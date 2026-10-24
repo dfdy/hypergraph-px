@@ -1,6 +1,6 @@
 # Frontend preview
 
-Status: runnable frontend-only synthetic-data preview, version 0.5.4. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
+Status: runnable frontend-only synthetic-data preview, version 0.6.0. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
 
 ## Run locally
 
@@ -26,6 +26,7 @@ Both a human browser and agent Chromium automation can use the same local URL. E
 - Drag workspace/sidebar column separators, or use their keyboard controls; Navigator width stays fixed. PX matches Hypergraph’s font size.
 - Default-on **Drag snapping** checkbox in the bottom settings bar enables sentence/paragraph snapping; repeated clicks independently select caret, word, sentence, paragraph, section. Keyboard and modified selections retain precise source ranges.
 - Semantic visual spacing between adjacent blocks preserves exact source and Markdown’s blank-line paragraph rule. A soft source newline stays within its paragraph; no extra blank lines are inserted. Navigator tables/maths remain rendered consistently while the editor virtualizes.
+- **Adjacent relationships:** each named relationship gets its own small horizontal sentence arrow or larger vertical paragraph arrow. Hover for its name; click or press Enter/Space to inspect it in Relations. Use the tab’s form to add/remove local examples at the caret. Exact source is unchanged; unrelated edits map ranges, while altered participants/lost adjacency leave review-needed records with hidden arrows. Pins are retained during explicit inspection. Examples reset on reload; section markers and canonical graph publication remain future work.
 - **Local Functions bar:** Fork opens an independent tab-only test document from a whole sentence/paragraph/section, retaining captured source attribution; it stays outside the dissertation composition. Link inserts an undoable plain Markdown heading link. Embed offers source/section/policy preview; actual shared insertion is disabled pending backend source/composition services. These are frontend demonstrations, not canonical graph records.
 - Local test comments, selection capture, clipboard removal, repeated simulated fork paste and clear, local simulation log, and accept/reject example assertion states per chapter.
 - Five-second-idle simulated checkpoint acknowledgement; always labelled tab-only, with delayed-ack reconciliation tested in the pure fixture adapter.

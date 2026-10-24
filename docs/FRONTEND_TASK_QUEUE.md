@@ -23,3 +23,7 @@ Owner requested import of tracked changes/comments from Word matched to a branch
 ## Important medium-term priority: encrypted browser/runtime communication
 
 Implement authenticated encrypted transport (HTTPS/WSS, including loopback) before real-data browser integration. ADR needed for certificate trust/bootstrap/lifecycle and secure development/embedded parity. Storage encryption, authentication and client-held egress policy remain separate. See [transport requirements](../Specifications/TRANSPORT_SECURITY.md). The current synthetic-only HTTP preview remains unconnected to Rust.
+
+## Adjacent-unit relationship visualization
+
+Issue 19: sentence horizontal and paragraph vertical double-ended arrows, one per named local relationship, delayed tooltip and exact Relations inspection; local multiple-record form, source-range mapping/review-needed invalidation, pinned context and Navigator parity. Frontend-only synthetic implementation; sections and real graph publication remain future work. Final evidence is in the handoff and issue.

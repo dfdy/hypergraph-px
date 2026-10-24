@@ -112,3 +112,12 @@ History and snapshot semantics are foundations for every durable gate, not featu
 
 
 Future export/compilation and external integration capabilities are subject to the [client-held/non-trusted egress policy](DATA/ENCRYPTION.md): document export and GitHub publication are disabled at the core in that mode, even at a plaintext-capable client. Internal protected provenance-clipboard references are distinct from an OS clipboard export sink. These mode restrictions remain future implementation gates.
+
+
+## Adjacent-unit relationship markers
+
+Display a small horizontal double-ended arrow between adjacent sentences for each relationship at that boundary. Between adjacent paragraphs use a larger vertical double-ended arrow. Multiple relationships produce separate individually actionable arrows, not one merged marker or a count badge. After the standard hover delay (more than three seconds), the tooltip names that arrow's relationship. Pointer activation or keyboard Enter/Space opens the exact relationship in the lower Relations tab, reveals it if the panel is collapsed and identifies both participants. Preserve the editor's source selection and retained pinned context when explicitly inspecting a relationship.
+
+These are source-neutral visual controls: never insert arrow characters or relationship labels into Markdown, exports or clipboard text. Double-ended glyphs indicate a connection control; they do not assert a symmetric predicate, erase participant roles or change the relationship's stored direction. A real relationship still requires the typed semantic identity, exact revision/occurrence anchors, policy and publication semantics above.
+
+Initial frontend demonstration supports top-level prose sentence and paragraph pairs in one document, with multiple named tab-only records and a local creation/removal form in Relations. Sentence segmentation uses Intl.Segmenter on source prose, excluding pairs crossing inline code/maths; paragraph pairs cannot cross headings, tables, code or other intervening blocks. Source edits map anchors; if participant text changes or adjacency is lost, hide the marker and retain a clearly review-needed record. Do not silently attach it to another matching passage. Reload resets these examples; no durable graph identity, merge or backend write is implemented. Section relationship creation and its marker design are subsequent work, not inferred from paragraph controls.
