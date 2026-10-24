@@ -19,3 +19,7 @@ Build and 19 Node tests passed; full Chromium suite passed (26 scenarios). Brows
 ## Future Word review import
 
 Owner requested import of tracked changes/comments from Word matched to a branch or snapshot, attributed to virtual Word Revision. Recorded in [the future specification](../Specifications/WORD_REVIEW_IMPORT.md); implementation remains queued, including parser/mapping/core publication and frontend review workflow.
+
+## Important medium-term priority: encrypted browser/runtime communication
+
+Implement authenticated encrypted transport (HTTPS/WSS, including loopback) before real-data browser integration. ADR needed for certificate trust/bootstrap/lifecycle and secure development/embedded parity. Storage encryption, authentication and client-held egress policy remain separate. See [transport requirements](../Specifications/TRANSPORT_SECURITY.md). The current synthetic-only HTTP preview remains unconnected to Rust.

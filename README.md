@@ -46,13 +46,14 @@ The following capabilities are planned and are **not yet implemented**. They bui
 - **Word review import:** match tracked changes and comments from a Word document to a specific branch or snapshot, preview conflicts and attribute imported contributions to a virtual **Word Revision** user. Preserve immutable snapshots and separate the importing human from external-review attribution. See the [future import requirements](Specifications/WORD_REVIEW_IMPORT.md).
 - **Reproducible compilation and export:** assemble documents from their exact recorded content, structure, citation data and compiler inputs. Keep recoverable editing drafts separate from explicitly committed history, and reproduce snapshots without consulting newer content heads.
 - **Multi-user collaboration and federation:** introduce users, devices and groups, supporting both live coediting and explicit branches/merges. Begin sharing at workspace/document scope, with full retained history shared only by explicit grant; validate authorization and structural consistency independently of synchronization or encryption.
+- **Encrypted browser/runtime communication — medium-term priority:** protect the browser-to-Rust connection, including localhost, with authenticated encrypted transport before real document data is connected. Certificate trust/bootstrap and secure development/release delivery are part of this work, independently of storage encryption. See [transport security](Specifications/TRANSPORT_SECURITY.md).
 - **Client-held encryption:** add an alternative to the default trusted-server mode, keeping decryption keys and plaintext operations at an authorized client. Recovery will use a user-held key. The stronger confidentiality guarantee against a malicious hosting server requires an independently trusted client and update channel. In non-trusted mode, the core will disable application-controlled plaintext egress, including document export and GitHub publication.
 
 These aims describe direction rather than a release-date commitment. Detailed mechanisms and acceptance checks must be specified before each capability is enabled.
 
 ## Current status
 
-Early development: pure Rust expansion validation, in-memory encryption/key wrapping and a separately runnable synthetic-data frontend preview are implemented. Durable workspace storage and the integrated Rust application remain planned. Current version: **0.5.3**; license: [AGPL-3.0-only](LICENSE).
+Early development: pure Rust expansion validation, in-memory encryption/key wrapping and a separately runnable synthetic-data frontend preview are implemented. Durable workspace storage and the integrated Rust application remain planned. Current version: **0.5.4**; license: [AGPL-3.0-only](LICENSE).
 
 ## Frontend preview
 

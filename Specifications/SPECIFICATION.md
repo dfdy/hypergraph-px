@@ -1,6 +1,6 @@
 # Hypergraph PX MU-F — product specification
 
-Status: current requirements, 2026-10-24. Project version 0.5.3. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
+Status: current requirements, 2026-10-24. Project version 0.5.4. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
 
 ## 1. Scope and architecture
 
@@ -39,11 +39,15 @@ Durability acceptance includes interrupted staging/publication, disk/write/fsync
 
 ## 4. Encryption and authority
 
+**Important medium-term priority:** encrypt and authenticate all browser-to-runtime communication, including loopback, using HTTPS and WSS where applicable. This is a gate before real-data browser integration, independent of storage/client-held encryption. Keep the current synthetic HTTP preview clearly separate. See [transport security](TRANSPORT_SECURITY.md) for certificate trust, bootstrap and acceptance requirements. This capability is not implemented.
+
 Trusted-server mode is the initial implementation and default: an unlocked trusted Rust process may decrypt permitted data for editing/search/compilation and approved integrations. Support passphrase and OS-keychain startup unlock, with passphrase unlock the default. Login authentication remains distinct from storage-key unlock; keychain use is an explicit alternative. Encrypt complete historical content and sensitive derived state at rest, including manifests/provenance, indexes/drafts and backups as applicable. Encryption suites, nonce/key envelopes, master-key unlock/recovery and authenticated contexts require an explicit security design, established libraries and tests.
 
 Client-held encryption is designed into identities, policies and execution boundaries now, but remains explicitly unavailable until implemented. In that mode the hosting server must not gain plaintext/decryption keys through configuration. Operations requiring plaintext run at an authorized client boundary or report unavailable; no silent server delegation or mode downgrade is permitted.
 
-Future client-held/non-trusted mode must deny application-controlled plaintext egress at the core, including GitHub publication and document export, across all UI/API/MCP/client/background paths. Client keys, read rights and confirmation cannot bypass that mode policy. See the [future egress requirement](DATA/ENCRYPTION.md). This stricter rule supersedes earlier client-side export/disclosure allowances; it remains unimplemented.\n\nAuthenticated workspace/group security policy controls key custody and migration; operational TOML cannot create missing decryption authority. Mode changes and re-encryption preserve logical identities and require the applicable authorization. Client-encryption recovery uses a user-held recovery key; server account reset cannot recover client-only keys. Revocation cannot erase data already disclosed to a participant.
+Future client-held/non-trusted mode must deny application-controlled plaintext egress at the core, including GitHub publication and document export, across all UI/API/MCP/client/background paths. Client keys, read rights and confirmation cannot bypass that mode policy. See the [future egress requirement](DATA/ENCRYPTION.md). This stricter rule supersedes earlier client-side export/disclosure allowances; it remains unimplemented.
+
+Authenticated workspace/group security policy controls key custody and migration; operational TOML cannot create missing decryption authority. Mode changes and re-encryption preserve logical identities and require the applicable authorization. Client-encryption recovery uses a user-held recovery key; server account reset cannot recover client-only keys. Revocation cannot erase data already disclosed to a participant.
 
 Initial future sharing scope is workspace/document. Full retained history is shared only by explicit grant. Current-state sharing must specify dependencies/provenance disclosure and opaque/hidden inaccessible references; read permission does not automatically imply every historical key.
 
@@ -76,7 +80,7 @@ Future Word review import must match tracked changes and comments to an explicit
 1. Repository/issue tracking, confirmed architecture decisions and current specifications.
 2. Pure constrained-graph validators and documented navigation contracts; first model obligations and Aeneas feasibility.
 3. Reviewed identities/canonical object and signed/encrypted envelope design, key lifecycle, authorization and storage publication/recovery.
-4. Minimal local encrypted persistence/drafts and independently developed whole-document editor, packaged/tested in the Rust executable.
+4. Minimal local encrypted persistence/drafts and independently developed whole-document editor, packaged/tested in the Rust executable. Prioritize authenticated encrypted browser/runtime transport before connecting real document data.
 5. Branch/compare/selected integration and human/mock-agent structural workflows with crash/permission/provenance evidence.
 6. Remaining local integrations and hardening; future multi-user, offline exchange, federation and client-held mode through separate explicit acceptance gates.
 

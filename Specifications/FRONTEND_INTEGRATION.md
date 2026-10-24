@@ -306,3 +306,8 @@ Repeated clicks in one spot select caret, word, sentence, paragraph, section (on
 ## Future Word review import
 
 Provide a branch/snapshot-bound import review for Word tracked changes and comments, with explicit exact/ambiguous/unmatched/conflicting results. Imported contributions use the virtual **Word Revision** identity in comments, attribution and the Users contributor projection; importing/approving humans remain separate actors. Snapshot review never mutates a snapshot. See [Word review import](WORD_REVIEW_IMPORT.md) for core application and acceptance requirements. This is future functionality, not an enabled fixture operation or endpoint.
+
+
+## Medium-term priority: encrypted runtime communication
+
+Before connecting real document data or sending runtime credentials/unlock inputs, require authenticated encrypted browser/runtime transport, including on loopback. Use trusted HTTPS for frontend bootstrap/assets, API and streaming, and WSS for any WebSockets; reject certificate failures and plaintext downgrade. Keep the synthetic-only HTTP preview separate. TLS does not replace origin/session/authorization controls or client-held content confidentiality. See [transport security](TRANSPORT_SECURITY.md) for development/release parity, certificate lifecycle decisions and acceptance gates.
