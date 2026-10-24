@@ -1,4 +1,4 @@
-# Hypergraph PX: More Than a Storage Mechanism
+# Hypergraph PX
 
 **Hypergraph PX is a MCP-ready, graph-based document editing system that treats documents not as isolated, static files, but as evolving compositions of interconnected, reusable, and independently versioned content.** 
 
