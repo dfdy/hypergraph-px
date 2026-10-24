@@ -2,6 +2,11 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.6.0 — 2026-10-25
+
+- Show one source-neutral horizontal sentence arrow or larger vertical paragraph arrow per adjacent-unit relationship; delayed tooltips name each relationship and activation opens its exact Relations entry.
+- Add tab-only multiple relationship creation/removal, per-document state and exact-range mapping with review-needed invalidation. Preserve pinned context, Markdown source and Navigator layout; no canonical graph/backend writes.
+
 ## 0.5.4 — 2026-10-25
 
 - Prioritize authenticated encrypted browser/runtime communication, including loopback, before real-data integration. Specify HTTPS/WSS, secure bootstrap and certificate trust/lifecycle decisions independently of storage/client-held encryption. Requirements only; no runtime TLS implementation.

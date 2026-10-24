@@ -311,3 +311,8 @@ Provide a branch/snapshot-bound import review for Word tracked changes and comme
 ## Medium-term priority: encrypted runtime communication
 
 Before connecting real document data or sending runtime credentials/unlock inputs, require authenticated encrypted browser/runtime transport, including on loopback. Use trusted HTTPS for frontend bootstrap/assets, API and streaming, and WSS for any WebSockets; reject certificate failures and plaintext downgrade. Keep the synthetic-only HTTP preview separate. TLS does not replace origin/session/authorization controls or client-held content confidentiality. See [transport security](TRANSPORT_SECURITY.md) for development/release parity, certificate lifecycle decisions and acceptance gates.
+
+
+## Adjacent-unit relationship visualization
+
+Implement [adjacent-unit markers](WORKSPACE_INTERFACE.md#adjacent-unit-relationship-markers) as source-neutral editor widgets: compact horizontal double-ended arrows for sentences, larger vertical ones for paragraphs, one arrow per relationship. Delayed names, keyboard activation and exact Relations-tab inspection are required. Reflect the same layout in the Navigator. Preserve source/undo, selection, per-document state and pinned context; report invalidated anchors instead of guessing. The synthetic adapter may demonstrate multiple local records and explicit review-needed states, without claiming canonical semantic identity or graph publication. Resolve real snapshot/occurrence/authorization mapping before backend integration. Section markers remain a later design step.

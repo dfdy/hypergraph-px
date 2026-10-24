@@ -36,3 +36,15 @@ body{--markdown-marker:#909090}body.light{--markdown-marker:#737373}.cm-source-m
 
 /* Pointer resizing is an action, not a selected column; retain keyboard focus cues. */
 .column-divider.pointer-resize:focus{outline:none}
+
+/* Relationship controls are source-neutral widgets with one arrow per assertion. */
+.relationship-boundary{display:inline-flex;gap:2px;vertical-align:middle;user-select:none;line-height:1}
+.relationship-arrow{display:inline-flex;align-items:center;justify-content:center;color:var(--accent);padding:0 1px;width:22px;height:20px;border-radius:3px;vertical-align:middle}
+.relationship-arrow svg{width:20px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.relationship-paragraph{width:100%;justify-content:center;height:1em}
+.relationship-paragraph .relationship-arrow{width:30px;height:28px}
+.relationship-paragraph svg{width:24px;height:26px;stroke-width:1.7}
+.relationship-card.inspected{border-color:var(--accent);box-shadow:inset 3px 0 var(--accent)}
+.relationship-card blockquote{margin:8px 0;padding-left:9px;border-left:2px solid var(--border);font-size:11px;overflow-wrap:anywhere}
+.relationship-form{display:grid;gap:8px;margin:12px 0}
+.relationship-form input,.relationship-form select{min-width:0;width:100%;background:var(--paper);border:1px solid var(--border);border-radius:5px;padding:7px}
