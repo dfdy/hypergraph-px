@@ -9,6 +9,13 @@ async function drag(page,from,to){await page.mouse.move(from.x,from.y);await pag
 // CodeMirror paints the DOM selection during its next measured view update.
 // Assert the resulting range after it settles, rather than reading the prior drag.
 async function expectSelected(page,text){await expect.poll(()=>page.evaluate(()=>window.getSelection().toString())).toBe(text);}
+// Start an independent selection gesture, not a native drag of already-selected text.
+async function dragSource(page,from,to){
+ await page.getByRole('textbox',{name:'Markdown document editor'}).focus();
+ await page.keyboard.press('ArrowLeft');
+ const start=await point(page,from),end=await point(page,to);
+ await drag(page,start,end);
+}
 async function selected(page){await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));return page.evaluate(()=>window.getSelection().toString());}
 const count=async(page,id)=>Number((await page.locator(id).innerText()).replaceAll(',',''));
 
@@ -52,14 +59,13 @@ test('one through five repeated clicks select caret, word, sentence, paragraph, 
 
 test('drag snapping promotes sentences/paragraphs in both directions and can be disabled',async({page})=>{
  const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+Home');await page.keyboard.insertText('# Snap tests\n\nAlpha one. Beta two.\n\nGamma three. Delta four.\n\n`code one. code two.`\n\n\\(math one. math two.\\)\n\n');const original=await source(page);
- const alpha=await point(page,'Alpha'),beta=await point(page,'Beta'),gamma=await point(page,'Gamma');
- await drag(page,alpha,beta);await expectSelected(page,'Alpha one. Beta two.');
- await drag(page,alpha,gamma);await expectSelected(page,'Alpha one. Beta two.\n\nGamma three. Delta four.');
- await drag(page,gamma,alpha);await expectSelected(page,'Alpha one. Beta two.\n\nGamma three. Delta four.');
- const codeOne=await point(page,'code one'),codeTwo=await point(page,'code two');await drag(page,codeOne,codeTwo);expect((await selected(page)).length).toBeLessThan('code one. code two.'.length);
- const mathOne=await point(page,'math one'),mathTwo=await point(page,'math two');await drag(page,mathOne,mathTwo);expect((await selected(page)).length).toBeLessThan('math one. math two.'.length);
+ await dragSource(page,'Alpha','Beta');await expectSelected(page,'Alpha one. Beta two.');
+ await dragSource(page,'Alpha','Gamma');await expectSelected(page,'Alpha one. Beta two.\n\nGamma three. Delta four.');
+ await dragSource(page,'Gamma','Alpha');await expectSelected(page,'Alpha one. Beta two.\n\nGamma three. Delta four.');
+ await dragSource(page,'code one','code two');expect((await selected(page)).length).toBeLessThan('code one. code two.'.length);
+ await dragSource(page,'math one','math two');expect((await selected(page)).length).toBeLessThan('math one. math two.'.length);
 
- await page.getByRole('checkbox',{name:'Drag snapping',exact:true}).uncheck();await drag(page,alpha,beta);expect(await selected(page)).not.toBe('Alpha one. Beta two.');expect((await selected(page)).length).toBeLessThan('Alpha one. Beta two.'.length);expect(await source(page)).toBe(original);
+ await page.getByRole('checkbox',{name:'Drag snapping',exact:true}).uncheck();await dragSource(page,'Alpha','Beta');expect(await selected(page)).not.toBe('Alpha one. Beta two.');expect((await selected(page)).length).toBeLessThan('Alpha one. Beta two.'.length);expect(await source(page)).toBe(original);
  await page.reload();await expect(page.getByRole('checkbox',{name:'Drag snapping',exact:true})).not.toBeChecked();
 });
 

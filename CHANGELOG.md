@@ -2,6 +2,10 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.5.2 — 2026-10-25
+
+- Begin each independent snapping-test gesture with a collapsed caret and freshly measured coordinates. Avoid Chromium treating a drag inside the previous selection as native selected-text drag/drop. Preserve exact source and forward/backward assertions; no runtime change.
+
 ## 0.5.1 — 2026-10-24
 
 - Wait for the actual DOM selection to settle when checking drag snapping in Chromium, retaining exact forward/backward expected ranges. Prevent CI from reading the previous gesture before CodeMirror paints the selection. No runtime/dependency/proof changes.
