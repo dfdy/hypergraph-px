@@ -1,6 +1,6 @@
 # Hypergraph PX MU-F — product specification
 
-Status: current requirements, 2026-10-24. Project version 0.1.4. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
+Status: current requirements, 2026-10-24. Project version 0.1.5. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
 
 ## 1. Scope and architecture
 
@@ -52,6 +52,8 @@ Keep cryptographic transport/group-key agreement separate from document synchron
 ## 5. Editor and integrations
 
 Provide a desktop four-column writing interface, from left to right: (1) a contents tree of chapters, sections and subsections; (2) an editor showing styled Markdown source; (3) a document minimap for click/drag navigation and current-viewport indication; (4) a discussion panel with separate Agent and Comments tabs. Preserve whole-document caret, selection and source-ownership mapping. Comments are user-authored document annotations and remain separate from agent conversation. Mobile is deferred. Document-local prose and repeated/nested source ownership are part of the core source model rather than late editor exceptions.
+
+The [frontend integration specification](FRONTEND_INTEGRATION.md) defines browser/Rust responsibilities, exact selection and source-mapping rules, draft/commit state handling, staged capabilities and frontend acceptance scenarios. Its candidate endpoints and adapter shapes are not implemented or frozen wire formats.
 
 Human and agent principals remain distinct. Context selection, model output and document instructions grant no permissions. Proposals freeze exact targets, action scope, model/actor attribution and expected state; approval rechecks current rights. Mock proposal/approval/recovery precedes live authoring. External model disclosure is explicit and mode-dependent.
 

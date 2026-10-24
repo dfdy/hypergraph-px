@@ -21,7 +21,7 @@ Canonical requirements: [Specifications/SPECIFICATION.md](../Specifications/SPEC
 
 ## Published milestones and executed checks
 
-Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.1.4** simplifies README status and adds developer installation; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
+Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.1.5** adds the evaluated frontend integration specification; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
 
 Implemented pure `hypergraph_domain::expansion::validate`: bounded Kahn DAG validator; five tests including all 512 directed three-vertex graphs versus an independent transitive-closure oracle. Source `crates/domain/src/expansion.rs` SHA-256 `74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad` remains unchanged.
 
@@ -86,3 +86,13 @@ Version 0.1.2 commit `5c993377d891850da0f5b5a8f8ba9d1a14ae48b7` was pushed; all 
 Owner requested a brief Current status outline, removal of Initial verification and basic developer installation instructions. README now gives Git/private repository access and Rust/native-linker prerequisites, clone instructions, explicit stable-toolchain installation, locked library build/tests and formatting/Clippy commands. Optional Lean reproduction and technical/progress documentation remain linked. There is no application launch/Node/frontend setup claim. Feature implementation stays paused.
 
 Version 0.1.3 commit `05193bb` was pushed with all three CI workflows observed successful (Rust 40083409534, Lean models 40083409533, extracted proof 40083409528); issue 6 is closed. Issue 7 is documentation-only at 0.1.4; observe publication/checks without creating a self-referential evidence update.
+
+## Frontend integration evaluation — issue 8
+
+Owner supplied the local ignored SPECS/Hypergraph-PX-Rust-Endpoint-Integration.md as noncanonical input and requested evaluation plus a specification for the frontend agent. Read all 245 lines; SHA-256 13263d8791dbdc327143f796cf543ed78141bca94ffa44ab265af342ed7934c3, 31,145 bytes. Preserve it unchanged and ignored. Prototype source/status claims were not independently verified. Actual repository still has no frontend/server/application/draft/publication service.
+
+Deliverable: [Specifications/FRONTEND_INTEGRATION.md](../Specifications/FRONTEND_INTEGRATION.md), a self-contained behavioral/adapter handoff with staged capability gates, the four-column desktop layout, fixture-only mode, exact source mapping/draft-local inserts/Unicode coordinates, draft autosave state machine, commit/structural approval/idempotency, candidate HTTP surface, errors/security/preferences and executable acceptance scenarios/work order. Adapter names/DTO concepts/routes are planning targets, not implemented or frozen APIs. No frontend library, durable anchor encoding, authentication mechanism, provider connection or cookie lifetime is selected.
+
+Evaluation and accepted/corrected/deferred findings are in [docs/reviews/0008-frontend-integration.md](reviews/0008-frontend-integration.md), outside Specifications. Key corrections: do not require a large API catalogue before an editor slice; add create/open workflow; do not trust stale/client ownership maps or replace multi-owner buffers; keep table edits in drafts; preserve newer typing and handle two contexts; distinguish unknown outcomes/202 from commit; do not make prototype sentence/cookie/provider choices canonical. Source document stays untracked; no backend/frontend code is implemented. General feature work remains paused.
+
+Version 0.1.4 commit `ddbcd1b` was pushed; all three hosted checks observed successful (Rust 40083746437, models 40083746477, extracted proof 40083746530), and issue 7 closed. Documentation milestone 0.1.5 follows the same publication policy; verify its actual CI via GitHub without another evidence-only version bump.

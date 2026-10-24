@@ -42,7 +42,7 @@ These aims describe direction rather than a release-date commitment. Detailed me
 
 ## Current status
 
-Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.4**; license: [AGPL-3.0-only](LICENSE).
+Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.5**; license: [AGPL-3.0-only](LICENSE).
 
 ## Developer installation
 
@@ -75,3 +75,5 @@ cargo +stable clippy --workspace --all-targets --locked -- -D warnings
 Lean is optional for ordinary Rust development. For proof toolchains and reproduction commands, see [formal assurance](proofs/README.md) and [extracted Rust proof replay](proofs/rust/README.md).
 
 Read [AGENTS.md](AGENTS.md) for contribution instructions, the [specification index](Specifications/README.md) for requirements and architecture, and the [data/navigation reference](Specifications/DATA/README.md) and [crypto adapter reference](crates/crypto/README.md) for implemented APIs. Progress and next steps are in the [development handoff](docs/DEVELOPMENT_STATE.md); version history is in [CHANGELOG.md](CHANGELOG.md).
+
+For browser interface work, use the [frontend integration specification](Specifications/FRONTEND_INTEGRATION.md), including its adapter boundary, fixture work order and acceptance scenarios.

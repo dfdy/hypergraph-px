@@ -5,6 +5,7 @@ This directory contains the current specifications for Hypergraph PX Multi-User 
 | Document | Responsibility |
 |---|---|
 | [Product specification](SPECIFICATION.md) | Scope, mandatory invariants, desktop interface, security, staged delivery, formal assurance and release policy |
+| [Frontend integration](FRONTEND_INTEGRATION.md) | Frontend-agent work order, fixture/live boundaries, source mapping, drafts, commands, candidate transport and acceptance scenarios |
 | [Architecture](ARCHITECTURE.md) | Component boundaries, command/data flow, single-executable packaging and outstanding mechanism decisions |
 | [Mathematical model](DATA/MATHEMATICAL_MODEL.md) | Typed graph projections, identity, temporal state, provenance and exact snapshot semantics |
 | [Data structures and navigation](DATA/README.md) | Proposed data/query contracts, actual Rust APIs, complexity, budgets, errors and examples |
