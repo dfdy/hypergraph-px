@@ -1,6 +1,6 @@
 # Frontend preview
 
-Status: runnable frontend-only synthetic-data preview, version 0.3.1. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
+Status: runnable frontend-only synthetic-data preview, version 0.4.0. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
 
 ## Run locally
 
@@ -21,6 +21,7 @@ Both a human browser and agent Chromium automation can use the same local URL. E
 - Context-aware Paragraph/H1–H4, Bold/Italic/Quote/Bulleted/Numbered controls, multi-click source units, table cell editing/undo, exact source/rendered maths, wrap/font/theme/authorship controls.
 - Split scrollable/resizable/collapsible right panels: upper Agent/Comments/Users and lower Concepts/Relations/Sources/Provenance/History. Pin an investigation context while continuing elsewhere.
 - Synthetic contributors with current human/agent pinned and distinct colors; no presence/authentication inference.
+- Live document word count before character count in the footer, with the word number bold. Words are Unicode word-like segments of Markdown source; numerals/code/formula words can contribute, while standalone punctuation/emoji do not. Counts update with editing and chapter switching.
 - Local test comments, selection capture, clipboard removal, repeated simulated fork paste and clear, local simulation log, and accept/reject example assertion states per chapter.
 - Five-second-idle simulated checkpoint acknowledgement; always labelled tab-only, with delayed-ack reconciliation tested in the pure fixture adapter.
 

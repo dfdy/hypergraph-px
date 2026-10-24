@@ -2,6 +2,12 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.4.0 — 2026-10-24
+
+- Show live document word count immediately before character count in the bottom status bar, with the numeric word count bold.
+- Count Unicode word-like segments in the current Markdown source, caching by immutable editor document so caret moves do not rescan text. Preserve existing line/column and UTF-16 character counts.
+- Verify typing, Unicode input, chapter switching, counter order and bold styling in Chromium. No backend/dependency/proof source changes.
+
 ## 0.3.1 — 2026-10-24
 
 - Group bullet and numbered list buttons directly together; use original SVG icons showing three bullets and 1/2/3 numbering with text lines.

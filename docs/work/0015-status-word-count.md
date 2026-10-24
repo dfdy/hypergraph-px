@@ -1,0 +1,5 @@
+# Status-bar word count — issue 15
+
+Owner requested word count immediately before character count and a bold number. Scope: frontend display only; version 0.4.0 follows the new-functionality MINOR convention. Unicode Intl.Segmenter word-like segments count the current Markdown source (not selected text or rendered prose). Preserve the existing UTF-16 character metric and line/column display. WeakMap caching keyed by immutable CodeMirror Text avoids recounting on caret movement and naturally updates on edits/undo or switching documents. No persistence, source mutation, backend API, new dependency or proof obligation is introduced.
+
+Executed: frontend static build and actual Chromium checks passed. Typing Extra words café plus a standalone compass emoji increased the count by exactly three; count survived chapter switch/return; number computed font-weight was 700; word count preceded character count. Footer screenshot captured locally, outside Git. Current preview at http://127.0.0.1:5173/ serves the new build after refresh. No new test file for this reversible display change; full existing browser regressions remain in hosted CI.
