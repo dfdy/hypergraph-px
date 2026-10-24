@@ -77,6 +77,16 @@ export function renderMinimap(view, track, layer, viewport) {
 }
 
 export function bindMinimap(track, viewport, getView) {
+  track.parentElement.addEventListener('wheel', event => {
+    // Keep pinch/Ctrl-wheel zoom under browser control. The document scroller
+    // supplies native bounds; changing scrollTop triggers the same map update.
+    if (event.ctrlKey || event.metaKey || !event.deltaY) return;
+    const view = getView();
+    const unit = event.deltaMode === 1 ? view.defaultLineHeight
+      : event.deltaMode === 2 ? view.scrollDOM.clientHeight : 1;
+    event.preventDefault();
+    view.scrollDOM.scrollTop += event.deltaY * unit;
+  }, {passive:false});
   track.addEventListener('pointerdown', event => {
     if (event.button !== 0) return;
     event.preventDefault();

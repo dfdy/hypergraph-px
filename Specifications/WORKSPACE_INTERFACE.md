@@ -10,7 +10,7 @@ Keep content identity, immutable revision, placement occurrence, anchor, transfo
 
 ## 2. Desktop workspace
 
-Keep four columns: **left navigator → editor → narrow minimap → right sidebar**. The left navigator offers Workspace, Document, Graph and History lenses. The branch/snapshot heading tree remains readily accessible; overlays add authorized concept/comment/source/contributor/change indicators without replacing its structure. Display query scope: selection, section, snapshot, branch, document or workspace; federation scope remains unavailable.
+Default to four columns: **left navigator → editor → narrow minimap → right sidebar**. Label the mini-overview **Navigator**; allow hide/show and positioning directly left or right of the editor, with saved display preferences. Wheel scrolling over it moves the same editor and viewport; Ctrl/pinch zoom remains under browser control. The left workspace navigator offers Workspace, Document, Graph and History lenses. The branch/snapshot heading tree remains readily accessible; overlays add authorized concept/comment/source/contributor/change indicators without replacing its structure. Display query scope: selection, section, snapshot, branch, document or workspace; federation scope remains unavailable.
 
 Workspace shows nested collections, documents and ordered composite works. Expand a chapter into headings, with breadcrumbs and previous/next chapter navigation following the selected composition order. Document shows the current outline; Graph shows bounded references/backlinks/concepts/provenance; History distinguishes revision, composition, derivation and snapshot views. Missing/denied results must not expose hidden target existence or counts.
 
