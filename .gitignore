@@ -1,0 +1,23 @@
+# Local runtime material; source design documents under SPECS remain tracked.
+.DS_Store
+/target/
+/node_modules/
+**/node_modules/
+/runtime/
+/workspaces/
+/artifacts/
+/test-results/
+/playwright-report/
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+/proofs/.lake/
+/proofs/lean/.lake/
