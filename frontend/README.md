@@ -1,6 +1,6 @@
 # Frontend preview
 
-Status: runnable frontend-only synthetic-data preview, version 0.5.0. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
+Status: runnable frontend-only synthetic-data preview, version 0.5.1. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
 
 ## Run locally
 

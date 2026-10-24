@@ -1,6 +1,6 @@
 # Development state and context-compaction handoff
 
-Last updated: 2026-10-24. **Current work: publish accumulated frontend milestone 0.5.0. Owner explicitly lifted the publication hold with “Push to github”. Frontend-only scope and authentication waiver for the synthetic preview remain. Local preview: http://127.0.0.1:5173/. Historical hold statements below describe earlier instructions.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
+Last updated: 2026-10-24. **Current work: validate and publish CI test timing repair 0.5.1 after the owner published 0.5.0. Owner explicitly lifted the publication hold with “Push to github”. Frontend-only scope and authentication waiver for the synthetic preview remain. Local preview: http://127.0.0.1:5173/. Historical hold statements below describe earlier instructions.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
 
 ## Workspace and authorization
 
@@ -228,3 +228,12 @@ Latest future requirement: Word review import, matching tracked changes/comments
 ## Publication authorized — 0.5.0 preparation
 
 Owner requested “Push to github”, lifting the earlier hold. Publish accumulated frontend features/fixes, Word review import and future egress specifications, local cpufeatures repair and owner README grammar edit. MINOR 0.5.0 reflects new frontend functionality; workspace/Lean/npm metadata synchronized by named entries only. No external dependency upgrade or Rust/proof source change. Final checks and publication evidence follow execution.
+
+
+## Resumed publication: existing 0.5.0 and CI repair 0.5.1
+
+On resume, the working tree was clean: 0.5.0 was already published in 685af85777623b44ae8230fce939f39ce42bbcee, followed by owner README edit 67901ee055ce3162759654be71242d9d7e4892f3. Preserve both commits. All three hosted Rust/Lean/extracted-proof workflows passed at 67901ee; frontend 40118154986 failed at the second forward drag assertion, which read the previous DOM selection. Browser selection is painted asynchronously by CodeMirror. Change the regression assertions to poll the exact expected range, retaining forward/backward/protected/source-preservation checks; no app behavior is changed. New publication uses PATCH 0.5.1, with named metadata entries synchronized and dependencies unchanged. Issue 16 tracks completion.
+
+On resume, pinned local Lean model build, theorem axioms and leanchecker passed. The actual-Rust helper replay also passed: unchanged source re-extracted, exact generated source, locked dependencies, spend_spec proof and environment checked. No new proof guarantee or digest entry is introduced. Final test/push/hosted results follow actual execution.
+
+Executed for 0.5.1: 19 Node tests, static build and all 26 Chromium scenarios passed, plus 10 repeated drag-snapping scenarios. Locked cargo check passed; prior full Rust fmt/clippy/eight tests passed on identical Rust sources. Pinned Lean models/axiom audit/leanchecker and extracted Rust helper replay passed. External dependency version/checksum records and proven expansion source digest match published source. Publication and hosted verification remain to be observed.
