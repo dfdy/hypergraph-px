@@ -21,7 +21,7 @@ Canonical requirements: [Specifications/SPECIFICATION.md](../Specifications/SPEC
 
 ## Published milestones and executed checks
 
-Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.1.3** adds README future design aims; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
+Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.1.4** simplifies README status and adds developer installation; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
 
 Implemented pure `hypergraph_domain::expansion::validate`: bounded Kahn DAG validator; five tests including all 512 directed three-vertex graphs versus an independent transitive-closure oracle. Source `crates/domain/src/expansion.rs` SHA-256 `74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad` remains unchanged.
 
@@ -80,3 +80,9 @@ Validation executed for 0.1.2: six current specification files, 78 published loc
 Owner requested a README section describing future aims, including Zotero. Added explicit planned/unimplemented descriptions of read-only reference selection/citations and reproducible bibliography inputs, desktop four-column editing/minimap, reusable content and history, agent/comments, export, live collaboration plus branches/federation, and future client-held encryption. Mobile remains deferred and no release date or runtime completion is claimed. Product specification remains authoritative. No feature implementation resumed.
 
 Version 0.1.2 commit `5c993377d891850da0f5b5a8f8ba9d1a14ae48b7` was pushed; all hosted checks observed successful (Rust 40083095570, Lean models 40083095585, extracted proof 40083095573), and issue 5 is closed. Issue 6 is documentation-only at 0.1.3; verify its publication/CI from GitHub rather than creating a self-referential evidence update.
+
+## Developer README setup — issue 7
+
+Owner requested a brief Current status outline, removal of Initial verification and basic developer installation instructions. README now gives Git/private repository access and Rust/native-linker prerequisites, clone instructions, explicit stable-toolchain installation, locked library build/tests and formatting/Clippy commands. Optional Lean reproduction and technical/progress documentation remain linked. There is no application launch/Node/frontend setup claim. Feature implementation stays paused.
+
+Version 0.1.3 commit `05193bb` was pushed with all three CI workflows observed successful (Rust 40083409534, Lean models 40083409533, extracted proof 40083409528); issue 6 is closed. Issue 7 is documentation-only at 0.1.4; observe publication/checks without creating a self-referential evidence update.

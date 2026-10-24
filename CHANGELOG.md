@@ -2,6 +2,12 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.1.4 — 2026-10-24
+
+- Shorten README Current status to a brief implementation outline and remove Initial verification.
+- Add developer prerequisites, private-repository clone instructions, stable Rust setup and locked build/test/lint commands.
+- Link optional proof reproduction and technical documentation; clarify that no application executable or frontend setup is available yet. No runtime/proof changes.
+
 ## 0.1.3 — 2026-10-24
 
 - Add README future design aims covering read-only Zotero citations, desktop editing/navigation, reusable content/history, agent/comments workflows, reproducible export, collaboration/federation and client-held encryption.

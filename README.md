@@ -42,32 +42,36 @@ These aims describe direction rather than a release-date commitment. Detailed me
 
 ## Current status
 
-Architecture decisions, a pure Rust expansion validator and an in-memory trusted-server cryptographic adapter. Authenticated object/passphrase-key envelopes are implemented; no durable workspace storage, browser editor or running service is implemented in this repository yet.
+Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.4**; license: [AGPL-3.0-only](LICENSE).
 
-Confirmed starting constraints:
+## Developer installation
 
-- Independently developed browser frontend and Rust domain/data processes, packaged as one Rust-based executable with built frontend assets embedded for releases.
-- Local-only first release; future multi-user/federation concerns inform the core now without enabling remote sharing prematurely.
-- Trusted-server encryption/key custody is the default, with passphrase unlock by default and an OS-keychain alternative; client-held encryption remains unavailable until implemented. Its future browser-only and trusted-client paths have explicitly different malicious-server-code guarantees.
-- Pure, deterministic core validators suitable for selective Lean verification; distinguish model proofs, Rust correspondence tests and direct implementation proofs.
-- A technical data-structure/navigation reference maintained alongside the implementation.
-- GitHub tracking and source control from the beginning.
+Install Git and [Rust through rustup](https://www.rust-lang.org/tools/install), including the native compiler/linker prerequisites for your platform. The repository is currently private, so your GitHub account needs access to clone it.
 
-Start with the [specification index](Specifications/README.md), [architecture](Specifications/ARCHITECTURE.md) and [data structures/navigation reference](Specifications/DATA/README.md). The [product specification](Specifications/SPECIFICATION.md) defines confirmed requirements. The [mathematical model](Specifications/DATA/MATHEMATICAL_MODEL.md) and [encryption specification](Specifications/DATA/ENCRYPTION.md) explain core invariants and security boundaries. These documents distinguish implemented behavior from planned work.
-
-No application launch command exists yet; the pure-core check commands are below. Original code is AGPL-3.0-only, confirmed by the owner. Current project version is **0.1.3**. Follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); increment the version before each milestone push introducing new changes. See [CHANGELOG.md](CHANGELOG.md).
-
-Initial core checks:
+Clone the repository and install the stable Rust toolchain with the formatting/lint components:
 
 ```sh
-cargo fmt --all -- --check
-cargo clippy --workspace --all-targets --locked -- -D warnings
-cargo test --workspace --locked
+git clone https://github.com/dfdy/hypergraph-px.git
+cd hypergraph-px
+rustup toolchain install stable --profile minimal --component rustfmt,clippy
 ```
 
+Build the workspace and run its tests using the committed dependency lockfile:
 
-## Initial verification
+```sh
+cargo +stable build --workspace --locked
+cargo +stable test --workspace --locked
+```
 
-Eight Rust tests pass: three envelope tests cover context/tamper/resource rejection and passphrase rewrapping, and five domain tests include all 512 directed three-vertex graphs against an independent reachability oracle, repeated dependencies, invalid inputs and exact resource budgets. Formatting and strict all-target Clippy pass. Four Lean graph-model theorems now check with Lean 4.35.0 and report no axioms. This does not prove the Rust validator: strict whole-validator translation currently fails on supported-subset/model limits, while its unchanged real Rust budget helper has a checked extracted-semantics proof. Durable encrypted storage, OS-keychain integration, the editor and single-executable runtime packaging remain implementation work. See [formal assurance](proofs/README.md) and the [human-readable Lean validation digest](proofs/VALIDATION_DIGEST.md).
+This currently builds Rust library crates; there is no application launch command yet. No Node.js or frontend setup is required at this stage.
 
-The [crypto adapter reference](crates/crypto/README.md) and [ADR 0002](docs/adr/0002-trusted-server-envelopes.md) describe the implemented byte formats, keys, resource limits and security assumptions. Its tests are separate from the Lean evidence; no crypto proof is claimed.
+Before contributing, run formatting and lint checks:
+
+```sh
+cargo +stable fmt --all -- --check
+cargo +stable clippy --workspace --all-targets --locked -- -D warnings
+```
+
+Lean is optional for ordinary Rust development. For proof toolchains and reproduction commands, see [formal assurance](proofs/README.md) and [extracted Rust proof replay](proofs/rust/README.md).
+
+Read [AGENTS.md](AGENTS.md) for contribution instructions, the [specification index](Specifications/README.md) for requirements and architecture, and the [data/navigation reference](Specifications/DATA/README.md) and [crypto adapter reference](crates/crypto/README.md) for implemented APIs. Progress and next steps are in the [development handoff](docs/DEVELOPMENT_STATE.md); version history is in [CHANGELOG.md](CHANGELOG.md).
