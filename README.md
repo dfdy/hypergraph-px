@@ -17,7 +17,7 @@ Confirmed starting constraints:
 - A technical data-structure/navigation reference maintained alongside the implementation.
 - GitHub tracking and source control from the beginning.
 
-Start with [source-document status](SPECS/README.md), the [foundation review](SPECS/ARCHITECTURE_REVIEW.md) and the [data architecture/navigation reference](SPECS/DATA/README.md). These identify confirmed decisions and pending proposals separately. A new canonical specification will consolidate resolved requirements; the historical evolved specification is not silently adopted as current authority.
+Start with [source-document status](SPECS/README.md), the [foundation review](SPECS/ARCHITECTURE_REVIEW.md) and the [data architecture/navigation reference](SPECS/DATA/README.md). These identify confirmed decisions and pending proposals separately. The [initial canonical specification](SPECS/SPECIFICATION.md) consolidates confirmed requirements; the historical evolved specification is not silently adopted as current authority.
 
 No application launch command exists yet; the pure-core check commands are below. Original code is AGPL-3.0-only, confirmed by the owner. Initial package version is 0.0.1; release/schema policy will be refined separately.
 
@@ -28,3 +28,8 @@ cargo fmt --all -- --check
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo test --workspace --locked
 ```
+
+
+## Initial verification
+
+Five Rust tests pass, including all 512 directed three-vertex graphs against an independent reachability oracle, repeated dependencies, invalid inputs and exact resource budgets. Formatting and strict all-target Clippy pass. Lean/Aeneas execution, storage encryption, the editor and single-executable runtime packaging remain implementation work; no retired-project evidence is counted here.
