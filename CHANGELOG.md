@@ -2,6 +2,12 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.1.7 — 2026-10-24
+
+- Prepare a local Sites export inbox, preserving raw files outside automatic Git publication.
+- Document review/adaptation against the frontend specification/evaluation, followed by a separate mock-data runtime and browser visual/interaction testing.
+- Retain eventual single-executable Rust asset embedding; no frontend package, runtime or browser acceptance result is introduced by the intake folder.
+
 ## 0.1.6 — 2026-10-24
 
 - Review the updated frontend integration proposal and adopt the owner-confirmed third Users tab and document-contributors semantics consistently in current requirements.

@@ -1,6 +1,6 @@
 # Development state and context-compaction handoff
 
-Last updated: 2026-10-24. **General implementation remains PAUSED. The owner separately authorized documentation updates; do not treat them as resumption of feature development.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
+Last updated: 2026-10-24. **Frontend intake and subsequent local mock-runtime integration are authorized. Current step: receive the exported files. Other backend feature development remains paused.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
 
 ## Workspace and authorization
 
@@ -21,7 +21,7 @@ Canonical requirements: [Specifications/SPECIFICATION.md](../Specifications/SPEC
 
 ## Published milestones and executed checks
 
-Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.1.6** updates the frontend contract for the second proposal and owner-defined contributor tab; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
+Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.1.7** prepares the local frontend export inbox and runtime/testing handoff; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
 
 Implemented pure `hypergraph_domain::expansion::validate`: bounded Kahn DAG validator; five tests including all 512 directed three-vertex graphs versus an independent transitive-closure oracle. Source `crates/domain/src/expansion.rs` SHA-256 `74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad` remains unchanged.
 
@@ -108,3 +108,11 @@ Updated Specifications/FRONTEND_INTEGRATION.md §§8.1–8.5 and acceptance/work
 GitHub document publishing would be external disclosure through a separately authorized app connection, never implicitly using this coding agent's/source repository's permissions. Exact frozen review, protected credentials, separate repository creation/local commit, provider-side expected-head checks and honest unknown/recovery outcomes are required before live use. Do not implement a preflight-read/unconditional-write race or assume provider correlation IDs deduplicate writes. General runtime work stays paused; this is documentation-only 0.1.6.
 
 Prior 0.1.5 commit ce525ed was pushed and all hosted checks observed successful (Rust 40087989026, models 40087989015, extracted proof 40087989000); issue 8 closed. Verify the current publication/CI from GitHub without a self-referential evidence-only push.
+
+## Local frontend export intake — issue 10
+
+Owner is moving frontend work into this IDE rather than continuing it separately in Sites. Upload location: frontend/incoming/sites-export/ (full path under the project workspace), tracked only through .gitkeep; raw files/archives are ignored. Instructions are in frontend/incoming/README.md and frontend/README.md. Preserve the export, review its architecture/dependencies/assets/licenses and adapt or replace code against Specifications/FRONTEND_INTEGRATION.md and docs/reviews/0008-frontend-integration.md. Do not assume the prototype's backend assumptions are accepted.
+
+After files arrive, the intended first implementation is a separate loopback frontend development server with synthetic mock documents/typed fixture adapter, plus browser screenshots and interaction tests. Eventual built frontend assets are embedded in the single Rust runtime. Node/npm and cached Chromium binaries exist locally; no project-local Playwright harness/package is configured and no actual UI test is claimed. Do not borrow application code/runtime data from unrelated projects or treat cache presence as tested browser automation.
+
+No export is present and no frontend runtime has been created at this intake milestone. Frontend stack/package/build commands will be chosen after inspection; avoid blindly running import scripts. This request authorizes that frontend direction, not unrelated backend feature development. Prior 0.1.6 commit ba424c4 was pushed; all three hosted checks observed successful (Rust 40091928377, models 40091928388, extracted proof 40091928441), and issue 9 closed. Observe 0.1.7 publication/checks without an evidence-only follow-up push.

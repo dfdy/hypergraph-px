@@ -1,12 +1,12 @@
 # Hypergraph PX MU-F — product specification
 
-Status: current requirements, 2026-10-24. Project version 0.1.6. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
+Status: current requirements, 2026-10-24. Project version 0.1.7. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
 
 ## 1. Scope and architecture
 
 Hypergraph PX Multi-User Federated initially operates locally with one human. Explicit user, device, group and policy identities prepare for future multi-user and federated operation. Future collaboration must accommodate both live coediting and explicit branch/merge workflows. Internet federation and multi-user deployment are not enabled by the local milestone.
 
-Develop the browser editor independently from Rust domain/data/storage/transport layers. Release packaging embeds built HTML/CSS/JavaScript in one Rust executable. No Node/frontend/database server or Lean process is required at runtime. Platform library/static-link requirements must be documented per release target rather than calling every build fully static.
+Develop the browser editor in the local IDE/workspace independently from Rust domain/data/storage/transport layers. Begin with a separate local frontend development runtime and synthetic mock documents, with browser visual/interaction testing. Review imported visual prototypes against the frontend integration specification before adopting their architecture. Release packaging embeds built HTML/CSS/JavaScript in one Rust executable. No Node/frontend/database server or Lean process is required at runtime. Platform library/static-link requirements must be documented per release target rather than calling every build fully static.
 
 Source and work tracking are maintained at https://github.com/dfdy/hypergraph-px, a private repository. Original application code is AGPL-3.0-only; user content retains its own ownership/license.
 
