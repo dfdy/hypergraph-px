@@ -2,6 +2,12 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see SPECS/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.1.1 — 2026-10-24
+
+- Record observed successful 0.1.0 hosted Rust, Lean model and extracted-Rust proof checks.
+- Finalize the context-compaction handoff, resolved findings, explicit unimplemented boundaries and concrete resumption steps.
+- Record the owner's requested pause after the completed increment. No runtime/proof source or format changes.
+
 ## 0.1.0 — 2026-10-24
 
 - Add a separate trusted-server crypto adapter: XChaCha20-Poly1305 object envelopes, ciphertext-only SHA-256 storage addresses and bounded Argon2id passphrase-key wrapping.
