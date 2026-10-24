@@ -1,14 +1,14 @@
-# Hypergraph PX MU-F — initial canonical specification
+# Hypergraph PX MU-F — product specification
 
-Status: initial foundation, 2026-10-24. Current application version 0.1.1 (initial baseline 0.0.1). This specification consolidates the owner's confirmed restart decisions and the mathematics/encryption design principles. The supplied original/evolved specifications and development review are historical sources; implementation claims there do not transfer to this project.
+Status: current requirements, 2026-10-24. Project version 0.1.2. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
 
 ## 1. Scope and architecture
 
-Hypergraph PX Multi-User Federated is a fresh implementation. Its first delivered application operates locally with one human. Explicit user, device, group and policy identities prepare for future multi-user and federated operation. Future collaboration must accommodate both live coediting and explicit branch/merge workflows. Internet federation and multi-user deployment are not enabled by the local milestone.
+Hypergraph PX Multi-User Federated initially operates locally with one human. Explicit user, device, group and policy identities prepare for future multi-user and federated operation. Future collaboration must accommodate both live coediting and explicit branch/merge workflows. Internet federation and multi-user deployment are not enabled by the local milestone.
 
 Develop the browser editor independently from Rust domain/data/storage/transport layers. Release packaging embeds built HTML/CSS/JavaScript in one Rust executable. No Node/frontend/database server or Lean process is required at runtime. Platform library/static-link requirements must be documented per release target rather than calling every build fully static.
 
-The old Hypergraph PX directory is retired and reference-only. Do not carry forward its application code wholesale, runtime data, credentials or schema ladder. Import/migration is a separate future feature. Source and work tracking start at https://github.com/dfdy/hypergraph-px, created private. Original application code is AGPL-3.0-only; user content retains its own ownership/license.
+Source and work tracking are maintained at https://github.com/dfdy/hypergraph-px, a private repository. Original application code is AGPL-3.0-only; user content retains its own ownership/license.
 
 ## 2. Data and history invariants
 
@@ -51,11 +51,11 @@ Keep cryptographic transport/group-key agreement separate from document synchron
 
 ## 5. Editor and integrations
 
-Retain the desktop writing direction from the supplied application design: visible styled Markdown source, whole-document caret/selection/ownership mapping, contents, editor, minimap and Agent/Comments panel. Mobile is deferred. Document-local prose and repeated/nested source ownership are part of the core source model rather than late editor exceptions.
+Provide a desktop four-column writing interface, from left to right: (1) a contents tree of chapters, sections and subsections; (2) an editor showing styled Markdown source; (3) a document minimap for click/drag navigation and current-viewport indication; (4) a discussion panel with separate Agent and Comments tabs. Preserve whole-document caret, selection and source-ownership mapping. Comments are user-authored document annotations and remain separate from agent conversation. Mobile is deferred. Document-local prose and repeated/nested source ownership are part of the core source model rather than late editor exceptions.
 
 Human and agent principals remain distinct. Context selection, model output and document instructions grant no permissions. Proposals freeze exact targets, action scope, model/actor attribution and expected state; approval rechecks current rights. Mock proposal/approval/recovery precedes live authoring. External model disclosure is explicit and mode-dependent.
 
-Branch comparison/selected integration, anchored comments, typed reasoning annotations, graph navigation, read-only Zotero citation integration, export and shared REST/MCP interfaces remain planned product areas derived from the historical design. They have no implementation claim here. Confirm detailed milestones/contracts before enabling them; historical provider IDs/protocol revisions and configuration sketches are not fixed choices for this new codebase.
+Branch comparison/selected integration, anchored comments, typed reasoning annotations, graph navigation, read-only Zotero citation integration, export and shared REST/MCP interfaces are planned product areas. They are not implemented yet. Specify and validate detailed capability, provider and protocol contracts before enabling them.
 
 ## 6. Formal validation
 
@@ -67,14 +67,14 @@ Lean/Aeneas are build/CI tools, not runtime requirements. Preserve a testable pu
 
 ## 7. Initial implementation order and gates
 
-1. Repository/issue/source reading, confirmed architecture decisions and this specification.
+1. Repository/issue tracking, confirmed architecture decisions and current specifications.
 2. Pure constrained-graph validators and documented navigation contracts; first model obligations and Aeneas feasibility.
 3. Reviewed identities/canonical object and signed/encrypted envelope design, key lifecycle, authorization and storage publication/recovery.
 4. Minimal local encrypted persistence/drafts and independently developed whole-document editor, packaged/tested in the Rust executable.
 5. Branch/compare/selected integration and human/mock-agent structural workflows with crash/permission/provenance evidence.
 6. Remaining local integrations and hardening; future multi-user, offline exchange, federation and client-held mode through separate explicit acceptance gates.
 
-Use a bounded issue per increment, reproducible checks, license/provenance accounting, pure-core property/differential tests, recovery/failpoint tests and real-browser embedded/development parity. Do not treat disconnected internal primitives as a complete editor milestone. The in-memory trusted-server adapter now defines versioned object/key envelope bytes in ADR 0002. This is not a complete encrypted storage mode: durable publication, policy enforcement, OS-keychain integration, the editor and federation remain unimplemented.
+Use a bounded issue per increment, reproducible checks, license/provenance accounting, pure-core property/differential tests, recovery/failpoint tests and real-browser embedded/development parity. Do not treat disconnected internal primitives as a complete editor milestone. The in-memory trusted-server adapter now defines versioned object/key envelope bytes in [the encryption specification](DATA/ENCRYPTION.md) and [ADR 0002](../docs/adr/0002-trusted-server-envelopes.md). This is not a complete encrypted storage mode: durable publication, policy enforcement, OS-keychain integration, the editor and federation remain unimplemented.
 
 
 ## 8. Semantic versioning and milestone publication

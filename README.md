@@ -28,7 +28,7 @@ See [development state and handoff](docs/DEVELOPMENT_STATE.md) for current progr
 
 ## Current status
 
-Architecture decisions, a pure Rust expansion validator and an in-memory trusted-server cryptographic adapter. Authenticated object/passphrase-key envelopes are implemented; no durable workspace storage, browser editor or running service is implemented in this repository yet. The old application's tests and implementation status do not describe this project.
+Architecture decisions, a pure Rust expansion validator and an in-memory trusted-server cryptographic adapter. Authenticated object/passphrase-key envelopes are implemented; no durable workspace storage, browser editor or running service is implemented in this repository yet.
 
 Confirmed starting constraints:
 
@@ -39,9 +39,9 @@ Confirmed starting constraints:
 - A technical data-structure/navigation reference maintained alongside the implementation.
 - GitHub tracking and source control from the beginning.
 
-Start with [source-document status](SPECS/README.md), the [foundation review](SPECS/ARCHITECTURE_REVIEW.md) and the [data architecture/navigation reference](SPECS/DATA/README.md). These identify confirmed decisions and pending proposals separately. The [initial canonical specification](SPECS/SPECIFICATION.md) consolidates confirmed requirements; the historical evolved specification is not silently adopted as current authority.
+Start with the [specification index](Specifications/README.md), [architecture](Specifications/ARCHITECTURE.md) and [data structures/navigation reference](Specifications/DATA/README.md). The [product specification](Specifications/SPECIFICATION.md) defines confirmed requirements. The [mathematical model](Specifications/DATA/MATHEMATICAL_MODEL.md) and [encryption specification](Specifications/DATA/ENCRYPTION.md) explain core invariants and security boundaries. These documents distinguish implemented behavior from planned work.
 
-No application launch command exists yet; the pure-core check commands are below. Original code is AGPL-3.0-only, confirmed by the owner. Current project version is **0.1.1**. Follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); increment the version before each milestone push introducing new changes. See [CHANGELOG.md](CHANGELOG.md).
+No application launch command exists yet; the pure-core check commands are below. Original code is AGPL-3.0-only, confirmed by the owner. Current project version is **0.1.2**. Follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); increment the version before each milestone push introducing new changes. See [CHANGELOG.md](CHANGELOG.md).
 
 Initial core checks:
 
@@ -54,6 +54,6 @@ cargo test --workspace --locked
 
 ## Initial verification
 
-Eight Rust tests pass: three envelope tests cover context/tamper/resource rejection and passphrase rewrapping, and five domain tests include all 512 directed three-vertex graphs against an independent reachability oracle, repeated dependencies, invalid inputs and exact resource budgets. Formatting and strict all-target Clippy pass. Four Lean graph-model theorems now check with Lean 4.35.0 and report no axioms. This does not prove the Rust validator: strict whole-validator translation currently fails on supported-subset/model limits, while its unchanged real Rust budget helper has a checked extracted-semantics proof. Durable encrypted storage, OS-keychain integration, the editor and single-executable runtime packaging remain implementation work; no retired-project evidence is counted here. See [formal assurance](proofs/README.md) and the [human-readable Lean validation digest](proofs/VALIDATION_DIGEST.md).
+Eight Rust tests pass: three envelope tests cover context/tamper/resource rejection and passphrase rewrapping, and five domain tests include all 512 directed three-vertex graphs against an independent reachability oracle, repeated dependencies, invalid inputs and exact resource budgets. Formatting and strict all-target Clippy pass. Four Lean graph-model theorems now check with Lean 4.35.0 and report no axioms. This does not prove the Rust validator: strict whole-validator translation currently fails on supported-subset/model limits, while its unchanged real Rust budget helper has a checked extracted-semantics proof. Durable encrypted storage, OS-keychain integration, the editor and single-executable runtime packaging remain implementation work. See [formal assurance](proofs/README.md) and the [human-readable Lean validation digest](proofs/VALIDATION_DIGEST.md).
 
 The [crypto adapter reference](crates/crypto/README.md) and [ADR 0002](docs/adr/0002-trusted-server-envelopes.md) describe the implemented byte formats, keys, resource limits and security assumptions. Its tests are separate from the Lean evidence; no crypto proof is claimed.

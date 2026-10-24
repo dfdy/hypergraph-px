@@ -2,7 +2,7 @@
 
 Status: accepted foundation decisions, owner confirmed 2026-10-24. Tracking: https://github.com/dfdy/hypergraph-px/issues/1.
 
-- Fresh project in Hypergraph PX MU-F, old project reference-only; source repository dfdy/hypergraph-px.
+- Project workspace Hypergraph PX MU-F; source repository dfdy/hypergraph-px.
 - One human locally first; users/devices/groups are distinct design identities now.
 - Separate frontend/domain/data development with single embedded-frontend Rust executable release.
 - Trusted-server encryption first/default; client-held mode planned and unavailable until implemented.

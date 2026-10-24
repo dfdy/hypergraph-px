@@ -1,6 +1,12 @@
 # Changelog
 
-Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see SPECS/SPECIFICATION.md §8 for the initial-development convention and push policy.
+Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
+
+## 0.1.2 — 2026-10-24
+
+- Publish a self-contained Specifications directory for current product, architecture, mathematical, data/navigation and encryption contracts.
+- Keep reference/source material local and excluded from publication; keep reports and proof evidence outside Specifications.
+- Update documentation links and resumption instructions without changing runtime behavior, proof source or data formats.
 
 ## 0.1.1 — 2026-10-24
 

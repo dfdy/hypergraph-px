@@ -104,7 +104,7 @@ e689f045cddc89a7d4e8acf0533edec9d0f7ffdb113d6566f7d890405c7f387e  proofs/lean/Hy
 74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad  crates/domain/src/expansion.rs
 ```
 
-The Rust hash identifies the related implementation. The full validator remains unverified; §7 now binds a checked extraction of its private spend helper to that same source. Tool licenses/origins are in [TOOLING.md](../legal/TOOLING.md). [Issue 2](https://github.com/dfdy/hypergraph-px/issues/2) and [work record](../docs/work/0002-lean-foundation.md) retain scope and CI evidence. No retired-project proof/test result is reused.
+The Rust hash identifies the related implementation. The full validator remains unverified; §7 now binds a checked extraction of its private spend helper to that same source. Tool licenses/origins are in [TOOLING.md](../legal/TOOLING.md). [Issue 2](https://github.com/dfdy/hypergraph-px/issues/2) and [work record](../docs/work/0002-lean-foundation.md) retain scope and CI evidence.
 
 ## 5. Reproducing and extending the evaluation
 
