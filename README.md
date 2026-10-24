@@ -6,7 +6,7 @@ I am developing Hypergraph PX as a writing and thinking tool for my doctoral dis
 
 ![Screenshot of Hypergraph PX](docs/images/Screenshot.png)
 
-*Figure 1: Hypergraph PX showing the document editor. Please note this is an early screenshot and the editor is not yet fully implemented.*
+*Figure 1: Hypergraph PX showing the document editor. Please note this is an early screenshot, the editor is not yet fully implemented.*
 
 Conventional documents are organised as trees: documents contain sections, sections contain paragraphs, and paragraphs contain sentences. Hypergraph PX preserves this familiar structure while extending it through a network of relationships between content, its origins, its revisions, and its uses across different documents.
 
