@@ -65,3 +65,12 @@ Require an early complete editor workflow: owned whole-buffer editing, five-seco
 Frontend implementation coordination is defined in [FRONTEND_INTEGRATION.md](FRONTEND_INTEGRATION.md). Its fixture-first work order and behavioral contracts do not settle the outstanding durable-format, transport DTO, authentication or recovery mechanisms listed above.
 
 The Users tab is a permission-scoped document-contributor projection over attribution/provenance, with current human/agent context pinned separately; it is independent of session presence and workspace membership. A derived contributor index requires no change to the core typed-graph model and grants no additional historical access.
+
+
+## Workspace reuse and investigation design dependencies
+
+[WORKSPACE_INTERFACE.md](WORKSPACE_INTERFACE.md) defines required planned behavior. Extend domain planning for revision-aware anchors, ordered composite documents, cross-identity fork events and complete pinned/live occurrence closure. A source head advance can introduce a new expansion cycle; the resolver must validate the resulting dependency view, not rely on insertion-time checks. Concepts/assertions use ordinary content/references; accepted semantic state and retrospective overlays have distinct snapshot bindings.
+
+Application commands coordinate source promotion, destination publication and protected principal/workspace clipboard state. Copy-triggered promotion requires explicit publication confirmation and must not silently commit unrelated drafts. Read permission is not derivation/redistribution authority. Atomic Paste All requires complete validation; clipboard clearing follows committed receipts and reconciles unknown outcomes. A separate private-state store needs an explicit crash-safe coordination protocol, not an assumed cross-store transaction.
+
+Derived indexes cover cross-document backlinks, occurrences, contributors and lineage with explicit permission/view/budget scope. Sensitive private clipboard previews/anchors require encryption and key-lock/revocation handling; display preferences remain non-sensitive. Pinned investigation context is not a continuing authorization grant. No new services, schema, database or provider protocol is selected. Frontend runtime implementation remains paused.

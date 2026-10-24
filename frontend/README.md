@@ -1,6 +1,6 @@
 # Local frontend development
 
-Status: intake prepared; no frontend export, package or runnable frontend has been integrated yet.
+Status: raw export received and inspected; no accepted frontend package or runnable frontend has been integrated. **Implementation is paused by the owner pending specification changes.** The updated [workspace interface contract](../Specifications/WORKSPACE_INTERFACE.md) applies when work is explicitly resumed.
 
 ## Upload location
 
