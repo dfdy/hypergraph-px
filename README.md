@@ -42,7 +42,7 @@ These aims describe direction rather than a release-date commitment. Detailed me
 
 ## Current status
 
-Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.6**; license: [AGPL-3.0-only](LICENSE).
+Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.7**; license: [AGPL-3.0-only](LICENSE).
 
 ## Developer installation
 
@@ -63,7 +63,7 @@ cargo +stable build --workspace --locked
 cargo +stable test --workspace --locked
 ```
 
-This currently builds Rust library crates; there is no application launch command yet. No Node.js or frontend setup is required at this stage.
+This currently builds Rust library crates; there is no application launch command yet. Rust-only checks do not require Node.js. The [frontend intake guide](frontend/README.md) describes the upload location and planned separate mock-data development runtime; frontend setup commands will be documented after the export is reviewed.
 
 Before contributing, run formatting and lint checks:
 

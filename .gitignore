@@ -28,3 +28,7 @@
 # Local source/reference material excluded from publication.
 /SPECS/
 /docs/source-reading-record.md
+
+# Raw frontend exports stay local until reviewed and adapted.
+/frontend/incoming/sites-export/*
+!/frontend/incoming/sites-export/.gitkeep
