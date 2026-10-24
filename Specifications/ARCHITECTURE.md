@@ -17,7 +17,7 @@ Develop the browser frontend independently from Rust data and application proces
 | Application layer | Trusted principal/device resolution, command authorization, exact expected-state checks, previews and receipts | Planned |
 | Storage layer | Canonical immutable records, one authoritative publication model, recoverable indexes and mutable durable drafts | Planned; no database or publication mechanism selected |
 | Transport/bootstrap | Local HTTP API, REST/MCP adapters, authentication, configuration and embedded asset delivery | Planned |
-| Browser frontend | Whole-document editor/source mapping, contents, minimap, Agent/Comments/Users, acknowledgement reconciliation | Planned; frontend libraries not selected |
+| Browser frontend | Whole-document editor/source mapping, contents, minimap, Agent/Comments/Users, acknowledgement reconciliation | Synthetic frontend-only preview uses CodeMirror 6/KaTeX; live services and durable acknowledgements planned |
 | Integration adapters | Explicitly scoped model calls, citation reads, export and future synchronization | Planned |
 | `proofs` | Lean models, selected extracted-Rust proofs and reproducible development/CI checking | Four model theorems and one extracted-helper theorem checked; see the validation digest |
 
@@ -73,4 +73,4 @@ The Users tab is a permission-scoped document-contributor projection over attrib
 
 Application commands coordinate source promotion, destination publication and protected principal/workspace clipboard state. Copy-triggered promotion requires explicit publication confirmation and must not silently commit unrelated drafts. Read permission is not derivation/redistribution authority. Atomic Paste All requires complete validation; clipboard clearing follows committed receipts and reconciles unknown outcomes. A separate private-state store needs an explicit crash-safe coordination protocol, not an assumed cross-store transaction.
 
-Derived indexes cover cross-document backlinks, occurrences, contributors and lineage with explicit permission/view/budget scope. Sensitive private clipboard previews/anchors require encryption and key-lock/revocation handling; display preferences remain non-sensitive. Pinned investigation context is not a continuing authorization grant. No new services, schema, database or provider protocol is selected. Frontend runtime implementation remains paused.
+Derived indexes cover cross-document backlinks, occurrences, contributors and lineage with explicit permission/view/budget scope. Sensitive private clipboard previews/anchors require encryption and key-lock/revocation handling; display preferences remain non-sensitive. Pinned investigation context is not a continuing authorization grant. No new services, schema, database or provider protocol is selected. Frontend-only fixture implementation is resumed; no backend runtime is enabled. The test preview has no sign-in, while future real-data authentication gates remain required.

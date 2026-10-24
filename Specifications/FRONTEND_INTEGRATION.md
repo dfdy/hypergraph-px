@@ -4,11 +4,11 @@ Status: development coordination specification, 2026-10-24. Audience: the agent 
 
 The behavioral requirements below govern frontend development. Adapter concepts and candidate HTTP routes are design targets, **not implemented endpoints, a frozen JSON schema or a durable storage format**. The product specification takes precedence. Agree executable DTO/schema fixtures with Rust implementation before connecting real data. Interface-study versions, application versions and transport-contract versions are independent.
 
-The [workspace interface specification](WORKSPACE_INTERFACE.md) refines the desktop layout, multi-document/reuse semantics and investigation workflows. Its sections define the durable clipboard/promotion/transclusion and backend gates. The owner has **paused frontend implementation**; this specification update authorizes no runtime work. Resume the staged work below only after explicit instruction.
+The [workspace interface specification](WORKSPACE_INTERFACE.md) refines the desktop layout, multi-document/reuse semantics and investigation workflows. Its sections define the durable clipboard/promotion/transclusion and backend gates. The owner has **resumed frontend-only implementation** and explicitly waived authentication for the synthetic test preview. This does not authorize backend services, real-data access or removal of future authentication gates.
 
 ## 1. Current boundary and staged delivery
 
-The repository implements a pure Rust expansion validator and an in-memory cryptographic adapter. It has **no HTTP server, authentication/session service, draft store, publication service, frontend package or live REST/MCP endpoints**. Crypto functions are not browser API endpoints. Frontend library selection is not fixed by this specification.
+The repository implements a pure Rust expansion validator and an in-memory cryptographic adapter. It has **no Rust HTTP server, authentication/session service, draft store, publication service or live REST/MCP endpoints**. Crypto functions are not browser API endpoints. A separate synthetic preview now uses reviewed, pinned CodeMirror 6 and KaTeX packages; its simulated state is not a Rust service or durability result. See [frontend setup](../frontend/README.md).
 
 Build a desktop interface against a replaceable typed application adapter. A fixture adapter may simulate the required state transitions with synthetic data; an HTTP adapter will later invoke the same application use cases. Show fixture mode persistently as **Demonstration — changes in this tab only**. Do not label fixture operations durable, committed to Rust, authenticated, encrypted at rest or restart-safe. A failed live connection must never silently switch to fixtures or report a successful save.
 
@@ -29,6 +29,8 @@ Comments/agent visual panels can be demonstrated in A; their persistence/live ex
 Default left-to-right layout: **workspace/contents navigator → styled Markdown source editor → document minimap → split right sidebar** (upper Interaction: Agent, Comments, Users; lower Investigation: Concepts, Relationships, Sources, Provenance, History). Keep this order. Minimap navigation and current-viewport indication must stay synchronized with the same editor projection as the contents tree. Mobile responsiveness is deferred.
 
 The browser owns presentation, input/IME, local transactions, caret/selection, focus, undo/redo and display preferences. Rust application services own authoritative identities, source ownership, permissions, validation, draft durability, proposal approval, publication, provenance and recovery. The browser may track tentative mappings to preserve editing responsiveness; Rust independently validates mappings before accepting writes.
+
+Provide separate Paragraph (¶) and H1–H4 controls instead of a style dropdown. Highlight the block style at the caret and show parsed Bold/Italic/Blockquote/Bulleted/Numbered-list context; active formatting toggles off and list conversion preserves nesting. Chapter disclosure arrows expand/collapse their own outlines independently from opening a chapter. The minimap uses the editor's actual line/wrapping/widget geometry and uniformly scaled viewport, not an independently wrapped text stream. Name individual interface controls/actionable items with delayed tooltips (exclude editor surfaces and large panel containers) after more than three seconds of hover (preview delay 3.1 seconds), suppress early native-title popups, and preserve accessible names and keyboard equivalents.
 
 Keep buttons and labels honest. Distinguish document text editing from structural publication and distinguish a temporary download from a saved draft. Provide keyboard operation/focus restoration for contents, minimap, dialogs, resizable panels and tabs. Unsupported actions have an explanatory unavailable state; a visually enabled control is never an authorization grant.
 
@@ -242,7 +244,7 @@ No frontend provider ID, database schema, cryptographic format, MLS transport or
 
 ## 9. Acceptance scenarios and handoff checklist
 
-When implementation resumes, the frontend agent should deliver its interface code, an adapter boundary, synthetic fixtures and executable UI/adapter tests for these scenarios. Report which were actually run; fixtures cannot establish Rust durability/security. Tests against a real backend are required for the corresponding integration gate.
+The frontend agent should deliver its interface code, an adapter boundary, synthetic fixtures and executable UI/adapter tests for these scenarios. Report which were actually run; fixtures cannot establish Rust durability/security. Tests against a real backend are required for the corresponding integration gate.
 
 | Scenario | Expected observable result |
 |---|---|
@@ -273,7 +275,7 @@ Before enabling live writes, both frontend and Rust developers must agree execut
 
 ## 10. Work order for the frontend agent
 
-After explicit resumption, start with stage A and keep the visual implementation behind the adapter in §3. Use synthetic fixtures with repeated/nested content, document-local prose, inserted text, Unicode, a small table and mapped formula source. Include pinned human/agent, other/offline contributors, a logged-in noncontributor, missing-agent and unknown/mixed authorship fixtures without inventing authenticated peers or crediting imported text to the current user. Implement controllable delayed acknowledgements, conflicts, locked/unavailable states and uncertain commit outcomes so the UI can exercise §§4–6 without real storage. Show fixture status and keep advanced live capabilities unavailable.
+Start with stage A and keep the visual implementation behind the adapter in §3. Use synthetic fixtures with repeated/nested content, document-local prose, inserted text, Unicode, a small table and mapped formula source. Include pinned human/agent, other/offline contributors, a logged-in noncontributor, missing-agent and unknown/mixed authorship fixtures without inventing authenticated peers or crediting imported text to the current user. Implement controllable delayed acknowledgements, conflicts, locked/unavailable states and uncertain commit outcomes so the UI can exercise §§4–6 without real storage. Show fixture status and keep advanced live capabilities unavailable.
 
 Deliver the interface, adapter/fixture modules, setup instructions, dependencies/licenses and the actual browser/adapter checks executed against §9. Document unanswered transport/schema questions for the Rust developer. Do not implement graph authority, invent a database/encryption format, connect a real provider, or claim real durability to make a visual control appear finished. Move to stage B only after its backend contract and acceptance gate exist.
 

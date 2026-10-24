@@ -1,0 +1,21 @@
+# Frontend preview — issue 11
+
+Owner resumed frontend-only work on 2026-10-24; testing preview requires no authentication. No backend service is enabled. Implement synthetic tab-only documents behind a fixture adapter; use independently built static assets for eventual Rust embedding. Preserve raw export and private manuscript inputs outside Git.
+
+Invariants: no fake persistent save/graph commits or provider calls; delayed fixture acknowledgements never overwrite newer typing; different document contexts retain separate state and undo; provenance clipboard is explicitly simulated, not restart-safe; source math remains exact. Tests: pure adapter delayed ack/isolation and captured source; actual browser editing/undo/navigation/table/math/panels/clipboard/download with screenshots and no page errors. Recovery: reload resets synthetic state, warn on unsaved changes; no plaintext browser draft persistence. Imported code license reviewed as owner AGPL-3.0-only; resolved npm manifests reviewed before execution. Runtime/proof Rust source unchanged.
+
+## Implemented and checked — 0.2.0
+
+Delivered a standalone loopback static preview at http://127.0.0.1:5173/ with no authentication. CodeMirror editor, synthetic six-chapter workspace, outline/minimap, split panels, pinned investigation, contributor display, table and maths source widgets, tab-only clipboard/paste, test comments and contextual semantic review are interactive. Actual graph publication/provider calls/durable recovery remain unavailable.
+
+Selective adoption hashes and exclusions: frontend/SOURCE_PROVENANCE.json. Reviewed all 54 resolved npm entries including optional platform binaries; exact version/integrity/SPDX inventory in legal/FRONTEND_DEPENDENCIES.json. Application AGPL, linked editor/renderer/build packages MIT, browser tooling Apache-2.0; generated build includes installed license notices and LICENSE. No raw manuscript or original bundle is tracked.
+
+Thirteen Node tests and fourteen Chromium scenarios passed locally; screenshots inspected at 1600x1000 and 1440x900, with no horizontal overflow at the latter. No page errors across browser scenarios. Local links/fences (12 documents, 85 links), synchronized 0.2.0 metadata, privacy boundaries, unchanged extracted Rust source hash, whitespace, cargo check and formatting passed. A fresh-install reproduction is recorded with its actual result below.
+
+Resolved: outline label property mismatch; ambiguous download test selector; false one-undo-group test assumption; repeated table-value source lookup; source-sequence recheck for stale comment navigation. These are frontend changes/test corrections, not backend recovery proofs. CI/publication are observed after push, with final results recorded in issue 11 to avoid an evidence-only version increment.
+
+## Owner live-feedback fixes
+
+Corrected independent minimap wrapping: use uniform scale of measured visible editor lines/widgets and estimated offscreen CodeMirror blocks; map viewport uses that same coordinate transform. Browser geometry checks pass after scrolling, font/wrap changes and rendered maths. Unique source headings avoid matching repeated note paragraphs in geometry tests. Added independent accessible chapter disclosure arrows, contextual Paragraph/H1–H4 buttons, parsed Bold/Italic/Quote/Bulleted/Numbered toggles and Markdown list continuation. Numbered-marker width changes reindent nested items to preserve their structure. Added delegated dynamic tooltips at 3.1 seconds, preserving names while suppressing earlier native-title popups; restart timing after scroll-to-view. No backend operations were enabled.
+
+Fresh-install reproduction executed successfully: npm ci --ignore-scripts followed by build and the then-current eight Node/eight browser cases. After owner feedback, current build, thirteen Node cases and fourteen browser cases passed; targeted tooltip checks rerun after the final naming/exclusion change. Large editor/panel surfaces are excluded from hover tooltips. Table cell edits now replace only exact trimmed source ranges, preserving untouched cell attribution and raw formatting; repeated values, escaped/code pipes and whitespace-only cells have regression coverage.

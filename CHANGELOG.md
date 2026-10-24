@@ -2,6 +2,14 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.2.0 — 2026-10-24
+
+- Add a runnable frontend-only loopback preview, no sign-in, with reviewed CodeMirror/KaTeX dependencies and static release-build inputs.
+- Implement six synthetic chapters, owned tab-local source/undo state, outline/minimap, formatting, table/maths views, split panels, contributors, pinned context and appearance controls.
+- Add explicitly simulated provenance clipboard/fork-paste, local comments and contextual semantic review; preserve captured source and delayed checkpoint sequences.
+- Align minimap with actual editor geometry; add independent chapter disclosure, contextual Paragraph/H1–H4/inline/list controls, numbered lists and 3.1-second control tooltips excluding large surfaces.
+- Add source/dependency provenance, generated notices, meaningful adapter/source and Chromium workflow tests and frontend CI. No Rust runtime API, durable graph/storage, live provider call or new Lean proof.
+
 ## 0.1.8 — 2026-10-24
 
 - Integrate multi-document/composite navigation, split Interaction/Investigation panels and contextual concept/assertion workflows into current specifications.

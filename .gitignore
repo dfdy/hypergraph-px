@@ -32,3 +32,8 @@
 # Raw frontend exports stay local until reviewed and adapted.
 /frontend/incoming/sites-export/*
 !/frontend/incoming/sites-export/.gitkeep
+
+# Accepted frontend generated assets and local browser traces.
+/frontend/dist/
+/frontend/test-results/
+/frontend/playwright-report/
