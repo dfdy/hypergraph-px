@@ -74,3 +74,8 @@ Specify data-key hierarchy, domain separation, rotation, historical grants, reco
 ## Validation boundary
 
 The adapter's Rust tests cover round-trips, independent encryption of equal content, tampering/context substitution, malformed/resource limits and passphrase rewrap preserving access to existing ciphertext. Dependency versions/checksums/licenses are recorded in [the runtime inventory](../../legal/RUST_DEPENDENCIES.json). No crypto function is Lean verified. Primitive correctness, OS entropy, client integrity, process memory and future I/O remain explicit trust assumptions. Formal-assurance evidence stays in the [Lean validation digest](../../proofs/VALIDATION_DIGEST.md), separate from these requirements.
+
+
+## Browser–runtime channel priority
+
+Encrypted authenticated transport is an important medium-term requirement in every key-custody mode, including local loopback. Storage AEAD and client-held content encryption do not replace HTTPS/WSS or runtime endpoint authentication. See [transport security](../TRANSPORT_SECURITY.md) for the real-data integration gate and certificate trust/bootstrap obligations. No browser/runtime TLS channel is implemented by this byte-encryption adapter or synthetic preview.

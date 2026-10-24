@@ -8,6 +8,7 @@ This directory contains the current specifications for Hypergraph PX Multi-User 
 | [Frontend integration](FRONTEND_INTEGRATION.md) | Frontend-agent work order, fixture/live boundaries, source mapping, drafts, commands, contributors/authorship, maths, exact export, reviewed GitHub publication and acceptance scenarios |
 | [Workspace interface](WORKSPACE_INTERFACE.md) | Multi-document compositions, split investigation panels, anchored reuse, private provenance clipboard, semantic assertions and backend gates |
 | [Word review import](WORD_REVIEW_IMPORT.md) | Future branch/snapshot matching for Word tracked changes/comments and virtual Word Revision attribution |
+| [Transport security](TRANSPORT_SECURITY.md) | Medium-term browser/runtime HTTPS/WSS requirement, local certificate trust/bootstrap and real-data integration gate |
 | [Architecture](ARCHITECTURE.md) | Component boundaries, command/data flow, single-executable packaging and outstanding mechanism decisions |
 | [Mathematical model](DATA/MATHEMATICAL_MODEL.md) | Typed graph projections, identity, temporal state, provenance and exact snapshot semantics |
 | [Data structures and navigation](DATA/README.md) | Proposed data/query contracts, actual Rust APIs, complexity, budgets, errors and examples |

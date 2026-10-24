@@ -2,6 +2,10 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.5.4 — 2026-10-25
+
+- Prioritize authenticated encrypted browser/runtime communication, including loopback, before real-data integration. Specify HTTPS/WSS, secure bootstrap and certificate trust/lifecycle decisions independently of storage/client-held encryption. Requirements only; no runtime TLS implementation.
+
 ## 0.5.3 — 2026-10-25
 
 - Refresh the README desktop screenshot from the current synthetic preview and clarify its fixture-only caption.

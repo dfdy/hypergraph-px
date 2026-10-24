@@ -1,6 +1,6 @@
 # Development state and context-compaction handoff
 
-Last updated: 2026-10-24. **Current work: capture and publish README screenshot refresh 0.5.3 (issue 17). Owner explicitly lifted the publication hold with “Push to github”. Frontend-only scope and authentication waiver for the synthetic preview remain. Local preview: http://127.0.0.1:5173/. Historical hold statements below describe earlier instructions.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
+Last updated: 2026-10-24. **Current work: document medium-term encrypted browser/runtime priority in 0.5.4 (issue 18). Owner explicitly lifted the publication hold with “Push to github”. Frontend-only scope and authentication waiver for the synthetic preview remain. Local preview: http://127.0.0.1:5173/. Historical hold statements below describe earlier instructions.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
 
 ## Workspace and authorization
 
@@ -249,3 +249,10 @@ Executed for 0.5.2: five repeated drag-snapping browser scenarios passed with fr
 0.5.2 ac824b94e98ed0e7b252a4c34e5cf9b36dd6fdb5 was verified pushed with a clean matching remote. All four hosted workflows succeeded: Frontend 40136732913, Rust 40136732920, Lean models 40136732923, extracted Rust proof 40136732910. Completion/evidence and the failed timing-only diagnosis are recorded in issue 16; issues 14–16 closed.
 
 Owner requested automatic screenshot replacement. Added frontend/scripts/capture-readme.mjs and npm screenshot command: rebuild static assets, start an owned loopback synthetic preview on 5193, open a fresh 1600x1000 Chromium context, await fonts/layout, check page errors/overflow, write docs/images/Screenshot.png, close browser/server. Human preview on 5173 and its browser state are untouched. Only fixture data is captured; image intentionally tracked as documentation, not a test trace. README caption/alt text updated. Screenshot command executed successfully and resulting PNG visually inspected. No app runtime source, dependencies or proof guarantees changed. PATCH 0.5.3 metadata synchronized by named entries only; publication evidence follows execution.
+
+
+## Medium-term transport priority — 0.5.4 / issue 18
+
+Owner requires encrypted browser/runtime communication as an important medium-term priority. Specifications/TRANSPORT_SECURITY.md now requires authenticated HTTPS (assets/bootstrap/API/streaming) and WSS where used, including loopback, before real-data browser integration. Keep storage AEAD, authentication/authorization, client-held content confidentiality and egress policy distinct. Certificate issuance, local OS/browser trust/bootstrap, key protection/lifecycle and development/release parity require an ADR before implementation; do not assume a self-signed certificate warning bypass is sufficient. One Rust executable remains the release product. No TLS dependency, runtime connection or formal guarantee is introduced. Current HTTP preview remains synthetic-only with no Rust API.
+
+README, product/architecture/encryption/frontend specifications, specification index and task queue reflect the priority. PATCH 0.5.4 synchronizes metadata by named entries only. Issue 18 remains a future implementation item; publication of requirements does not complete the security gate. Screenshot publication 0.5.3 was verified pushed as fb278a65fedeedf447f22420d2b76f5ba99a3b33; do not infer its hosted results from earlier milestones.

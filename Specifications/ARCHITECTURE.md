@@ -8,6 +8,8 @@ The initial application runs locally for one human. Model users, devices, groups
 
 Develop the browser frontend independently from Rust data and application processes. Development may use a frontend development server with a defined API/proxy contract. Production builds embed the compiled HTML/CSS/JavaScript in one Rust executable that owns startup, storage, application services, transport and asset delivery. Node, Lean and a separate database/frontend server are not runtime requirements. Describe platform libraries accurately for each release target.
 
+Medium-term integration gate: the browser/runtime boundary uses authenticated encrypted transport, including loopback. The Rust executable owns secure asset/API delivery; certificate trust/bootstrap and development parity require an ADR before implementation. See [transport security](TRANSPORT_SECURITY.md). This is independent of content-key custody and remains unimplemented.
+
 ## Responsibility boundaries
 
 | Component | Responsibility | Implementation status |
