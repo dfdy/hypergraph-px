@@ -39,7 +39,7 @@ Durability acceptance includes interrupted staging/publication, disk/write/fsync
 
 ## 4. Encryption and authority
 
-Trusted-server mode is the initial implementation and default: an unlocked trusted Rust process may decrypt permitted data for editing/search/compilation and approved integrations. Encrypt complete historical content and sensitive derived state at rest, including manifests/provenance, indexes/drafts and backups as applicable. Encryption suites, nonce/key envelopes, master-key unlock/recovery and authenticated contexts require an explicit security design, established libraries and tests.
+Trusted-server mode is the initial implementation and default: an unlocked trusted Rust process may decrypt permitted data for editing/search/compilation and approved integrations. Support passphrase and OS-keychain startup unlock, with passphrase unlock the default. Login authentication remains distinct from storage-key unlock; keychain use is an explicit alternative. Encrypt complete historical content and sensitive derived state at rest, including manifests/provenance, indexes/drafts and backups as applicable. Encryption suites, nonce/key envelopes, master-key unlock/recovery and authenticated contexts require an explicit security design, established libraries and tests.
 
 Client-held encryption is designed into identities, policies and execution boundaries now, but remains explicitly unavailable until implemented. In that mode the hosting server must not gain plaintext/decryption keys through configuration. Operations requiring plaintext run at an authorized client boundary or report unavailable; no silent server delegation or mode downgrade is permitted.
 
@@ -47,7 +47,7 @@ Authenticated workspace/group security policy controls key custody and migration
 
 Initial future sharing scope is workspace/document. Full retained history is shared only by explicit grant. Current-state sharing must specify dependencies/provenance disclosure and opaque/hidden inaccessible references; read permission does not automatically imply every historical key.
 
-Keep cryptographic transport/group-key agreement separate from document synchronization, authorization, conflict resolution and archival access. MLS is a candidate for future group transport, not an adopted implementation or complete federation protocol. Reject silent security downgrades. Browser-delivered E2EE does not resist a malicious code-serving server without a separately trusted client/distribution assumption; that threat model must be stated before claiming such protection.
+Keep cryptographic transport/group-key agreement separate from document synchronization, authorization, conflict resolution and archival access. MLS is a candidate for future group transport, not an adopted implementation or complete federation protocol. Reject silent security downgrades. Retain both browser-only and independently trusted client deployment paths for future client-held mode. The stronger guarantee against a malicious hosting server changing editor code requires the independently trusted client and update channel; browser-only deployments must explicitly exclude malicious client-code delivery from their confidentiality guarantee. A client/server deployment role need not imply distinct application implementations.
 
 ## 5. Editor and integrations
 
@@ -63,7 +63,7 @@ Keep critical validators pure and deterministic. Lean models/proofs target occur
 
 For every property distinguish proposed obligation, checked Lean model, differential/property-test evidence and actual extracted-Rust correspondence proof. Document toolchain versions and trusted assumptions, including cryptographic libraries, entropy, I/O and client integrity. No whole-application security or Rust correctness claim follows from model-only proofs.
 
-Lean/Aeneas are build/CI tools, not runtime requirements. Preserve a testable pure core even for functions not supported by extraction. All proof/test results must be actual executed evidence.
+Lean/Aeneas are build/CI tools, not runtime requirements. Preserve a testable pure core even for functions not supported by extraction. All proof/test results must be actual executed evidence. Maintain a human-readable digest of every Lean-validated function/theorem for developer/mathematician evaluation, including its guarantee, assumptions, proof technique, exact source/toolchain and Rust correspondence status.
 
 ## 7. Initial implementation order and gates
 

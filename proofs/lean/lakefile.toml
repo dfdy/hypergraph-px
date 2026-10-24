@@ -1,0 +1,7 @@
+name = "hypergraphProofs"
+version = "0.0.1"
+defaultTargets = ["Hypergraph"]
+moreLeanArgs = ["-DwarningAsError=true"]
+
+[[lean_lib]]
+name = "Hypergraph"
