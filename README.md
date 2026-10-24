@@ -39,7 +39,7 @@ Confirmed starting constraints:
 
 Start with [source-document status](SPECS/README.md), the [foundation review](SPECS/ARCHITECTURE_REVIEW.md) and the [data architecture/navigation reference](SPECS/DATA/README.md). These identify confirmed decisions and pending proposals separately. The [initial canonical specification](SPECS/SPECIFICATION.md) consolidates confirmed requirements; the historical evolved specification is not silently adopted as current authority.
 
-No application launch command exists yet; the pure-core check commands are below. Original code is AGPL-3.0-only, confirmed by the owner. Initial package version is 0.0.1; release/schema policy will be refined separately.
+No application launch command exists yet; the pure-core check commands are below. Original code is AGPL-3.0-only, confirmed by the owner. Current project version is **0.0.2**. Follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); increment the version before each milestone push introducing new changes. See [CHANGELOG.md](CHANGELOG.md).
 
 Initial core checks:
 
