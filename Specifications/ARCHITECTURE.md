@@ -17,7 +17,7 @@ Develop the browser frontend independently from Rust data and application proces
 | Application layer | Trusted principal/device resolution, command authorization, exact expected-state checks, previews and receipts | Planned |
 | Storage layer | Canonical immutable records, one authoritative publication model, recoverable indexes and mutable durable drafts | Planned; no database or publication mechanism selected |
 | Transport/bootstrap | Local HTTP API, REST/MCP adapters, authentication, configuration and embedded asset delivery | Planned |
-| Browser frontend | Whole-document editor/source mapping, contents, minimap, Agent/Comments, acknowledgement reconciliation | Planned; frontend libraries not selected |
+| Browser frontend | Whole-document editor/source mapping, contents, minimap, Agent/Comments/Users, acknowledgement reconciliation | Planned; frontend libraries not selected |
 | Integration adapters | Explicitly scoped model calls, citation reads, export and future synchronization | Planned |
 | `proofs` | Lean models, selected extracted-Rust proofs and reproducible development/CI checking | Four model theorems and one extracted-helper theorem checked; see the validation digest |
 
@@ -63,3 +63,5 @@ Preserve pure deterministic validators and bounded traversals. Distinguish tests
 Require an early complete editor workflow: owned whole-buffer editing, five-second-idle draft persistence, restart recovery, explicit commit and delayed acknowledgement handling. Verify crash/failure states, exact historical reconstruction, authorization and development/embedded browser parity. The current domain and crypto primitives do not constitute this delivered workflow.
 
 Frontend implementation coordination is defined in [FRONTEND_INTEGRATION.md](FRONTEND_INTEGRATION.md). Its fixture-first work order and behavioral contracts do not settle the outstanding durable-format, transport DTO, authentication or recovery mechanisms listed above.
+
+The Users tab is a permission-scoped document-contributor projection over attribution/provenance, with current human/agent context pinned separately; it is independent of session presence and workspace membership. A derived contributor index requires no change to the core typed-graph model and grants no additional historical access.
