@@ -1,6 +1,6 @@
 # Development state and context-compaction handoff
 
-Last updated: 2026-10-24. **Current work: validate and publish independent drag-test gesture repair 0.5.2. Owner explicitly lifted the publication hold with “Push to github”. Frontend-only scope and authentication waiver for the synthetic preview remain. Local preview: http://127.0.0.1:5173/. Historical hold statements below describe earlier instructions.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
+Last updated: 2026-10-24. **Current work: capture and publish README screenshot refresh 0.5.3 (issue 17). Owner explicitly lifted the publication hold with “Push to github”. Frontend-only scope and authentication waiver for the synthetic preview remain. Local preview: http://127.0.0.1:5173/. Historical hold statements below describe earlier instructions.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
 
 ## Workspace and authorization
 
@@ -242,3 +242,10 @@ Executed for 0.5.1: 19 Node tests, static build and all 26 Chromium scenarios pa
 0.5.1 b0ce8acff98a512bb70fc2be65e2642a1648e383 was verified pushed. Its frontend workflow 40136505888 failed on the same forward selection even with polling, disproving painting timing as a sufficient explanation. CodeMirror MouseSelection explicitly treats a single drag beginning inside an existing selection as selected-text dragging, with native Chromium behavior differing between macOS and Linux. Test gestures now collapse the previous selection by ArrowLeft and remeasure both source endpoints before each independent drag; no runtime behavior is changed. Version 0.5.2 is the follow-up patch. Preserve this failed diagnosis and subsequent evidence rather than claiming 0.5.1 passed hosted frontend CI.
 
 Executed for 0.5.2: five repeated drag-snapping browser scenarios passed with fresh collapsed-caret gestures; static build, locked cargo check and diff whitespace checks passed. Remaining application source/dependencies/proof sources unchanged from 0.5.1. Full 26-scenario and 19-source-test checks passed locally before this isolated test change; hosted verification of this patch remains pending.
+
+
+## README screenshot refresh — 0.5.3 / issue 17
+
+0.5.2 ac824b94e98ed0e7b252a4c34e5cf9b36dd6fdb5 was verified pushed with a clean matching remote. All four hosted workflows succeeded: Frontend 40136732913, Rust 40136732920, Lean models 40136732923, extracted Rust proof 40136732910. Completion/evidence and the failed timing-only diagnosis are recorded in issue 16; issues 14–16 closed.
+
+Owner requested automatic screenshot replacement. Added frontend/scripts/capture-readme.mjs and npm screenshot command: rebuild static assets, start an owned loopback synthetic preview on 5193, open a fresh 1600x1000 Chromium context, await fonts/layout, check page errors/overflow, write docs/images/Screenshot.png, close browser/server. Human preview on 5173 and its browser state are untouched. Only fixture data is captured; image intentionally tracked as documentation, not a test trace. README caption/alt text updated. Screenshot command executed successfully and resulting PNG visually inspected. No app runtime source, dependencies or proof guarantees changed. PATCH 0.5.3 metadata synchronized by named entries only; publication evidence follows execution.

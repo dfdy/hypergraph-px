@@ -1,6 +1,6 @@
 # Frontend preview
 
-Status: runnable frontend-only synthetic-data preview, version 0.5.2. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
+Status: runnable frontend-only synthetic-data preview, version 0.5.3. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
 
 ## Run locally
 
@@ -51,3 +51,7 @@ npm run test:ui
 The browser suite starts the preview server if needed, or reuses the local port. It covers real editing/undo/download, chapter context, source-preserving maths/table edits, contributors, minimap/panel keyboard interaction, clipboard actions, pinned context, local comments/review, inert markup and static-server boundaries. Screenshots go to ignored `artifacts/ui/`; failure traces stay in ignored `frontend/test-results/`. Do not use real private documents in test traces. A cached browser is optional; install the matching Playwright Chromium revision when absent. These frontend checks cannot prove Rust authorization, durable storage, encryption or graph correctness.
 
 Canonical behavior: [frontend integration](../Specifications/FRONTEND_INTEGRATION.md) and [workspace interface](../Specifications/WORKSPACE_INTERFACE.md). Work/evidence: [issue 11 work record](../docs/work/0011-frontend-preview.md).
+
+## Refresh the README screenshot
+
+Run `npm --prefix frontend run screenshot` from the repository root after installing the matching Playwright Chromium browser. The command rebuilds the frontend, starts a dedicated synthetic preview on loopback port 5193, captures a fresh 1600 × 1000 browser context into `docs/images/Screenshot.png`, and closes its browser/server. Keep port 5193 free; the human testing server on 5173 is unaffected. Inspect the image before publication. No manuscript or existing browser state is captured.
