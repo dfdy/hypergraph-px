@@ -61,3 +61,5 @@ Make routine mechanism choices within the approved requirements and record them 
 Preserve pure deterministic validators and bounded traversals. Distinguish tests, Lean model proofs and extracted-Rust correspondence. Current full-validator translation is blocked by concrete Aeneas subset/model limits; its budget helper is proved through extraction. No cryptographic primitive, filesystem or complete application proof is claimed.
 
 Require an early complete editor workflow: owned whole-buffer editing, five-second-idle draft persistence, restart recovery, explicit commit and delayed acknowledgement handling. Verify crash/failure states, exact historical reconstruction, authorization and development/embedded browser parity. The current domain and crypto primitives do not constitute this delivered workflow.
+
+Frontend implementation coordination is defined in [FRONTEND_INTEGRATION.md](FRONTEND_INTEGRATION.md). Its fixture-first work order and behavioral contracts do not settle the outstanding durable-format, transport DTO, authentication or recovery mechanisms listed above.

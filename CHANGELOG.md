@@ -2,6 +2,12 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.1.5 — 2026-10-24
+
+- Add a frontend integration specification with a fixture-first work order, staged capabilities, exact source/Unicode mapping, draft acknowledgement states and atomic command/retry semantics.
+- Evaluate the supplied endpoint proposal separately, retaining aligned requirements and correcting/deferring prototype assumptions, mixed draft/publication actions and premature transport detail.
+- Link the frontend handoff from current specifications and README; preserve the input document locally and unchanged. No endpoints, frontend runtime, durable formats or proof results are introduced.
+
 ## 0.1.4 — 2026-10-24
 
 - Shorten README Current status to a brief implementation outline and remove Initial verification.
