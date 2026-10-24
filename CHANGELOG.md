@@ -2,6 +2,10 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.5.1 — 2026-10-24
+
+- Wait for the actual DOM selection to settle when checking drag snapping in Chromium, retaining exact forward/backward expected ranges. Prevent CI from reading the previous gesture before CodeMirror paints the selection. No runtime/dependency/proof changes.
+
 ## 0.5.0 — 2026-10-24
 
 - Specify future Word tracked-change/comment import matched to branches or snapshots, attributed to the virtual Word Revision contributor.

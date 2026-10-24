@@ -6,7 +6,10 @@ test.afterEach(async({page})=>expect(errors.get(page)).toEqual([]));
 async function source(page){const ready=page.waitForEvent('download');await page.getByRole('button',{name:'↓ Markdown',exact:true}).click();return readFile(await (await ready).path(),'utf8');}
 async function point(page,word,offset=2){return page.locator('.cm-content').evaluate((root,{word,offset})=>{const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=walker.nextNode())){const at=n.textContent.indexOf(word);if(at>=0){const r=document.createRange();r.setStart(n,at+offset);r.setEnd(n,at+offset+1);const box=r.getBoundingClientRect();return {x:box.left+box.width*.25,y:box.top+box.height/2};}}throw new Error('Missing source word '+word);},{word,offset});}
 async function drag(page,from,to){await page.mouse.move(from.x,from.y);await page.mouse.down();await page.mouse.move(to.x,to.y,{steps:12});await page.mouse.up();}
-async function selected(page){return page.evaluate(()=>window.getSelection().toString());}
+// CodeMirror paints the DOM selection during its next measured view update.
+// Assert the resulting range after it settles, rather than reading the prior drag.
+async function expectSelected(page,text){await expect.poll(()=>page.evaluate(()=>window.getSelection().toString())).toBe(text);}
+async function selected(page){await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));return page.evaluate(()=>window.getSelection().toString());}
 const count=async(page,id)=>Number((await page.locator(id).innerText()).replaceAll(',',''));
 
 test('workspace/document totals follow edits, undo and independent forks; requested layout placements',async({page})=>{
@@ -50,9 +53,9 @@ test('one through five repeated clicks select caret, word, sentence, paragraph, 
 test('drag snapping promotes sentences/paragraphs in both directions and can be disabled',async({page})=>{
  const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+Home');await page.keyboard.insertText('# Snap tests\n\nAlpha one. Beta two.\n\nGamma three. Delta four.\n\n`code one. code two.`\n\n\\(math one. math two.\\)\n\n');const original=await source(page);
  const alpha=await point(page,'Alpha'),beta=await point(page,'Beta'),gamma=await point(page,'Gamma');
- await drag(page,alpha,beta);expect(await selected(page)).toBe('Alpha one. Beta two.');
- await drag(page,alpha,gamma);expect(await selected(page)).toBe('Alpha one. Beta two.\n\nGamma three. Delta four.');
- await drag(page,gamma,alpha);expect(await selected(page)).toBe('Alpha one. Beta two.\n\nGamma three. Delta four.');
+ await drag(page,alpha,beta);await expectSelected(page,'Alpha one. Beta two.');
+ await drag(page,alpha,gamma);await expectSelected(page,'Alpha one. Beta two.\n\nGamma three. Delta four.');
+ await drag(page,gamma,alpha);await expectSelected(page,'Alpha one. Beta two.\n\nGamma three. Delta four.');
  const codeOne=await point(page,'code one'),codeTwo=await point(page,'code two');await drag(page,codeOne,codeTwo);expect((await selected(page)).length).toBeLessThan('code one. code two.'.length);
  const mathOne=await point(page,'math one'),mathTwo=await point(page,'math two');await drag(page,mathOne,mathTwo);expect((await selected(page)).length).toBeLessThan('math one. math two.'.length);
 
