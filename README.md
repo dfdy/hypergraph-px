@@ -1,6 +1,8 @@
 # Hypergraph PX: More Than a Storage Mechanism
 
-**Hypergraph PX is a graph-based document editing system that treats documents not as isolated, static files, but as evolving compositions of interconnected, reusable, and independently versioned content.** I am developing Hypergraph PX as a writing and thinking tool for my doctoral dissertation in philosophy. The name Hypergraph PX is derived from the mathematical concept of the hypergraph, a generalization of a graph in which an edge can join any number of vertices, and a tongue in the cheek reference to Project Xanadu, the first hypertext project and an early precursor to the World Wide Web.
+**Hypergraph PX is a graph-based document editing system that treats documents not as isolated, static files, but as evolving compositions of interconnected, reusable, and independently versioned content.** 
+
+I am developing Hypergraph PX as a writing and thinking tool for my doctoral dissertation in philosophy. The name Hypergraph PX is derived from the mathematical concept of the hypergraph, a generalization of a graph in which an edge can join any number of vertices, and a tongue in the cheek reference to Project Xanadu, the first hypertext project and an early precursor to the World Wide Web.
 
 ![Screenshot of Hypergraph PX](docs/images/Screenshot.png)
 
