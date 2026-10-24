@@ -10,4 +10,6 @@ export class FixtureAdapter {
  remove(id){this.clipboard=this.clipboard.filter(e=>e.id!==id);}
  forkPlan(ids){const entries=ids.map(id=>this.clipboard.find(e=>e.id===id));if(!entries.length||entries.some(e=>!e))throw new Error('Clipboard selection changed');return {id:`demo:paste:${++this.serial}`,entries:entries.map(e=>({...e})),text:entries.map(e=>e.text).join('\n\n')};}
  finishFork(plan,clear){this.pastes.push({id:plan.id,sources:plan.entries.map(e=>({document:e.document,sequence:e.sequence,from:e.from,to:e.to}))});if(clear){const ids=new Set(plan.entries.map(e=>e.id));this.clipboard=this.clipboard.filter(e=>!ids.has(e.id));}}
+ createFork(context,title,attribution){const source=this.get(context.document);if(source.sequence!==context.sequence||source.source.slice(context.from,context.to)!==context.text)throw new Error('Fork source changed');if(!context.text||!title.trim())throw new Error('Fork requires selected source and a name');const id=`demo:fork:${++this.serial}`,record={id,title:title.trim(),source:context.text,sequence:0,acknowledged:0,attribution,fixtureFork:{document:context.document,sequence:context.sequence,from:context.from,to:context.to}};this.docs.set(id,record);this.pastes.push({id:`demo:derivation:${this.serial}`,destination:id,sources:[record.fixtureFork]});return this.get(id);}
+
 }

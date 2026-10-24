@@ -105,7 +105,7 @@ checksum = "a6ef517f0926dd24a1582492c791b6a4818a4d94e789a334894aa15b0d12f55c"
 
 [[package]]
 name = "cpufeatures"
-version = "0.4.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5ca28b0ae3115b884660db4118d803791fd6756b6e88f39c0f3f7859060d7566"
 dependencies = [
@@ -167,7 +167,7 @@ dependencies = [
 
 [[package]]
 name = "hypergraph-crypto"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "argon2",
  "chacha20poly1305",
@@ -178,7 +178,7 @@ dependencies = [
 
 [[package]]
 name = "hypergraph-domain"
-version = "0.4.0"
+version = "0.5.0"
 
 [[package]]
 name = "inout"

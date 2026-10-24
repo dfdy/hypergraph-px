@@ -1,114 +1,119 @@
-// Geometry comes from this editor's measured/estimated line blocks, never a
-// separately wrapped plain-text view. Visible rendered widgets are cloned.
-export function renderMinimap(view, track, layer, viewport) {
-  const scroll = view.scrollDOM;
-  const content = view.contentDOM;
-  const style = getComputedStyle(content);
-  const width = content.clientWidth;
-  if (!width || !track.clientHeight) return;
-  const scale = Math.min(0.1, track.clientWidth / width);
-  const total = scroll.scrollHeight;
-  const maxScroll = Math.max(0, total - scroll.clientHeight);
-  const progress = maxScroll ? scroll.scrollTop / maxScroll : 0;
-  const overflow = Math.max(0, total * scale - track.clientHeight);
-  const offset = progress * overflow;
-  const paddingLeft = parseFloat(style.paddingLeft);
-  const paddingRight = parseFloat(style.paddingRight);
-  layer.style.cssText = `position:absolute;left:0;top:${-offset}px;width:${width}px;height:${total}px;transform:scale(${scale});transform-origin:top left;pointer-events:none;`;
-  layer.style.fontFamily = style.fontFamily;
-  layer.style.fontSize = style.fontSize;
-  layer.style.lineHeight = '1.9';
-  const nodes = [];
-  const seen = new Set();
-  for (let n = 1; n <= view.state.doc.lines; n++) {
-    const line = view.state.doc.line(n);
-    const block = view.lineBlockAt(line.from);
-    // Replaced block widgets cover several source lines, drawn only once.
-    if (seen.has(block.from)) continue;
-    seen.add(block.from);
-    const widget = view.dom.querySelector(`[data-table-from="${block.from}"], [data-math-from="${block.from}"]`);
-    let mini, measuredTop = null, measuredHeight = null;
-    if (widget) {
-      mini = widget.cloneNode(true);
-      mini.querySelectorAll('button,input,textarea,.table-caption,.table-hint').forEach(e => e.remove());
-      mini.querySelectorAll('[tabindex],[id]').forEach(e => {e.removeAttribute('tabindex');e.removeAttribute('id');});
-      mini.style.margin = '0';
-      measuredTop = widget.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop;
-      measuredHeight = widget.getBoundingClientRect().height;
-    } else {
-      const visible = view.domAtPos(line.from).node;
-      let actual = (visible.nodeType === 1 ? visible : visible.parentElement)?.closest('.cm-line');
-      if (actual && view.posAtDOM(actual, 0) !== line.from) actual = null;
-      mini = actual ? actual.cloneNode(true) : document.createElement('div');
-      if (!actual) mini.textContent = line.text;
-      mini.classList.add('mini-source-line');
-      mini.querySelectorAll('[tabindex],[id]').forEach(e => {e.removeAttribute('tabindex');e.removeAttribute('id');});
-      const heading = /^#{1,4}(?=\s)/.exec(line.text);
-      if (heading) mini.classList.add(`cm-h${heading[0].length}`);
-      mini.style.whiteSpace = 'pre-wrap';
-      mini.style.overflowWrap = 'anywhere';
-      mini.style.padding = '0 4px';
-      if (actual) {
-        measuredTop = actual.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop;
-        measuredHeight = actual.getBoundingClientRect().height;
-        const measured = getComputedStyle(actual);
-        mini.style.fontSize = measured.fontSize;
-        mini.style.lineHeight = measured.lineHeight;
-        mini.style.fontWeight = measured.fontWeight;
-      }
-    }
-    mini.dataset.sourceFrom = line.from;
-    mini.style.position = 'absolute';
-    mini.style.left = `${paddingLeft}px`;
-    mini.style.top = `${measuredTop ?? view.documentPadding.top + block.top}px`;
-    mini.style.width = `${width - paddingLeft - paddingRight}px`;
-    mini.style.maxHeight = `${Math.max(1, measuredHeight ?? block.height)}px`;
-    mini.style.overflow = 'hidden';
-    nodes.push(mini);
-  }
-  layer.replaceChildren(...nodes);
-  const height = scroll.clientHeight * scale;
-  viewport.style.height = `${height}px`;
-  viewport.style.top = `${scroll.scrollTop * scale - offset}px`;
-  viewport.setAttribute('aria-valuenow', Math.round(progress * 100));
-  track.dataset.scale = scale;
-  track.dataset.offset = offset;
-  track.dataset.travel = Math.max(0, Math.min(total * scale, track.clientHeight) - height);
-}
+import {parseTables} from './tables.js';
+import {tableRendering,createTablePreview,createTableSourcePreview} from './table-view.js';
+import {isMathRendered,createMathPreview} from './math-view.js';
+import {mathExpressions} from './math.js';
+import {authorshipField,authorHue} from './authorship.js';
+import {documentPresentation,presentationLineClasses} from './document-presentation.js';
 
-export function bindMinimap(track, viewport, getView) {
-  track.parentElement.addEventListener('wheel', event => {
-    // Keep pinch/Ctrl-wheel zoom under browser control. The document scroller
-    // supplies native bounds; changing scrollTop triggers the same map update.
-    if (event.ctrlKey || event.metaKey || !event.deltaY) return;
-    const view = getView();
-    const unit = event.deltaMode === 1 ? view.defaultLineHeight
-      : event.deltaMode === 2 ? view.scrollDOM.clientHeight : 1;
-    event.preventDefault();
-    view.scrollDOM.scrollTop += event.deltaY * unit;
-  }, {passive:false});
-  track.addEventListener('pointerdown', event => {
-    if (event.button !== 0) return;
-    event.preventDefault();
-    track.setPointerCapture(event.pointerId);
-    const rect = track.getBoundingClientRect();
-    const grab = event.target === viewport
-      ? event.clientY - viewport.getBoundingClientRect().top
-      : viewport.getBoundingClientRect().height / 2;
-    const move = e => {
-      const view = getView();
-      const travel = Number(track.dataset.travel);
-      const progress = travel ? Math.max(0, Math.min(1, (e.clientY - rect.top - grab) / travel)) : 0;
-      view.scrollDOM.scrollTop = progress * (view.scrollDOM.scrollHeight - view.scrollDOM.clientHeight);
-    };
-    if (event.target !== viewport) move(event);
-    const finish = () => {
-      track.removeEventListener('pointermove', move);
-      track.removeEventListener('pointerup', finish);
-      track.removeEventListener('pointercancel', finish);
-    };
-    track.addEventListener('pointermove', move);
-    track.addEventListener('pointerup', finish);
-    track.addEventListener('pointercancel', finish);
-  });
+const layouts=new WeakMap();
+function appendSource(parent,source,from,to,markers,authors){
+ const boundaries=new Set([from,to]);
+ for(const range of [...markers,...authors]){if(range.from<to&&range.to>from){boundaries.add(Math.max(from,range.from));boundaries.add(Math.min(to,range.to));}}
+ const points=[...boundaries].sort((a,b)=>a-b);
+ for(let i=0;i<points.length-1;i++){
+  const start=points[i],end=points[i+1],span=document.createElement('span');span.textContent=source.slice(start,end);
+  if(markers.some(r=>start>=r.from&&start<r.to))span.classList.add('cm-source-marker');
+  const author=authors.find(r=>start>=r.from&&start<r.to)?.author;
+  if(author){span.classList.add('cm-author-text');span.dataset.authorId=author.id;span.style.setProperty('--author-hue',authorHue(author.id,author.kind));}
+  parent.append(span);
+ }
+}
+function buildLayout(view,track,layer){
+ const state=view.state,source=state.doc.toString(),style=getComputedStyle(view.contentDOM),width=view.contentDOM.clientWidth;
+ const mathMode=isMathRendered(state),sourceTables=state.field(tableRendering).sourceTables,authors=state.field(authorshipField);
+ const key=[width,style.fontFamily,style.fontSize,style.paddingTop,style.paddingBottom,style.paddingLeft,style.paddingRight].join('|');
+ let layout=layouts.get(track);
+ if(layout&&layout.doc===state.doc&&layout.key===key&&layout.mathMode===mathMode&&layout.sourceTables===sourceTables&&layout.authors===authors)return layout;
+ const model=documentPresentation(state),tables=parseTables(source),expressions=mathMode?mathExpressions(source,{exclude:tables}):[];
+ const tableByStart=new Map(tables.map(t=>[t.from,t])),mathByStart=new Map(expressions.filter(e=>e.block).map(e=>[e.renderFrom,e]));
+ const nodes=[],blocks=[];
+ layer.replaceChildren();
+ layer.style.cssText='position:absolute;left:0;top:0;box-sizing:border-box;transform-origin:top left;pointer-events:none;white-space:normal;';
+ Object.assign(layer.style,{width:width+'px',fontFamily:style.fontFamily,fontSize:style.fontSize,lineHeight:'1.9',paddingTop:style.paddingTop,paddingBottom:style.paddingBottom,paddingLeft:style.paddingLeft,paddingRight:style.paddingRight,tabSize:style.tabSize,fontVariantLigatures:style.fontVariantLigatures});
+ for(let n=1;n<=state.doc.lines;n++){
+  const line=state.doc.line(n),table=tableByStart.get(line.from),math=mathByStart.get(line.from);
+  let element,to=line.to;
+  if(table&&!sourceTables.has(table.from)){element=createTablePreview(view,table);to=table.to;n=state.doc.lineAt(to).number;}
+  else if(math){element=createMathPreview(view,math);to=math.renderTo;n=state.doc.lineAt(to).number;}
+  else{
+   const text=document.createElement('div');text.className='cm-line mini-source-line '+presentationLineClasses(model,line.from);text.dataset.sourceFrom=line.from;
+   Object.assign(text.style,{whiteSpace:'pre-wrap',overflowWrap:'anywhere',wordBreak:'break-word'});
+   let cursor=line.from;
+   for(const expression of expressions.filter(e=>!e.block&&e.from>=line.from&&e.to<=line.to)){
+    appendSource(text,source,cursor,expression.from,model.markers,authors);text.append(createMathPreview(view,expression));cursor=expression.to;
+   }
+   appendSource(text,source,cursor,line.to,model.markers,authors);if(!line.text)text.append(document.createElement('br'));element=text;
+   if(table&&sourceTables.has(table.from)){element=document.createElement('div');element.append(createTableSourcePreview(view,table.from),text);}
+  }
+  element.dataset.sourceFrom=line.from;element.dataset.sourceTo=to;element.inert=true;
+  element.querySelectorAll('[id],[tabindex]').forEach(e=>{e.removeAttribute('id');e.removeAttribute('tabindex');});
+  nodes.push(element);blocks.push({from:line.from,to,element});
+ }
+ layer.append(...nodes);
+ layout={doc:state.doc,key,mathMode,sourceTables,authors,blocks,layer};layouts.set(track,layout);return layout;
+}
+function blockForPosition(layout,position){
+ let low=0,high=layout.blocks.length-1;
+ while(low<high){const middle=Math.ceil((low+high)/2);if(layout.blocks[middle].from<=position)low=middle;else high=middle-1;}
+ return layout.blocks[low];
+}
+function measure(layout,scale){
+ const root=layout.layer.getBoundingClientRect();
+ for(const block of layout.blocks){const r=block.element.getBoundingClientRect(),style=getComputedStyle(block.element),before=parseFloat(style.marginTop)||0,after=parseFloat(style.marginBottom)||0;block.top=(r.top-root.top)/scale-before;block.height=r.height/scale+before+after;}
+ layout.total=layout.layer.clientHeight;
+}
+function projectedHeight(view,layout,screenY){
+ const scroll=view.scrollDOM,top=view.documentTop;
+ const root=layout.layer.getBoundingClientRect(),scale=layout.scale;
+ const candidates=[];
+ for(const actual of view.contentDOM.querySelectorAll('.cm-line,.rendered-table-block,.math-block')){
+  let position,mini;
+  if(actual.classList.contains('cm-line')){
+   try{position=view.posAtDOM(actual,0);}catch{continue;}
+   const block=blockForPosition(layout,position);if(block.from!==position)continue;
+   mini=block.element.classList.contains('mini-source-line')?block.element:block.element.querySelector('.mini-source-line');
+  }else{position=Number(actual.dataset.tableFrom??actual.dataset.mathFrom);mini=blockForPosition(layout,position).element;}
+  if(!mini)continue;
+  const real=actual.getBoundingClientRect(),small=mini.getBoundingClientRect();
+  const distance=screenY<real.top?real.top-screenY:screenY>real.bottom?screenY-real.bottom:0;
+  const top=(small.top-root.top)/scale,height=small.height/scale;
+  const projected=distance===0&&real.height?top+(screenY-real.top)*height/real.height:top+screenY-real.top;
+  candidates.push({distance,projected});
+ }
+ if(candidates.length){candidates.sort((a,b)=>a.distance-b.distance);return Math.max(0,Math.min(layout.total,candidates[0].projected));}
+ const first=layout.blocks[0],last=layout.blocks.at(-1),lastMain=view.lineBlockAt(view.state.doc.length);
+ if(screenY<top)return Math.max(0,first.top+screenY-top);
+ if(screenY>top+lastMain.bottom)return Math.min(layout.total,last.top+last.height+screenY-top-lastMain.bottom);
+ const block=view.lineBlockAtHeight(Math.max(0,screenY-top)),mini=blockForPosition(layout,block.from);
+ const fraction=block.height?Math.max(0,Math.min(1,(screenY-top-block.top)/block.height)):0;
+ return mini.top+fraction*mini.height;
+}
+export function renderMinimap(view,track,layer,viewport){
+ if(!view.contentDOM.clientWidth||!track.clientHeight)return;
+ const layout=buildLayout(view,track,layer),scale=Math.min(.1,track.clientWidth/view.contentDOM.clientWidth);
+ layer.style.transform='scale('+scale+')';layout.scale=scale;measure(layout,scale);
+ const box=view.scrollDOM.getBoundingClientRect(),start=projectedHeight(view,layout,box.top),end=projectedHeight(view,layout,box.bottom);
+ const visible=Math.max(0,end-start),height=visible*scale,progress=Math.max(0,Math.min(1,start/Math.max(1,layout.total-visible))),overflow=Math.max(0,layout.total*scale-track.clientHeight),offset=progress*overflow;
+ layer.style.top=-offset+'px';viewport.style.height=height+'px';viewport.style.top=start*scale-offset+'px';viewport.setAttribute('aria-valuenow',Math.round(progress*100));
+ Object.assign(track.dataset,{scale,offset,travel:Math.max(0,Math.min(layout.total*scale,track.clientHeight)-height),totalHeight:layout.total});
+ layout.scale=scale;layout.offset=offset;layout.visible=visible;
+}
+function scrollToProjected(view,layout,height){
+ const target=Math.max(0,Math.min(layout.total-layout.visible,height));
+ let block=layout.blocks.find(b=>b.top+b.height>=target)||layout.blocks.at(-1);
+ const fraction=Math.max(0,Math.min(1,(target-block.top)/Math.max(1,block.height))),actual=view.lineBlockAt(block.from);
+ view.scrollDOM.scrollTop=Math.max(0,view.documentPadding.top+actual.top+fraction*actual.height);
+ view.requestMeasure({key:layout,read:v=>{const measured=v.lineBlockAt(block.from);return Math.max(0,v.documentPadding.top+measured.top+fraction*measured.height);},write:(top,v)=>{if(Math.abs(v.scrollDOM.scrollTop-top)>1)v.scrollDOM.scrollTop=top;}});
+
+}
+export function bindMinimap(track,viewport,getView){
+ track.parentElement.addEventListener('wheel',event=>{if(event.ctrlKey||event.metaKey||!event.deltaY)return;const view=getView(),unit=event.deltaMode===1?view.defaultLineHeight:event.deltaMode===2?view.scrollDOM.clientHeight:1;event.preventDefault();view.scrollDOM.scrollTop+=event.deltaY*unit;},{passive:false});
+ track.addEventListener('pointerdown',event=>{
+  if(event.button!==0)return;event.preventDefault();track.setPointerCapture(event.pointerId);
+  const rect=track.getBoundingClientRect(),grab=event.target===viewport?event.clientY-viewport.getBoundingClientRect().top:viewport.getBoundingClientRect().height/2;
+  const move=e=>{const layout=layouts.get(track);if(!layout)return;const travel=Number(track.dataset.travel),progress=travel?Math.max(0,Math.min(1,(e.clientY-rect.top-grab)/travel)):0;scrollToProjected(getView(),layout,progress*Math.max(0,layout.total-layout.visible));};
+  if(event.target!==viewport)move(event);
+  const finish=()=>{track.removeEventListener('pointermove',move);track.removeEventListener('pointerup',finish);track.removeEventListener('pointercancel',finish);};
+  track.addEventListener('pointermove',move);track.addEventListener('pointerup',finish);track.addEventListener('pointercancel',finish);
+ });
 }

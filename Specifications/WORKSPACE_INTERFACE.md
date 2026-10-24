@@ -109,3 +109,6 @@ Dependency order below extends the editor delivery gates; each requires its own 
 | Integrations and later deployment | Exact Markdown/HTML plus manifests, separately gated Zotero adapters; future coediting/federation/client-held boundaries, never inferred from local UI availability |
 
 History and snapshot semantics are foundations for every durable gate, not features deferred until after destructive reuse. Add pure-model obligations for promotion preservation, fork provenance completeness, snapshot determinism and atomic publication/clear before claiming assurance. Any Lean evidence must name actual checked theorems and Rust correspondence; none is newly established here.
+
+
+Future export/compilation and external integration capabilities are subject to the [client-held/non-trusted egress policy](DATA/ENCRYPTION.md): document export and GitHub publication are disabled at the core in that mode, even at a plaintext-capable client. Internal protected provenance-clipboard references are distinct from an OS clipboard export sink. These mode restrictions remain future implementation gates.

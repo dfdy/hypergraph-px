@@ -38,3 +38,6 @@ export const tableRendering=StateField.define({
  update(value,tr){let sources=value.sourceTables;if(tr.docChanged)sources=new Set([...sources].map(p=>tr.changes.mapPos(p)));for(const e of tr.effects)if(e.is(toggleTableSource)){sources=new Set(sources);sources.has(e.value)?sources.delete(e.value):sources.add(e.value)}return tr.docChanged||tr.effects.length>0?{sourceTables:sources,decorations:build(tr.state,sources)}:value},
  provide:field=>EditorView.decorations.from(field,v=>v.decorations)
 });
+
+export function createTablePreview(view,table){return new TableWidget(table,view.state.field(authorshipField),isMathRendered(view.state)).toDOM(view);}
+export function createTableSourcePreview(view,from){return new SourceToggle(from).toDOM(view);}

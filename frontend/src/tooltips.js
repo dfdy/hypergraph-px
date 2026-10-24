@@ -7,6 +7,7 @@ export function installTooltips(root = document) {
   tip.role = 'tooltip';
   tip.hidden = true;
   document.body.append(tip);
+  let pointerDown = false;
   let target = null, timer, originalDescription = null, pointer = {x:-1,y:-1};
   function suppressNative(element) {
     if (element.hasAttribute('title')) {
@@ -36,13 +37,15 @@ export function installTooltips(root = document) {
     target = null;
   }
   function showFor(element) {
-    if (element === target) return;
+    if (pointerDown || element === target) return;
     hide();
     target = element;
     suppressNative(element);
     originalDescription = element.getAttribute('aria-describedby');
     timer = setTimeout(() => {
       if (!element.isConnected || target !== element) return;
+      const host = element.closest('dialog[open]') || document.body;
+      if (tip.parentElement !== host) host.append(tip);
       const name = element.getAttribute('aria-label') || element.labels?.[0]?.textContent ||
         element.getAttribute('placeholder') || element.textContent;
       const description = element.dataset.tooltip;
@@ -70,7 +73,9 @@ export function installTooltips(root = document) {
     if (element) showFor(element);
   });
   root.addEventListener('focusout', hide);
-  root.addEventListener('pointerdown', hide);
+  root.addEventListener('pointerdown', () => {pointerDown = true; hide();}, true);
+  root.addEventListener('pointerup', () => {pointerDown = false;}, true);
+  root.addEventListener('pointercancel', () => {pointerDown = false;}, true);
   root.addEventListener('scroll', () => {
     hide();
     requestAnimationFrame(() => {
