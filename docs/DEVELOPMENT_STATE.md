@@ -1,6 +1,6 @@
 # Development state and context-compaction handoff
 
-Last updated: 2026-10-24. **Current work: validate and publish CI test timing repair 0.5.1 after the owner published 0.5.0. Owner explicitly lifted the publication hold with “Push to github”. Frontend-only scope and authentication waiver for the synthetic preview remain. Local preview: http://127.0.0.1:5173/. Historical hold statements below describe earlier instructions.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
+Last updated: 2026-10-24. **Current work: validate and publish independent drag-test gesture repair 0.5.2. Owner explicitly lifted the publication hold with “Push to github”. Frontend-only scope and authentication waiver for the synthetic preview remain. Local preview: http://127.0.0.1:5173/. Historical hold statements below describe earlier instructions.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
 
 ## Workspace and authorization
 
@@ -237,3 +237,8 @@ On resume, the working tree was clean: 0.5.0 was already published in 685af85777
 On resume, pinned local Lean model build, theorem axioms and leanchecker passed. The actual-Rust helper replay also passed: unchanged source re-extracted, exact generated source, locked dependencies, spend_spec proof and environment checked. No new proof guarantee or digest entry is introduced. Final test/push/hosted results follow actual execution.
 
 Executed for 0.5.1: 19 Node tests, static build and all 26 Chromium scenarios passed, plus 10 repeated drag-snapping scenarios. Locked cargo check passed; prior full Rust fmt/clippy/eight tests passed on identical Rust sources. Pinned Lean models/axiom audit/leanchecker and extracted Rust helper replay passed. External dependency version/checksum records and proven expansion source digest match published source. Publication and hosted verification remain to be observed.
+
+
+0.5.1 b0ce8acff98a512bb70fc2be65e2642a1648e383 was verified pushed. Its frontend workflow 40136505888 failed on the same forward selection even with polling, disproving painting timing as a sufficient explanation. CodeMirror MouseSelection explicitly treats a single drag beginning inside an existing selection as selected-text dragging, with native Chromium behavior differing between macOS and Linux. Test gestures now collapse the previous selection by ArrowLeft and remeasure both source endpoints before each independent drag; no runtime behavior is changed. Version 0.5.2 is the follow-up patch. Preserve this failed diagnosis and subsequent evidence rather than claiming 0.5.1 passed hosted frontend CI.
+
+Executed for 0.5.2: five repeated drag-snapping browser scenarios passed with fresh collapsed-caret gestures; static build, locked cargo check and diff whitespace checks passed. Remaining application source/dependencies/proof sources unchanged from 0.5.1. Full 26-scenario and 19-source-test checks passed locally before this isolated test change; hosted verification of this patch remains pending.
