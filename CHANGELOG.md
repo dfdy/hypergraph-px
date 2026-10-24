@@ -2,6 +2,13 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.1.6 — 2026-10-24
+
+- Review the updated frontend integration proposal and adopt the owner-confirmed third Users tab and document-contributors semantics consistently in current requirements.
+- Extend frontend contracts for distinct contributors/presence/membership/authorship, exact context lookup, source-preserving maths display and explicit Markdown export sources.
+- Specify optional reviewed GitHub document disclosure as external jobs with separate authorization, provider-side concurrency and honest recovery limits.
+- Preserve both local proposal inputs and unverified prototype claims; no frontend/backend implementation, provider credentials, renderer dependency or proof result is introduced.
+
 ## 0.1.5 — 2026-10-24
 
 - Add a frontend integration specification with a fixture-first work order, staged capabilities, exact source/Unicode mapping, draft acknowledgement states and atomic command/retry semantics.

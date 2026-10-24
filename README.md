@@ -31,7 +31,7 @@ See [development state and handoff](docs/DEVELOPMENT_STATE.md) for current progr
 The following capabilities are planned and are **not yet implemented**. They build on the [product specification](Specifications/SPECIFICATION.md) and its staged delivery plan.
 
 - **Zotero citation integration:** search and select references from a Zotero library through a read-only integration, insert citations while writing, and use bibliographic metadata during document compilation/export. Preserve the exact citation metadata and formatting inputs needed to reproduce a recorded document; reading a historical snapshot must not silently refresh its references. Writing back to the Zotero library is outside the initial integration scope.
-- **Desktop writing workspace:** a four-column layout with chapter/section contents, a styled Markdown source editor, a navigable document minimap, and a sidebar with separate Agent and Comments tabs. Preserve whole-document selection and precise ownership of text, including repeated and nested content. Mobile responsiveness is deferred.
+- **Desktop writing workspace:** a four-column layout with chapter/section contents, a styled Markdown source editor, a navigable document minimap, and a sidebar with separate Agent, Comments and Users tabs. Users lists document contributors, with the current human and agent pinned above the other contributors, each with its own colour. Preserve whole-document selection and precise ownership of text, including repeated and nested content. Mobile responsiveness is deferred.
 - **Reusable content and navigable history:** edit and reuse independently versioned content, fork or split it with traceable provenance, compare branches, and selectively integrate changes. Explore occurrences, references, backlinks and derivations without losing the exact state captured by a document snapshot.
 - **Agent assistance and anchored comments:** discuss selected context, review proposed edits and approve precisely scoped changes. Keep human comments separate from agent conversation, distinguish human and agent identities, and recheck permissions and document state before applying an approved proposal. External model disclosure must be explicit.
 - **Reproducible compilation and export:** assemble documents from their exact recorded content, structure, citation data and compiler inputs. Keep recoverable editing drafts separate from explicitly committed history, and reproduce snapshots without consulting newer content heads.
@@ -42,7 +42,7 @@ These aims describe direction rather than a release-date commitment. Detailed me
 
 ## Current status
 
-Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.5**; license: [AGPL-3.0-only](LICENSE).
+Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.6**; license: [AGPL-3.0-only](LICENSE).
 
 ## Developer installation
 
