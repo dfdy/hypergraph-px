@@ -2,6 +2,12 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.3.0 — 2026-10-24
+
+- Rename Overview to Navigator and route wheel input over its label/map to the editor while preserving browser zoom gestures.
+- Add Navigator hide/show and left/right placement controls with validated display preference persistence and recalculated source-aligned geometry.
+- Test actual wheel input, line/page units, layout, preference restoration and unchanged source. No backend implementation, dependency or proof changes.
+
 ## 0.2.0 — 2026-10-24
 
 - Add a runnable frontend-only loopback preview, no sign-in, with reviewed CodeMirror/KaTeX dependencies and static release-build inputs.

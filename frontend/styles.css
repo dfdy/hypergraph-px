@@ -5,3 +5,8 @@
 #mapViewport{min-height:0}
 .chapter{padding:3px 4px;gap:2px}.chapter-toggle{flex:0 0 22px;padding:5px 3px;font-size:12px;min-width:22px}.chapter-open{flex:1;text-align:left;padding:6px 3px;font-size:12px;min-width:0}.outline .depth-4{padding-left:30px}.block-styles{display:flex;gap:1px}.toolbar .block-styles button{padding:4px 5px;min-width:25px;font-size:12px}.block-styles button[aria-pressed=true]{background:var(--accent);color:var(--bg);font-weight:650}.cm-h4{font-size:1em;font-weight:600;color:var(--muted)}
 #interface-tooltip{position:fixed;z-index:100;pointer-events:none;max-width:340px;padding:7px 10px;border:1px solid var(--border);border-radius:5px;background:var(--panel);color:var(--text);font-size:11px;box-shadow:0 4px 18px #0005;line-height:1.5}#interface-tooltip[hidden]{display:none}
+/* Explicit grid areas keep visual and DOM order aligned when moving Navigator. */
+.workspace{grid-template-areas:"outline editor minimap sidebar"}.workspace>.navigator{grid-area:outline}.editor-pane{grid-area:editor}.minimap{grid-area:minimap}.right-sidebar{grid-area:sidebar}
+.workspace.navigator-left{grid-template-columns:226px 90px minmax(400px,1fr) 348px;grid-template-areas:"outline minimap editor sidebar"}
+.workspace.navigator-hidden{grid-template-columns:226px minmax(400px,1fr) 348px;grid-template-areas:"outline editor sidebar"}.workspace.navigator-hidden>.minimap{display:none}
+.header-actions #navigatorToggle,.header-actions #navigatorSide{font-size:11px}.header-actions{gap:8px}

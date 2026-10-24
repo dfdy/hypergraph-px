@@ -1,6 +1,6 @@
 # Development state and context-compaction handoff
 
-Last updated: 2026-10-24. **Current work: issue 11, frontend-only implementation RESUMED by owner; authentication explicitly waived for the synthetic testing preview. Backend feature development remains outside scope. Local preview runs at http://127.0.0.1:5173/.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
+Last updated: 2026-10-24. **Current work: issue 13, Navigator controls after the published 0.2.0 preview; frontend-only implementation RESUMED by owner; authentication explicitly waived for the synthetic testing preview. Backend feature development remains outside scope. Local preview runs at http://127.0.0.1:5173/.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
 
 ## Workspace and authorization
 
@@ -21,7 +21,7 @@ Canonical requirements: [Specifications/SPECIFICATION.md](../Specifications/SPEC
 
 ## Published milestones and executed checks
 
-Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.2.0** delivers the separate frontend preview; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
+Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.3.0** adds Navigator display controls to the separate frontend preview; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
 
 Implemented pure `hypergraph_domain::expansion::validate`: bounded Kahn DAG validator; five tests including all 512 directed three-vertex graphs versus an independent transitive-closure oracle. Source `crates/domain/src/expansion.rs` SHA-256 `74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad` remains unchanged.
 
@@ -148,3 +148,12 @@ Next steps remain FRONTEND ONLY: improve visual polish and source-mapped interac
 Latest owner feedback included in 0.2.0 before publication: minimap now shares measured visible geometry and offscreen block estimates with editor, chapter arrows independently expand/collapse, Paragraph/H1–H4 and Bold/Italic/Quote/Bulleted/Numbered buttons follow parsed context and toggle, and all controls have delayed named tooltips (3.1 seconds). Thirteen actual browser scenarios and thirteen Node tests cover these fixes, including minimap pixel alignment after wrap/font/maths changes, independent disclosures, toolbar context and tooltip timing/reset. Native titles are converted to delegated tooltip descriptions, including dynamically created controls. Source helper selection and DOM widgets remain fixture-only.
 
 Owner clarified that large editor/panel surfaces should have NO tooltips. Delegation now targets individual controls/actionable table/math items only; editor role=textbox, panel regions and broad containers are excluded. Preserve this exception to the earlier all-elements wording.
+
+
+## Navigator controls — issue 13 (current)
+
+0.2.0 commit a5bf854f2fd09a65d77c5f45613648f6c7824bb3 was verified pushed, all four hosted workflows observed successful (Frontend 40109205423, Rust 40109205450, models 40109205390, extracted proof 40109205424), issue 11 closed. Subsequent owner requests: rename Overview to Navigator, wheel scrolling in Navigator, visibility toggle and move Navigator to either side of the editor. Issue 13 and docs/work/0013-navigator-controls.md track this frontend-only increment. These new display controls use version 0.3.0; 0.2.1 was considered for the initial naming/wheel repair but was never published or used after added functionality increased scope.
+
+Implemented controls in header: Navigator hide/show and move-left/right. Default visible/right, validated navigatorVisible/navigatorSide fields added to non-sensitive display preferences. DOM/grid order changes together; same EditorView/state retained and remeasured. Whole Navigator accepts pixel/line/page wheel input; native scroll bounds and map updates shared, Ctrl/Meta-wheel/pinch preserved. Server remains live at http://127.0.0.1:5173/. No backend/dependency/proof source changes. Final browser/source/build and publication evidence follows actual execution, with hosted results recorded in issue 13 rather than an evidence-only version bump. Preserve unrelated owner README grammar change outside milestone staging.
+
+Executed for 0.3.0: frontend build, thirteen Node tests and sixteen real Chromium scenarios passed, including new Navigator wheel/visibility/side/persistence cases; left-position screenshot visually inspected at 1440x900 with no horizontal overflow. No runtime/proof source or dependency changes. The running frontend server serves the rebuilt current assets; user must refresh open tabs.

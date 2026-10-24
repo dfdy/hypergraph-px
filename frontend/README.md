@@ -1,6 +1,6 @@
 # Frontend preview
 
-Status: runnable frontend-only synthetic-data preview, version 0.2.0. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
+Status: runnable frontend-only synthetic-data preview, version 0.3.0. Owner explicitly resumed development and waived authentication for this test runtime. No Rust HTTP API, login, graph publication or encrypted persistence is implemented. This preview opens directly; that does not alter future backend authentication requirements.
 
 ## Run locally
 
@@ -13,11 +13,11 @@ npm run dev
 
 Open **http://127.0.0.1:5173/**. The server binds loopback, serves only generated `dist/` assets, rejects unexpected Host/mutation requests and uses a restrictive CSP with no network connections. Set `HYPERGRAPH_PREVIEW_PORT` to another unprivileged port if needed. `npm run build` regenerates static assets; refresh the browser after rebuilds. Stop the terminal process with Ctrl+C. No authentication, provider account, manuscript or Rust service is needed.
 
-Both a human browser and agent Chromium automation can use the same local URL. Each tab has separate fixture state; agent tests do not observe the human tab's unsaved edits. Reload resets text, clipboard, comments and review examples. Only validated non-sensitive display preferences persist. Before reload/close, the app warns if tab data changed. Download the current buffer using **↓ Markdown** for an exact temporary uncommitted Markdown copy.
+Both a human browser and agent Chromium automation can use the same local URL. Each tab has separate fixture state; agent tests do not observe the human tab's unsaved edits. Reload resets text, clipboard, comments and review examples. Only validated non-sensitive display preferences persist, including Navigator visibility and left/right position. Before reload/close, the app warns if tab data changed. Download the current buffer using **↓ Markdown** for an exact temporary uncommitted Markdown copy.
 
 ## Available interactions
 
-- Six synthetic chapters with independent tab-local editor/undo state, Workspace/Document navigation, independent chapter disclosure arrows, measured editor-aligned minimap click/drag/keyboard and chapter previous/next.
+- Six synthetic chapters with independent tab-local editor/undo state, Workspace/Document navigation, independent chapter disclosure arrows, measured editor-aligned Navigator with wheel/click/drag/keyboard, hide/show and left/right placement controls and chapter previous/next.
 - Context-aware Paragraph/H1–H4, Bold/Italic/Quote/Bulleted/Numbered controls, multi-click source units, table cell editing/undo, exact source/rendered maths, wrap/font/theme/authorship controls.
 - Split scrollable/resizable/collapsible right panels: upper Agent/Comments/Users and lower Concepts/Relations/Sources/Provenance/History. Pin an investigation context while continuing elsewhere.
 - Synthetic contributors with current human/agent pinned and distinct colors; no presence/authentication inference.
