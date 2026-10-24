@@ -10,3 +10,5 @@
 .workspace.navigator-left{grid-template-columns:226px 90px minmax(400px,1fr) 348px;grid-template-areas:"outline minimap editor sidebar"}
 .workspace.navigator-hidden{grid-template-columns:226px minmax(400px,1fr) 348px;grid-template-areas:"outline editor sidebar"}.workspace.navigator-hidden>.minimap{display:none}
 .header-actions #navigatorToggle,.header-actions #navigatorSide{font-size:11px}.header-actions{gap:8px}
+
+.toolbar .list-icon{display:block;margin:auto;pointer-events:none}

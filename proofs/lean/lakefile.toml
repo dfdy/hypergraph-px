@@ -1,5 +1,5 @@
 name = "hypergraphProofs"
-version = "0.3.0"
+version = "0.3.1"
 defaultTargets = ["Hypergraph"]
 moreLeanArgs = ["-DwarningAsError=true"]
 
