@@ -1,6 +1,6 @@
 # Hypergraph PX MU-F — product specification
 
-Status: current requirements, 2026-10-24. Project version 0.1.3. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
+Status: current requirements, 2026-10-24. Project version 0.1.4. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
 
 ## 1. Scope and architecture
 
