@@ -12,6 +12,22 @@ Client-held mode remains unavailable until implemented. Its server stores/relays
 
 Future client-held recovery uses a user-held recovery key; server account reset cannot recover client-only content. Keep both browser-only and independently trusted client paths. Protection against a malicious hosting server changing editor code requires the independently trusted client/update channel; browser-only confidentiality excludes malicious client-code delivery.
 
+## Future core egress policy for client-held/non-trusted mode
+
+Status: required future functionality, unimplemented. When client-held/local encryption with a non-trusted server is selected, the core must deny application-controlled plaintext disclosure paths. **GitHub publication/pushing and document export are disabled**, including local Markdown/HTML/PDF/LaTeX/Word downloads and direct browser Blob/download shortcuts. Possession of client keys, read access, an integration credential or a confirmation dialog cannot override this mode policy.
+
+Use one authoritative policy/command boundary across browser, native/trusted client, REST, MCP, plugins and background workers. UI capability flags and disabled buttons reflect the decision; every direct command, retry and sink must independently enforce it. The future trusted client must route file/download, OS clipboard, printing, integrations and provider network calls through its core execution boundary. An authorized plaintext-capable client is not an automatic export exception.
+
+Audit and block additional application disclosure sinks: external model/agent/provider requests carrying protected content; citation or integration queries derived from protected text; plaintext OS clipboard/share sheets; printing; public previews/share links; file/temporary/export artifacts; plaintext caches, indexes, service-worker storage, logs, errors, traces, crash reports and telemetry. Internal encrypted workspace drafts, protected application clipboard references and authorized local viewing/editing require their own permitted flows. Keep protected plaintext from the hosting server and third-party assets.
+
+Ciphertext-only synchronization and separately designed encrypted recovery/backup flows need an explicit policy, metadata/disclosure bounds and authorization. They cannot reuse a disabled document-export/publish operation as an escape hatch. Mixed-source operations inherit restrictions from every protected input; moving content into a trusted destination cannot launder its source policy.
+
+Freeze the applicable policy context in plans and recheck before execution and artifact delivery. Switching to non-trusted mode invalidates pending export/push/disclosure plans, jobs, temporary artifacts and outstanding plaintext access links; no delayed task may execute under an older permissive policy. Mode changes must not silently downgrade protection. Earlier disclosures cannot be recalled.
+
+Acceptance requires negative tests through all transports and clients, UI bypass/direct commands, stale plans, retry/outbox/restart, mixed protected inputs, provider/OS sinks, caches/logs and mode transitions. Model the decision as a pure exhaustive policy function and consider Lean denial-invariant proofs; this requirement establishes no checked theorem or implemented guarantee.
+
+The threat model must distinguish application-controlled egress from a reader copying a screen, OS screenshots, compromised endpoints and side channels. Protection against a malicious host replacing browser code still requires independently trusted client/update delivery. Do not claim that an ordinary browser can prevent a malicious host or privileged user from extracting plaintext already available to it. These limits must not weaken enforcement of the application's supported disclosure paths.
+
 ## Implemented cryptographic primitives and contexts
 
 Use RustCrypto XChaCha20-Poly1305 authenticated encryption with independent OS-generated 32-byte data keys and fresh 24-byte nonces. Use Argon2id v19 to derive a passphrase key-encryption key: exactly 65,536 KiB memory, 3 passes, 1 lane, 32-byte output, random 16-byte salt. Passphrases are 1–1024 raw bytes with no normalization. Reject all unsupported profiles before expensive derivation. Application-level unlock serialization/rate limits remain required; per-call bounds do not bound concurrent aggregate work.

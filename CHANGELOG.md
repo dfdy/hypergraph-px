@@ -2,6 +2,26 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.5.0 — 2026-10-24
+
+- Specify future Word tracked-change/comment import matched to branches or snapshots, attributed to the virtual Word Revision contributor.
+
+- Match vertical column resize dividers to the right-panel horizontal divider: dark track, paired borders and centered muted grip.
+
+- Correct parsed block-style indicators; place bold Document/Workspace word totals after characters, match PX brand size and move Markdown download to the left footer.
+- Add draggable/keyboard column resizing with fixed Navigator width, and source-preserving semantic spacing under unchanged Markdown paragraph rules.
+- Replace viewport-dependent Navigator rendering with stable full-source table/math presentation and source-based viewport mapping.
+- Add default-on Drag snapping toggle and independent caret/word/sentence/paragraph/section repeated-click selection; resolve stale modal-close selection restoration.
+- Specify future core disclosure denial in client-held/non-trusted mode, including exports and GitHub publication; no backend implementation or new proof claim.
+
+- Mute Markdown source syntax markers in grey across themes and Authors mode, preserving content, code/math literals and exact source.
+
+- Add default-on red caret with a persistent bottom-bar toggle, theme-appropriate reds and a more visible drawn cursor.
+
+- Add explicit Fork, Link and Embed controls: independent tab-only fixture forks with source attribution, undoable Markdown heading links and gated shared-inclusion previews.
+- Preserve exact selection on dialog cancellation and show delayed tooltips inside modal dialogs.
+- Correct accidental external cpufeatures version replacement in the local Cargo.lock; retain the previously pinned dependency version/checksum.
+
 ## 0.4.0 — 2026-10-24
 
 - Show live document word count immediately before character count in the bottom status bar, with the numeric word count bold.

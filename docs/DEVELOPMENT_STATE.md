@@ -1,6 +1,6 @@
 # Development state and context-compaction handoff
 
-Last updated: 2026-10-24. **Current work: issue 15, live status-bar word count after the published 0.3.1 toolbar polish; frontend-only implementation RESUMED by owner; authentication explicitly waived for the synthetic testing preview. Backend feature development remains outside scope. Local preview runs at http://127.0.0.1:5173/.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
+Last updated: 2026-10-24. **Current work: publish accumulated frontend milestone 0.5.0. Owner explicitly lifted the publication hold with “Push to github”. Frontend-only scope and authentication waiver for the synthetic preview remain. Local preview: http://127.0.0.1:5173/. Historical hold statements below describe earlier instructions.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
 
 ## Workspace and authorization
 
@@ -171,3 +171,60 @@ Executed for 0.3.1: static frontend build and existing Chromium contextual forma
 0.3.1 commit d343cc74b7d1615d551421e9b373066db9aac3fb was verified pushed. Rust 40110393122, Lean models 40110393117 and extracted proof 40110393175 succeeded; frontend 40110393137 was still installing the browser environment at latest observation. Do not claim it passed; issue 14 remains to close after observed results. Owner then requested live word count to the left of character count, numeric word count bold; a subsequent progress question did not cancel this work.
 
 Implemented in updatePosition(): Unicode Intl.Segmenter word-like count of current Markdown source, cached in a WeakMap by immutable CodeMirror Text; no recount on caret-only changes. Display strong numeric count followed by words, then unchanged character count; updates on edits/undo and chapter switching. Executed static build and actual Chromium checks for Unicode input (+3 words, emoji excluded), chapter return, order and computed bold weight 700; footer screenshot is ignored. Work record: docs/work/0015-status-word-count.md. New functionality uses MINOR 0.4.0 with synchronized metadata; no backend/dependency/proof source changes. Live server still http://127.0.0.1:5173/; refresh for new count. Preserve owner's unrelated README grammar edit outside staging.
+
+
+## Publication hold — latest owner instruction
+
+Owner explicitly instructed: “Don't publish again until I tell you.” Do not push, create releases or publish further GitHub updates until explicit authorization. Local work and verification can continue. Latest already-pushed commit before this instruction was bfaad9869581f9fd446a7e3883a86c739bb38033 (0.4.0 word count). No subsequent push is authorized.
+
+A broad version-string replacement accidentally changed the external cpufeatures lock entry from 0.3.1 to 0.4.0 while leaving its checksum unchanged. The local locked build caught this, but a shell command sequence continued to commit/push after the failed check; this was an error, not a passing validation. Corrected ONLY the external cpufeatures entry locally to the prior pinned version/checksum and compared all external dependency version/checksum pairs against the previous lock. No dependency upgrade intended. Do not publish this repair without authorization. Future version scripts must target named workspace records and execute dependent checks/commits using check=True or fail-fast sequencing; never global-replace versions in dependency lockfiles. The live frontend word counter itself passed Chromium checks.
+
+
+## Local Functions bar — latest work under publication hold
+
+Owner requested explicit Fork, Link and Embed in the top Functions bar. Implemented locally with no GitHub updates or version bump; AGENTS.md now carries the explicit publication hold above automatic publication rules. Work record: docs/work/local-functions-bar.md.
+
+Fork accepts whole source units and creates independent synthetic tab-only documents, preserving source attribution and exact captured input context. They appear under Local test forks, outside the six-chapter composition, with chapter previous/next disabled. Editing a fork preserves the original; source authors are not relabelled as current human. Link uses the same-document heading picker to insert an undoable plain Markdown link, not a typed reference edge. Embed has source document/section/policy and preview; shared insertion and Live remain disabled until real backend mappings/publication exist. Dialogs freeze context, reject stale sources and restore anchor/head on cancel. New module: frontend/src/functions-bar.js; fixture operation stays in adapter.js. Modal tooltip is parented into the active dialog for correct top-layer display.
+
+Executed: build, fourteen Node checks and nineteen full Chromium scenarios passed; then focused tooltip/Embed cases run after final tooltip fix. Original source/undo/panels/navigation checks remain passing. Screenshots are ignored under artifacts/ui. Local Cargo.lock cpufeatures repair still passes locked build; no dependency upgrade intended, no Rust/proof source change. Leave all changes local and preserve owner README grammar edit. Do not publish, close/update GitHub issues, or treat new local implementation requests as permission to lift the hold.
+
+Latest local UI request: move Navigator left/right toggle to its own bottom edge. Implemented minimap-footer containing navigatorSide, compact Left/Right labels, retained full accessible action names and top-header show/hide. Navigator is flex-column; map gets remaining height, footer stays below it. Explicitly restore button focus after moving the panel. Build and four targeted Chromium regression cases passed; direct browser footer/no-overlap/focus checks and screenshot inspection passed. All changes remain uncommitted/unpublished under the existing hold. Work record: docs/work/local-navigator-controls.md.
+
+Latest local UI request: visible red caret plus bottom settings toggle. Implemented default-on Red caret checkbox next to Authors, redCaret boolean in validated display preferences, dark/light red colors and 2px drawn cursor; unchecked restores theme accent. Native caret fallback follows same color while respecting CodeMirror's drawSelection hiding. Verified static build, appearance/privacy scenario, actual computed cursor colors/width in both themes, persisted off/on after reload, unchanged source and blocked storage fallback. Screenshots visually inspected. Work record: docs/work/local-red-caret.md. All changes remain local under publication hold; no version bump or GitHub update.
+
+Latest local UI request: place font-size slider next to Wrap column selector. Moved existing font-label and fontValue immediately after Wrap in bottom view-controls, removed font-label auto left margin. Existing handlers/preferences retained. Build and actual Chromium DOM/bounds/font adjustment checks passed; settings-bar screenshot visually inspected. No publication/version bump. Work record: docs/work/local-settings-order.md.
+
+Latest local UI request: grey all Markdown selectors. Implemented parser-aware source-markers.js ranges (heading/emphasis/strike/list/quote/link/code/table/task/tag markers, escape prefix and maths delimiters), preserving literal punctuation in code/maths and content text. Uses the already bundled extended Markdown language, without new dependencies. Grey overrides Authors colours only for marker spans, dark #909090/light #737373. Decorator refresh observes syntax-tree progress. Build, fifteen Node checks and nineteen Chromium scenarios passed; direct browser checks in both themes/Authors confirm correct colours and exact unchanged source. Screenshots inspected. Work record: docs/work/local-markdown-markers.md. Everything remains local under the publication hold.
+
+## Pending owner batch and task queue (latest)
+
+Preserve ALL queued requests: style indicators; character count followed by labelled Document/Workspace word counts (bold numbers); PX brand size; Markdown download at left-column bottom; draggable column widths except fixed Navigator; presentation spacing for semantic blocks without source whitespace; future core plaintext-egress denial in non-trusted/client-held mode; Navigator recording defects; sentence/paragraph selection snapping explicitly queued from initial exploration. Central queue: docs/FRONTEND_TASK_QUEUE.md. A new request does not cancel earlier tasks.
+
+Recording inspected locally: /Users/diaan/Downloads/Screen Recording 2026-10-24 at 18.29.53.mov, 382x1670, 16.67 seconds. Native frames under /tmp/hypergraph-navigator-clip, outside Git. It shows miniature table/formula representations changing as editor content virtualizes. Current Navigator clones visible widgets but substitutes source/estimates offscreen; replace that representation with stable full-document layout and source-based mapping. Selection snapping remains queued beyond existing multi-click selection.
+
+
+## Completed local owner batch — latest authoritative state
+
+The preceding pending-batch paragraphs are historical. All items in docs/FRONTEND_TASK_QUEUE.md are now completed locally or explicitly specified as future core work. No publication, commit, version bump or GitHub update occurred; version remains 0.4.0. Live preview: http://127.0.0.1:5173/ (refresh rebuilt assets; synthetic tab-only state).
+
+Implemented parsed block/inline context indicators; characters then bold Document/Workspace word totals; matching PX brand size; Markdown download at left-column footer; draggable/keyboard column widths with fixed 90px Navigator and validated display preferences. Workspace counts each independent fixture document once, including local forks. Column resize Escape/lost-capture cleanup preserves state.
+
+Owner confirmed Markdown blank-line paragraph rules. document-presentation.js caches full Markdown syntax by immutable Text, deriving marker/heading/block-gap presentation without inserting whitespace or changing Enter/soft-line semantics. minimap.js now builds a stable full-source projection with table/math widget factories, independent of the main viewport; source anchors map its viewport and navigation to main-editor geometry. Fonts/layout trigger remeasurement. Video native frames remain in /tmp, not Git.
+
+source-selection.js provides default-on persisted bottom-bar Drag snapping for sentence/paragraph ranges, exact protected code/math/table contexts, forward/backward dragging and independent click counts 1–5 (caret/word/sentence/paragraph/section). Existing keyboard/modified selection stays precise. Fixed a modal-close race: a delayed native close event previously restored stale selection over a later click; synchronous idempotent cleanup now restores context only during explicit close handling.
+
+Future client-held/non-trusted mode must deny application-controlled egress in core commands/policy, including exports/GitHub/providers/clipboard/print/logs/caches, across all transports. Specifications/DATA/ENCRYPTION.md details scope and honest endpoint limits; earlier export allowances reconciled. This is specification only, no backend implementation or new proof claim.
+
+Executed: build and 19 Node tests passed; complete 26-scenario Chromium run passed (test-results last-run status passed, zero failures). Visually inspected current dark workspace and stable rendered Navigator screenshots. No new dependencies or Rust/proof source changes. Preserve local cpufeatures lock repair and owner README grammar edit. Publication hold remains in force.
+
+
+Latest local refinement: vertical column resize handles now visually match the horizontal right-panel divider, rotated: 6px background track, paired theme borders and centered 1px muted grip spanning the middle 10%. Keep 8px pointer targets and existing keyboard/drag behavior. Build and targeted Chromium resize/Escape/persistence scenario passed; desktop screenshot inspected. No publication.
+
+Latest local refinement: column pointer resizing suppresses the selected-looking focus outline; keyboard navigation restores its visible focus cue. Tooltips remain hidden during pointer drags (including delayed focus/scroll rearming). Build, two targeted Chromium scenarios and direct held-drag/keyboard checks passed. No publication.
+
+Latest future requirement: Word review import, matching tracked changes/comments to an explicitly selected branch or exact snapshot, attributed to a stable virtual Word Revision contributor. New Specifications/WORD_REVIEW_IMPORT.md covers ambiguous/stale matching, immutable snapshot/writable destination, conflict review, original external labels versus importing human, contributor visibility, untrusted parsing, retry/recovery and encryption policy boundaries. Linked product/frontend specification, index and README; queued only, no implementation/dependency/proof claim. Publication hold remains active.
+
+
+## Publication authorized — 0.5.0 preparation
+
+Owner requested “Push to github”, lifting the earlier hold. Publish accumulated frontend features/fixes, Word review import and future egress specifications, local cpufeatures repair and owner README grammar edit. MINOR 0.5.0 reflects new frontend functionality; workspace/Lean/npm metadata synchronized by named entries only. No external dependency upgrade or Rust/proof source change. Final checks and publication evidence follow execution.

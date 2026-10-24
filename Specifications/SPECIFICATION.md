@@ -1,6 +1,6 @@
 # Hypergraph PX MU-F — product specification
 
-Status: current requirements, 2026-10-24. Project version 0.4.0. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
+Status: current requirements, 2026-10-24. Project version 0.5.0. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
 
 ## 1. Scope and architecture
 
@@ -43,7 +43,7 @@ Trusted-server mode is the initial implementation and default: an unlocked trust
 
 Client-held encryption is designed into identities, policies and execution boundaries now, but remains explicitly unavailable until implemented. In that mode the hosting server must not gain plaintext/decryption keys through configuration. Operations requiring plaintext run at an authorized client boundary or report unavailable; no silent server delegation or mode downgrade is permitted.
 
-Authenticated workspace/group security policy controls key custody and migration; operational TOML cannot create missing decryption authority. Mode changes and re-encryption preserve logical identities and require the applicable authorization. Client-encryption recovery uses a user-held recovery key; server account reset cannot recover client-only keys. Revocation cannot erase data already disclosed to a participant.
+Future client-held/non-trusted mode must deny application-controlled plaintext egress at the core, including GitHub publication and document export, across all UI/API/MCP/client/background paths. Client keys, read rights and confirmation cannot bypass that mode policy. See the [future egress requirement](DATA/ENCRYPTION.md). This stricter rule supersedes earlier client-side export/disclosure allowances; it remains unimplemented.\n\nAuthenticated workspace/group security policy controls key custody and migration; operational TOML cannot create missing decryption authority. Mode changes and re-encryption preserve logical identities and require the applicable authorization. Client-encryption recovery uses a user-held recovery key; server account reset cannot recover client-only keys. Revocation cannot erase data already disclosed to a participant.
 
 Initial future sharing scope is workspace/document. Full retained history is shared only by explicit grant. Current-state sharing must specify dependencies/provenance disclosure and opaque/hidden inaccessible references; read permission does not automatically imply every historical key.
 
@@ -68,6 +68,8 @@ Keep critical validators pure and deterministic. Lean models/proofs target occur
 For every property distinguish proposed obligation, checked Lean model, differential/property-test evidence and actual extracted-Rust correspondence proof. Document toolchain versions and trusted assumptions, including cryptographic libraries, entropy, I/O and client integrity. No whole-application security or Rust correctness claim follows from model-only proofs.
 
 Lean/Aeneas are build/CI tools, not runtime requirements. Preserve a testable pure core even for functions not supported by extraction. All proof/test results must be actual executed evidence. Maintain a human-readable digest of every Lean-validated function/theorem for developer/mathematician evaluation, including its guarantee, assumptions, proof technique, exact source/toolchain and Rust correspondence status.
+
+Future Word review import must match tracked changes and comments to an explicitly selected branch or snapshot, with imported contributions attributed to the virtual **Word Revision** user. Preserve immutable snapshots and review conflicts before applying to a writable branch; see [Word review import](WORD_REVIEW_IMPORT.md). This capability is not implemented.
 
 ## 7. Initial implementation order and gates
 

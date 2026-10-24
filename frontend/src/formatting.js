@@ -1,16 +1,51 @@
 import {syntaxTree} from '@codemirror/language';
 
 const names = {bold:'StrongEmphasis',italic:'Emphasis',quote:'Blockquote',bullet:'BulletList',number:'OrderedList'};
-export function formatNode(state, type) {
-  const selection = state.selection.main;
-  for (const bias of [-1, 1]) {
-    let node = syntaxTree(state).resolveInner(selection.from, bias);
-    while (node) {
-      if (node.name === names[type] && node.from <= selection.from && node.to >= selection.to) return node;
-      node = node.parent;
-    }
+function containingNodes(state,from,to=from) {
+  const nodes=[],seen=new Set(),line=state.doc.lineAt(from);
+  for(const bias of [1,-1])for(let node=syntaxTree(state).resolveInner(from,bias);node;node=node.parent){
+    if(node.from>from||node.to<to)continue;
+    if(from===to&&node.to<=line.from&&node.from<line.from)continue;
+    const key=`${node.name}:${node.from}:${node.to}`;
+    if(!seen.has(key)){seen.add(key);nodes.push(node);}
   }
-  return null;
+  return nodes.sort((a,b)=>(a.to-a.from)-(b.to-b.from));
+}
+export function formatNode(state,type) {
+  const selection=state.selection.main,nodes=containingNodes(state,selection.from,selection.to);
+  if(type==='bullet'||type==='number'){
+    const list=nodes.find(node=>node.name==='BulletList'||node.name==='OrderedList');
+    return list?.name===names[type]?list:null;
+  }
+  return nodes.find(node=>node.name===names[type]&&(!(type==='bold'||type==='italic')||!selection.empty||selection.from<node.to))??null;
+}
+function blockAt(state,position){
+  const nodes=containingNodes(state,position);
+  if(nodes.some(n=>n.name==='FencedCode'||n.name==='IndentedCode'))return {kind:'code'};
+  if(nodes.some(n=>n.name==='Table'))return {kind:'table'};
+  const heading=nodes.find(n=>/^(?:ATXHeading[1-6]|SetextHeading[12])$/.test(n.name));
+  if(heading)return {kind:'heading',headingLevel:Number(heading.name.at(-1))};
+  const list=nodes.find(n=>n.name==='BulletList'||n.name==='OrderedList');
+  if(list)return {kind:list.name==='OrderedList'?'number':'bullet'};
+  if(nodes.some(n=>n.name==='Blockquote'))return {kind:'quote'};
+  if(nodes.some(n=>n.name==='HorizontalRule'||n.name==='HTMLBlock'||n.name==='LinkReference'))return {kind:'other'};
+  if(nodes.some(n=>n.name==='Paragraph')||!state.doc.lineAt(position).text.trim())return {kind:'paragraph'};
+  return {kind:'other'};
+}
+export function blockStyleState(state){
+  const selection=state.selection.main,positions=[];
+  if(selection.empty)positions.push(selection.head);
+  else{
+    const first=state.doc.lineAt(selection.from).number,last=state.doc.lineAt(selection.to-1).number;
+    for(let n=first;n<=last;n++){
+      const line=state.doc.line(n),from=Math.max(line.from,selection.from),to=Math.min(line.to,selection.to),part=state.sliceDoc(from,to),offset=part.search(/\S/);
+      if(offset>=0)positions.push(from+offset);
+    }
+    if(!positions.length)positions.push(selection.from);
+  }
+  const blocks=positions.map(position=>blockAt(state,position)),first=blocks[0];
+  const same=blocks.every(block=>block.kind===first.kind&&block.headingLevel===first.headingLevel);
+  return {kind:same?first.kind:'mixed',paragraph:same&&first.kind==='paragraph',headingLevel:same&&first.kind==='heading'?first.headingLevel:null};
 }
 export function formattingState(state) {
   return Object.fromEntries(Object.keys(names).map(type => [type, !!formatNode(state, type)]));

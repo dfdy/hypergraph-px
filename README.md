@@ -2,7 +2,7 @@
 
 **Hypergraph PX is a MCP-ready, graph-based document editing system that treats documents not as isolated, static files, but as evolving compositions of interconnected, reusable, and independently versioned content.** 
 
-I am developing Hypergraph PX as a writing and thinking tool for my doctoral dissertation in philosophy. The name Hypergraph PX is derived from the mathematical concept of the hypergraph, a generalization of a graph in which an edge can join any number of vertices, and a tongue in the cheek reference to Project Xanadu, the first hypertext project and an early precursor to the World Wide Web.
+I am developing Hypergraph PX as a writing and thinking tool for my doctoral dissertation in philosophy. The name Hypergraph PX is derived from the mathematical concept of the hypergraph, a generalization of a graph in which an edge can join any number of vertices, and a tongue-in-cheek reference to Project Xanadu, the first hypertext project and an early precursor to the World Wide Web.
 
 Hypergraph PX is written in Rust, with Lean used for verifying the mathematical integrity of the Rust code that implements its core functionality. This software is developed with the help of AI. 
 
@@ -43,15 +43,16 @@ The following capabilities are planned and are **not yet implemented**. They bui
 - **Multi-document research and reuse:** organize independent chapters into versioned composite works, navigate Workspace/Document/Graph/History lenses, and use a protected provenance clipboard for independently forked pastes or explicit pinned/live transclusions. Investigate concepts and contextual semantic assertions without confusing agent proposals with accepted claims. See the [workspace interface contract](Specifications/WORKSPACE_INTERFACE.md).
 - **Reusable content and navigable history:** edit and reuse independently versioned content, fork or split it with traceable provenance, compare branches, and selectively integrate changes. Explore occurrences, references, backlinks and derivations without losing the exact state captured by a document snapshot.
 - **Agent assistance and anchored comments:** discuss selected context, review proposed edits and approve precisely scoped changes. Keep human comments separate from agent conversation, distinguish human and agent identities, and recheck permissions and document state before applying an approved proposal. External model disclosure must be explicit.
+- **Word review import:** match tracked changes and comments from a Word document to a specific branch or snapshot, preview conflicts and attribute imported contributions to a virtual **Word Revision** user. Preserve immutable snapshots and separate the importing human from external-review attribution. See the [future import requirements](Specifications/WORD_REVIEW_IMPORT.md).
 - **Reproducible compilation and export:** assemble documents from their exact recorded content, structure, citation data and compiler inputs. Keep recoverable editing drafts separate from explicitly committed history, and reproduce snapshots without consulting newer content heads.
 - **Multi-user collaboration and federation:** introduce users, devices and groups, supporting both live coediting and explicit branches/merges. Begin sharing at workspace/document scope, with full retained history shared only by explicit grant; validate authorization and structural consistency independently of synchronization or encryption.
-- **Client-held encryption:** add an alternative to the default trusted-server mode, keeping decryption keys and plaintext operations at an authorized client. Recovery will use a user-held key. The stronger confidentiality guarantee against a malicious hosting server requires an independently trusted client and update channel.
+- **Client-held encryption:** add an alternative to the default trusted-server mode, keeping decryption keys and plaintext operations at an authorized client. Recovery will use a user-held key. The stronger confidentiality guarantee against a malicious hosting server requires an independently trusted client and update channel. In non-trusted mode, the core will disable application-controlled plaintext egress, including document export and GitHub publication.
 
 These aims describe direction rather than a release-date commitment. Detailed mechanisms and acceptance checks must be specified before each capability is enabled.
 
 ## Current status
 
-Early development: pure Rust expansion validation, in-memory encryption/key wrapping and a separately runnable synthetic-data frontend preview are implemented. Durable workspace storage and the integrated Rust application remain planned. Current version: **0.4.0**; license: [AGPL-3.0-only](LICENSE).
+Early development: pure Rust expansion validation, in-memory encryption/key wrapping and a separately runnable synthetic-data frontend preview are implemented. Durable workspace storage and the integrated Rust application remain planned. Current version: **0.5.0**; license: [AGPL-3.0-only](LICENSE).
 
 ## Frontend preview
 

@@ -1,3 +1,4 @@
+import {documentHeadings} from './context-actions.js';
 // Pure source-range selection helpers. Offsets are UTF-16, matching CodeMirror.
 export function paragraphs(text){
  const result=[];let start=null,offset=0,lastEnd=0,fence=null;
@@ -43,19 +44,8 @@ export function gestureRange(text,origin,current,count=1){
  if(count>=5){const from=Math.min(first.from,last.from),to=Math.max(first.to,last.to);return current>origin?{anchor:from,head:to}:{anchor:to,head:from}}
  return current>origin?{anchor:first.from,head:last.to}:{anchor:first.to,head:last.from};
 }
-export function sectionAt(text,start){
- const heading=/^(#{1,6})[\t ]+/.exec(text.slice(start));if(!heading)return {from:start,to:start};
- const tail=text.slice(start);const next=/^#{1,6}[\t ]+.*$/gm;next.exec(tail);let m;
- while((m=next.exec(tail))){if(/^#+/.exec(m[0])[0].length<=heading[1].length)return {from:start,to:start+m.index}}
- return {from:start,to:text.length};
-}
-
-export function sectionContaining(text,pos){
- const headings=[...text.matchAll(/^#{1,6}[\t ]+.*$/gm)];
- let current=null;
- for(const h of headings){if(h.index>pos)break;current=h}
- return current?sectionAt(text,current.index):{from:0,to:headings[0]?.index??text.length};
-}
+export function sectionAt(text,start){const heading=documentHeadings(text).find(h=>h.from===start);return heading?{from:start,to:heading.to}:{from:start,to:start};}
+export function sectionContaining(text,pos){const headings=documentHeadings(text);let current=null;for(const h of headings){if(h.from>pos)break;current=h;}return current?{from:current.from,to:current.to}:{from:0,to:headings[0]?.from??text.length};}
 function trimmedRange(text,from,to){
  const raw=text.slice(from,to),start=raw.length-raw.trimStart().length;
  return {from:from+start,to:to-(raw.length-raw.trimEnd().length)};

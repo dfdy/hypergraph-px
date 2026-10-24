@@ -1,5 +1,10 @@
 # Development instructions
 
+## Current owner instruction: publication authorized
+
+The owner explicitly requested “Push to github” after the earlier publication hold. Publish the accumulated reviewed local milestone with a SemVer increment and validation; the prior hold is lifted. Continue the milestone rules below and preserve source/runtime separation.
+
+
 1. Work in `Hypergraph PX MU-F` and `dfdy/hypergraph-px`. Keep source, runtime data and credentials separate; never import unrelated runtime material.
 2. Read `Specifications/README.md` for the current specification map, then the relevant model, approved decisions and issue. Keep Specifications self-contained: only current specifications, with no references to a previous application or imported reports.
 3. Track bounded work in GitHub issues and record assumptions, invariants, tests and recovery implications before code. Persist owner decisions; do not ask repeatedly for previously granted routine authorization.

@@ -32,3 +32,5 @@ export const mathRendering=StateField.define({
  provide:field=>EditorView.decorations.from(field,v=>v.decorations)
 });
 export function isMathRendered(state){return state.field(mathRendering).rendered}
+
+export function createMathPreview(view,expression){return new MathWidget(expression,getAuthorAt(view.state,expression.from)).toDOM(view);}
