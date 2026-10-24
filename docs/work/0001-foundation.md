@@ -2,9 +2,9 @@
 
 Date: 2026-10-24. Tracking: https://github.com/dfdy/hypergraph-px/issues/1.
 
-Scope and assumptions were recorded in the GitHub issue before implementation. Fresh project; supplied documents retained unchanged; prior application referenced only for source comparison and standard AGPL license text. Owner-confirmed scope and security/proof decisions are in ADR 0001 and SPECS/SPECIFICATION.md.
+Scope and assumptions were recorded in the GitHub issue before implementation. Project scope, license and authority boundaries were confirmed before code. Owner-confirmed scope and security/proof decisions are in ADR 0001 and Specifications/SPECIFICATION.md.
 
-Implemented: independent Cargo domain crate, pure bounded expansion validator, initial CI workflow, canonical foundation specification, data/navigation README, source-reading/authority records and proof plan. No external Rust dependencies, durable data format, user data, listener, editor, cryptographic implementation, federation or checked Lean theorem introduced.
+Implemented: independent Cargo domain crate, pure bounded expansion validator, initial CI workflow, canonical foundation specification, data/navigation README, requirements/authority records and proof plan. No external Rust dependencies, durable data format, user data, listener, editor, cryptographic implementation, federation or checked Lean theorem introduced.
 
 Invariants: complete declared endpoint validation; cycles rejected only in the selected expansion projection; repeated/parallel dependencies preserved; finite input/work budgets; input immutability; no storage or authorization side effects. Hyperlinks, occurrence forest ownership, snapshot completeness and permission resolution are separate caller responsibilities.
 

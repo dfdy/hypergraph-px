@@ -1,4 +1,4 @@
-# Local runtime material; source design documents under SPECS remain tracked.
+# Local runtime and reference material. Current specifications live in Specifications.
 .DS_Store
 /target/
 /node_modules/
@@ -24,3 +24,7 @@
 
 # Isolated proof translators, nightly/cache files and extraction output.
 /.verification/
+
+# Local source/reference material excluded from publication.
+/SPECS/
+/docs/source-reading-record.md

@@ -1,8 +1,8 @@
 # Data structures and navigation: MU-F technical reference
 
-Status: initial design vocabulary, 2026-10-24. The navigation/type table below remains proposed. The first implemented validator is documented in §9. Proposed names/contracts below will be replaced or linked to actual symbols as implementation proceeds. Domain wire fields and container choices await accepted decisions; the separate crypto envelope adapter is now documented in §10.
+Status: current data and navigation contract, 2026-10-24. The navigation/type table below remains proposed. The first implemented validator is documented in §9. Proposed names/contracts below will be replaced or linked to actual symbols as implementation proceeds. Domain wire fields and container choices await accepted decisions; the separate crypto envelope adapter is now documented in §10.
 
-Design inputs: [underlying mathematics](Underlying%20mathematics.md), [encryption design](Encryption%20specification.md), and the [new-project reconciliation](../ARCHITECTURE_REVIEW.md). This reference explains mechanisms; a future canonical specification will own product requirements.
+Related requirements: [mathematical model](MATHEMATICAL_MODEL.md), [encryption](ENCRYPTION.md), [architecture](../ARCHITECTURE.md) and the [product specification](../SPECIFICATION.md). This reference defines data/navigation mechanisms and marks proposed interfaces explicitly.
 
 ## 1. Distinct record identities
 
@@ -20,7 +20,7 @@ Design inputs: [underlying mathematics](Underlying%20mathematics.md), [encryptio
 | `SecurityPolicy` / epoch | Authenticated authority and key-custody rules | Mode changes require authority and keys; configuration alone cannot grant decryption |
 | `PrivateDigest`, `StorageObjectId` | Internal plaintext commitment and physical ciphertext lookup | Do not conflate with logical revision IDs; deduplication and metadata disclosure are encryption-domain decisions |
 
-Identifier algorithms and serialization must be selected together with canonical signing/encryption rules. UUIDv7 was used previously but is not silently fixed here. Content equality is neither identity equality nor permission to disclose cross-domain existence.
+Identifier algorithms and serialization must be selected together with canonical signing/encryption rules. No domain identifier generation algorithm has been selected yet. Content equality is neither identity equality nor permission to disclose cross-domain existence.
 
 ## 2. Typed graph projections
 
@@ -28,7 +28,7 @@ Identifier algorithms and serialization must be selected together with canonical
 - **Revision ancestry:** an immutable same-node DAG; divergent revisions remain retained and merge parents cannot name unrelated identities.
 - **Transformation provenance:** an incidence graph linking immutable input revisions to an event and that event to output revisions. Source context/ranges matter for split/extraction and ordered multi-source merges.
 - **References/semantic links:** a typed directed multigraph; hyperlinks/self-links may cycle. An asserted semantic relation is not proof or permission.
-- **Expansion dependencies:** a separately validated projection. The owner confirmed rejection of recursive expansion cycles; hyperlinks remain a different projection. Untrusted cyclic imports must fail validation rather than become accepted complete states.
+- **Expansion dependencies:** a separately validated projection. Reject recursive expansion cycles; hyperlinks remain a different projection. Untrusted cyclic imports must fail validation rather than become accepted complete states.
 - **Snapshot resolution:** a finite context graph recording every required occurrence binding, including nested/repeated and revision/closure-pinned uses.
 
 Store canonical records once and derive graph indexes; do not create one independent authoritative database per projection. Topological dependency order is not authorial reading order. Wall-clock timestamps are display/search metadata, not ancestry or accepted-operation ordering.
@@ -85,7 +85,7 @@ The storage ADR must define fsync/publication order, journal/database authority,
 
 ## 5. Encryption-aware access and execution
 
-Mode-independent domain identities must survive re-encryption and authorized transfer. The encrypted envelope needs version/algorithm/key-epoch identifiers, nonce and authenticated context binding; exact fields are pending security design. Signatures/commitments, encrypted physical lookup and private payload hashes must have separate responsibilities.
+Mode-independent domain identities must survive re-encryption and authorized transfer. The implemented crypto adapter binds version/suite, nonce and the expected workspace/logical record/purpose/key epoch; its exact envelope layout is specified in [ENCRYPTION.md](ENCRYPTION.md). Authenticated catalogue and application policy formats remain unimplemented. Signatures/commitments, encrypted physical lookup and private payload hashes must have separate responsibilities.
 
 Trusted-server mode permits an unlocked Rust service to run plaintext graph queries, compilation and permitted agent context. In client-held mode those operations must run at an authorized client boundary or be explicitly unavailable. The server cannot perform plaintext search simply because its config says it may. Plaintext drafts, indexes, backups, working Markdown, logs and exports are all part of the confidentiality boundary.
 
