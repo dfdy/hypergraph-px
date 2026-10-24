@@ -1,0 +1,78 @@
+{
+  "aeneas_revision": "74aabd52f77001cf9eaad51b4f4b867a7dc6b111",
+  "charon_revision": "260ba2c82588291b1f9efaf4f42d7100adc9c6c2",
+  "release": "nightly-2026.10.24-74aabd5",
+  "rust_toolchain": "nightly-2026-09-17",
+  "lean_toolchain": "leanprover/lean4:v4.35.0",
+  "source": "crates/domain/src/expansion.rs",
+  "source_sha256": "74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad",
+  "start_from": "crate::expansion::spend",
+  "generated_sha256": "feef095d9ad83706fa45ff0112cf40a9cced536527db7d7e48d200855b32cc9b",
+  "proof_sha256": "e61df9d66ff4da04af2e6ca860a8a01eab195811d7562032fc0732d2578e0875",
+  "dependencies": [
+    {
+      "name": "mathlib",
+      "repo": "leanprover-community/mathlib4",
+      "revision": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "plausible",
+      "repo": "leanprover-community/plausible",
+      "revision": "dfa4f38190d07c37e315953e08b90fe2d95b3c24",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "LeanSearchClient",
+      "repo": "leanprover-community/LeanSearchClient",
+      "revision": "d6b4c7be5be75ec4917c873ac50c756dc1436372",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "importGraph",
+      "repo": "leanprover-community/import-graph",
+      "revision": "a41f0e9a4dea23188ea9cc1c41ac9f8bbafe0b93",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "proofwidgets",
+      "repo": "leanprover-community/ProofWidgets4",
+      "revision": "df72b022e558978a1c50264cfc4d7fec86fa8e04",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "aesop",
+      "repo": "leanprover-community/aesop",
+      "revision": "4a174c490d8707121c4a9290800489f105d85e07",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "Qq",
+      "repo": "leanprover-community/quote4",
+      "revision": "dce0ad79c486cb1fb504af04f953c3466b0c6db8",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "batteries",
+      "repo": "leanprover-community/batteries",
+      "revision": "66e469188fe07963e5cf666c7d4433f45b8131c5",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "Cli",
+      "repo": "leanprover/lean4-cli",
+      "revision": "c24fe6078c630e89b489bffe59b3e20ac30d12c8",
+      "license": "MIT"
+    }
+  ],
+  "assets": {
+    "Darwin-arm64": {
+      "name": "aeneas-macos-aarch64.tar.gz",
+      "sha256": "e515671436b2a78bfc199080010157f1e1051aea888b74e910f8a4b65a5089cf"
+    },
+    "Linux-x86_64": {
+      "name": "aeneas-linux-x86_64.tar.gz",
+      "sha256": "0c2d6acf44e3e4f38a9b04ca14f909cf049bed1033a85b4591da5fd46663eeeb"
+    }
+  }
+}

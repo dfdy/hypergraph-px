@@ -39,7 +39,7 @@ Confirmed starting constraints:
 
 Start with [source-document status](SPECS/README.md), the [foundation review](SPECS/ARCHITECTURE_REVIEW.md) and the [data architecture/navigation reference](SPECS/DATA/README.md). These identify confirmed decisions and pending proposals separately. The [initial canonical specification](SPECS/SPECIFICATION.md) consolidates confirmed requirements; the historical evolved specification is not silently adopted as current authority.
 
-No application launch command exists yet; the pure-core check commands are below. Original code is AGPL-3.0-only, confirmed by the owner. Current project version is **0.0.2**. Follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); increment the version before each milestone push introducing new changes. See [CHANGELOG.md](CHANGELOG.md).
+No application launch command exists yet; the pure-core check commands are below. Original code is AGPL-3.0-only, confirmed by the owner. Current project version is **0.0.3**. Follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); increment the version before each milestone push introducing new changes. See [CHANGELOG.md](CHANGELOG.md).
 
 Initial core checks:
 
@@ -52,4 +52,4 @@ cargo test --workspace --locked
 
 ## Initial verification
 
-Five Rust tests pass, including all 512 directed three-vertex graphs against an independent reachability oracle, repeated dependencies, invalid inputs and exact resource budgets. Formatting and strict all-target Clippy pass. Four Lean graph-model theorems now check with Lean 4.35.0 and report no axioms. This does not prove the Rust validator: actual Aeneas extraction remains unrun. Storage encryption, the editor and single-executable runtime packaging remain implementation work; no retired-project evidence is counted here. See [formal assurance](proofs/README.md) and the [human-readable Lean validation digest](proofs/VALIDATION_DIGEST.md).
+Five Rust tests pass, including all 512 directed three-vertex graphs against an independent reachability oracle, repeated dependencies, invalid inputs and exact resource budgets. Formatting and strict all-target Clippy pass. Four Lean graph-model theorems now check with Lean 4.35.0 and report no axioms. This does not prove the Rust validator: strict whole-validator translation currently fails on supported-subset/model limits, while its unchanged real Rust budget helper has a checked extracted-semantics proof. Storage encryption, the editor and single-executable runtime packaging remain implementation work; no retired-project evidence is counted here. See [formal assurance](proofs/README.md) and the [human-readable Lean validation digest](proofs/VALIDATION_DIGEST.md).

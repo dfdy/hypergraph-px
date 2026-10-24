@@ -1,0 +1,28 @@
+name: Extracted Rust proof
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  budget-helper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@24581d74d674803a25a81b10b059c5c0cdd344c6
+        with:
+          lake-package-directory: proofs/lean
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-mathlib-cache: 'false'
+          use-github-cache: 'false'
+      - name: Cache pinned verification environment
+        uses: actions/cache@v4
+        with:
+          path: .verification
+          key: rust-proof-linux-v1-${{ hashFiles('proofs/rust/extraction.json') }}
+      - name: Re-extract and prove actual Rust helper
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/check_rust_proof.py --download

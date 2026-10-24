@@ -1,6 +1,6 @@
 # Human-readable Lean validation digest
 
-**Evidence date:** 2026-10-24. **Toolchain:** Lean/Lake 4.35.0. **Current inventory:** four checked Lean model theorems; zero Rust functions formally verified through Lean. This is a maintained evaluation record for developers and mathematicians, not a claim that the application or Rust graph algorithm is formally verified.
+**Evidence date:** 2026-10-24. **Toolchain:** Lean/Lake 4.35.0. **Current inventory:** four checked Lean model theorems and one checked theorem about an Aeneas-extracted real Rust helper. The full Rust graph validator remains unproved. This is a maintained evaluation record for developers and mathematicians, not a claim that the application or Rust graph algorithm is formally verified.
 
 The word “checked” below means Lean accepted a proof term for the stated proposition, and the compiled project environment was also checked with `leanchecker`. This differs from executing examples or passing a Rust test suite. The checked source is [Expansion.lean](lean/Hypergraph/Expansion.lean); the package entry imports it through [Hypergraph.lean](lean/Hypergraph.lean).
 
@@ -18,9 +18,9 @@ Rust implementation status:
 | Rust function | Existing evidence | Lean validation status |
 |---|---|---|
 | [`hypergraph_domain::expansion::validate`](../crates/domain/src/expansion.rs) | Five Rust tests, including exhaustive comparison of all 512 directed three-vertex graphs against a separate reachability oracle; formatting/Clippy/CI evidence in the foundation record | **Not formally verified.** Its Kahn elimination, declared-vertex checks, multiedges, maps/queue, work budgets and machine arithmetic have not been translated/proved in Lean. |
-| Internal `expansion::spend` | Exact boundary behavior exercised through validator tests | **Not formally verified.** No corresponding extracted function or overflow/budget theorem exists yet. |
+| Internal `expansion::spend` | Charon extraction from unchanged Rust, Aeneas translation, exact generated-source replay and `spend_spec` theorem | **Extracted semantics checked.** Exhaustion preserves the counter; successful accounting increments once without overflow/panic. This trusts the extraction/translation/backend boundary; see §7. |
 
-The Lean results currently concern mathematical relations/rank witnesses. They are not theorems about the compiled Rust binary, its filesystem, its authorization or a particular in-memory graph catalogue.
+The four graph results concern mathematical relations/rank witnesses. A separate extracted-helper proof is detailed in §7. None proves the compiled application binary, filesystem, authorization or complete graph catalogue.
 
 ## 2. Definitions and assumptions
 
@@ -104,13 +104,13 @@ e689f045cddc89a7d4e8acf0533edec9d0f7ffdb113d6566f7d890405c7f387e  proofs/lean/Hy
 74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad  crates/domain/src/expansion.rs
 ```
 
-The Rust hash identifies the *related unverified implementation*, not a proven extraction. Tool licenses/origins are in [TOOLING.md](../legal/TOOLING.md). [Issue 2](https://github.com/dfdy/hypergraph-px/issues/2) and [work record](../docs/work/0002-lean-foundation.md) retain scope and CI evidence. No retired-project proof/test result is reused.
+The Rust hash identifies the related implementation. The full validator remains unverified; §7 now binds a checked extraction of its private spend helper to that same source. Tool licenses/origins are in [TOOLING.md](../legal/TOOLING.md). [Issue 2](https://github.com/dfdy/hypergraph-px/issues/2) and [work record](../docs/work/0002-lean-foundation.md) retain scope and CI evidence. No retired-project proof/test result is reused.
 
 ## 5. Reproducing and extending the evaluation
 
 Install the exact pinned Lean toolchain, then run the commands above. With elan installed, `lake` selects the toolchain from the file. With an official unpacked distribution, prepend its `bin` directory to PATH. Recompute the source hashes before treating these results as evidence for modified code. The CI workflow builds with the pinned Lean action, rechecks the environment and prints theorem dependencies. Its checker must explicitly target `Hypergraph`: the Lake package is named `hypergraphProofs`, while the library module is `Hypergraph`. The initial hosted build passed but the helper guessed `HypergraphProofs` and could not find that module; specifying `leanchecker-args: Hypergraph` corrects the integration without weakening the check. The corrected [Lean CI run](https://github.com/dfdy/hypergraph-px/actions/runs/40078687517) passed for revision `756915a74738555f8893d2f00d7261c6d5ac8d91`, including build, environment checking and axiom output. The matching [Rust CI run](https://github.com/dfdy/hypergraph-px/actions/runs/40078687500) also passed. This evidence-only documentation update changes none of the source hashes above.
 
-Actual Rust-to-Lean extraction remains **unrun**. The preliminary Aeneas assessment pins a candidate Aeneas/Charon/Lean combination and records missing local translator build tools; it is not a pass/fail result for Rust support. Next evaluate a representative extraction, then prove that successful Rust validation produces or entails an accepted mathematical witness, including machine arithmetic, error paths and budgets. If containers are opaque, document required verified specifications or choose a smaller verification boundary rather than assuming equivalence.
+Actual extraction has now run. The unchanged whole crate reaches unsupported nested-loop returns and a missing Iterator::filter_map model; it has no complete generated validator proof. Isolating the real budget helper succeeds, with the theorem in §7. A diagnostic printer also failed on tuple-name formatting; dropping only that printer retained strict translation checks. A future full-validator proof must connect successful Rust validation to a mathematical witness, including containers, arithmetic, errors and budgets. Do not hide those obligations behind opaque declarations.
 
 ## 6. Maintenance requirement for future validated functions
 
@@ -124,3 +124,34 @@ For every additional Lean-validated function or theorem, append an inventory row
 6. Whether a source change invalidates the claim, what must be rerun, and the remaining unproved obligations.
 
 Never promote an ordinary test, a proposed proof, a failed build, or a model-only theorem into “Rust function verified.” Keep unsuccessful attempts and their corrections in the work record, so later evaluations can distinguish a sound result from an attractive but unconnected mathematical model.
+
+
+## 7. Actual Rust helper: `expansion::spend`
+
+**Checked symbol:** `spend_spec` in [SpendProof.lean](rust/SpendProof.lean), about `hypergraph_domain.expansion.spend` in [generated Spend.lean](rust/Spend.lean). **Original Rust:** the private helper in [expansion.rs](../crates/domain/src/expansion.rs). This source was extracted by Charon; the Lean body was not manually rewritten.
+
+The Rust function receives mutable machine-sized `work` and a `budget`, returning Rust `Result<(), Error>`. The generated Lean function receives two `Usize` values and returns an outer Aeneas result containing both the ordinary Rust result and the post-mutation counter. The outer result models successful execution versus panic/divergence; a returned Rust `Err(Budget)` is an ordinary successful execution of that function.
+
+The theorem quantifies over every represented pair of machine-sized inputs. Its total postcondition is the following disjunction:
+
+- If work < budget: ordinary Rust result is Ok and the returned counter equals the original work + 1.
+- If budget ≤ work: ordinary Rust result is Err(Budget) and the returned counter is unchanged.
+
+**Technical proof:** unfold the automatically generated function and split its guard. Simplification proves the exhausted branch. In the available-budget branch, the Aeneas `step` tactic applies the checked addition specification; `scalar_tac` discharges arithmetic obligations using work < budget and the bounded Usize representation. These facts imply work + 1 ≤ budget ≤ machine maximum, so addition cannot overflow. The total weakest-precondition specification proves outer successful return, rather than allowing panic/divergence vacuously. This proves this helper's accounting rule, not the validity of the graph, the chosen work-cost model, the surrounding loops or authorization.
+
+**Actual sequence:** pinned Charon compiled/extracted the original crate from the helper root; Aeneas translated it with warnings as errors; the generated file was byte-compared against the tracked output; pinned backend dependencies were checked; Lake built the theorem; theorem axioms were printed; `leanchecker SpendProof` rechecked the environment. The end-to-end [replay script](../scripts/check_rust_proof.py) passed locally, including fresh extraction from the unchanged Rust source. It isolates Rust nightly/Cargo/proof caches rather than changing the normal user toolchain.
+
+**Axiom report:** `spend_spec` depends on `[propext, Classical.choice, Quot.sound]`. These are Lean's standard foundations used by the backend/tactics. There is no sorryAx or native-decision axiom in the theorem report. Unlike the four initial graph theorems, this theorem is not axiom-free; evaluation must retain that distinction.
+
+**Tool boundary:** Aeneas commit 74aabd52f77001cf9eaad51b4f4b867a7dc6b111; Charon 0.1.294 at 260ba2c82588291b1f9efaf4f42d7100adc9c6c2; Rust nightly-2026-09-17; Lean 4.35.0. Trust includes Rust compilation/MIR extraction, the translator, the Aeneas standard-library semantics and Lean's checking/host/artifact infrastructure. The theorem is about the translated semantics, not an independent proof of emitted machine code. The existing graph validator's BTreeMap/VecDeque/control flow remains outside this result.
+
+Reproduce with `python3 scripts/check_rust_proof.py --download` after installing the pinned Lean/Lake, Python 3.12+, GitHub CLI and rustup. See [Rust proof README](rust/README.md) for tool reuse and [extraction.json](rust/extraction.json) for exact asset/source/proof/dependency pins. A source-hash change fails until reviewed and re-extracted; no dependency or generated-source mismatch is silently accepted. Hosted replay is a separate workflow whose actual results are recorded in the work record.
+
+Checked artifact hashes:
+
+```text
+feef095d9ad83706fa45ff0112cf40a9cced536527db7d7e48d200855b32cc9b  proofs/rust/Spend.lean
+e61df9d66ff4da04af2e6ca860a8a01eab195811d7562032fc0732d2578e0875  proofs/rust/SpendProof.lean
+```
+
+The original Rust module hash remains the one recorded in §4. Added nine development-only Lean packages are revision/license-pinned in the extraction record; no runtime Cargo dependency or Rust code was added by this proof.

@@ -103,4 +103,4 @@ Primary references checked on 2026-10-24:
 - [Aeneas project](https://github.com/AeneasVerif/aeneas): supported Rust translation and proof toolchain must be assessed against the actual selected version; no whole-application verification claim.
 - [Libsodium AEAD documentation](https://doc.libsodium.org/secret-key_cryptography/aead/chacha20-poly1305): established constructions are candidates, not a license to invent cryptography or declare a suite chosen before threat-model review.
 
-At initial discovery no crypto/proof tool was installed. Follow-up issue #2 now pins Lean 4.35.0 and checks four rank/path model theorems; see the [validation digest](../proofs/VALIDATION_DIGEST.md). Aeneas extraction and crypto implementation remain unrun/unimplemented.
+At initial discovery no crypto/proof tool was installed. Follow-up issue #2 now pins Lean 4.35.0 and checks four rank/path model theorems; see the [validation digest](../proofs/VALIDATION_DIGEST.md). Actual Charon/Aeneas extraction now proves the unchanged budget helper, while full-validator translation hits concrete subset/model limits. Crypto implementation remains future work.
