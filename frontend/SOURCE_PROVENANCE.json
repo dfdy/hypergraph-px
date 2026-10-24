@@ -1,0 +1,36 @@
+{
+  "source": "Owner-provided interface study 0.13.1, source commit f0309a8c3b69fa2c0486b2b5f86ba25de2dd579d",
+  "adoption": "Selected source helpers/render widgets only. Synthetic identities, exact cell range lookup and minimal cell edits adapted to preserve untouched source/attribution. HTML/layout, app/adapter, fixture source, formatting/minimap/tooltips, server and tests newly authored. Manuscript, built bundle, provider modules and private test fixture excluded.",
+  "modules": [
+    {
+      "source": "selection.js",
+      "sha256": "d65d36cff18b00cf997933f5a88cb6d30ef682410ab9479a07d147a23d31d366",
+      "license": "AGPL-3.0-only"
+    },
+    {
+      "source": "tables.js",
+      "sha256": "aaf6ada5b7621a0b9de10e0e1e599b9f75f9f345bd22226e9786f332290df126",
+      "license": "AGPL-3.0-only"
+    },
+    {
+      "source": "context-actions.js",
+      "sha256": "5f0672c950821c984bf98881cba79068559070769617434f6d74671008fe3b6e",
+      "license": "AGPL-3.0-only"
+    },
+    {
+      "source": "math-view.js",
+      "sha256": "3d3931e0f7dddc5d0499d4bf9f06373781f3a9d7c4e223ee85df982749c75b8f",
+      "license": "AGPL-3.0-only"
+    },
+    {
+      "source": "table-view.js",
+      "sha256": "e7fb77cd2e1e4b1fbf6797ba82457b248b120774363b138b0901cfd92a6850d8",
+      "license": "AGPL-3.0-only"
+    },
+    {
+      "source": "authorship.js",
+      "sha256": "85cca0accb87e7aa00d93de6ebe4f9e32997d1e47d70475ed924676166bfc2d8",
+      "license": "AGPL-3.0-only"
+    }
+  ]
+}

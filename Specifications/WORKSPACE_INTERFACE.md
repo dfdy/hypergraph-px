@@ -1,6 +1,6 @@
 # Workspace, reuse and investigation interface
 
-Status: current target requirements, 2026-10-24. All capabilities in this document are **unimplemented**. This document refines the [product specification](SPECIFICATION.md) and [frontend integration contract](FRONTEND_INTEGRATION.md); it defines behavior, not a selected database, endpoint schema or frontend library. Frontend implementation is paused pending an explicit instruction to resume.
+Status: current target requirements, 2026-10-24. Canonical backend capabilities in this document are **unimplemented**; the separate frontend preview implements selected presentation and explicitly tab-only fixture interactions. This document refines the [product specification](SPECIFICATION.md) and [frontend integration contract](FRONTEND_INTEGRATION.md); it defines behavior, not a selected database, endpoint schema or frontend library. Frontend-only implementation is authorized; the synthetic preview opens without authentication. Backend implementation remains outside this scope.
 
 ## 1. Core boundaries
 
@@ -96,7 +96,7 @@ Logical capabilities (identity, content/anchors, composition, revisions, referen
 
 Zotero integration plans include separately selectable/authenticated desktop-local REST and cloud Web API adapters, read-only initially. Their actual protocol/credential/origin contracts require review before code. Bind cited metadata to reconstruction inputs; live provider refresh never changes historical output. GitHub publication remains an explicit external job, not canonical history.
 
-Dependency order below extends the editor delivery gates; none authorizes restarting paused implementation:
+Dependency order below extends the editor delivery gates; each requires its own evidence; frontend-only authorization does not enable backend writes:
 
 | Gate | Required capability and observable acceptance |
 |---|---|

@@ -51,7 +51,18 @@ These aims describe direction rather than a release-date commitment. Detailed me
 
 ## Current status
 
-Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.8**; license: [AGPL-3.0-only](LICENSE).
+Early development: pure Rust expansion validation, in-memory encryption/key wrapping and a separately runnable synthetic-data frontend preview are implemented. Durable workspace storage and the integrated Rust application remain planned. Current version: **0.2.0**; license: [AGPL-3.0-only](LICENSE).
+
+## Frontend preview
+
+From `frontend/`, install Node.js 26 and run:
+
+```sh
+npm ci --ignore-scripts
+npm run dev
+```
+
+Open **http://127.0.0.1:5173/**. No authentication is required for this synthetic-data preview. Edit six example chapters, use the outline/minimap, inspect both sidebar panels, try table/maths views, add local comments and simulate provenance clipboard reuse. Changes stay in the tab and reset on reload; use **↓ Markdown** to download your current uncommitted buffer. See [frontend setup and tests](frontend/README.md). The separate Node development server is not part of the eventual single-Rust-executable release.
 
 ## Developer installation
 

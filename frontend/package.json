@@ -1,0 +1,25 @@
+{
+  "name": "hypergraph-px-frontend",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "dev": "node build.mjs && node server.mjs",
+    "build": "node build.mjs",
+    "test": "node --test tests/*.test.js",
+    "test:ui": "playwright test"
+  },
+  "dependencies": {
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.15",
+    "@codemirror/commands": "6.11.1",
+    "@codemirror/lang-markdown": "6.5.2",
+    "katex": "0.19.1",
+    "@codemirror/language": "6.13.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "@playwright/test": "1.64.1"
+  }
+}

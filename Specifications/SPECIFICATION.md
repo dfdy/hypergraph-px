@@ -1,6 +1,6 @@
 # Hypergraph PX MU-F — product specification
 
-Status: current requirements, 2026-10-24. Project version 0.1.8. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
+Status: current requirements, 2026-10-24. Project version 0.2.0. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
 
 ## 1. Scope and architecture
 
@@ -78,7 +78,7 @@ Lean/Aeneas are build/CI tools, not runtime requirements. Preserve a testable pu
 5. Branch/compare/selected integration and human/mock-agent structural workflows with crash/permission/provenance evidence.
 6. Remaining local integrations and hardening; future multi-user, offline exchange, federation and client-held mode through separate explicit acceptance gates.
 
-Use a bounded issue per increment, reproducible checks, license/provenance accounting, pure-core property/differential tests, recovery/failpoint tests and real-browser embedded/development parity. Do not treat disconnected internal primitives as a complete editor milestone. The in-memory trusted-server adapter now defines versioned object/key envelope bytes in [the encryption specification](DATA/ENCRYPTION.md) and [ADR 0002](../docs/adr/0002-trusted-server-envelopes.md). This is not a complete encrypted storage mode: durable publication, policy enforcement, OS-keychain integration, the editor and federation remain unimplemented.
+Use a bounded issue per increment, reproducible checks, license/provenance accounting, pure-core property/differential tests, recovery/failpoint tests and real-browser embedded/development parity. Do not treat disconnected internal primitives as a complete editor milestone. The in-memory trusted-server adapter now defines versioned object/key envelope bytes in [the encryption specification](DATA/ENCRYPTION.md) and [ADR 0002](../docs/adr/0002-trusted-server-envelopes.md). This is not a complete encrypted storage mode: durable publication, policy enforcement, OS-keychain integration, the live Rust-integrated editor and federation remain unimplemented. A synthetic browser-only preview is separately runnable without authentication; its tab-only simulations do not satisfy the durable editor gate.
 
 
 ## 8. Semantic versioning and milestone publication
