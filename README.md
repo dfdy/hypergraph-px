@@ -6,13 +6,13 @@ Source repository: https://github.com/dfdy/hypergraph-px (created private). Acti
 
 ## Current status
 
-Architecture decisions and the first pure Rust expansion validator. No durable storage format, crypto suite, checked Lean proof, browser editor or running service is implemented in this repository yet. The old application's tests and implementation status do not describe this project.
+Architecture decisions and the first pure Rust expansion validator. No durable storage format, crypto suite, browser editor or running service is implemented in this repository yet. The old application's tests and implementation status do not describe this project.
 
 Confirmed starting constraints:
 
 - Independently developed browser frontend and Rust domain/data processes, packaged as one Rust-based executable with built frontend assets embedded for releases.
 - Local-only first release; future multi-user/federation concerns inform the core now without enabling remote sharing prematurely.
-- Trusted-server encryption/key custody is the default; client-held encryption is a future supported alternative and remains unavailable until implemented.
+- Trusted-server encryption/key custody is the default, with passphrase unlock by default and an OS-keychain alternative; client-held encryption remains unavailable until implemented. Its future browser-only and trusted-client paths have explicitly different malicious-server-code guarantees.
 - Pure, deterministic core validators suitable for selective Lean verification; distinguish model proofs, Rust correspondence tests and direct implementation proofs.
 - A technical data-structure/navigation reference maintained alongside the implementation.
 - GitHub tracking and source control from the beginning.
@@ -32,4 +32,4 @@ cargo test --workspace --locked
 
 ## Initial verification
 
-Five Rust tests pass, including all 512 directed three-vertex graphs against an independent reachability oracle, repeated dependencies, invalid inputs and exact resource budgets. Formatting and strict all-target Clippy pass. Lean/Aeneas execution, storage encryption, the editor and single-executable runtime packaging remain implementation work; no retired-project evidence is counted here.
+Five Rust tests pass, including all 512 directed three-vertex graphs against an independent reachability oracle, repeated dependencies, invalid inputs and exact resource budgets. Formatting and strict all-target Clippy pass. Four Lean graph-model theorems now check with Lean 4.35.0 and report no axioms. This does not prove the Rust validator: actual Aeneas extraction remains unrun. Storage encryption, the editor and single-executable runtime packaging remain implementation work; no retired-project evidence is counted here. See [formal assurance](proofs/README.md) and the [human-readable Lean validation digest](proofs/VALIDATION_DIGEST.md).

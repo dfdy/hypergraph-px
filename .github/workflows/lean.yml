@@ -1,0 +1,21 @@
+name: Lean models
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@24581d74d674803a25a81b10b059c5c0cdd344c6 # v1, inspected 2026-10-24
+        with:
+          lake-package-directory: proofs/lean
+          auto-config: 'false'
+          build: 'true'
+          test: 'false'
+          lint: 'false'
+          use-mathlib-cache: 'false'
+          leanchecker: 'true'
+      - name: Report theorem axioms
+        working-directory: proofs/lean
+        run: lake env lean -DwarningAsError=true Hypergraph/Expansion.lean

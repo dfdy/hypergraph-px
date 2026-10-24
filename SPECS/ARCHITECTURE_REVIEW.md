@@ -81,7 +81,7 @@ Pin Lean/extraction versions and identify trusted components. Model-only proofs 
 5. Lean model proofs plus early Aeneas feasibility; selected actual Rust proofs where supported.
 6. Reject expansion cycles; hyperlinks may cycle. Initial sharing is workspace/document scoped and full history requires explicit grant. Original application code remains AGPL-3.0-only. No legacy feature removal was requested.
 
-Implement these confirmed decisions without reopening them routinely. Exact crypto formats, key-unlock defaults, storage publication and future replicated conflict semantics still require their own reviewed mechanisms before dependent durable writes. The first pure expansion validator introduces no data format or key custody.
+Implement these confirmed decisions without reopening them routinely. Key-unlock defaults and trusted-client guarantee are now confirmed: support passphrase/keychain, default passphrase; retain both browser-only and trusted-client paths, requiring the latter for malicious-host-code protection. Exact crypto formats, key wrapping, storage publication and future replicated conflict semantics still require their own reviewed mechanisms before dependent durable writes. The first pure expansion validator introduces no data format or key custody.
 
 ## Fresh implementation sequence
 
@@ -103,4 +103,4 @@ Primary references checked on 2026-10-24:
 - [Aeneas project](https://github.com/AeneasVerif/aeneas): supported Rust translation and proof toolchain must be assessed against the actual selected version; no whole-application verification claim.
 - [Libsodium AEAD documentation](https://doc.libsodium.org/secret-key_cryptography/aead/chacha20-poly1305): established constructions are candidates, not a license to invent cryptography or declare a suite chosen before threat-model review.
 
-No crypto/proof dependency was installed or selected by this review. The initial Rust expansion validator is the first implementation increment. No crypto/proof dependency or checked theorem exists yet.
+At initial discovery no crypto/proof tool was installed. Follow-up issue #2 now pins Lean 4.35.0 and checks four rank/path model theorems; see the [validation digest](../proofs/VALIDATION_DIGEST.md). Aeneas extraction and crypto implementation remain unrun/unimplemented.
