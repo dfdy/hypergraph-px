@@ -1,4 +1,5 @@
-# Hypergraph PX: The Graph Is More Than a Storage Mechanism
+# Hypergraph PX:
+## The Graph Is More Than a Storage Mechanism
 
 **Hypergraph PX is a graph-based document editing system that treats documents not as isolated, static files, but as evolving compositions of interconnected, reusable, and independently versioned content.**
 
