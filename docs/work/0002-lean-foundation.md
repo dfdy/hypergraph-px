@@ -16,3 +16,6 @@ Owner requested an ongoing human-readable digest for developers/mathematicians d
 Aeneas assessment: pinned source/Lean/Charon compatibility reviewed, no local OCaml/OPAM/Nix translator build available, queried latest-release endpoint returned 404. No extraction ran. This is an explicit unfinished implementation-correspondence gate, not evidence BTreeMap/VecDeque are supported or unsupported. No actual Rust function is claimed Lean-verified.
 
 Added pinned Lean CI action with compiled-environment checking. Hosted CI results will be evaluated on the pushed commit; local success is not labelled hosted success. No runtime dependency, crypto implementation, durable data format or user-data write introduced. Issue #2 stays open for the actual extraction/correspondence feasibility step.
+
+
+Initial hosted Rust CI passed. Initial hosted Lean build also compiled all theorems, but its environment-check helper inferred the package name HypergraphProofs rather than the actual library module Hypergraph and failed to find compiled modules. Fixed workflow by explicitly passing leanchecker-args: Hypergraph, matching the already-passing local command. No proof/source theorem change or check removal. Recheck the full workflow after this correction before claiming hosted proof success.

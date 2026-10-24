@@ -16,6 +16,7 @@ jobs:
           lint: 'false'
           use-mathlib-cache: 'false'
           leanchecker: 'true'
+          leanchecker-args: 'Hypergraph'
       - name: Report theorem axioms
         working-directory: proofs/lean
         run: lake env lean -DwarningAsError=true Hypergraph/Expansion.lean
