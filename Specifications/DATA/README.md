@@ -133,3 +133,8 @@ Five tests cover repeated/parallel/isolated dependencies, self/long/disconnected
 ## 10. Implemented encryption adapter boundary
 
 [hypergraph-crypto](../../crates/crypto/README.md) implements `Context`, `Purpose`, `SecretKey::{generate,seal,open,wrap,unlock}`, `StorageAddress` and `storage_address`. Its reference provides exact canonical byte layouts, algorithm/resource costs, errors, authorization responsibilities, plaintext/ciphertext visibility, a synthetic example and tests. [ADR 0002](../../docs/adr/0002-trusted-server-envelopes.md) explains the choices. Logical binding IDs and encrypted physical addresses remain separate; envelope context is supplied by an authorized application, not trusted from the file. These APIs add no graph navigation, history, storage publication, policy grant or client-held encryption. They are tested Rust, not Lean-verified functions.
+
+
+## 11. Planned workspace/reuse queries
+
+The [workspace interface contract](../WORKSPACE_INTERFACE.md) adds unimplemented requirements, not Rust symbols: list collection memberships versus composition children; resolve revision-bound selection anchors; trace cross-document derivation; inspect contextual assertions; resolve a designated live track; and manage protected per-principal/workspace clipboard entries. All queries bind exact view/context, permissions and budgets. Anchor transforms report ambiguity rather than silently quote-matching another occurrence. Reverse occurrence/backlink/lineage indexes are reconstructible; private clipboard order and acknowledged entries are protected application state, not a graph index. Query/renderer results never grant mutation or historical-key authority. Actual APIs in §§9–10 are unchanged.

@@ -1,6 +1,6 @@
 # Hypergraph PX MU-F — product specification
 
-Status: current requirements, 2026-10-24. Project version 0.1.7. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
+Status: current requirements, 2026-10-24. Project version 0.1.8. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
 
 ## 1. Scope and architecture
 
@@ -8,7 +8,7 @@ Hypergraph PX Multi-User Federated initially operates locally with one human. Ex
 
 Develop the browser editor in the local IDE/workspace independently from Rust domain/data/storage/transport layers. Begin with a separate local frontend development runtime and synthetic mock documents, with browser visual/interaction testing. Review imported visual prototypes against the frontend integration specification before adopting their architecture. Release packaging embeds built HTML/CSS/JavaScript in one Rust executable. No Node/frontend/database server or Lean process is required at runtime. Platform library/static-link requirements must be documented per release target rather than calling every build fully static.
 
-Source and work tracking are maintained at https://github.com/dfdy/hypergraph-px, a private repository. Original application code is AGPL-3.0-only; user content retains its own ownership/license.
+Source and work tracking are maintained at https://github.com/dfdy/hypergraph-px, a public repository. Original application code is AGPL-3.0-only; user content retains its own ownership/license.
 
 ## 2. Data and history invariants
 
@@ -51,13 +51,15 @@ Keep cryptographic transport/group-key agreement separate from document synchron
 
 ## 5. Editor and integrations
 
-Provide a desktop four-column writing interface, from left to right: (1) a contents tree of chapters, sections and subsections; (2) an editor showing styled Markdown source; (3) a document minimap for click/drag navigation and current-viewport indication; (4) a sidebar with separate Agent, Comments and Users tabs. Preserve whole-document caret, selection and source-ownership mapping. Comments are user-authored document annotations and remain separate from agent conversation. Users shows the known contributors to the current document, with the current human and current agent pinned above other contributing users/agents, each with a distinct display colour. It is a permission-scoped contribution/provenance view rather than a logged-in-user list; showing a contributor does not enable remote editing or grant historical access. Mobile is deferred. Document-local prose and repeated/nested source ownership are part of the core source model rather than late editor exceptions.
+Provide a desktop four-column writing interface, from left to right: (1) a contents tree of chapters, sections and subsections; (2) an editor showing styled Markdown source; (3) a document minimap for click/drag navigation and current-viewport indication; (4) a split sidebar with upper Interaction tabs (Agent, Comments, Users) and lower Investigation tabs (Concepts, Relationships, Sources, Provenance, History). The left navigator provides Workspace, Document, Graph and History lenses while keeping the heading tree accessible. Preserve whole-document caret, selection and source-ownership mapping. Comments are user-authored document annotations and remain separate from agent conversation. Users shows the known contributors to the current document, with the current human and current agent pinned above other contributing users/agents, each with a distinct display colour. It is a permission-scoped contribution/provenance view rather than a logged-in-user list; showing a contributor does not enable remote editing or grant historical access. Mobile is deferred. Document-local prose and repeated/nested source ownership are part of the core source model rather than late editor exceptions.
 
 The [frontend integration specification](FRONTEND_INTEGRATION.md) defines browser/Rust responsibilities, exact selection and source-mapping rules, draft/commit state handling, staged capabilities and frontend acceptance scenarios. Its candidate endpoints and adapter shapes are not implemented or frozen wire formats.
 
 Human and agent principals remain distinct. Context selection, model output and document instructions grant no permissions. Proposals freeze exact targets, action scope, model/actor attribution and expected state; approval rechecks current rights. Mock proposal/approval/recovery precedes live authoring. External model disclosure is explicit and mode-dependent.
 
 Branch comparison/selected integration, anchored comments, typed reasoning annotations, graph navigation, read-only Zotero citation integration, export and shared REST/MCP interfaces are planned product areas. They are not implemented yet. Specify and validate detailed capability, provider and protocol contracts before enabling them.
+
+The [workspace interface specification](WORKSPACE_INTERFACE.md) extends the desktop contract with independent chapter documents in versioned composite works, per-user/workspace protected provenance clipboards, explicit selection promotion, repeated paste-as-fork, pinned/live transclusion and contextual semantic assertions. Exact history, ownership, authorization and recovery are prerequisites for these durable capabilities. Clipboard previews and anchors are sensitive private state; ordinary copy never silently commits unsaved work. Lower-panel context pinning and accessible navigation are required. Zotero targets separately authenticated desktop-local REST and cloud Web API adapters, read-only initially. All these capabilities remain planned.
 
 ## 6. Formal validation
 

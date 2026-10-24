@@ -4,7 +4,9 @@ Status: development coordination specification, 2026-10-24. Audience: the agent 
 
 The behavioral requirements below govern frontend development. Adapter concepts and candidate HTTP routes are design targets, **not implemented endpoints, a frozen JSON schema or a durable storage format**. The product specification takes precedence. Agree executable DTO/schema fixtures with Rust implementation before connecting real data. Interface-study versions, application versions and transport-contract versions are independent.
 
-## 1. Current boundary and what to build now
+The [workspace interface specification](WORKSPACE_INTERFACE.md) refines the desktop layout, multi-document/reuse semantics and investigation workflows. Its sections define the durable clipboard/promotion/transclusion and backend gates. The owner has **paused frontend implementation**; this specification update authorizes no runtime work. Resume the staged work below only after explicit instruction.
+
+## 1. Current boundary and staged delivery
 
 The repository implements a pure Rust expansion validator and an in-memory cryptographic adapter. It has **no HTTP server, authentication/session service, draft store, publication service, frontend package or live REST/MCP endpoints**. Crypto functions are not browser API endpoints. Frontend library selection is not fixed by this specification.
 
@@ -14,9 +16,9 @@ Do not implement the complete endpoint catalogue before a usable editor slice. S
 
 | Stage | Frontend work | Backend acceptance gate |
 |---|---|---|
-| A: visual/interaction study | Four columns/three sidebar tabs, editable synthetic document, selection/undo, outline/minimap, table/maths presentation, attribution and simulated failure states | Fixture-only; no backend dependency |
+| A: visual/interaction study | Four columns/split Interaction and Investigation panels, editable synthetic document, selection/undo, outline/minimap, table/maths presentation, attribution and simulated failure states | Fixture-only; no backend dependency |
 | B: local editor | Create/open document, exact owned projection, draft autosave/recovery, explicit commit, error/conflict handling | Authentication/unlock design, authoritative identities/source mapping, encrypted durable drafts/publication and real recovery tests |
-| C: reviewed structure | Fork/link/shared occurrence operations, history and branch comparison/integration | Exact provenance/closure, proposal/approval, atomic expected-state/idempotency and permission checks |
+| C: reviewed structure | Multi-document/composite structure, anchored promotion, private clipboard, fork/pinned inclusion, history and branch comparison/integration | Exact provenance/closure, promotion approval, protected clipboard/receipt recovery, atomic expected-state/idempotency and permission checks; Live gated separately by resolver acceptance |
 | D: integrations | Anchored comments, contributor/attribution services, annotations, exact export, mock then live agent, read-only Zotero and optional reviewed GitHub document publication | Per-feature contracts, disclosure/credential policy, capability checks and executed acceptance evidence |
 | E: remote/client-held | Live collaboration, offline exchange, federation, client-held mode | Separate concurrency, membership, policy, key lifecycle and trusted-client gates |
 
@@ -24,7 +26,7 @@ Comments/agent visual panels can be demonstrated in A; their persistence/live ex
 
 ## 2. Desktop presentation and interaction responsibilities
 
-Default left-to-right layout: **chapter/section/subsection contents → styled Markdown source editor → document minimap → discussion sidebar with Agent, Comments and Users tabs**. Keep this order. Minimap navigation and current-viewport indication must stay synchronized with the same editor projection as the contents tree. Mobile responsiveness is deferred.
+Default left-to-right layout: **workspace/contents navigator → styled Markdown source editor → document minimap → split right sidebar** (upper Interaction: Agent, Comments, Users; lower Investigation: Concepts, Relationships, Sources, Provenance, History). Keep this order. Minimap navigation and current-viewport indication must stay synchronized with the same editor projection as the contents tree. Mobile responsiveness is deferred.
 
 The browser owns presentation, input/IME, local transactions, caret/selection, focus, undo/redo and display preferences. Rust application services own authoritative identities, source ownership, permissions, validation, draft durability, proposal approval, publication, provenance and recovery. The browser may track tentative mappings to preserve editing responsiveness; Rust independently validates mappings before accepting writes.
 
@@ -147,7 +149,7 @@ Optional server events may invalidate authorized projections or report progress.
 
 Local live serving must bind loopback by default and validate Host/origin, same-origin requests and CSRF protection for cookie-authenticated mutation. Do not enable permissive CORS to connect a hosted mockup. Keep authentication, display preferences and storage unlock distinct. Server-derived actors/device authority, not submitted labels, authorize operations. Protect sensitive API responses and exports from unintended caches and logs; select exact headers, cookies and CSP in the transport/security contract before real data integration.
 
-Display preferences may contain only validated theme, wrap width, editor font size, minimap visibility, panel widths, authorship-colour visibility and maths Source/Rendered mode, with a schema version and defaults for corrupt/unsupported values. Persistence mechanism, name and lifetime are UI choices, not an authentication or data format. Never store text, document IDs, drafts, proposals, credentials, keys or permission grants with preferences. Blocking preference persistence must not prevent editing. Browser zoom is separate from editor font size.
+Display preferences may contain only validated theme, wrap width, editor font size, minimap visibility, panel widths/proportions, collapsed states, selected tab/lens, authorship-colour visibility and maths Source/Rendered mode, with a schema version and defaults for corrupt/unsupported values. Persistence mechanism, name and lifetime are UI choices, not an authentication or data format. Never store text, document IDs, drafts, proposals, credentials, keys or permission grants with preferences. Blocking preference persistence must not prevent editing. Browser zoom is separate from editor font size.
 
 | Later feature | Required frontend boundary |
 |---|---|
@@ -161,7 +163,7 @@ Display preferences may contain only validated theme, wrap width, editor font si
 
 ### 8.1 Users as document contributors
 
-The owner-approved sidebar has three tabs: **Agent, Comments, Users**. **Users lists all known contributors to the current document, not logged-in or connected users.** Derive it from authorized contribution/attribution/provenance records for the viewed document/state. A disconnected contributor remains listed; connecting alone does not make anyone a contributor. This read projection is compatible with one active local human and does not enable multi-user mutation or federation.
+The upper Interaction panel has three tabs: **Agent, Comments, Users**. **Users lists all known contributors to the current document, not logged-in or connected users.** Derive it from authorized contribution/attribution/provenance records for the viewed document/state. A disconnected contributor remains listed; connecting alone does not make anyone a contributor. This read projection is compatible with one active local human and does not enable multi-user mutation or federation.
 
 At the top, pin **current human** and **current agent**, resolved by opaque principal identity from the authenticated human and the agent assigned to this document/editing context. They remain distinguishable from historical contribution claims: pinning someone does not assert they wrote text. If no current agent is assigned, show an explicit “No current agent” row rather than fabricate a connected agent/principal. Fixture identities are clearly labelled synthetic/display-only; a provider label, model name, MCP connection or sample chat message is not an authoritative agent identity.
 
@@ -169,7 +171,7 @@ Below the pinned entries, list **other contributing users/agents**, one entry pe
 
 “All known” includes recorded earlier contributions, including edits to content no longer present, within the viewer's authorized document/provenance/history scope. Full retained-history access is not granted by opening this tab. Return only identities/roles and completeness information the policy allows; do not reveal withheld identities or counts. A historical snapshot query binds its exact permitted state and cannot acquire contributors from newer heads. An unavailable/incomplete contributor index is reported honestly, never replaced by current presence. Queries are bounded/paginated, with navigation to all available contributors rather than silent truncation. A recoverable contributor index derives from authoritative records rather than becoming a second history authority.
 
-Use one session-stable **distinct assigned colour per displayed principal**, including pinned entries, and reuse that palette in inline attribution and context-menu indicators. Reserve current-human red (hue 0) under the display convention in §8.2; assign the agent and other contributors different colours with collision handling. Loading later pages must not reshuffle existing colours or merge different identities. Names, human/agent kind and role labels remain necessary for accessibility; colour alone is not an identity or evidence. The Authors toggle controls inline highlighting, not whether the Users list shows contributor colours. Do not persist principal/hue maps in display cookies.
+Use one session-stable **distinct assigned colour per displayed principal**, including pinned entries, and reuse that palette in inline attribution and context-menu indicators. Reserve current-human red (hue 0) and current-agent blue under the display convention in §8.2; assign other contributors distinct colours with collision handling. Loading later pages must not reshuffle existing colours or merge different identities. Names, human/agent kind and role labels remain necessary for accessibility; colour alone is not an identity or evidence. The Authors toggle controls inline highlighting, not whether the Users list shows contributor colours. Do not persist principal/hue maps in display cookies.
 
 The optional `getContributors` adapter may use candidate `GET /documents/{document}/contributors`, bound to exact projection/snapshot, authorized contribution scope and cursor. Return permitted principals/roles and current-context references separately from historical contribution facts. This is a planned read model, not an implemented endpoint. `GET /documents/{document}/presence` and `GET /workspaces/{workspace}/members`, if later supported, remain separate connection/membership projections and **must not populate the Users contributor list**. Current-agent context resolution and contributor-role/completeness rules must be specified before live integration; no new graph primitive or identity model is required.
 
@@ -179,7 +181,7 @@ Provide an **Authors** display toggle, initially off. Attribution comes from aut
 
 The contract must name the attribution role shown: recorded original contributor, last editor, importer, agent proposer, human approver and content owner are different facts. Return known, mixed, unknown or undisclosed attribution plus only permitted evidence. Presence or ownership cannot determine the author. **Importing, copying, forking or including text does not automatically make the current human its original author.** Imported material without evidence remains unknown in the relevant authorship role; the importer may be recorded separately. Newly typed bytes can carry tentative current-human draft attribution until validated publication. Do not invent coauthors or verified provenance for a visual demonstration.
 
-Default visual convention: the authenticated current human uses red (hue 0); other known authors use session-stable hues outside the reserved red range. The palette is display state, not a principal ID, evidence or globally stable identity. Use the distinct contributor palette in §8.1, labels/role indicators and accessible contrast as well as colour; colour differences alone do not provide accessible identity. Do not persist author identities/hue maps in the display cookie. Imported unknown text must not receive current-user red merely because the document was opened by that user.
+Default visual convention: the authenticated current human uses red (hue 0); the current agent uses blue; other known authors use distinct session-stable hues outside reserved red and blue ranges. The palette is display state, not a principal ID, evidence or globally stable identity. Use the distinct contributor palette in §8.1, labels/role indicators and accessible contrast as well as colour; colour differences alone do not provide accessible identity. Do not persist author identities/hue maps in the display cookie. Imported unknown text must not receive current-user red merely because the document was opened by that user.
 
 Context-menu lookup uses the **clicked source position**, not the existing selection's anchor/head. A right-click inside the selection preserves it while showing attribution for the clicked position. Keyboard invocation uses the caret context. Show an attribution header even when colouring is off or other actions are unavailable; use a safe unknown/undisclosed or mixed result where appropriate. Table cells and maths widgets map their actual clicked content back to exact source spans; repeated visible text is never a unique anchor.
 
@@ -240,7 +242,7 @@ No frontend provider ID, database schema, cryptographic format, MLS transport or
 
 ## 9. Acceptance scenarios and handoff checklist
 
-The frontend agent should deliver its interface code, an adapter boundary, synthetic fixtures and executable UI/adapter tests for these scenarios. Report which were actually run; fixtures cannot establish Rust durability/security. Tests against a real backend are required for the corresponding integration gate.
+When implementation resumes, the frontend agent should deliver its interface code, an adapter boundary, synthetic fixtures and executable UI/adapter tests for these scenarios. Report which were actually run; fixtures cannot establish Rust durability/security. Tests against a real backend are required for the corresponding integration gate.
 
 | Scenario | Expected observable result |
 |---|---|
@@ -271,7 +273,7 @@ Before enabling live writes, both frontend and Rust developers must agree execut
 
 ## 10. Work order for the frontend agent
 
-Start with stage A and keep the visual implementation behind the adapter in §3. Use synthetic fixtures with repeated/nested content, document-local prose, inserted text, Unicode, a small table and mapped formula source. Include pinned human/agent, other/offline contributors, a logged-in noncontributor, missing-agent and unknown/mixed authorship fixtures without inventing authenticated peers or crediting imported text to the current user. Implement controllable delayed acknowledgements, conflicts, locked/unavailable states and uncertain commit outcomes so the UI can exercise §§4–6 without real storage. Show fixture status and keep advanced live capabilities unavailable.
+After explicit resumption, start with stage A and keep the visual implementation behind the adapter in §3. Use synthetic fixtures with repeated/nested content, document-local prose, inserted text, Unicode, a small table and mapped formula source. Include pinned human/agent, other/offline contributors, a logged-in noncontributor, missing-agent and unknown/mixed authorship fixtures without inventing authenticated peers or crediting imported text to the current user. Implement controllable delayed acknowledgements, conflicts, locked/unavailable states and uncertain commit outcomes so the UI can exercise §§4–6 without real storage. Show fixture status and keep advanced live capabilities unavailable.
 
 Deliver the interface, adapter/fixture modules, setup instructions, dependencies/licenses and the actual browser/adapter checks executed against §9. Document unanswered transport/schema questions for the Rust developer. Do not implement graph authority, invent a database/encryption format, connect a real provider, or claim real durability to make a visual control appear finished. Move to stage B only after its backend contract and acceptance gate exist.
 

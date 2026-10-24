@@ -48,3 +48,12 @@ Every traversal declares its edge projection, consistent view, authorization sco
 Validate unique placement ownership, complete endpoints, same-identity parents, transformation coverage, expansion acyclicity and snapshot closure before publication. Cross-owner mutations recheck every affected expected head and policy atomically. Request/storage exhaustion rejects work without silently pruning history. A recoverable index cannot become historical authority.
 
 The implemented `expansion::validate` is a bounded Kahn validator over caller-supplied vertices and edges; it does not implement the entire model above. Four Lean rank/path theorems check a mathematical acyclicity model, and the actual Rust budget helper has an extracted proof. Full graph-validator correspondence and the additional invariants remain unproved. See the [validation digest](../../proofs/VALIDATION_DIGEST.md).
+
+
+## Workspace composition, anchors and semantic entities
+
+Collections organize membership without embedding; versioned composite works reuse manifest/occurrence semantics to assemble independent documents. The concrete entity-kind encoding remains undecided. Exact snapshot closure includes ordered chapter revisions and repeated nested contexts; a pin on one revision alone does not necessarily pin its descendants.
+
+Revision-bound anchors identify partial/overlapping ranges without creating overlapping composition children. Explicit promotion preserves visible bytes and earlier snapshots. Ordered multi-owner ranges retain per-component identity, revision, occurrence context and coordinates. Every fork creates a fresh identity and exact transformation event; repeated fork pastes derive from the captured revision, not a later head. Clipboard entries reference sources as protected private state, not canonical derivation events until an actual derivation occurs.
+
+Concepts, propositions and assertions are ordinary identifiable revisioned entities. Role-labelled reference edges encode n-ary assertions; namespaced semantic predicates cannot masquerade as structural commands. Proposed/accepted/rejected/superseded states carry context and actor evidence, not universal truth. Snapshot inclusion profiles bind exact reference/assertion state separately from later retrospective overlays. See [workspace interface](../WORKSPACE_INTERFACE.md) for behavior and unresolved format gates. These are proposed obligations, not newly proved or implemented types.

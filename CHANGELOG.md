@@ -2,6 +2,13 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.1.8 — 2026-10-24
+
+- Integrate multi-document/composite navigation, split Interaction/Investigation panels and contextual concept/assertion workflows into current specifications.
+- Specify protected provenance clipboards, explicit source promotion, atomic fork-paste/clear recovery and pinned/live transclusion with exact historical closure.
+- Record backend identity, authorization, encryption, transaction and resolver gates; retain single-Rust-executable packaging and read-only local/cloud Zotero plans.
+- Reflect public source-repository visibility and the owner's frontend implementation pause. No runtime, dependency, proof or durable format changes.
+
 ## 0.1.7 — 2026-10-24
 
 - Prepare a local Sites export inbox, preserving raw files outside automatic Git publication.

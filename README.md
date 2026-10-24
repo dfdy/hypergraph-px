@@ -38,8 +38,9 @@ See [development state and handoff](docs/DEVELOPMENT_STATE.md) for current progr
 
 The following capabilities are planned and are **not yet implemented**. They build on the [product specification](Specifications/SPECIFICATION.md) and its staged delivery plan.
 
-- **Zotero citation integration:** search and select references from a Zotero library through a read-only integration, insert citations while writing, and use bibliographic metadata during document compilation/export. Preserve the exact citation metadata and formatting inputs needed to reproduce a recorded document; reading a historical snapshot must not silently refresh its references. Writing back to the Zotero library is outside the initial integration scope.
-- **Desktop writing workspace:** a four-column layout with chapter/section contents, a styled Markdown source editor, a navigable document minimap, and a sidebar with separate Agent, Comments and Users tabs. Users lists document contributors, with the current human and agent pinned above the other contributors, each with its own colour. Preserve whole-document selection and precise ownership of text, including repeated and nested content. Mobile responsiveness is deferred.
+- **Zotero citation integration:** search and select references from a Zotero library through separately authenticated desktop-local REST and cloud Web API adapters, read-only initially, insert citations while writing, and use bibliographic metadata during document compilation/export. Preserve the exact citation metadata and formatting inputs needed to reproduce a recorded document; reading a historical snapshot must not silently refresh its references. Writing back to the Zotero library is outside the initial integration scope.
+- **Desktop writing workspace:** a four-column layout with chapter/section contents, a styled Markdown source editor, a navigable document minimap, and a split sidebar with upper Agent, Comments and Users tabs and lower Concepts, Relationships, Sources, Provenance and History investigation tabs. Users lists document contributors, with the current human and agent pinned above the other contributors, each with its own colour. Preserve whole-document selection and precise ownership of text, including repeated and nested content. Mobile responsiveness is deferred.
+- **Multi-document research and reuse:** organize independent chapters into versioned composite works, navigate Workspace/Document/Graph/History lenses, and use a protected provenance clipboard for independently forked pastes or explicit pinned/live transclusions. Investigate concepts and contextual semantic assertions without confusing agent proposals with accepted claims. See the [workspace interface contract](Specifications/WORKSPACE_INTERFACE.md).
 - **Reusable content and navigable history:** edit and reuse independently versioned content, fork or split it with traceable provenance, compare branches, and selectively integrate changes. Explore occurrences, references, backlinks and derivations without losing the exact state captured by a document snapshot.
 - **Agent assistance and anchored comments:** discuss selected context, review proposed edits and approve precisely scoped changes. Keep human comments separate from agent conversation, distinguish human and agent identities, and recheck permissions and document state before applying an approved proposal. External model disclosure must be explicit.
 - **Reproducible compilation and export:** assemble documents from their exact recorded content, structure, citation data and compiler inputs. Keep recoverable editing drafts separate from explicitly committed history, and reproduce snapshots without consulting newer content heads.
@@ -50,11 +51,11 @@ These aims describe direction rather than a release-date commitment. Detailed me
 
 ## Current status
 
-Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.7**; license: [AGPL-3.0-only](LICENSE).
+Early development: pure Rust expansion validation and in-memory encryption/key wrapping are implemented. Durable workspace storage, the browser editor and a runnable application are still planned. Current version: **0.1.8**; license: [AGPL-3.0-only](LICENSE).
 
 ## Developer installation
 
-Install Git and [Rust through rustup](https://www.rust-lang.org/tools/install), including the native compiler/linker prerequisites for your platform. The repository is currently private, so your GitHub account needs access to clone it.
+Install Git and [Rust through rustup](https://www.rust-lang.org/tools/install), including the native compiler/linker prerequisites for your platform. The repository is public at [dfdy/hypergraph-px](https://github.com/dfdy/hypergraph-px); no GitHub account is required to clone it.
 
 Clone the repository and install the stable Rust toolchain with the formatting/lint components:
 
