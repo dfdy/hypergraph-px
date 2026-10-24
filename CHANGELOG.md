@@ -2,6 +2,14 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see SPECS/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.1.0 — 2026-10-24
+
+- Add a separate trusted-server crypto adapter: XChaCha20-Poly1305 object envelopes, ciphertext-only SHA-256 storage addresses and bounded Argon2id passphrase-key wrapping.
+- Bind workspace/record/purpose/epoch, clear managed secret/KDF buffers, and reject malformed/unknown/resource-heavy inputs before cryptographic processing.
+- Test round-trip, independent encryption of equal content, tampering/context substitution, limits and passphrase rewrapping without re-encrypting prior objects.
+- Record dependency licenses/checksums, the envelope ADR, actual API reference and persistent context-compaction handoff.
+- No durable workspace, keychain implementation, authorization, client-held encryption or complete application is claimed. Existing domain/proof source is unchanged.
+
 ## 0.0.3 — 2026-10-24
 
 - Execute pinned Charon/Aeneas extraction against the actual Rust domain crate and document nested-loop/iterator-model limits.

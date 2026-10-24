@@ -155,3 +155,9 @@ e61df9d66ff4da04af2e6ca860a8a01eab195811d7562032fc0732d2578e0875  proofs/rust/Sp
 ```
 
 The original Rust module hash remains the one recorded in §4. Added nine development-only Lean packages are revision/license-pinned in the extraction record; no runtime Cargo dependency or Rust code was added by this proof.
+
+## 8. Hosted replay and later adapter boundary
+
+For published commit `3d7f2538696c13383bd05c1932f53831f4db8a57` (0.0.3), all three hosted workflows were observed completed successfully: [Rust checks](https://github.com/dfdy/hypergraph-px/actions/runs/40080895349), [Lean models](https://github.com/dfdy/hypergraph-px/actions/runs/40080895296), and [fresh extracted-Rust proof replay](https://github.com/dfdy/hypergraph-px/actions/runs/40080895276). This closes initial extraction feasibility, not full-validator correctness.
+
+The subsequent crypto adapter adds tested runtime code in a separate crate. No cryptographic or key-lifecycle function has been Lean verified; this inventory remains four model theorems and one extracted-helper theorem. Cryptographic library correctness/entropy/zeroization and filesystem/application policy remain outside these proofs.

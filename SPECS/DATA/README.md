@@ -1,6 +1,6 @@
 # Data structures and navigation: MU-F technical reference
 
-Status: initial design vocabulary, 2026-10-24. The navigation/type table below remains proposed. The first implemented validator is documented in §9. Proposed names/contracts below will be replaced or linked to actual symbols as implementation proceeds. Durable wire fields, encoding, crypto suite and algorithm/container choices await accepted decisions.
+Status: initial design vocabulary, 2026-10-24. The navigation/type table below remains proposed. The first implemented validator is documented in §9. Proposed names/contracts below will be replaced or linked to actual symbols as implementation proceeds. Domain wire fields and container choices await accepted decisions; the separate crypto envelope adapter is now documented in §10.
 
 Design inputs: [underlying mathematics](Underlying%20mathematics.md), [encryption design](Encryption%20specification.md), and the [new-project reconciliation](../ARCHITECTURE_REVIEW.md). This reference explains mechanisms; a future canonical specification will own product requirements.
 
@@ -129,3 +129,7 @@ As code lands, replace sketches with real Rust symbol/source links, canonical ex
 The implementation uses iterative Kahn validation and ordered maps. Parallel edges and repeated dependencies are valid. A successful run spends exactly 2V + 2E defined work units, stores O(V + E) data and performs O((V + E) log V) ordered-map work (with a constant empty case). It mutates no input and does not require storage, network, keys or a principal. Its caller must supply the complete correct projection and authorize any records used to build it. It is not a renderer, forest-owner validator, durable commit or permission grant.
 
 Five tests cover repeated/parallel/isolated dependencies, self/long/disconnected cycles, invalid vertex catalogues/endpoints and exact independent budgets. The last exhaustively checks all 512 directed graphs on three vertices against an independent transitive-closure oracle, with reversed input order and input preservation. Actual execution evidence belongs to the issue/work record; these tests are not Lean/Rust correspondence proofs. Separate rank/path model theorems are checked, as documented in the formal-assurance record.
+
+## 10. Implemented encryption adapter boundary
+
+[hypergraph-crypto](../../crates/crypto/README.md) implements `Context`, `Purpose`, `SecretKey::{generate,seal,open,wrap,unlock}`, `StorageAddress` and `storage_address`. Its reference provides exact canonical byte layouts, algorithm/resource costs, errors, authorization responsibilities, plaintext/ciphertext visibility, a synthetic example and tests. [ADR 0002](../../docs/adr/0002-trusted-server-envelopes.md) explains the choices. Logical binding IDs and encrypted physical addresses remain separate; envelope context is supplied by an authorized application, not trusted from the file. These APIs add no graph navigation, history, storage publication, policy grant or client-held encryption. They are tested Rust, not Lean-verified functions.
