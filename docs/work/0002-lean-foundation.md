@@ -19,3 +19,6 @@ Added pinned Lean CI action with compiled-environment checking. Hosted CI result
 
 
 Initial hosted Rust CI passed. Initial hosted Lean build also compiled all theorems, but its environment-check helper inferred the package name HypergraphProofs rather than the actual library module Hypergraph and failed to find compiled modules. Fixed workflow by explicitly passing leanchecker-args: Hypergraph, matching the already-passing local command. No proof/source theorem change or check removal. Recheck the full workflow after this correction before claiming hosted proof success.
+
+
+Hosted verification succeeded for proof/workflow revision 756915a74738555f8893d2f00d7261c6d5ac8d91: Lean build, explicit Hypergraph environment check and theorem-axiom report passed at https://github.com/dfdy/hypergraph-px/actions/runs/40078687517; Rust formatting/strict Clippy/tests passed at https://github.com/dfdy/hypergraph-px/actions/runs/40078687500. The subsequent evidence-only update changes no proof or Rust source hash. Digest delivered; actual Rust extraction/correspondence remains open.
