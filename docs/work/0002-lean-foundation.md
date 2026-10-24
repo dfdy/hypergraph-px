@@ -1,6 +1,6 @@
 # First Lean model — issue 2
 
-Tracking: https://github.com/dfdy/hypergraph-px/issues/2. Date: 2026-10-24. Status: first model proofs validated; Rust extraction remains follow-up work.
+Tracking: https://github.com/dfdy/hypergraph-px/issues/2. Date: 2026-10-24. Status: completed at 0.0.3; selected actual Rust helper extraction/proof replay passed locally and in hosted CI. Earlier entries below retain their historical state.
 
 Owner follow-up resolves startup unlock (both passphrase/keychain, default passphrase) and future client distribution (both browser-only and independently trusted clients, stronger malicious-code-serving protection only for trusted clients). Updated canonical specification and ADR 0001 before dependent storage work.
 
@@ -32,3 +32,5 @@ Milestone 0.0.3: Charon 0.1.294 successfully extracted the actual crate. Aeneas 
 The new replay script succeeded end-to-end twice locally, including after version bump: exact tool versions, fresh extraction, generated-byte match, nine backend dependency pins, theorem build/audit and leanchecker. Five Rust tests, formatting, strict locked Clippy, version/hash/document-link checks passed. Updated digest distinguishes four axiom-free abstract graph theorems from the one extracted-helper theorem and records both actual translator failure and success. A dedicated hosted replay workflow now provisions pinned official bundles and isolated tool caches. Hosted results are not presumed until observed.
 
 This resolves initial extraction feasibility with a useful real helper proof, not full-validator correctness. Future graph proof work must address control flow and standard-library models or a reviewed certificate checker; do not hide those obligations as trusted opaque functions. The next implementation increment can now proceed toward encrypted local data without asserting full formal verification.
+
+Observed hosted 0.0.3 success before starting issue 4: Rust run 40080895349, model run 40080895296, extracted-Rust replay run 40080895276. Issue 2 closed completed; full-validator proof remains an explicitly separate obligation.

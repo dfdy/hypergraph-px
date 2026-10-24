@@ -1,6 +1,6 @@
 # Hypergraph PX MU-F — initial canonical specification
 
-Status: initial foundation, 2026-10-24. Current application version 0.0.3 (initial baseline 0.0.1). This specification consolidates the owner's confirmed restart decisions and the mathematics/encryption design principles. The supplied original/evolved specifications and development review are historical sources; implementation claims there do not transfer to this project.
+Status: initial foundation, 2026-10-24. Current application version 0.1.0 (initial baseline 0.0.1). This specification consolidates the owner's confirmed restart decisions and the mathematics/encryption design principles. The supplied original/evolved specifications and development review are historical sources; implementation claims there do not transfer to this project.
 
 ## 1. Scope and architecture
 
@@ -74,7 +74,7 @@ Lean/Aeneas are build/CI tools, not runtime requirements. Preserve a testable pu
 5. Branch/compare/selected integration and human/mock-agent structural workflows with crash/permission/provenance evidence.
 6. Remaining local integrations and hardening; future multi-user, offline exchange, federation and client-held mode through separate explicit acceptance gates.
 
-Use a bounded issue per increment, reproducible checks, license/provenance accounting, pure-core property/differential tests, recovery/failpoint tests and real-browser embedded/development parity. Do not treat disconnected internal primitives as a complete editor milestone. This initial specification introduces no durable wire format and does not claim an implemented encryption mode, editor or federation protocol.
+Use a bounded issue per increment, reproducible checks, license/provenance accounting, pure-core property/differential tests, recovery/failpoint tests and real-browser embedded/development parity. Do not treat disconnected internal primitives as a complete editor milestone. The in-memory trusted-server adapter now defines versioned object/key envelope bytes in ADR 0002. This is not a complete encrypted storage mode: durable publication, policy enforcement, OS-keychain integration, the editor and federation remain unimplemented.
 
 
 ## 8. Semantic versioning and milestone publication
@@ -82,3 +82,7 @@ Use a bounded issue per increment, reproducible checks, license/provenance accou
 Use [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html). Before each milestone push introducing new commits, increase the project version, synchronize Rust package/lockfile and Lean package metadata plus current documentation, and record the change in CHANGELOG.md. A retry of the identical versioned commit does not need another bump. Do not rewrite already published version contents or bump unrelated schema/protocol/toolchain versions.
 
 The public contract comprises exported Rust APIs and documented behavior, and subsequently the supported CLI/HTTP/MCP interfaces and durable/import formats as each is implemented. The 0.y.z line is initial development with no stable-API promise. Project convention before 1.0: PATCH for compatible fixes, documentation/build/proof-only maintenance; MINOR (reset PATCH) for new functionality or breaking development-API changes, documenting any breaks. From 1.0: PATCH for compatible fixes/maintenance, MINOR for compatible functionality/deprecation, MAJOR (reset MINOR/PATCH) for incompatible public-contract changes. Select the largest applicable change class in a milestone. A version bump alone does not establish feature completeness or formal verification; 1.0 requires an explicitly documented stable public contract and readiness assessment.
+
+## 9. Implementation evidence and resumable progress
+
+Maintain [docs/DEVELOPMENT_STATE.md](../docs/DEVELOPMENT_STATE.md) as the context-compaction handoff, with confirmed decisions or authoritative links, published milestone/CI evidence, active issue and uncommitted work, actual boundaries, unresolved findings and exact next steps. Update it before significant transitions or compaction; never record credentials. Bounded issue work records retain chronological implementation/verification findings; ADRs record design reasons; the data reference and Lean digest record actual APIs and assurance. A context reset must not silently convert proposed features or unobserved checks into completed work.
