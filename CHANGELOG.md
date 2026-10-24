@@ -2,6 +2,11 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.3.1 — 2026-10-24
+
+- Group bullet and numbered list buttons directly together; use original SVG icons showing three bullets and 1/2/3 numbering with text lines.
+- Preserve accessible names, contextual pressed states and formatting behavior; no dependency/backend changes.
+
 ## 0.3.0 — 2026-10-24
 
 - Rename Overview to Navigator and route wheel input over its label/map to the editor while preserving browser zoom gestures.

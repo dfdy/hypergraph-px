@@ -1,6 +1,6 @@
 # Development state and context-compaction handoff
 
-Last updated: 2026-10-24. **Current work: issue 13, Navigator controls after the published 0.2.0 preview; frontend-only implementation RESUMED by owner; authentication explicitly waived for the synthetic testing preview. Backend feature development remains outside scope. Local preview runs at http://127.0.0.1:5173/.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
+Last updated: 2026-10-24. **Current work: issue 14, list toolbar icon polish after the published 0.3.0 Navigator controls; frontend-only implementation RESUMED by owner; authentication explicitly waived for the synthetic testing preview. Backend feature development remains outside scope. Local preview runs at http://127.0.0.1:5173/.** Read this first when resuming, then AGENTS.md and the linked authoritative documents. This file records actual state; it does not replace the specification or make proposed features implemented.
 
 ## Workspace and authorization
 
@@ -21,7 +21,7 @@ Canonical requirements: [Specifications/SPECIFICATION.md](../Specifications/SPEC
 
 ## Published milestones and executed checks
 
-Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.3.0** adds Navigator display controls to the separate frontend preview; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
+Latest implemented milestone **0.1.0**, commit `4705b3f863da68e55f902780876cf770a4c6636e`, verified pushed to origin/main. Current project metadata **0.3.1** clarifies adjacent list icons in the separate frontend preview; no runtime/proof source changes. Use git log/origin to identify the final documentation commit, avoiding self-referential version churn. Issues 1 (foundation), 2 (Lean/extraction feasibility), 3 (version policy) and 4 (crypto adapter) are completed; issue 4 closure follows observed hosted success.
 
 Implemented pure `hypergraph_domain::expansion::validate`: bounded Kahn DAG validator; five tests including all 512 directed three-vertex graphs versus an independent transitive-closure oracle. Source `crates/domain/src/expansion.rs` SHA-256 `74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad` remains unchanged.
 
@@ -157,3 +157,10 @@ Owner clarified that large editor/panel surfaces should have NO tooltips. Delega
 Implemented controls in header: Navigator hide/show and move-left/right. Default visible/right, validated navigatorVisible/navigatorSide fields added to non-sensitive display preferences. DOM/grid order changes together; same EditorView/state retained and remeasured. Whole Navigator accepts pixel/line/page wheel input; native scroll bounds and map updates shared, Ctrl/Meta-wheel/pinch preserved. Server remains live at http://127.0.0.1:5173/. No backend/dependency/proof source changes. Final browser/source/build and publication evidence follows actual execution, with hosted results recorded in issue 13 rather than an evidence-only version bump. Preserve unrelated owner README grammar change outside milestone staging.
 
 Executed for 0.3.0: frontend build, thirteen Node tests and sixteen real Chromium scenarios passed, including new Navigator wheel/visibility/side/persistence cases; left-position screenshot visually inspected at 1440x900 with no horizontal overflow. No runtime/proof source or dependency changes. The running frontend server serves the rebuilt current assets; user must refresh open tabs.
+
+
+## List toolbar icon polish — issue 14 (current)
+
+0.3.0 commit bd3c56fc5632f2c329aa8bf70eb4226c0d46f226 was verified pushed and all four hosted workflows observed successful (Frontend 40109937299, Rust 40109937270, Lean models 40109937280, extracted proof 40109937268); issue 13 closed. Owner now requested adjacent bullet/numbered buttons with representative bullet/line and 1/2/3 icons. Implemented original inline SVGs, preserving aria labels, tooltip names, context pressed states and commands. Patch 0.3.1 synchronizes metadata; no dependency/backend/proof source changes. Work record: docs/work/0014-list-toolbar-icons.md. Preserve the owner's unrelated README grammar edit outside milestone staging. Live server remains http://127.0.0.1:5173/; refresh to receive the rebuilt toolbar.
+
+Executed for 0.3.1: static frontend build and existing Chromium contextual formatting/toggle scenario passed; direct DOM sibling check confirmed adjacent controls; toolbar screenshot visually inspected. Original SVGs use currentColor and stay aria-hidden inside named buttons. CI/publication results will be recorded in issue 14 after observation.
