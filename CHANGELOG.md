@@ -2,6 +2,11 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.5.3 — 2026-10-25
+
+- Refresh the README desktop screenshot from the current synthetic preview and clarify its fixture-only caption.
+- Add a repeatable screenshot command using a fresh browser context and dedicated loopback preview, preserving the human testing session.
+
 ## 0.5.2 — 2026-10-25
 
 - Begin each independent snapping-test gesture with a collapsed caret and freshly measured coordinates. Avoid Chromium treating a drag inside the previous selection as native selected-text drag/drop. Preserve exact source and forward/backward assertions; no runtime change.

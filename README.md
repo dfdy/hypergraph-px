@@ -6,9 +6,9 @@ I am developing Hypergraph PX as a writing and thinking tool for my doctoral dis
 
 Hypergraph PX is written in Rust, with Lean used for verifying the mathematical integrity of the Rust code that implements its core functionality. This software is developed with the help of AI. 
 
-![Screenshot of Hypergraph PX](docs/images/Screenshot.png)
+![Hypergraph PX desktop preview with contents, Markdown editor, Navigator and interaction sidebar](docs/images/Screenshot.png)
 
-*Figure 1: Hypergraph PX showing the document editor. Please note this is an early screenshot, the editor is not yet fully implemented.*
+*Figure 1: Current desktop frontend preview using synthetic document data. Editing is tab-local; the Rust backend is not connected.*
 
 Conventional documents are organised as trees: documents contain sections, sections contain paragraphs, and paragraphs contain sentences. Hypergraph PX preserves this familiar structure while extending it through a network of relationships between content, its origins, its revisions, and its uses across different documents.
 
@@ -52,7 +52,7 @@ These aims describe direction rather than a release-date commitment. Detailed me
 
 ## Current status
 
-Early development: pure Rust expansion validation, in-memory encryption/key wrapping and a separately runnable synthetic-data frontend preview are implemented. Durable workspace storage and the integrated Rust application remain planned. Current version: **0.5.2**; license: [AGPL-3.0-only](LICENSE).
+Early development: pure Rust expansion validation, in-memory encryption/key wrapping and a separately runnable synthetic-data frontend preview are implemented. Durable workspace storage and the integrated Rust application remain planned. Current version: **0.5.3**; license: [AGPL-3.0-only](LICENSE).
 
 ## Frontend preview
 
