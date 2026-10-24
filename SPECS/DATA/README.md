@@ -102,7 +102,7 @@ Candidate initial properties:
 5. An accepted operation satisfies the applicable actor/device/policy authority; configuration cannot create client-only decryption authority.
 6. A future conflict resolver is deterministic under its specified causal input/accepted-operation set; encryption delivery order does not define graph validity.
 
-For each theorem record its definitions, preconditions, trusted assumptions, Lean file/symbol, corresponding Rust function and actual checked evidence. Model-only proof, differential tests and Rust extraction proof are separate columns. The first rank/path model proofs are now checked under Lean 4.35.0; see [formal assurance](../../proofs/README.md) and the [validation digest](../../proofs/VALIDATION_DIGEST.md). Rust extraction/correspondence remains unrun. Cryptographic primitives, randomness, host/client integrity and filesystem durability require explicit assumptions and additional validation.
+For each theorem record its definitions, preconditions, trusted assumptions, Lean file/symbol, corresponding Rust function and actual checked evidence. Model-only proof, differential tests and Rust extraction proof are separate columns. The first rank/path model proofs are now checked under Lean 4.35.0; see [formal assurance](../../proofs/README.md) and the [validation digest](../../proofs/VALIDATION_DIGEST.md). The unchanged Rust budget helper now has a checked Aeneas-extracted theorem; full graph validation remains unproved. Cryptographic primitives, randomness, host/client integrity and filesystem durability require explicit assumptions and additional validation.
 
 ## 7. Worked conceptual example
 

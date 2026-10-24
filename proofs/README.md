@@ -18,10 +18,10 @@ lake env leanchecker Hypergraph
 
 The project has no Mathlib or Aeneas package dependency. Lake treats proof warnings as errors. The pinned CI action builds and runs the bundled environment checker. Tool origins/licenses are in [TOOLING.md](../legal/TOOLING.md). Lean is not a runtime dependency. The current local binary is a temporary development installation; use elan or the official pinned distribution on another machine.
 
-## Aeneas feasibility — preliminary assessment
+## Aeneas feasibility — actual result
 
-Inspected Aeneas commit 74aabd52f77001cf9eaad51b4f4b867a7dc6b111, its Lean 4.35.0 backend pin and Charon commit 260ba2c82588291b1f9efaf4f42d7100adc9c6c2. Official build instructions require a compatible Charon plus OCaml/OPAM or an appropriate Nix build environment. Those tools are not installed locally. The queried latest-release endpoint returned 404, so no prebuilt translator was obtained that way.
+Official prerelease nightly-2026.10.24-74aabd5 matched the already pinned source/Charon/Lean versions and was checksum-verified. The latest-release endpoint had omitted prereleases; enumerating them resolved local provisioning without building OCaml/Nix.
 
-No Rust extraction ran. In particular, do not interpret absence of BTreeMap/VecDeque-named files in the inspected source tree as proof that these containers are supported or unsupported. The existing validator uses these containers and generic IDs; an actual pinned extraction is the next feasibility gate. Do not claim that testing a toy arithmetic function verifies the graph implementation.
+Charon extracted the unchanged domain crate. Strict whole-crate translation fails on nested-loop returns and missing Iterator::filter_map modelling; no full-validator proof exists. The isolated original `expansion::spend` helper translates and has a checked total accounting/overflow theorem. Its axiom report contains only propext, Classical.choice and Quot.sound. This is a proof about extracted semantics with an explicit translator/backend trust boundary, not the compiled application or full graph algorithm.
 
-Maintain separate evidence for model theorem, Rust differential/property tests, extracted-Rust theorem and trusted assumptions. Follow-on targets include same-identity ancestry, history extension, exact source coverage, closed-snapshot determinism and permission/key-custody non-escalation. Filesystem durability/cryptographic primitives/client delivery need explicit assumptions and additional tests.
+See [extracted Rust replay](rust/README.md), [exact pins](rust/extraction.json) and [digest §7](VALIDATION_DIGEST.md#7-actual-rust-helper-expansionspend). The replay regenerates/compares the actual source, validates dependencies, checks the theorem and its axioms, and rechecks the environment. Future full-validator proofs still need an implementation-to-rank/acyclicity connection without silently opaque control flow or containers.

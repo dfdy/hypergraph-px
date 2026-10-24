@@ -21,3 +21,6 @@
 *.db-*
 /proofs/.lake/
 /proofs/lean/.lake/
+
+# Isolated proof translators, nightly/cache files and extraction output.
+/.verification/

@@ -1,6 +1,6 @@
 # Hypergraph PX MU-F — initial canonical specification
 
-Status: initial foundation, 2026-10-24. Current application version 0.0.2 (initial baseline 0.0.1). This specification consolidates the owner's confirmed restart decisions and the mathematics/encryption design principles. The supplied original/evolved specifications and development review are historical sources; implementation claims there do not transfer to this project.
+Status: initial foundation, 2026-10-24. Current application version 0.0.3 (initial baseline 0.0.1). This specification consolidates the owner's confirmed restart decisions and the mathematics/encryption design principles. The supplied original/evolved specifications and development review are historical sources; implementation claims there do not transfer to this project.
 
 ## 1. Scope and architecture
 
