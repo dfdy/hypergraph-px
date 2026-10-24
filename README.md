@@ -1,8 +1,28 @@
-# Hypergraph PX MU-F
+# Hypergraph PX: The Graph Is More Than a Storage Mechanism
 
-Hypergraph PX Multi-User Federated is a new implementation, beginning with local-only operation while designing identities, authorization, data formats and encryption boundaries for future multi-user and federated instances.
+**Hypergraph PX is a graph-based document editing system that treats documents not as isolated, static files, but as evolving compositions of interconnected, reusable, and independently versioned content.**
 
-Source repository: https://github.com/dfdy/hypergraph-px (created private). Active project directory: `Hypergraph PX MU-F`. The preceding `Hypergraph PX` project is retired and may be consulted as a reference; its code, runtime data, credentials and intermediate formats are not the starting implementation.
+Conventional documents are organised as trees: documents contain sections, sections contain paragraphs, and paragraphs contain sentences. Hypergraph PX preserves this familiar structure while extending it through a network of relationships between content, its origins, its revisions, and its uses across different documents.
+
+At its core, Hypergraph PX is built around a **typed, directed, attributed, temporal multigraph composed of several mathematically constrained subgraphs**. Each represents a different relationship between content and its development:
+
+- **Composition trees** describe how content is organised into documents, preserving the order and hierarchy needed for reading and editing.
+- **Reference graphs** connect content through hyperlinks, citations, and other relationships, allowing connections across documents and back to their ancestors.
+- **Revision graphs** preserve the history of every independently identifiable piece of content, allowing revisions to branch and merge without overwriting earlier versions.
+- **Provenance graphs** record how content originated, was extracted, forked, combined, or transformed, preserving traceable relationships between original and derived material.
+- **Document snapshots** preserve reproducible historical states, allowing an entire document to be reconstructed as it existed at a particular recorded revision.
+
+These structures coexist within a common graph but obey different mathematical rules. Document containment requires a coherent hierarchy, while hyperlinks may form cycles. Revision histories can branch and merge but must preserve their causal ancestry. A paragraph may appear in several documents without duplicating its identity or losing its individual history.
+
+The distinction between **content, its identity, its history, and its position within a document** is fundamental. A sentence, paragraph, or section can be edited independently, reused elsewhere, or forked into a new version while retaining a navigable connection to its source. Documents can consequently be assembled from existing material without sacrificing the independence or historical continuity of their constituent parts.
+
+This architecture makes it possible to optimise storage, retrieval, version management, document compilation, and graph traversal using algorithms suited to each relationship. More importantly, it extends the possibilities of document editing beyond the production of successive, self-contained texts.
+
+**A document becomes a historically situated composition of identifiable and reusable intellectual material.**
+
+Its structure shows how ideas are organised. Its references show how they relate. Its provenance reveals how they came into existence. Its revision history records how they developed, diverged, and converged.
+
+Hypergraph PX is therefore intended not merely as a system for writing and organising documents, but as a means of exploring the relationships, transformations, and histories through which knowledge is developed, revised, shared, and collectively constructed.
 
 ## Current status
 
