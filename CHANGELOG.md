@@ -2,6 +2,58 @@
 
 Project versions follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); see Specifications/SPECIFICATION.md §8 for the initial-development convention and push policy.
 
+## 0.7.0 — 2026-10-25
+
+- Refresh the README screenshot from the latest synthetic frontend preview.
+- Read table-wrapper/card geometry atomically in browser regression checks so scrolling between measurements cannot produce a false alignment failure.
+
+- Fix guide/caret height drift after rendered tables by placing vertical spacing inside the measured widget wrapper; update Navigator projection and regress alignment below table/maths through rendering, font and wrap changes.
+
+- Match editor guides to Explorer spacing/colour in both themes; increase the outer inset and fit the common gutter to document depth while removing excess text-side padding and centring.
+
+- Add non-indenting editor structure guides for sections/subsections and paragraphs in a fixed left gutter, using actual wrapping/widget heights and preserving existing provenance icon locations.
+
+- Add provenance icon rows above and left of paragraphs and sections, using independent unit-level anchors, exact counterpart navigation and Navigator geometry; extend tab-only forks and fork pastes to complete block units.
+
+- Change the shared tooltip delay to 1500 ms, retaining exclusions for self-labelled text controls.
+
+- Treat relationship categories as overlapping browsing tags over one stable-definition registry; deduplicate search/selection and reuse identical typed assertions across tags.
+- Add assertion-level negation, certainty, attribution and scope, with optional creation controls and contextual display; preserve source and canonical predicate direction.
+- Remove redundant tooltips from self-labelled text controls; retain delayed explanations for icons and formatting abbreviations.
+- Record local spell checking as a medium-term requirement, including language/dictionaries, exact undoable corrections and protected syntax/privacy boundaries.
+
+- Alphabetize relationship category and item dropdowns by display name; retain search relevance and alphabetize equal-score suggestions.
+
+- Add source-neutral sentence-start provenance icons with distinct link kinds/directions, delayed names, exact-link inspection and counterpart navigation. Mirror their geometry in the Navigator and track complete-sentence links for tab-only Fork and provenance-clipboard fork paste operations; label synthetic examples and retain invalidated anchors for review.
+
+- Implement the full relationship vocabulary audit: 244 choices across 13 categories, including discourse, temporal, source/provenance and causal/empirical families; make missing directions selectable and reuse aliases instead of duplicating choices.
+- Add per-choice definitions, examples, roles/context and symmetry assessments, validated reciprocal inverse metadata and normalized local participant orientation; show Roles and context in the picker and Relations cards. These remain tab-only annotations, not Rust graph/inference or authenticated provenance operations.
+
+- Remove the relationship-creation form from Relations; retain creation through the editor context-menu modal.
+
+- Add categorized context-menu relationship creation for adjacent sentences, paragraphs and sibling sections, with search, unique-match selection, compact suggestions and single-field custom terms; display the relationship between participants.
+- Follow the caret in Relations, combining applicable sentence/paragraph/section assertions; scope local review controls to actual records.
+- Use ordinary relationship labels and separate logical marker words; distinguish adapts/adapts to, determines/is determined by and underdetermines/is underdetermined by. Record a category-wide vocabulary audit and proposals separately from implemented presets.
+- Fix snapped dragging in separator whitespace and when starting inside an existing selection; prevent caret-reveal scrolling from overriding Explorer follow context.
+
+- Align Interaction/Investigation headings, tabs and body edges on a shared 12px inset, with consistent tab styling/gaps and accessible overflow when narrowed.
+
+- Separate adjacent Explorer highlights with small vertical gaps and omit redundant tooltips on document/heading labels, retaining disclosure-control tooltips.
+
+- Add EXPLORER title, list documents directly without the duplicate workspace root, retain document rows on Close all, and align all guide levels on one 18px step.
+- Place Relations before Concepts and select it initially.
+- Fix backward word selection from a paragraph’s exact end; collapse only the visual separator beside sentence arrows without changing source.
+
+- Add nested contents disclosures and section guides, plus bottom Follow editor and Close all / Open all controls in Workspace/Document trees.
+
+- Remove the left-column Research Workspace heading row and its symbol.
+
+- Remove line/column coordinates and character count from the status bar; keep bold Document/Workspace word totals.
+
+- Move Markdown download to the right of the document bar, replacing the demo branch label.
+
+- Match a highlighted pair of complete adjacent sentences/paragraphs using both selection bounds, independent of drag direction; place its marker at their shared boundary. Reject partial/ambiguous selections instead of guessing from the head caret.
+
 ## 0.6.0 — 2026-10-25
 
 - Show one source-neutral horizontal sentence arrow or larger vertical paragraph arrow per adjacent-unit relationship; delayed tooltips name each relationship and activation opens its exact Relations entry.

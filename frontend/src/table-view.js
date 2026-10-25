@@ -18,7 +18,7 @@ function commit(view,table,doc,action,row,col,value){
 class TableWidget extends WidgetType{
  constructor(table,attribution,renderedMath){super();this.table=table;this.attribution=attribution;this.renderedMath=renderedMath}
  eq(other){return this.table.from===other.table.from&&this.table.source===other.table.source&&this.attribution===other.attribution&&this.renderedMath===other.renderedMath}
- get estimatedHeight(){return 42+this.table.rows.length*38}
+ get estimatedHeight(){return 78+this.table.rows.length*38}
  toDOM(view){
   const data=this.table,doc=view.state.doc,wrap=document.createElement('div');wrap.className='rendered-table-block';wrap.dataset.tableFrom=data.from;wrap.setAttribute('contenteditable','false');
   const caption=document.createElement('div');caption.className='table-caption';const label=document.createElement('span');label.textContent='TABLE';const source=document.createElement('button');source.type='button';source.textContent='Edit Markdown';source.onclick=()=>{view.dispatch({effects:toggleTableSource.of(data.from)});view.focus()};caption.append(label,source);wrap.append(caption);
@@ -27,7 +27,7 @@ class TableWidget extends WidgetType{
    cell.oncontextmenu=e=>{e.preventDefault();e.stopPropagation();contextHandler(e,{table:data,doc,row:ri,col:ci,sourcePosition})};
    const edit=()=>{if(cell.querySelector('input'))return;const input=document.createElement('input');input.className='table-cell-input';input.value=value.replace(/\\\|/g,'|');input.setAttribute('aria-label',`Edit row ${ri+1}, column ${ci+1}`);cell.replaceChildren(input);input.focus();input.select();let cancelled=false;input.onkeydown=e=>{if(e.key==='Escape'){e.preventDefault();cancelled=true;input.blur()}else if(e.key==='Enter'){e.preventDefault();input.blur()}e.stopPropagation()};input.onblur=()=>{if(!cancelled&&input.value!==value.replace(/\\\|/g,'|'))commit(view,data,doc,'cell',ri,ci,input.value);else renderCellMath(cell,value.replace(/\\\|/g,'|'),this.renderedMath)};};
    cell.ondblclick=edit;cell.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();edit()}else if(e.key==='ContextMenu'||(e.shiftKey&&e.key==='F10')){e.preventDefault();const r=cell.getBoundingClientRect();contextHandler({clientX:r.left,clientY:r.bottom,preventDefault(){},stopPropagation(){}},{table:data,doc,row:ri,col:ci,sourcePosition})}};tr.append(cell)});(ri===0?table.createTHead():table.tBodies[0]||table.createTBody()).append(tr)});
-  wrap.append(table);const hint=document.createElement('div');hint.className='table-hint';hint.textContent='Double-click a cell to edit · right-click for rows and columns';wrap.append(hint);return wrap;
+  wrap.append(table);const hint=document.createElement('div');hint.className='table-hint';hint.textContent='Double-click a cell to edit · right-click for rows and columns';wrap.append(hint);const layout=document.createElement('div');layout.className='table-block-layout';layout.dataset.tableFrom=data.from;layout.setAttribute('contenteditable','false');layout.append(wrap);return layout;
  }
  ignoreEvent(){return true}
 }

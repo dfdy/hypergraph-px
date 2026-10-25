@@ -15,8 +15,9 @@ export function paragraphs(text){
 }
 
 function containing(ranges,pos){
- for(let i=0;i<ranges.length;i++){let r=ranges[i];if(pos<r.to||i===ranges.length-1)return r}
- return ranges[ranges.length-1];
+ let previous=ranges[0];
+ for(const range of ranges){if(pos<range.from)return previous;if(pos<=range.to)return range;previous=range;}
+ return previous;
 }
 export function paragraphAt(text,pos){return containing(paragraphs(text),pos)}
 export function sentenceAt(text,pos){

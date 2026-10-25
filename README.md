@@ -38,6 +38,7 @@ See [development state and handoff](docs/DEVELOPMENT_STATE.md) for current progr
 
 The following capabilities are planned and are **not yet implemented**. They build on the [product specification](Specifications/SPECIFICATION.md) and its staged delivery plan.
 
+- **Spell checking — medium-term priority:** local prose spell checking with suggestions, explicit undoable corrections, language selection and user dictionaries, respecting Markdown/code/maths boundaries and document privacy. See [spell-checking requirements](Specifications/SPELL_CHECKING.md).
 - **Zotero citation integration:** search and select references from a Zotero library through separately authenticated desktop-local REST and cloud Web API adapters, read-only initially, insert citations while writing, and use bibliographic metadata during document compilation/export. Preserve the exact citation metadata and formatting inputs needed to reproduce a recorded document; reading a historical snapshot must not silently refresh its references. Writing back to the Zotero library is outside the initial integration scope.
 - **Desktop writing workspace:** a four-column layout with chapter/section contents, a styled Markdown source editor, a navigable document minimap, and a split sidebar with upper Agent, Comments and Users tabs and lower Concepts, Relationships, Sources, Provenance and History investigation tabs. Users lists document contributors, with the current human and agent pinned above the other contributors, each with its own colour. Preserve whole-document selection and precise ownership of text, including repeated and nested content. Mobile responsiveness is deferred.
 - **Multi-document research and reuse:** organize independent chapters into versioned composite works, navigate Workspace/Document/Graph/History lenses, and use a protected provenance clipboard for independently forked pastes or explicit pinned/live transclusions. Investigate concepts and contextual semantic assertions without confusing agent proposals with accepted claims. See the [workspace interface contract](Specifications/WORKSPACE_INTERFACE.md).
@@ -49,11 +50,13 @@ The following capabilities are planned and are **not yet implemented**. They bui
 - **Encrypted browser/runtime communication — medium-term priority:** protect the browser-to-Rust connection, including localhost, with authenticated encrypted transport before real document data is connected. Certificate trust/bootstrap and secure development/release delivery are part of this work, independently of storage encryption. See [transport security](Specifications/TRANSPORT_SECURITY.md).
 - **Client-held encryption:** add an alternative to the default trusted-server mode, keeping decryption keys and plaintext operations at an authorized client. Recovery will use a user-held key. The stronger confidentiality guarantee against a malicious hosting server requires an independently trusted client and update channel. In non-trusted mode, the core will disable application-controlled plaintext egress, including document export and GitHub publication.
 
+- **Release checks and updates:** check GitHub for newer releases. Downloaded official runtimes should offer a user-approved update; self-compiled builds should notify only, leaving rebuilding to the developer. See the [future update requirements](Specifications/SPECIFICATION.md#10-future-release-discovery-and-runtime-updates).
+
 These aims describe direction rather than a release-date commitment. Detailed mechanisms and acceptance checks must be specified before each capability is enabled.
 
 ## Current status
 
-Early development: pure Rust expansion validation, in-memory encryption/key wrapping and a separately runnable synthetic-data frontend preview are implemented. Durable workspace storage and the integrated Rust application remain planned. Current version: **0.6.0**; license: [AGPL-3.0-only](LICENSE).
+Early development: pure Rust expansion validation, in-memory encryption/key wrapping and a separately runnable synthetic-data frontend preview are implemented. Durable workspace storage and the integrated Rust application remain planned. Current version: **0.7.0**; license: [AGPL-3.0-only](LICENSE).
 
 ## Frontend preview
 
@@ -85,7 +88,7 @@ cargo +stable build --workspace --locked
 cargo +stable test --workspace --locked
 ```
 
-This currently builds Rust library crates; there is no application launch command yet. Rust-only checks do not require Node.js. The [frontend intake guide](frontend/README.md) describes the upload location and planned separate mock-data development runtime; frontend setup commands will be documented after the export is reviewed.
+This currently builds Rust library crates; there is no application launch command yet. Rust-only checks do not require Node.js. See the [frontend guide](frontend/README.md) for the separate mock-data development runtime and browser tests.
 
 Before contributing, run formatting and lint checks:
 

@@ -1,4 +1,5 @@
-export const TOOLTIP_DELAY = 3100;
+import {isDescriptiveControlLabel} from './control-labels.js';
+export const TOOLTIP_DELAY = 1500;
 const targets = 'button,a,input,select,textarea,[role="slider"],[role="separator"],.math-rendered[tabindex="0"],.table-author-text[tabindex="0"]';
 
 export function installTooltips(root = document) {
@@ -36,7 +37,17 @@ export function installTooltips(root = document) {
     }
     target = null;
   }
+  function selfLabelled(element){
+    if(element.matches('.chapter-open,.heading-open'))return true;
+    const labelled=[...(element.labels??[])].map(label=>label.innerText??label.textContent).join(' ');
+    if(isDescriptiveControlLabel(labelled))return true;
+    if(element.matches('button,a,[role="button"]'))return isDescriptiveControlLabel(element.innerText??element.textContent);
+    if(element.matches('input,textarea')&&!element.value)return isDescriptiveControlLabel(element.getAttribute('placeholder'));
+    return false;
+  }
   function showFor(element) {
+    // Explorer labels already name their destination; keep disclosure-control tips.
+    if (selfLabelled(element)) {hide();return;}
     if (pointerDown || element === target) return;
     hide();
     target = element;
@@ -44,6 +55,7 @@ export function installTooltips(root = document) {
     originalDescription = element.getAttribute('aria-describedby');
     timer = setTimeout(() => {
       if (!element.isConnected || target !== element) return;
+      if(selfLabelled(element)){hide();return;}
       const host = element.closest('dialog[open]') || document.body;
       if (tip.parentElement !== host) host.append(tip);
       const name = element.getAttribute('aria-label') || element.labels?.[0]?.textContent ||

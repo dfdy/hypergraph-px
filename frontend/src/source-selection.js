@@ -11,6 +11,8 @@ export function sourceSelectionStyle(view,event){
  let text=view.state.doc.toString(),protectedRanges=snap?[...codeRanges(text),...mathExpressions(text),...parseTables(text)]:[];
  let origin=view.posAtCoords({x:event.clientX,y:event.clientY}),original=view.state.selection;
  if(origin==null)return null;
+ // In snapping mode a new drag redraws selection, rather than starting native text drag/drop.
+ if(snap&&count===1&&!event.metaKey&&!event.ctrlKey&&!original.main.empty)view.dispatch({selection:{anchor:origin}});
  return {
   get(current,_extend,multiple){
    const position=view.posAtCoords({x:current.clientX,y:current.clientY},false)??origin;

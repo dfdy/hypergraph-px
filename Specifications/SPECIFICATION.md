@@ -1,6 +1,6 @@
 # Hypergraph PX MU-F — product specification
 
-Status: current requirements, 2026-10-24. Project version 0.6.0. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
+Status: current requirements, 2026-10-24. Project version 0.7.0. This document defines the approved product requirements. The architecture, mathematical model, data reference and encryption specification in this directory elaborate these requirements and distinguish implemented behavior from planned work.
 
 ## 1. Scope and architecture
 
@@ -11,6 +11,8 @@ Develop the browser editor in the local IDE/workspace independently from Rust do
 Source and work tracking are maintained at https://github.com/dfdy/hypergraph-px, a public repository. Original application code is AGPL-3.0-only; user content retains its own ownership/license.
 
 ## 2. Data and history invariants
+
+**Text encoding:** UTF-8 is required for document text, textual stored payloads, text API/wire representations and plain-text/Markdown exports. Encrypted objects and other binary containers remain binary; encode their text payloads as UTF-8 before encryption/serialization. Reject malformed UTF-8 at text boundaries rather than silently replacing characters. Preserve exact Unicode content and line endings; encoding does not authorize normalization. Browser UTF-16 indices are an internal coordinate convention and must be explicitly converted at integration boundaries.
 
 The core is a typed temporal multigraph exposed through constrained projections, not one untyped graph database:
 
@@ -55,7 +57,7 @@ Keep cryptographic transport/group-key agreement separate from document synchron
 
 ## 5. Editor and integrations
 
-Provide a desktop writing interface with four default columns, from left to right: (1) a contents tree of chapters, sections and subsections; (2) an editor showing styled Markdown source; (3) a document minimap labelled Navigator, supporting wheel/click/drag/keyboard navigation and current-viewport indication, hide/show and placement on either side of the editor; (4) a split sidebar with upper Interaction tabs (Agent, Comments, Users) and lower Investigation tabs (Concepts, Relationships, Sources, Provenance, History). The left navigator provides Workspace, Document, Graph and History lenses while keeping the heading tree accessible. Preserve whole-document caret, selection and source-ownership mapping. Comments are user-authored document annotations and remain separate from agent conversation. Users shows the known contributors to the current document, with the current human and current agent pinned above other contributing users/agents, each with a distinct display colour. It is a permission-scoped contribution/provenance view rather than a logged-in-user list; showing a contributor does not enable remote editing or grant historical access. Mobile is deferred. Document-local prose and repeated/nested source ownership are part of the core source model rather than late editor exceptions.
+Provide a desktop writing interface with four default columns, from left to right: (1) a contents tree of chapters, sections and subsections; (2) an editor showing styled Markdown source; (3) a document minimap labelled Navigator, supporting wheel/click/drag/keyboard navigation and current-viewport indication, hide/show and placement on either side of the editor; (4) a split sidebar with upper Interaction tabs (Agent, Comments, Users) and lower Investigation tabs (Relationships, Concepts, Sources, Provenance, History). The left navigator provides Workspace, Document, Graph and History lenses while keeping the heading tree accessible. Preserve whole-document caret, selection and source-ownership mapping. Comments are user-authored document annotations and remain separate from agent conversation. Users shows the known contributors to the current document, with the current human and current agent pinned above other contributing users/agents, each with a distinct display colour. It is a permission-scoped contribution/provenance view rather than a logged-in-user list; showing a contributor does not enable remote editing or grant historical access. Mobile is deferred. Document-local prose and repeated/nested source ownership are part of the core source model rather than late editor exceptions.
 
 The [frontend integration specification](FRONTEND_INTEGRATION.md) defines browser/Rust responsibilities, exact selection and source-mapping rules, draft/commit state handling, staged capabilities and frontend acceptance scenarios. Its candidate endpoints and adapter shapes are not implemented or frozen wire formats.
 
@@ -96,3 +98,16 @@ The public contract comprises exported Rust APIs and documented behavior, and su
 ## 9. Implementation evidence and resumable progress
 
 Maintain [docs/DEVELOPMENT_STATE.md](../docs/DEVELOPMENT_STATE.md) as the context-compaction handoff, with confirmed decisions or authoritative links, published milestone/CI evidence, active issue and uncommitted work, actual boundaries, unresolved findings and exact next steps. Update it before significant transitions or compaction; never record credentials. Bounded issue work records retain chronological implementation/verification findings; ADRs record design reasons; the data reference and Lean digest record actual APIs and assurance. A context reset must not silently convert proposed features or unobserved checks into completed work.
+
+
+## 10. Future release discovery and runtime updates
+
+Planned; not implemented. The application should check the project's GitHub releases for a newer applicable version and notify the user. Compare semantic versions and select a compatible release artifact for the operating system/architecture; prerelease or development builds must not silently switch release channels.
+
+Distinguish installation origin using explicit build/distribution metadata rather than the executable's location or version string alone:
+
+- **Downloaded official runtime:** offer to download and install the release after explicit user approval. Do not silently replace a running executable or interrupt unsaved work. Verify the artifact's authenticity and integrity before installation; define safe replacement/restart, failure recovery and any storage-format migration/rollback constraints before enabling updates. The release remains one Rust executable containing the built frontend assets.
+- **Self-compiled build:** notify that a newer release exists and provide its release notes/source link. Do not overwrite the developer's executable or automatically rebuild their checkout.
+- **Unknown origin or externally managed installation:** use notification-only behavior until a supported installation/update mechanism is identified.
+
+Allow users to disable automatic checks and request a manual check. A release check sends no document/workspace content, keys or credentials; network activity remains subject to the active security/egress policy. Failure to reach GitHub must not prevent local work. Scheduling, artifact signing/trust bootstrap, platform installation permissions and restart/migration mechanics require a concrete design before implementation. These requirements do not authorize publication of application source or user documents to GitHub.

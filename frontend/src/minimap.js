@@ -1,3 +1,5 @@
+import {sentenceProvenanceField,sentenceProvenanceGroups} from './sentence-provenance.js';
+import {createSentenceProvenanceMarker} from './sentence-provenance-view.js';
 import {relationshipField,relationshipBoundaries} from './relationships.js';
 import {createRelationshipMarker} from './relationship-markers.js';
 import {parseTables} from './tables.js';
@@ -8,15 +10,17 @@ import {authorshipField,authorHue} from './authorship.js';
 import {documentPresentation,presentationLineClasses} from './document-presentation.js';
 
 const layouts=new WeakMap();
-function appendSource(parent,source,from,to,markers,authors,relations=[]){
+function appendSource(parent,source,from,to,markers,authors,relations=[],provenance=[]){
  const boundaries=new Set([from,to]);
- for(const group of relations)if(group.position>=from&&group.position<to)boundaries.add(group.position);
- if(from===to)for(const group of relations.filter(group=>group.position===from))parent.append(createRelationshipMarker(group));
+ for(const group of provenance)if(group.position>=from&&group.position<to)boundaries.add(group.position);
+ for(const group of relations){if(group.position>=from&&group.position<to)boundaries.add(group.position);if(group.gapFrom!==undefined&&group.gapFrom>from&&group.gapFrom<to)boundaries.add(group.gapFrom);}
+ if(from===to){for(const group of relations.filter(group=>group.position===from))parent.append(createRelationshipMarker(group));for(const group of provenance.filter(group=>group.position===from))parent.append(createSentenceProvenanceMarker(group));}
  for(const range of [...markers,...authors]){if(range.from<to&&range.to>from){boundaries.add(Math.max(from,range.from));boundaries.add(Math.min(to,range.to));}}
  const points=[...boundaries].sort((a,b)=>a-b);
  for(let i=0;i<points.length-1;i++){
-  const start=points[i],end=points[i+1];for(const group of relations.filter(group=>group.position===start))parent.append(createRelationshipMarker(group));const span=document.createElement('span');span.textContent=source.slice(start,end);
+  const start=points[i],end=points[i+1];for(const group of relations.filter(group=>group.position===start))parent.append(createRelationshipMarker(group));for(const group of provenance.filter(group=>group.position===start))parent.append(createSentenceProvenanceMarker(group));const span=document.createElement('span');span.textContent=source.slice(start,end);
   if(markers.some(r=>start>=r.from&&start<r.to))span.classList.add('cm-source-marker');
+  if(relations.some(group=>group.gapFrom!==undefined&&start>=group.gapFrom&&end<=group.position))span.classList.add('relationship-gap');
   const author=authors.find(r=>start>=r.from&&start<r.to)?.author;
   if(author){span.classList.add('cm-author-text');span.dataset.authorId=author.id;span.style.setProperty('--author-hue',authorHue(author.id,author.kind));}
   parent.append(span);
@@ -24,11 +28,11 @@ function appendSource(parent,source,from,to,markers,authors,relations=[]){
 }
 function buildLayout(view,track,layer){
  const state=view.state,source=state.doc.toString(),style=getComputedStyle(view.contentDOM),width=view.contentDOM.clientWidth;
- const mathMode=isMathRendered(state),sourceTables=state.field(tableRendering).sourceTables,authors=state.field(authorshipField),relationships=state.field(relationshipField);
+ const mathMode=isMathRendered(state),sourceTables=state.field(tableRendering).sourceTables,authors=state.field(authorshipField),relationships=state.field(relationshipField),provenance=state.field(sentenceProvenanceField);
  const key=[width,style.fontFamily,style.fontSize,style.paddingTop,style.paddingBottom,style.paddingLeft,style.paddingRight].join('|');
  let layout=layouts.get(track);
- if(layout&&layout.doc===state.doc&&layout.key===key&&layout.mathMode===mathMode&&layout.sourceTables===sourceTables&&layout.authors===authors&&layout.relationships===relationships)return layout;
- const relations=relationshipBoundaries(state),model=documentPresentation(state),tables=parseTables(source),expressions=mathMode?mathExpressions(source,{exclude:tables}):[];
+ if(layout&&layout.doc===state.doc&&layout.key===key&&layout.mathMode===mathMode&&layout.sourceTables===sourceTables&&layout.authors===authors&&layout.relationships===relationships&&layout.provenance===provenance)return layout;
+ const relations=relationshipBoundaries(state),allProvenance=sentenceProvenanceGroups(state),provenanceGroups=allProvenance.filter(group=>group.unitKind==='sentence'),blockProvenance=allProvenance.filter(group=>group.unitKind!=='sentence'),model=documentPresentation(state),tables=parseTables(source),expressions=mathMode?mathExpressions(source,{exclude:tables}):[];
  const tableByStart=new Map(tables.map(t=>[t.from,t])),mathByStart=new Map(expressions.filter(e=>e.block).map(e=>[e.renderFrom,e]));
  const nodes=[],blocks=[];
  layer.replaceChildren();
@@ -42,11 +46,12 @@ function buildLayout(view,track,layer){
   else{
    const text=document.createElement('div');text.className='cm-line mini-source-line '+presentationLineClasses(model,line.from);text.dataset.sourceFrom=line.from;
    Object.assign(text.style,{whiteSpace:'pre-wrap',overflowWrap:'anywhere',wordBreak:'break-word'});
+   for(const group of blockProvenance.filter(group=>group.position===line.from)){text.classList.add('cm-provenance-block-start');const row=document.createElement('span');row.className='provenance-block-row provenance-'+group.unitKind;row.append(createSentenceProvenanceMarker(group));text.append(row);}
    let cursor=line.from;
    for(const expression of expressions.filter(e=>!e.block&&e.from>=line.from&&e.to<=line.to)){
-    appendSource(text,source,cursor,expression.from,model.markers,authors,relations);text.append(createMathPreview(view,expression));cursor=expression.to;
+    appendSource(text,source,cursor,expression.from,model.markers,authors,relations,provenanceGroups);text.append(createMathPreview(view,expression));cursor=expression.to;
    }
-   appendSource(text,source,cursor,line.to,model.markers,authors,relations);if(!line.text)text.append(document.createElement('br'));element=text;
+   appendSource(text,source,cursor,line.to,model.markers,authors,relations,provenanceGroups);if(!line.text)text.append(document.createElement('br'));element=text;
    if(table&&sourceTables.has(table.from)){element=document.createElement('div');element.append(createTableSourcePreview(view,table.from),text);}
   }
   element.dataset.sourceFrom=line.from;element.dataset.sourceTo=to;element.inert=true;
@@ -54,7 +59,7 @@ function buildLayout(view,track,layer){
   nodes.push(element);blocks.push({from:line.from,to,element});
  }
  layer.append(...nodes);
- layout={doc:state.doc,key,relationships,mathMode,sourceTables,authors,blocks,layer};layouts.set(track,layout);return layout;
+ layout={doc:state.doc,key,relationships,provenance,mathMode,sourceTables,authors,blocks,layer};layouts.set(track,layout);return layout;
 }
 function blockForPosition(layout,position){
  let low=0,high=layout.blocks.length-1;
@@ -70,7 +75,7 @@ function projectedHeight(view,layout,screenY){
  const scroll=view.scrollDOM,top=view.documentTop;
  const root=layout.layer.getBoundingClientRect(),scale=layout.scale;
  const candidates=[];
- for(const actual of view.contentDOM.querySelectorAll('.cm-line,.rendered-table-block,.math-block')){
+ for(const actual of view.contentDOM.querySelectorAll('.cm-line,.table-block-layout,.math-block')){
   let position,mini;
   if(actual.classList.contains('cm-line')){
    try{position=view.posAtDOM(actual,0);}catch{continue;}
