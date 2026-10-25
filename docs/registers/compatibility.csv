@@ -1,0 +1,2 @@
+release,workspace_format,api_version,protocol_version,os_arch,min_toolchain,notes
+0.7.0 published; local working tree incomplete,schema1 local design; record-version requirement not yet implemented,"contract1 local subset, provisional",no federation protocol adopted,local macOS evidence only; supported matrix TBD,"Rust stable; Node26 build; Lean4.35.0 evidence only, not runtime",No app/schema/protocol/toolchain version bump by migration
