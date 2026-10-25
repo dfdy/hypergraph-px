@@ -21,10 +21,10 @@ const count=async(page,id)=>Number((await page.locator(id).innerText()).replaceA
 
 test('workspace/document totals follow edits, undo and independent forks; requested layout placements',async({page})=>{
  const original=await source(page),document=await count(page,'#wordCount'),workspace=await count(page,'#workspaceWordCount');expect(workspace).toBeGreaterThan(document);
- await expect(page.locator('#position')).toContainText(new RegExp('characters · Document .* words · Workspace .* words'));
+ await expect(page.locator('#position')).toContainText(/^Document [\d,]+ words · Workspace [\d,]+ words$/);
  await expect(page.locator('#wordCount')).toHaveCSS('font-weight','700');await expect(page.locator('#workspaceWordCount')).toHaveCSS('font-weight','700');
  expect(await page.locator('.brand-px').evaluate(e=>getComputedStyle(e).fontSize)).toBe(await page.locator('.brand').evaluate(e=>getComputedStyle(e).fontSize));
- await expect(page.locator('.navigator-foot #download')).toBeVisible();await expect(page.locator('header #download')).toHaveCount(0);
+ await expect(page.locator('.document-bar #download')).toBeVisible();await expect(page.locator('.navigator-foot #download')).toHaveCount(0);await expect(page.locator('.document-bar')).not.toContainText('demo branch');
  const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+Home');await page.keyboard.insertText('Extra words\n\n');
  await expect.poll(()=>count(page,'#wordCount')).toBe(document+2);await expect.poll(()=>count(page,'#workspaceWordCount')).toBe(workspace+2);
  await page.getByRole('button',{name:'Undo',exact:true}).click();await expect.poll(()=>count(page,'#workspaceWordCount')).toBe(workspace);expect(await source(page)).toBe(original);
@@ -58,7 +58,7 @@ test('one through five repeated clicks select caret, word, sentence, paragraph, 
 });
 
 test('drag snapping promotes sentences/paragraphs in both directions and can be disabled',async({page})=>{
- const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+Home');await page.keyboard.insertText('# Snap tests\n\nAlpha one. Beta two.\n\nGamma three. Delta four.\n\n`code one. code two.`\n\n\\(math one. math two.\\)\n\n');const original=await source(page);
+ const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+Home');await page.keyboard.insertText('# Snap tests\n\nAlpha one. Beta two.\n\nGamma three. Delta four.\n\n`code one. code two.`\n\n\\(math one. math two.\\)\n\n');await page.keyboard.press('ControlOrMeta+Home');const original=await source(page);
  await dragSource(page,'Alpha','Beta');await expectSelected(page,'Alpha one. Beta two.');
  await dragSource(page,'Alpha','Gamma');await expectSelected(page,'Alpha one. Beta two.\n\nGamma three. Delta four.');
  await dragSource(page,'Gamma','Alpha');await expectSelected(page,'Alpha one. Beta two.\n\nGamma three. Delta four.');
@@ -72,4 +72,31 @@ test('drag snapping promotes sentences/paragraphs in both directions and can be 
 test('semantic blocks have presentation spacing without rewriting source or splitting soft lines',async({page})=>{
  const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+Home');await page.keyboard.insertText('# Adjacent heading\nParagraph without an empty line.\nA soft continuation.\n## Next heading\nMore prose.\n\n');
  const current=await source(page);await expect(page.locator('.cm-editor .cm-line').filter({hasText:'Paragraph without an empty line.'})).toHaveCSS('padding-top','12px');await expect(page.locator('.cm-editor .cm-line').filter({hasText:'A soft continuation.'})).toHaveCSS('padding-top','0px');await expect(page.locator('.cm-editor .cm-line').filter({hasText:'## Next heading'})).toHaveCSS('padding-top','12px');expect(await source(page)).toBe(current);
+});
+
+test('backward drag after the final full stop selects words without grabbing the following paragraph',async({page})=>{
+ const editor=page.getByRole('textbox',{name:'Markdown document editor'}),text='# Snap end\n\nFirst sentence. Last words here.\n\nNext paragraph.\n';await editor.focus();await page.keyboard.press('ControlOrMeta+A');await page.keyboard.insertText(text);await expect(page.getByRole('checkbox',{name:'Drag snapping',exact:true})).toBeChecked();
+ const points=await page.locator('.cm-content').evaluate(root=>{
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;while((node=walker.nextNode())){const at=node.textContent.indexOf('Last words here.');if(at>=0){const last=document.createRange(),word=document.createRange();last.setStart(node,at+'Last words here'.length);last.setEnd(node,at+'Last words here.'.length);word.setStart(node,at+'Last '.length);word.setEnd(node,at+'Last w'.length);const end=last.getBoundingClientRect(),start=word.getBoundingClientRect();return {from:{x:end.right+.1,y:end.top+end.height/2},to:{x:start.left+.1,y:start.top+start.height/2}};}}throw Error('Missing test sentence');
+ });await drag(page,points.from,points.to);await expect.poll(()=>selected(page)).toBe('words here.');expect(await source(page)).toBe(text);
+});
+
+test('sidebar halves share divider insets and tab spacing at default and resized widths',async({page})=>{
+ const handle=page.getByRole('separator',{name:'Resize interaction and investigation column',exact:true});
+ async function check(){
+  const result=await page.locator('.right-sidebar').evaluate(sidebar=>{
+   const edge=sidebar.getBoundingClientRect().left;
+   return [...sidebar.querySelectorAll('.right-panel')].map(panel=>({tab:panel.querySelector('.tabs button').getBoundingClientRect().left-edge,heading:panel.querySelector('.pane-heading > span').getBoundingClientRect().left-edge,body:Number.parseFloat(getComputedStyle(panel.querySelector('.panel-body')).paddingLeft),gap:getComputedStyle(panel.querySelector('.tabs')).gap,padding:getComputedStyle(panel.querySelector('.tabs button')).padding,font:getComputedStyle(panel.querySelector('.tabs button')).fontSize}));
+  });expect(result[0]).toEqual(result[1]);expect(result[0].tab).toBe(12);expect(result[0].heading).toBe(12);expect(result[0].body).toBe(12);expect(result[0].gap).toBe('4px');
+ }
+ await check();await handle.focus();await page.keyboard.press('Home');for(let i=0;i<9;i++)await page.keyboard.press('ArrowRight');await check();
+ const history=page.getByRole('tablist',{name:'Investigation tabs'}).getByRole('tab',{name:'History',exact:true});await history.focus();await expect(history).toBeInViewport();
+ await handle.focus();await page.keyboard.press('Home');for(let i=0;i<5;i++)await page.keyboard.press('Shift+ArrowLeft');await check();await page.keyboard.press('Home');await check();await page.screenshot({path:'../artifacts/ui/sidebar-consistent-spacing.png'});
+});
+
+test('drag selection follows moves through blank gaps and can restart inside an existing selection',async({page})=>{
+ const editor=page.getByRole('textbox',{name:'Markdown document editor'}),text='# Gap test\n\nAlpha one. Beta two.\n\n## Next section\n\nGamma three.';await editor.focus();await page.keyboard.press('ControlOrMeta+A');await page.keyboard.insertText(text);
+ const alpha=await point(page,'Alpha'),beta=await point(page,'Beta'),gap=await page.locator('#editorHost .cm-line').nth(3).boundingBox();await page.mouse.move(alpha.x,alpha.y);await page.mouse.down();await page.mouse.move(gap.x+30,gap.y+gap.height/2,{steps:10});await expect.poll(()=>selected(page)).toBe('Alpha one. Beta two.');await page.mouse.move(beta.x,beta.y,{steps:8});await expect.poll(()=>selected(page)).toBe('Alpha one. Beta two.');await page.mouse.up();
+ // The next mouse drag starts inside highlighted text. It must redraw selection, not drag the text.
+ await drag(page,beta,{x:beta.x+20,y:beta.y});const partial=await selected(page);expect(partial.length).toBeGreaterThan(0);expect(partial.length).toBeLessThan('Alpha one. Beta two.'.length);expect(await source(page)).toBe(text);
 });

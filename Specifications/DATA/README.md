@@ -4,6 +4,12 @@ Status: current data and navigation contract, 2026-10-24. The navigation/type ta
 
 Related requirements: [mathematical model](MATHEMATICAL_MODEL.md), [encryption](ENCRYPTION.md), [architecture](../ARCHITECTURE.md) and the [product specification](../SPECIFICATION.md). This reference defines data/navigation mechanisms and marks proposed interfaces explicitly.
 
+## Text encoding contract
+
+Document text and other textual payloads use UTF-8 in storage, transport and plain-text/Markdown export. Rust String/str already require valid UTF-8; byte-oriented adapters must validate incoming text and return an error for invalid sequences instead of replacement decoding. Encrypt the exact UTF-8 bytes where a payload is protected; ciphertext is not itself text. Importing a differently encoded external format requires an explicit format-specific decode/convert step before creating application text.
+
+Do not equate encoding with indexing or normalization. Internal browser ranges remain UTF-16 code units. UTF-8 byte offsets, Unicode scalar positions and grapheme positions are different units; every range contract must name its unit and bind the exact source version. Validate conversions and boundaries without changing composed/decomposed forms, emoji sequences or CRLF. UTF-8 does not choose the future durable anchor scheme or canonical record serialization. Runtime enforcement and edge-case tests remain integration acceptance work, not claimed by this documentation update.
+
 ## 1. Distinct record identities
 
 | Proposed type | Meaning | Stability / relationships |
