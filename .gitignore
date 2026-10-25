@@ -37,3 +37,6 @@
 /frontend/dist/
 /frontend/test-results/
 /frontend/playwright-report/
+
+# Previous project documentation, preserved locally by owner instruction.
+/.oldspecs/

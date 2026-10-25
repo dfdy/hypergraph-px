@@ -1,5 +1,0 @@
-# List toolbar icons — issue 14
-
-Owner requested adjacent bullet/numbered list controls and clearer icons. Scope: frontend presentation only. Keep the established accessible names, delayed tooltips, parsed context and command behavior. Original inline SVGs use currentColor so active/inactive styling continues; three circular bullets and explicit 1/2/3 digits accompany text lines. No imported artwork, dependencies or backend source changes. Reordering preserves native keyboard DOM order. Verify existing formatting browser coverage and inspect a toolbar screenshot; no new test needed for this reversible visual-only change. Patch milestone 0.3.1 synchronizes version metadata and records actual results before push.
-
-Executed: frontend static build passed; existing Chromium formatting-context/toggle scenario passed. Browser DOM check confirms direct list-button adjacency; live toolbar screenshot visually inspected, with three circular bullets and explicit 1/2/3 digits visible. Screenshot is ignored. Full existing frontend/Rust/Lean regressions remain in hosted CI; no unexecuted local checks are claimed.

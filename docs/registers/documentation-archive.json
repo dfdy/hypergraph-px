@@ -1,0 +1,926 @@
+[
+  {
+    "original_path": "ABOUT.md",
+    "archive_path": ".oldspecs/ABOUT.md",
+    "sha256": "b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000",
+    "bytes": 13132,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "AGENTS.md",
+    "archive_path": ".oldspecs/AGENTS.md",
+    "sha256": "395aadaad5ede26c3e7091502e8266720e4d229fc40c7734ed810906f7aebac1",
+    "bytes": 5308,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "CHANGELOG.md",
+    "archive_path": ".oldspecs/CHANGELOG.md",
+    "sha256": "24c0567a58ce0cf264dbc9ddca71d9b0c748b404bc8c2d17c1459f449d8aeb65",
+    "bytes": 17067,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "README.md",
+    "archive_path": ".oldspecs/README.md",
+    "sha256": "353f0fcbea92b729b0fc149defba1f523804ff6914ba6ca79c6fd097c0a62095",
+    "bytes": 12294,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/ARCHITECTURE_REVIEW.md",
+    "archive_path": ".oldspecs/SPECS/ARCHITECTURE_REVIEW.md",
+    "sha256": "c78942f7d5ce259a4ffe7edd4a9847e019fcc6557d7bc21187fabe8927c20f5e",
+    "bytes": 11758,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/DATA/Encryption specification.md",
+    "archive_path": ".oldspecs/SPECS/DATA/Encryption specification.md",
+    "sha256": "3de8d36787322eeb2ca9c0f5be19cba7463c0106973c0fae5f494a9cc121a1c8",
+    "bytes": 46703,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/DATA/README.md",
+    "archive_path": ".oldspecs/SPECS/DATA/README.md",
+    "sha256": "1ee27464a3dddc0672cbe3f8314fa15077e8566e3008945753f29e424b216fed",
+    "bytes": 15671,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/DATA/Underlying mathematics.md",
+    "archive_path": ".oldspecs/SPECS/DATA/Underlying mathematics.md",
+    "sha256": "c25596484e5627b218a4d11683a884d6f5cda8d79f24256517c0b11ab98ae754",
+    "bytes": 34096,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/DEVELOPMENT_REVIEW.md",
+    "archive_path": ".oldspecs/SPECS/DEVELOPMENT_REVIEW.md",
+    "sha256": "9cef2c0afbacda3d2ae2073560a88dd4001bbdfb9adcbf7bd0db85833f7da36a",
+    "bytes": 66467,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/EVOLVED SPECIFICATION.md",
+    "archive_path": ".oldspecs/SPECS/EVOLVED SPECIFICATION.md",
+    "sha256": "d94a4a3482c1aa92aff44d4f828d329020eade5a5f893bbd614cc5c4f7ff9972",
+    "bytes": 154080,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/HPX_Core_Data_Storage_and_File_Format_Specification.md",
+    "archive_path": ".oldspecs/SPECS/HPX_Core_Data_Storage_and_File_Format_Specification.md",
+    "sha256": "23d76e174c94fa8956451abab9333073ddf78c5e3ba51a7944417a2f5851d15d",
+    "bytes": 21354,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/HPX_Core_Object_Model.md",
+    "archive_path": ".oldspecs/SPECS/HPX_Core_Object_Model.md",
+    "sha256": "1a183c4582cfc22011bb95794fe397aea7ad6b11217efacb460525fd5ea81787",
+    "bytes": 10956,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/HPX_Technical_Implementation_Recommendations.md",
+    "archive_path": ".oldspecs/SPECS/HPX_Technical_Implementation_Recommendations.md",
+    "sha256": "43a780889c07fae877172671bcb2cf7accfaad95312b9658a9b47bd7192253ac",
+    "bytes": 22382,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/Hypergraph-PX-Rust-Endpoint-Integration(1).md",
+    "archive_path": ".oldspecs/SPECS/Hypergraph-PX-Rust-Endpoint-Integration(1).md",
+    "sha256": "8dd5fb621d507488e51cd2afe778411ece1d5eaaade5deb5857e64722e5dc439",
+    "bytes": 47985,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/Hypergraph-PX-Rust-Endpoint-Integration.md",
+    "archive_path": ".oldspecs/SPECS/Hypergraph-PX-Rust-Endpoint-Integration.md",
+    "sha256": "13263d8791dbdc327143f796cf543ed78141bca94ffa44ab265af342ed7934c3",
+    "bytes": 31145,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/Hypergraph_PX_Integrated_Architecture_UI_Specification.md",
+    "archive_path": ".oldspecs/SPECS/Hypergraph_PX_Integrated_Architecture_UI_Specification.md",
+    "sha256": "52318be318982e1dde5043ca316e80d5f75e600781c2b52220db3ccf9ef2b00d",
+    "bytes": 28206,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/ORIGINAL SPECIFICATION.MD",
+    "archive_path": ".oldspecs/SPECS/ORIGINAL SPECIFICATION.MD",
+    "sha256": "7b48a3e3044e0b6fd9aaba97bd02bf6e6d068b03ecc15f9cb2e11aed706be44b",
+    "bytes": 3726,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/README.md",
+    "archive_path": ".oldspecs/SPECS/README.md",
+    "sha256": "680aa33d312d972ae068ac03e9d7bed509ee02287e61a2f8dcbc17cabf0449e8",
+    "bytes": 2312,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "SPECS/SPECIFICATION.md",
+    "archive_path": ".oldspecs/SPECS/SPECIFICATION.md",
+    "sha256": "a857c5de2cb022d73421497bbbce10bc8c5db446a486ef1939e91d93177c5dc9",
+    "bytes": 13666,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/ARCHITECTURE.md",
+    "archive_path": ".oldspecs/Specifications/ARCHITECTURE.md",
+    "sha256": "74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7",
+    "bytes": 10269,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/ASSERTIONS_AND_TAGS.md",
+    "archive_path": ".oldspecs/Specifications/ASSERTIONS_AND_TAGS.md",
+    "sha256": "817001ea4de2c8165bb62bbc9149aeef5ef1fdf3d8762ec1a35f50f07f8dabb6",
+    "bytes": 5084,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/CORE_OBJECT_MODEL.md",
+    "archive_path": ".oldspecs/Specifications/CORE_OBJECT_MODEL.md",
+    "sha256": "0f49701674dc75f229cddfe447d9432706badbecbb0556823534d101b356e489",
+    "bytes": 4533,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/DATA/ENCRYPTION.md",
+    "archive_path": ".oldspecs/Specifications/DATA/ENCRYPTION.md",
+    "sha256": "5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6",
+    "bytes": 11094,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/DATA/MATHEMATICAL_MODEL.md",
+    "archive_path": ".oldspecs/Specifications/DATA/MATHEMATICAL_MODEL.md",
+    "sha256": "3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117",
+    "bytes": 8069,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/DATA/README.md",
+    "archive_path": ".oldspecs/Specifications/DATA/README.md",
+    "sha256": "1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800",
+    "bytes": 17734,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/EDITOR_STRUCTURE_GUIDES.md",
+    "archive_path": ".oldspecs/Specifications/EDITOR_STRUCTURE_GUIDES.md",
+    "sha256": "6e725b35aa4d7ecf35a61d9c753a2a060dbb96f518b07a94b8f233a341ab94db",
+    "bytes": 3614,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/FRONTEND_INTEGRATION.md",
+    "archive_path": ".oldspecs/Specifications/FRONTEND_INTEGRATION.md",
+    "sha256": "71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d",
+    "bytes": 56840,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/README.md",
+    "archive_path": ".oldspecs/Specifications/README.md",
+    "sha256": "49065f9630f2a6ee4694004fa56201b5ae32a71b8a77b645d8b3d17b3aab3104",
+    "bytes": 3617,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/RELATIONSHIP_UI.md",
+    "archive_path": ".oldspecs/Specifications/RELATIONSHIP_UI.md",
+    "sha256": "bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8",
+    "bytes": 10002,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/SENTENCE_PROVENANCE.md",
+    "archive_path": ".oldspecs/Specifications/SENTENCE_PROVENANCE.md",
+    "sha256": "717a143f1d4affbbc6ac8aea5f1ce27d8df14609419516509705218f4c66c133",
+    "bytes": 6678,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/SPECIFICATION.md",
+    "archive_path": ".oldspecs/Specifications/SPECIFICATION.md",
+    "sha256": "5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a",
+    "bytes": 20189,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/SPELL_CHECKING.md",
+    "archive_path": ".oldspecs/Specifications/SPELL_CHECKING.md",
+    "sha256": "d84fe838b40e136d3a16859a71c82caf430cfcddd3a0ad9110147be198d7c1ab",
+    "bytes": 1647,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/SQLITE_PERSISTENCE.md",
+    "archive_path": ".oldspecs/Specifications/SQLITE_PERSISTENCE.md",
+    "sha256": "a5f2ddf4a59c93589326af673ca8dd14254291167ed3504262c68afe4c6cb5df",
+    "bytes": 5830,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/TRANSPORT_SECURITY.md",
+    "archive_path": ".oldspecs/Specifications/TRANSPORT_SECURITY.md",
+    "sha256": "96688214826d64bb9d96f01f98c3f717c7327c9e8ec8487eb461bc71098fa0eb",
+    "bytes": 4135,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/WORD_REVIEW_IMPORT.md",
+    "archive_path": ".oldspecs/Specifications/WORD_REVIEW_IMPORT.md",
+    "sha256": "cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804",
+    "bytes": 5284,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "Specifications/WORKSPACE_INTERFACE.md",
+    "archive_path": ".oldspecs/Specifications/WORKSPACE_INTERFACE.md",
+    "sha256": "2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e",
+    "bytes": 27377,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "crates/crypto/README.md",
+    "archive_path": ".oldspecs/crates/crypto/README.md",
+    "sha256": "f0e23d0926c724b816157a3ccf1b0a07ac3f7332a55eb6ab809747dc1d7422d6",
+    "bytes": 6175,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/HPX-documentation-template-pack.zip",
+    "archive_path": ".oldspecs/docproject/HPX-documentation-template-pack.zip",
+    "sha256": "bdef6d74d618e3a770a39116c29454c993754a2525212fb8b8152c260d33fc93",
+    "bytes": 132247,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/ADOPTION_ASSESSMENT.md",
+    "archive_path": ".oldspecs/docproject/migration-review/ADOPTION_ASSESSMENT.md",
+    "sha256": "126f4804be254cabf7ccda1a03fa4ad158126f3b03444b3aad18828d5c4bfc39",
+    "bytes": 4401,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/APPROVAL_DECISIONS.md",
+    "archive_path": ".oldspecs/docproject/migration-review/APPROVAL_DECISIONS.md",
+    "sha256": "c3d03b1365df4c7a4848764c3f499a20b53113fe77634de5db8f7027b619623a",
+    "bytes": 2629,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/BASELINE_AND_SCOPE.md",
+    "archive_path": ".oldspecs/docproject/migration-review/BASELINE_AND_SCOPE.md",
+    "sha256": "d83b1cb7758ef8c6423ba330536bc6e6147001bc8a80c420176936f98bddd205",
+    "bytes": 3405,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/DUPLICATIONS_AND_CONFLICTS.md",
+    "archive_path": ".oldspecs/docproject/migration-review/DUPLICATIONS_AND_CONFLICTS.md",
+    "sha256": "c7e77147581ff168c3885783ee726796cb0dbf824b3fb9ba12cb0ec076a82d4e",
+    "bytes": 4465,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/MIGRATION_PLAN.md",
+    "archive_path": ".oldspecs/docproject/migration-review/MIGRATION_PLAN.md",
+    "sha256": "874e47cff7afc9e29b56dcf18c164b36aff3aa40912ef077309f229f25bb2c94",
+    "bytes": 9833,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/MIGRATION_VERIFICATION_REPORT.md",
+    "archive_path": ".oldspecs/docproject/migration-review/MIGRATION_VERIFICATION_REPORT.md",
+    "sha256": "93018b9413b606843efb2bc4e59087b68852e0bdec10413390ffcf65e83e51f2",
+    "bytes": 4030,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/README.md",
+    "archive_path": ".oldspecs/docproject/migration-review/README.md",
+    "sha256": "50c72314cfa5bc37fde5a687f761c007743c93579da61469c52eeb7135dee043",
+    "bytes": 3458,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/SOURCE_INVENTORY.md",
+    "archive_path": ".oldspecs/docproject/migration-review/SOURCE_INVENTORY.md",
+    "sha256": "df485cf32251bd911a83fb0e4ecfe295bd367db2109368a3679ecf893b203510",
+    "bytes": 5388,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/__pycache__/verify_review.cpython-314.pyc",
+    "archive_path": ".oldspecs/docproject/migration-review/__pycache__/verify_review.cpython-314.pyc",
+    "sha256": "be62d74d15fe3a2c805d7ae36e77b7b8cabd1281a68fd325c958140a09e4bf5a",
+    "bytes": 13253,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/baseline-files.json",
+    "archive_path": ".oldspecs/docproject/migration-review/baseline-files.json",
+    "sha256": "6660b86b5f4c39b11dd249119daafc00c77f7f9336215bd76daa523070287b0e",
+    "bytes": 38326,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/baseline-git-status.txt",
+    "archive_path": ".oldspecs/docproject/migration-review/baseline-git-status.txt",
+    "sha256": "da0bf5a716d880fe10b564a3f2bcdcf36f796accd74bf09f9c8e59f16756af57",
+    "bytes": 878,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/baseline.json",
+    "archive_path": ".oldspecs/docproject/migration-review/baseline.json",
+    "sha256": "d25500d55bab7b95a213f67290b202ff96ce5dba59d72c79eb0bb8653cf73a55",
+    "bytes": 293,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/conflicts.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/conflicts.csv",
+    "sha256": "40dae15b7f9c6b2a7c7ea56cff5ecc96757e661494ee9e8360de3ee6f8cee708",
+    "bytes": 11282,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/decisions.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/decisions.csv",
+    "sha256": "f965b9cd9ba04593bfa1b45e06ec97c1d11a8a7d6ab2e3b52541b801227cbe13",
+    "bytes": 4171,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/existing-link-findings.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/existing-link-findings.csv",
+    "sha256": "05aa4c93fa369087aaa2dc4e2be55670d96959111e7f1e1559c00ef962da229c",
+    "bytes": 39002,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/implementation-collateral.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/implementation-collateral.csv",
+    "sha256": "b4c4cf58aa101c1227b363b4a850e69bac2fb14cef2e34325db1b80b1c63f84f",
+    "bytes": 21372,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/migration-map.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/migration-map.csv",
+    "sha256": "6d2dad68352ff7abc191e3ff796e941f71f72a5ec03968d56928182d21e35f11",
+    "bytes": 283486,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/missing-specifications.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/missing-specifications.csv",
+    "sha256": "62fbe1ac4a4d991bd08878cf2ca977773185246f9473b7b34372d9c9ecee3da1",
+    "bytes": 8081,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/proposed-document-inventory.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/proposed-document-inventory.csv",
+    "sha256": "d49f8989b482cc544dff3b3742f7602dd0cf334bee5ac67f9061ad8713cc6dc4",
+    "bytes": 29523,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/requirements.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/requirements.csv",
+    "sha256": "723c8802155ab36b7d53323c69cfa7906125010f6316a11d3b6451aa8fc5f470",
+    "bytes": 10168,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/source-manifest.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/source-manifest.csv",
+    "sha256": "ae0c3ec38ce93614aa3b3b8fb46c0b83e3e42612752b7296ceafe32006837391",
+    "bytes": 147865,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/source-sections.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/source-sections.csv",
+    "sha256": "c9777194cf969198fca526383837d5ef02e2615008392249b68941f7ee0dd485",
+    "bytes": 239724,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/template-pack-inventory.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/template-pack-inventory.csv",
+    "sha256": "0cbdc4e4669498ab9cdee6af6ea2d0805f8d63578c1a387e4c4c41f41fffbaa7",
+    "bytes": 20832,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/traceability.csv",
+    "archive_path": ".oldspecs/docproject/migration-review/traceability.csv",
+    "sha256": "56615e53f378f3a97ed2052f20a58c7d03da427ccd1103374d80a2ccd06cf3ae",
+    "bytes": 10094,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docproject/migration-review/verify_review.py",
+    "archive_path": ".oldspecs/docproject/migration-review/verify_review.py",
+    "sha256": "7ae73980053d6ccc898cb91f92fe3168cb06108ccea78e192951024117615fa0",
+    "bytes": 6768,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/DEVELOPMENT_STATE.md",
+    "archive_path": ".oldspecs/docs/DEVELOPMENT_STATE.md",
+    "sha256": "9d50274026bcd93235a362bcd79d8d8da16ef39630eed0257f9fc2366a591024",
+    "bytes": 96860,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/FRONTEND_TASK_QUEUE.md",
+    "archive_path": ".oldspecs/docs/FRONTEND_TASK_QUEUE.md",
+    "sha256": "33ac434c3ff0879205a87d3ac688f3a5aae022dc273af27c1ebdceb50220c56d",
+    "bytes": 3314,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/adr/0001-foundation-decisions.md",
+    "archive_path": ".oldspecs/docs/adr/0001-foundation-decisions.md",
+    "sha256": "8e36576431b39364dab6e4cc464ef40624e3ba586643a8401d6647a10b716748",
+    "bytes": 1903,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/adr/0002-trusted-server-envelopes.md",
+    "archive_path": ".oldspecs/docs/adr/0002-trusted-server-envelopes.md",
+    "sha256": "8f2254251aa273b939c58295fe97ade69f23843907aff2fc7aa066b0dd030505",
+    "bytes": 4765,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/adr/0003-sqlite-local-writer.md",
+    "archive_path": ".oldspecs/docs/adr/0003-sqlite-local-writer.md",
+    "sha256": "40bab3126a8d1dea3f1d6ca0f2f457edf4d0a61ce4dbf774eedcf206a3cc2c7f",
+    "bytes": 2234,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/adr/0004-local-https-bootstrap.md",
+    "archive_path": ".oldspecs/docs/adr/0004-local-https-bootstrap.md",
+    "sha256": "e540f6db076c044420b7f6fddc43dc82cdec6d239e6643ab3125ef364d00a013",
+    "bytes": 3524,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/images/Screenshot.png",
+    "archive_path": ".oldspecs/docs/images/Screenshot.png",
+    "sha256": "45267b8f93cc18e66913ccad81c9582cbedb2566b05e2bc7faabff0937636088",
+    "bytes": 239196,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/research/RELATIONSHIP_CATALOGUE_INVENTORY.md",
+    "archive_path": ".oldspecs/docs/research/RELATIONSHIP_CATALOGUE_INVENTORY.md",
+    "sha256": "2fd4d1590a4d98ed58163b812b75a6575d1ff0f6bcd0d16b813c051461628185",
+    "bytes": 123360,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/research/RELATIONSHIP_VOCABULARY_AUDIT.md",
+    "archive_path": ".oldspecs/docs/research/RELATIONSHIP_VOCABULARY_AUDIT.md",
+    "sha256": "825020c017cf6ab4385ce8451fad8b9f5f61459c325ed3d108962e893efe9d80",
+    "bytes": 17145,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/reviews/0008-frontend-integration.md",
+    "archive_path": ".oldspecs/docs/reviews/0008-frontend-integration.md",
+    "sha256": "a7c12f3e8f00a796f4e70e92e5bce06d914206b6de60636dea173e50eb6b2dcc",
+    "bytes": 16888,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/reviews/0012-integrated-workspace-interface.md",
+    "archive_path": ".oldspecs/docs/reviews/0012-integrated-workspace-interface.md",
+    "sha256": "c15ec544778cf5cc4901de57321550e73763d5e3472b6969e89803e7cfad563b",
+    "bytes": 6282,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/source-reading-record.md",
+    "archive_path": ".oldspecs/docs/source-reading-record.md",
+    "sha256": "683f6042b2d8564c03e91ec6abd18f52445d7d6ea0c546e4ce5eaafa485fcbbc",
+    "bytes": 1243,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0001-foundation.md",
+    "archive_path": ".oldspecs/docs/work/0001-foundation.md",
+    "sha256": "23c5b41bbf9eca68302dc55011afd420fdaa5c3419bbe27e450215139a6cec40",
+    "bytes": 1829,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0002-lean-foundation.md",
+    "archive_path": ".oldspecs/docs/work/0002-lean-foundation.md",
+    "sha256": "d07999ec9abf240561283a499e522dd979ca5a0dcc22bda7aec8ed941927709a",
+    "bytes": 6840,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0004-crypto-envelopes.md",
+    "archive_path": ".oldspecs/docs/work/0004-crypto-envelopes.md",
+    "sha256": "66485797a898f4b2f5310584949c5a11836f7d817c2bd6d83fb709b4aad9dc1b",
+    "bytes": 3508,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0005-specifications.md",
+    "archive_path": ".oldspecs/docs/work/0005-specifications.md",
+    "sha256": "351591bf219e7a1351e077d1a3818be98a6473eea82e4948402031efa86e4a41",
+    "bytes": 2077,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0006-readme-design-aims.md",
+    "archive_path": ".oldspecs/docs/work/0006-readme-design-aims.md",
+    "sha256": "53ae1bc59a5e4cc70e25e6b03f81109b29d2adb79c6314b9f5b9c7d75ecfb158",
+    "bytes": 1397,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0007-developer-readme.md",
+    "archive_path": ".oldspecs/docs/work/0007-developer-readme.md",
+    "sha256": "944048dc7631e2335465d1fc74318e1af7ed2737b300c6c2682b4a23a25500a6",
+    "bytes": 1519,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0010-frontend-intake.md",
+    "archive_path": ".oldspecs/docs/work/0010-frontend-intake.md",
+    "sha256": "6578c3bf94dab1ecd24a4c14c59d0db16bb125cf94e8520057a2bc30dce9f4d9",
+    "bytes": 1760,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0011-frontend-preview.md",
+    "archive_path": ".oldspecs/docs/work/0011-frontend-preview.md",
+    "sha256": "a3c3c65b2da070d54c726fb5e2100eb5a7302d2954f9ee2ad5bbc921923b9f05",
+    "bytes": 4217,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0013-navigator-controls.md",
+    "archive_path": ".oldspecs/docs/work/0013-navigator-controls.md",
+    "sha256": "ebb55b9c87568002195157a67a76fb34e975b08a92f69ae2dc5d5c5717e00ffe",
+    "bytes": 2325,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0014-list-toolbar-icons.md",
+    "archive_path": ".oldspecs/docs/work/0014-list-toolbar-icons.md",
+    "sha256": "d1d6143f01243a8f7909297ee721fbf8c13ec6b1171ab26a6ea75b6c13dad863",
+    "bytes": 1118,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0015-status-word-count.md",
+    "archive_path": ".oldspecs/docs/work/0015-status-word-count.md",
+    "sha256": "57f8ba9d7b44efbbf18c75b6225b0835cc03c580914820bcb5e0d30808206596",
+    "bytes": 1710,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/0019-adjacent-relationships.md",
+    "archive_path": ".oldspecs/docs/work/0019-adjacent-relationships.md",
+    "sha256": "13f404805830ba0c68e1bdbb24f3fed4ce0888ab55dfc7b928637189b981c93d",
+    "bytes": 2966,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-block-provenance.md",
+    "archive_path": ".oldspecs/docs/work/local-block-provenance.md",
+    "sha256": "5db33de3c7201af6ef4ccc16693fbddf08ecfff9e0f88bf8027ca09168065c69",
+    "bytes": 3707,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-contents-tree.md",
+    "archive_path": ".oldspecs/docs/work/local-contents-tree.md",
+    "sha256": "142424a718999bf394b5149ac353da1e819f9abeeb96a13706d94700e3d11208",
+    "bytes": 2167,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-durable-writer.md",
+    "archive_path": ".oldspecs/docs/work/local-durable-writer.md",
+    "sha256": "bef51e80fc890fab33acb056ce456a642aabeb9343f992d0f716ad21c321ac8b",
+    "bytes": 2135,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-editor-structure-guides.md",
+    "archive_path": ".oldspecs/docs/work/local-editor-structure-guides.md",
+    "sha256": "8aec3d4871919ca072bad4b150846c01e2139de4f3d95a52c46dd0d7fd602a87",
+    "bytes": 5664,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-full-relations-audit.md",
+    "archive_path": ".oldspecs/docs/work/local-full-relations-audit.md",
+    "sha256": "c9b0e9cbe9312aa3f1956bb44044b2c82adb5709248f638138339a8d0343822f",
+    "bytes": 4132,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-functions-bar.md",
+    "archive_path": ".oldspecs/docs/work/local-functions-bar.md",
+    "sha256": "680f4a2cb7a65be45c0672d5a5afd4a1e0f169ce9237401eaf61f94e64f51ef4",
+    "bytes": 2564,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-markdown-markers.md",
+    "archive_path": ".oldspecs/docs/work/local-markdown-markers.md",
+    "sha256": "38719e11007066ccf72ec372b94261768c744b6ae826d0a409734f8071f8185e",
+    "bytes": 1739,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-navigator-controls.md",
+    "archive_path": ".oldspecs/docs/work/local-navigator-controls.md",
+    "sha256": "3af449f13aa3ef614d3902e8159a8ad796ee48a439142ba3ba25bd4265d9a506",
+    "bytes": 1278,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-red-caret.md",
+    "archive_path": ".oldspecs/docs/work/local-red-caret.md",
+    "sha256": "a5949cd531fbe56d1cd49d28ab61e20f49ba50843393a8b4a106c8a55f3e358a",
+    "bytes": 1518,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-relation-picker.md",
+    "archive_path": ".oldspecs/docs/work/local-relation-picker.md",
+    "sha256": "1c5bde1c3956de47f189b5c71e23ef4b745bc3783a717400755b8e4d0efde190",
+    "bytes": 4339,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-relationship-tags.md",
+    "archive_path": ".oldspecs/docs/work/local-relationship-tags.md",
+    "sha256": "3cf366ad5e71a92ddafdd1edd12471ebba12aed44fc83121ed27556bc3bddb04",
+    "bytes": 5130,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-selected-relationship-pair.md",
+    "archive_path": ".oldspecs/docs/work/local-selected-relationship-pair.md",
+    "sha256": "1726ae35afa306cd83e7f5c53cad7588ec39f1e170fc7ec1fa1b36d549fdc2d8",
+    "bytes": 1308,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-sentence-provenance.md",
+    "archive_path": ".oldspecs/docs/work/local-sentence-provenance.md",
+    "sha256": "54e7191322be8ab1d73c30315e5662513a2ace2aa9671a7ba86ad9e2039ec050",
+    "bytes": 3973,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-settings-order.md",
+    "archive_path": ".oldspecs/docs/work/local-settings-order.md",
+    "sha256": "cfd60ec37025c78f92efeb9ded5c9f61e254f0fc4404c816fa4e79fb9d994cb1",
+    "bytes": 787,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-style-indicators.md",
+    "archive_path": ".oldspecs/docs/work/local-style-indicators.md",
+    "sha256": "625ed20c04dadc9f84be9720e83d4f7069cb567dfcc0625e2a3e6337ea2020b6",
+    "bytes": 685,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-widget-guide-alignment.md",
+    "archive_path": ".oldspecs/docs/work/local-widget-guide-alignment.md",
+    "sha256": "600ac5cfc7de462c6faa8506edfbbe9cd832c185eed167810fef60615e8db46f",
+    "bytes": 2379,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "docs/work/local-workspace-layout.md",
+    "archive_path": ".oldspecs/docs/work/local-workspace-layout.md",
+    "sha256": "cc957e6549ac24b9ee81339cd4b671dddf3ce51e21c839df4a1a4c528af0cd57",
+    "bytes": 1532,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "frontend/README.md",
+    "archive_path": ".oldspecs/frontend/README.md",
+    "sha256": "0061aadaee9055edae76de03dc28b1c284b6195e710746c408adbf58570282a5",
+    "bytes": 11369,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "frontend/incoming/README.md",
+    "archive_path": ".oldspecs/frontend/incoming/README.md",
+    "sha256": "96803cee71d19eaf22776cc70f6b19f1155c75e2d5ae852c8cc90558d6e4e3b6",
+    "bytes": 1205,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "frontend/incoming/sites-export/Hypergraph-PX-0.13.1/CHANGELOG.md",
+    "archive_path": ".oldspecs/frontend/incoming/sites-export/Hypergraph-PX-0.13.1/CHANGELOG.md",
+    "sha256": "2388aa39852a93c0182b8ccfb9a31655245eafbd3c5adecb1d216df56271ee6e",
+    "bytes": 10088,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "frontend/incoming/sites-export/Hypergraph-PX-0.13.1/DOWNLOAD.md",
+    "archive_path": ".oldspecs/frontend/incoming/sites-export/Hypergraph-PX-0.13.1/DOWNLOAD.md",
+    "sha256": "1abe298ecebc74421862c37cf3059178585c45eabe4eda4231e0d06fcca2a767",
+    "bytes": 2817,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "frontend/incoming/sites-export/Hypergraph-PX-0.13.1/README.md",
+    "archive_path": ".oldspecs/frontend/incoming/sites-export/Hypergraph-PX-0.13.1/README.md",
+    "sha256": "2f64d66a9db99bae9630717e4a3d21f7324315daf35c06d339012de7ea8ad53d",
+    "bytes": 6583,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "frontend/incoming/sites-export/Hypergraph-PX-0.13.1/docs/backend-endpoints.md",
+    "archive_path": ".oldspecs/frontend/incoming/sites-export/Hypergraph-PX-0.13.1/docs/backend-endpoints.md",
+    "sha256": "e74fc3d0a8a6f580b61ab8463af06c2947fbc71c59c7a9a0b3879019087ec246",
+    "bytes": 48297,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "frontend/incoming/sites-export/Hypergraph-PX-0.13.1/initial.md",
+    "archive_path": ".oldspecs/frontend/incoming/sites-export/Hypergraph-PX-0.13.1/initial.md",
+    "sha256": "3f606b7d3a39ce5d34c6f8d9ad1b8fe3cf932327f8cceb907d16ba6ec050be59",
+    "bytes": 7394,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "frontend/incoming/sites-export/Hypergraph-PX-0.13.1/tests/fixtures/extended-mathematics.md",
+    "archive_path": ".oldspecs/frontend/incoming/sites-export/Hypergraph-PX-0.13.1/tests/fixtures/extended-mathematics.md",
+    "sha256": "e559c4c898f15614c56c44b5751255fc538a4cff7938ff8186e316e886286b9a",
+    "bytes": 33825,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "legal/TOOLING.md",
+    "archive_path": ".oldspecs/legal/TOOLING.md",
+    "sha256": "931174282e3b973d5b9e68ab19a89574d3f5dac435e2828d994871bf5b8772c3",
+    "bytes": 5395,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "proofs/README.md",
+    "archive_path": ".oldspecs/proofs/README.md",
+    "sha256": "cae432eaa5499a2ae962270920dbe092fadc5449d06990cd843d8bec341b4613",
+    "bytes": 2945,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "proofs/VALIDATION_DIGEST.md",
+    "archive_path": ".oldspecs/proofs/VALIDATION_DIGEST.md",
+    "sha256": "69452ea0278fd29685e133c33ed6357c0d281efad623e6b53ba6208a1386c550",
+    "bytes": 17812,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": "proofs/rust/README.md",
+    "archive_path": ".oldspecs/proofs/rust/README.md",
+    "sha256": "07aa440ed51c367cee95a4fda3e3c8eaf4eb08f4105760124ce73b847ad3cb2b",
+    "bytes": 2218,
+    "action": "moved byte-for-byte; previous documentation no longer active"
+  },
+  {
+    "original_path": ".gitignore",
+    "archive_path": ".oldspecs/.gitignore.before-documentation-migration",
+    "sha256": "712ccda1889268f87b01bfcb987484f6bc3ca22ef29c96958879428598b1f75a",
+    "bytes": 788,
+    "action": "copied original ignore rules before appending owner-authorized archive exclusion"
+  },
+  {
+    "original_path": "docproject/migration-execution/OWNER_DECISIONS.md",
+    "archive_path": ".oldspecs/docproject/migration-execution/OWNER_DECISIONS.md",
+    "sha256": "38fde5fae916c6e05ce4f38f529a24eebc07b26559475f2d5c0f91d7982b9272",
+    "bytes": 2332,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/README.md",
+    "archive_path": ".oldspecs/docproject/migration-execution/README.md",
+    "sha256": "0bfd144fae2dda7022e5b295374633e4b84270925c39065651409ad866540486",
+    "bytes": 654,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/VERIFICATION.md",
+    "archive_path": ".oldspecs/docproject/migration-execution/VERIFICATION.md",
+    "sha256": "524b0fb2e6d470d8f87e39ea0e5cdd526f0fcee5291e9faa588bf61f3db1524c",
+    "bytes": 4385,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/archive-manifest.json",
+    "archive_path": ".oldspecs/docproject/migration-execution/archive-manifest.json",
+    "sha256": "9cdba4f6976cdbc562ad85bea0dfd828eeebcf9b9d3fb98e6889d36b8ea7e953",
+    "bytes": 37880,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/archive_previous_documentation.py",
+    "archive_path": ".oldspecs/docproject/migration-execution/archive_previous_documentation.py",
+    "sha256": "d13cdc040789ae442a66869d6f095665779a14c17483ce83c713d2dbc0a96725",
+    "bytes": 4975,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/baseline.json",
+    "archive_path": ".oldspecs/docproject/migration-execution/baseline.json",
+    "sha256": "1a099b15cb31028f9ae6640ecd35079fe48ccb6d6b7ed91d92bdcfb610f1d724",
+    "bytes": 41300,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/build_documentation.py",
+    "archive_path": ".oldspecs/docproject/migration-execution/build_documentation.py",
+    "sha256": "88816a0e28eaa91d00a559b34a60c10cd25f6b4ddd957538f3823540237bb0ef",
+    "bytes": 43418,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/canonical-section-coverage.csv",
+    "archive_path": ".oldspecs/docproject/migration-execution/canonical-section-coverage.csv",
+    "sha256": "57b027312ae1357f69998ae6c46353467aebe93343714292bde4e2d6d971b04f",
+    "bytes": 72132,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/complete_documentation.py",
+    "archive_path": ".oldspecs/docproject/migration-execution/complete_documentation.py",
+    "sha256": "276c9ff7d14937150d45363b284c23c680d833e95113ead397d6034650c97e7f",
+    "bytes": 28833,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/generated-paths.json",
+    "archive_path": ".oldspecs/docproject/migration-execution/generated-paths.json",
+    "sha256": "85c8581caec9d582a891f9f6f8cbf7cc23d4a6b7bcb50afc2a2011c5cbdb2002",
+    "bytes": 4226,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/next-AGENTS.md",
+    "archive_path": ".oldspecs/docproject/migration-execution/next-AGENTS.md",
+    "sha256": "cde9661beaf09f8925cac02a71d7ff6169ab5fa83fa2dcf32e3b5d109f26e726",
+    "bytes": 4682,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/next-README.md",
+    "archive_path": ".oldspecs/docproject/migration-execution/next-README.md",
+    "sha256": "584954b424d53118491d8abf1fdb6a0a05a4c507e524d08f861dca9d8cfaf2a4",
+    "bytes": 2846,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/prepare_archive.py",
+    "archive_path": ".oldspecs/docproject/migration-execution/prepare_archive.py",
+    "sha256": "f4874d74fcbed63f9a7a5afd19cbc24eea68a1f0d57e31a123c246610b36121b",
+    "bytes": 17980,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/topic-definitions.json",
+    "archive_path": ".oldspecs/docproject/migration-execution/topic-definitions.json",
+    "sha256": "f14dc0dc6a112d4c7f8b74ecd2571ae7d43efa181e422885432d6613e9e5efef",
+    "bytes": 118799,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "docproject/migration-execution/verify_migration.py",
+    "archive_path": ".oldspecs/docproject/migration-execution/verify_migration.py",
+    "sha256": "46f980208de3bbd445e33377ff62562c0192bdd8ea2cad39cb94a20fdd2b5618",
+    "bytes": 8863,
+    "action": "byte-identical execution original retained; active records/checker routed separately"
+  }
+]

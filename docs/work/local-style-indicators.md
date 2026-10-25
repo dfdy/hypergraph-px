@@ -1,3 +1,0 @@
-# Local contextual style indicators
-
-Publication remains paused. Owner reports Paragraph remains active inside a numbered list and asks to check other styles. Existing code defaults every non-outline-heading to Paragraph, including lists, quotes, code and tables. Derive paragraph/heading state from parsed block context instead. Keep inline emphasis independent: Paragraph plus Bold/Italic is valid within a normal paragraph. Check nested headings, nearest nested list type, code literals, empty paragraphs and mixed selections. Refresh indicators when background parsing advances. Preserve source/selection/undo and keep all changes local; no dependency/version/publication changes.

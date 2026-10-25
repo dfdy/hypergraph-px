@@ -1,0 +1,4 @@
+risk_id,area,description,likelihood,impact,mitigation,owner,status,review_trigger
+HPX-RISK-001,documentation authority,Editorial assembly could be mistaken for new feature approval,not quantified,incorrect implementation direction,status/authority fields; owner decisions and source coverage,project owner,open review risk,topic adoption
+HPX-RISK-002,confidentiality,Ignored raw sources/private baseline could be accidentally published,not quantified,unapproved disclosure,.oldspecs ignored; private baseline outside Git; no publishing permission,project owner,"controlled, not eliminated",any publication
+HPX-RISK-003,assurance,Historic proof/test success could be overstated after new code changes,not quantified,false correctness/security claim,retain full digest and scope; current integration explicitly unverified,project owner,open,code/test/proof change

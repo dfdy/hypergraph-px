@@ -2,3 +2,5 @@
 //! Pure domain validators. No storage, cryptography, HTTP or implicit authority.
 
 pub mod expansion;
+
+pub mod records;
