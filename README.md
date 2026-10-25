@@ -3,7 +3,7 @@
 
 **Hypergraph PX (HPX)** is a writing and thinking environment born out of my frustration with writing a doctoral dissertation in software that doesn't let me work the way I think.
 
-Tools from Microsoft Word to Scrivener are useful, but I've always found it strange that writing software still lacks capabilities that programmers have taken for granted for decades, such as Git-like versioning, branching, and the ability to define meaningful relationships between specific parts of a document. Ideas don't develop in neat, linear sequences. They overlap, contradict, diverge, reconnect, and change through our encounters with other ideas and people. Why shouldn't our writing tools accommodate that?
+Writing tools, from Microsoft Word to Scrivener, are useful, but I've always found it strange that writing software still lacks capabilities that programmers have taken for granted for decades, such as Git-like versioning, branching, and the ability to define meaningful relationships between specific parts of a document. Ideas don't develop in neat, linear sequences. They overlap, contradict, diverge, reconnect, and change through our encounters with other ideas and people. Why shouldn't our writing tools accommodate that?
 
 HPX explores a different approach: treating writing as an evolving network of identifiable, reusable, and versioned contributions, while still allowing us to work with familiar, readable documents. Its [hypergraph](https://en.wikipedia.org/wiki/Hypergraph) structure allows relationships to connect multiple pieces of content, rather than simply linking documents or paragraphs. It aims to make these relationships explicit, preserve their histories, and support experimentation without losing what came before.
 
