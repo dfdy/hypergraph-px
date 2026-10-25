@@ -1,7 +1,0 @@
-# Local red caret preference
-
-Publication remains paused. Owner requested a red caret for visibility and a toggle in the bottom settings bar. Default enabled; unchecked restores theme accent. Apply to the drawn CodeMirror cursor and native caret fallback, preserve native drawSelection caret hiding, and use a darker red in light theme. Persist only a validated boolean display preference; missing/corrupt/blocked preferences keep the default usable. No editor/source transaction, selection reset, document persistence, dependency or publication/version changes. Verify actual computed cursor color in both themes, toggle/reload persistence, no source changes and existing display-preference privacy checks.
-
-Implemented locally: default red caret (dark theme #ff5b63, light theme #c62936), 2px drawn cursor for visibility, and Red caret checkbox next to Authors. Disabled restores the theme accent; redCaret is a validated non-sensitive display preference. Missing/blocked preference storage retains a usable red default; toggling still works without persistence. No forced native caret-color override that would break CodeMirror drawSelection hiding.
-
-Executed static build and existing appearance/privacy browser scenario passed. Actual Chromium checked default/on/off border colors, 2px width, light/dark colors, reload persistence, exact unchanged Markdown and blocked localStorage operation. Both theme screenshots captured and visually inspected. No publishing, dependency/backend changes or version increment.

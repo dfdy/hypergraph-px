@@ -84,7 +84,8 @@ export function installFunctionsBar(api) {
   };
   return {update(context){
     const source=api.getDocument(context.document).source;
-    fork.disabled=!selectionKind(source,context.from,context.to);
+    fork.disabled=!!api.runtime||!selectionKind(source,context.from,context.to);
+    embed.disabled=!!api.runtime;
     fork.title=fork.disabled?'Select a whole sentence, paragraph or section':'Create an independent tab-only demo fork';
     link.disabled=!documentHeadings(source).length||context.from!==context.to&&!selectedWords(source,context.from,context.to);
     link.title=link.disabled?'Use a caret or whole-word selection in a document with headings':'Insert a plain Markdown heading link';

@@ -1,0 +1,3 @@
+contribution_id,identity_or_alias,kind,source_or_commit,licence,acknowledgement_status
+HPX-CONTRIB-001,project owner,purpose and explicit decisions,ABOUT source; HPX-OWNER-001..005,existing rights retained; no new license inferred,attributed source; no cryptographic authorship claim
+HPX-CONTRIB-002,development agent,inventory/editorial assembly,Phase A/B/C records and source hashes,no new license scope adopted,AI contribution recorded; approval authority remains human
