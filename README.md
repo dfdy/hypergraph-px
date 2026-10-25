@@ -1,5 +1,5 @@
 # Hypergraph PX
-<img src="docs/assets/logo.png" alt="Hypergraph PX logo" width="96">
+<img src="docs/assets/logo.png" alt="Hypergraph PX logo" width="128">
 
 **Hypergraph PX (HPX)** is a writing and thinking environment born out of my frustration with writing a doctoral dissertation in software that doesn't let me work the way I think.
 
