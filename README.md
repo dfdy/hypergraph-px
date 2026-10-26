@@ -9,9 +9,9 @@ HPX explores a different approach: treating writing as an evolving network of id
 
 Underlying the project is a commitment to **intellectual autonomy, transparency, privacy, and collaboration**. It is a tool that helps people think together without obscuring who contributed what, including when collaborating with AI. It begins as a personal writing environment but is ultimately intended to become a secure, federated, collaborative commons for writing and inquiry.
 
-![Current synthetic desktop frontend preview](docs/assets/desktop-preview.png)
+![Latest Hypergraph PX desktop runtime with synthetic documents](docs/assets/desktop-preview.png)
 
-*Current local frontend preview, captured on 2026-10-26 with synthetic content. This synthetic preview image is not evidence of live Rust integration.*
+*Latest local HTTPS runtime, captured on 2026-10-26 using isolated synthetic documents. Real-document acceptance remains pending.*
 
 ### How it's being built
 
