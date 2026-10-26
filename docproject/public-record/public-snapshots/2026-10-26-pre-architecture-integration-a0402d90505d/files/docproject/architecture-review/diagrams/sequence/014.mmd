@@ -1,0 +1,23 @@
+%% HPX-DIAG-014 — Atomic text publication and recovery
+%% Scope: Which objects become durable together, and what happens around COMMIT?
+%% Local unless explicitly F / G
+sequenceDiagram
+ actor U as Human
+ participant B as Frozen browser context
+ participant R as Application coordinator
+ participant D as SQLite writer
+ U->>B: Explicit Commit reviewed source
+ B->>R: Operation + expected head/generation + exact bytes
+ R->>D: BEGIN IMMEDIATE
+ R->>D: Current owner/device, branch state, original receipt check
+ alt Preconditions fail
+ D-->>R: Conflict / authorization / integrity error
+ R-->>B: No publication
+ else Valid exact plan
+ R->>D: Insert same-node Revision, closed Snapshot, Publication
+ R->>D: Advance selected head, rebase Draft, eligible promotion, Receipt
+ R->>D: COMMIT
+ Note over R,D: Crash before commit = old state, after commit = complete new state
+ R-->>B: Original receipt or unknown transport outcome
+ end
+ Note over B,D: Reference replacement is a separate later operation, no cross-identity parent is created

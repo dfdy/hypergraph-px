@@ -1,0 +1,162 @@
+{
+  "date": "2026-10-26",
+  "scope": "documentation, supporting review and redacted public derivative only",
+  "candidate_files_scanned": 671,
+  "credential_or_local_path_hits": [],
+  "master_payload_hashes_verified": 327,
+  "master_control_hashes_verified": 9,
+  "public_payloads_changed": [
+    "files/docproject/architecture-review/validation/diagram-results-initial.json",
+    "files/docproject/architecture-review/validation/diagram-results.json",
+    "files/docproject/architecture-review/validation/renderer-provenance.json"
+  ],
+  "public_payloads_identical": 324,
+  "historical_controls_identical": 9,
+  "derivative_manifest_verified": true,
+  "csv_rows": {
+    "assumptions.csv": {
+      "historical_rows": 3,
+      "current_rows": 3,
+      "unchanged_rows": 3,
+      "all_original_terminators_preserved": true
+    },
+    "claim-coverage.csv": {
+      "historical_rows": 170,
+      "current_rows": 170,
+      "unchanged_rows": 170,
+      "all_original_terminators_preserved": true
+    },
+    "claims.csv": {
+      "historical_rows": 605,
+      "current_rows": 605,
+      "unchanged_rows": 605,
+      "all_original_terminators_preserved": true
+    },
+    "compatibility.csv": {
+      "historical_rows": 12,
+      "current_rows": 12,
+      "unchanged_rows": 11,
+      "all_original_terminators_preserved": true
+    },
+    "conflicts.csv": {
+      "historical_rows": 19,
+      "current_rows": 20,
+      "unchanged_rows": 16,
+      "all_original_terminators_preserved": true
+    },
+    "contributions.csv": {
+      "historical_rows": 3,
+      "current_rows": 3,
+      "unchanged_rows": 3,
+      "all_original_terminators_preserved": true
+    },
+    "decisions.csv": {
+      "historical_rows": 20,
+      "current_rows": 20,
+      "unchanged_rows": 20,
+      "all_original_terminators_preserved": true
+    },
+    "document-inventory.csv": {
+      "historical_rows": 89,
+      "current_rows": 89,
+      "unchanged_rows": 75,
+      "all_original_terminators_preserved": true
+    },
+    "existing-link-findings.csv": {
+      "historical_rows": 160,
+      "current_rows": 160,
+      "unchanged_rows": 160,
+      "all_original_terminators_preserved": true
+    },
+    "implementation-collateral.csv": {
+      "historical_rows": 88,
+      "current_rows": 88,
+      "unchanged_rows": 88,
+      "all_original_terminators_preserved": true
+    },
+    "migration-map.csv": {
+      "historical_rows": 809,
+      "current_rows": 809,
+      "unchanged_rows": 804,
+      "all_original_terminators_preserved": true
+    },
+    "open-questions.csv": {
+      "historical_rows": 23,
+      "current_rows": 25,
+      "unchanged_rows": 21,
+      "all_original_terminators_preserved": true
+    },
+    "requirements.csv": {
+      "historical_rows": 32,
+      "current_rows": 32,
+      "unchanged_rows": 22,
+      "all_original_terminators_preserved": true
+    },
+    "research.csv": {
+      "historical_rows": 2,
+      "current_rows": 2,
+      "unchanged_rows": 2,
+      "all_original_terminators_preserved": true
+    },
+    "risks.csv": {
+      "historical_rows": 4,
+      "current_rows": 4,
+      "unchanged_rows": 4,
+      "all_original_terminators_preserved": true
+    },
+    "source-manifest.csv": {
+      "historical_rows": 139,
+      "current_rows": 139,
+      "unchanged_rows": 134,
+      "all_original_terminators_preserved": true
+    },
+    "source-sections.csv": {
+      "historical_rows": 790,
+      "current_rows": 790,
+      "unchanged_rows": 790,
+      "all_original_terminators_preserved": true
+    },
+    "technical-debt.csv": {
+      "historical_rows": 4,
+      "current_rows": 4,
+      "unchanged_rows": 4,
+      "all_original_terminators_preserved": true
+    },
+    "template-pack-inventory.csv": {
+      "historical_rows": 111,
+      "current_rows": 111,
+      "unchanged_rows": 111,
+      "all_original_terminators_preserved": true
+    },
+    "tests.csv": {
+      "historical_rows": 39,
+      "current_rows": 40,
+      "unchanged_rows": 39,
+      "all_original_terminators_preserved": true
+    },
+    "traceability.csv": {
+      "historical_rows": 591,
+      "current_rows": 596,
+      "unchanged_rows": 591,
+      "all_original_terminators_preserved": true
+    }
+  },
+  "private_master_excluded": true,
+  "application_work": "preserved locally; not included",
+  "licences": "existing terms retained; no blanket relicensing",
+  "documentation_check": "PASS: python3 scripts/verify_documentation.py --check-local-sources",
+  "whitespace_check": "PASS for remaining staged scope using CR-aware settings; one preserved historical EOF blank line reported in the unchanged formal-validation.md snapshot payload",
+  "offline_viewer_check": {
+    "headless": true,
+    "checks_passed": 6,
+    "initial_attempt": "sandbox blocked Chromium macOS registration; isolated retry outside sandbox passed",
+    "screenshot_visually_inspected": true,
+    "personal_browser_used": false,
+    "application_runtime_used": false
+  },
+  "application_tests": "not run; no application changes",
+  "publication_authority": "owner: Redact what is needed and push to GitHub",
+  "staged_paths_verified": 592,
+  "staged_scope": "only .gitignore, docs/ and docproject/; all staged bytes matched inspected files",
+  "viewer_source_links_resolved": 163
+}

@@ -1,0 +1,15 @@
+{
+  "headless": true,
+  "network": "All requests aborted; inline SVG and JS only",
+  "personal_profile": false,
+  "application_runtime": false,
+  "checks": [
+    "51 selectable diagrams",
+    "exact selection",
+    "process search",
+    "linked child navigation",
+    "zoom control",
+    "no page JavaScript errors"
+  ],
+  "passed": true
+}

@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-26",
+  "historical_master": "docproject/public-record/specification-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d",
+  "original_payload_files": 327,
+  "changed_payload_files": 3,
+  "unchanged_payload_files": 324,
+  "changes": [
+    {
+      "path": "files/docproject/architecture-review/validation/diagram-results-initial.json",
+      "original_sha256": "a13ce861f4c5cbf1b4b6c212bc51b9e11aa4b9a7a8bf0dc0e5001ce525ab0210",
+      "public_sha256": "eb26169de485d68684bbf23231b36f2b6406363d041202556ad0e242d88b72f9",
+      "reason": "replace local browser/cache prefixes; preserve error and stack suffixes"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/diagram-results.json",
+      "original_sha256": "17e4104ff7fe537a4651e569d5f4231466b5db7ff7af736647908315b977344f",
+      "public_sha256": "e4357d9f864cab9adf9d36598bea30cb5e1f31ce96e1d887ecfb384feeec86f7",
+      "reason": "replace local browser/cache prefixes; preserve error and stack suffixes"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/renderer-provenance.json",
+      "original_sha256": "29a9762515ed77c267d204916eb1ef04218190e5c277bb768d3c429a117be6ed",
+      "public_sha256": "44809574da4e0605997977533c69d78e746e7bbb466d35388811882104a9e453",
+      "reason": "replace local browser/cache prefixes; preserve error and stack suffixes"
+    }
+  ],
+  "historical_control_sha256": {
+    "PUBLICATION_READINESS.md": "109ae2a1a21064ed810c4abced71bb94307ac9f3b7a935a180dd7d76981c154c",
+    "metadata.json": "5720bb761243b2ff6e5e2aba69f31ef4b710e59f7be294abf60f95183a85870f",
+    "README.md": "c581e32a50108e2728b37e3693006f616a8f6dccb2a3ea4af61c2ba67f13b41a",
+    "control-checksums.json": "02fd48716f5e1420bc76ce489a6e68593cb19e00274fa6f05dd148c5dd75c1e1",
+    "source-git-status.txt": "53fddfa96687e160c9dc5b7b8e3ef9f751cb3d51b7578c6f9136ced3bb1b5c7b",
+    "manifest.json": "278568e18b70833d7a8a511cbd0d0780fef1733cb411ee716c7bbe06e356becf",
+    "verification.json": "ed02052aa7809fe7ad36bcbff7a499fedb3d4bb1d2811578ffe3d1f23b41c642",
+    "preflight-review.json": "47a3f037ff5c3131c6347e4791bff60360d10f975b0e53baecd7f1e0e262d91d",
+    "SHA256SUMS": "cfc843bb8ead35b1ef8ef06912a224aa746eb3a0ceaa2e9112bb1927ea775fb3"
+  }
+}

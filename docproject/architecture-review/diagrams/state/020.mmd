@@ -1,0 +1,13 @@
+%% HPX-DIAG-020 — Annotation entity lifecycle
+%% Scope: What does review change, and what does it leave immutable?
+%% Local unless explicitly F / G
+stateDiagram-v2
+ [*] --> ProposedAssertion: reviewed create exact role bindings
+ ProposedAssertion --> AcceptedRevision: authorized append review
+ ProposedAssertion --> RejectedRevision: authorized append review
+ AcceptedRevision --> SupersedingRevision: authorized append
+ RejectedRevision --> SupersedingRevision: authorized append
+ [*] --> ImmutableComment: exact committed passage and body
+ ImmutableComment --> ImmutableComment: historical inspect, no edit/reply/resolve in initial scope
+ note right of AcceptedRevision: Accepted is review status, not proof of truth
+ note right of ImmutableComment: Text Snapshot is unchanged, later overlays stay retrospective

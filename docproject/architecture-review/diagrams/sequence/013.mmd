@@ -1,0 +1,23 @@
+%% HPX-DIAG-013 — Autosave, newer typing and lost acknowledgement
+%% Scope: What prevents a delayed Save acknowledgement from replacing newer typing?
+%% Local unless explicitly F / G
+sequenceDiagram
+ actor U as Human
+ participant B as Browser context (document,branch)
+ participant R as Authorized Rust route
+ participant D as Encrypted SQLite
+ U->>B: Type source at sequence s
+ B->>B: Freeze op ID, bytes, generation, branch
+ B->>R: Save exact frozen request
+ R->>D: BEGIN IMMEDIATE / current authority / receipt lookup
+ R->>D: CAS Draft + original Receipt / COMMIT
+ U->>B: Type newer source at s+1
+ alt Reply received
+ R-->>B: Exact op receipt for s
+ B->>B: Advance acknowledged base, preserve s+1 bytes
+ else Reply lost or delayed
+ B->>R: Retry same ID and same bytes
+ R->>D: Current authority then original receipt
+ R-->>B: Original outcome (or explicit conflict)
+ end
+ Note over B,D: Save is not Commit, tab reload durability for unacknowledged typing is not promised

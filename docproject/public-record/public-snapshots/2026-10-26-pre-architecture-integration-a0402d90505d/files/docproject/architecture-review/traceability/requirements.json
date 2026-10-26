@@ -1,0 +1,1178 @@
+[
+  {
+    "requirement": "HPX-RQ-001",
+    "statement": "One Rust release executable embeds frontend assets; no Node/Lean/database server at runtime",
+    "design_processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-001.002",
+      "HPX-PROC-018.006"
+    ],
+    "components": [
+      "Independent verification tooling / owner decision authority",
+      "Rust runtime / embedded browser assets / development tooling"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-001.002",
+        "tests_or_scenarios": "Recorded embedded/development asset hash parity",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-018.006",
+        "tests_or_scenarios": "Historical builds/license inventories; no compilation in this review",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-ARCH-001",
+    "original_code_refs": "crates/runtime/build.rs",
+    "original_test_refs": "Pending embedded/browser parity",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-002",
+    "statement": "Text is UTF8; preserve Unicode/CRLF and explicitly convert browser UTF16 boundaries",
+    "design_processes": [
+      "HPX-PROC-004",
+      "HPX-PROC-006"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-004.001",
+      "HPX-PROC-006.002"
+    ],
+    "components": [
+      "Browser CodeMirror / owned-source adapter",
+      "Pure graph validator / authorized read projections"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-004.001",
+        "tests_or_scenarios": "frontend/tests/owned-source.test.js; domain UTF8 validation",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-006.002",
+        "tests_or_scenarios": "Exact Unicode/range/source-mismatch tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-DOM-006",
+    "original_code_refs": "crates/domain/src/records.rs",
+    "original_test_refs": "frontend/tests/owned-source.test.js; frontend/tests/browser/runtime-buffer.spec.js; domain Unicode tests",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-003",
+    "statement": "Revision ancestry stays same-identity and immutable; cross-identity derivations are distinct",
+    "design_processes": [
+      "HPX-PROC-005",
+      "HPX-PROC-007",
+      "HPX-PROC-008"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-003.003",
+      "HPX-PROC-007.002",
+      "HPX-PROC-007.003",
+      "HPX-PROC-008.007"
+    ],
+    "components": [
+      "Application command coordinator / encrypted SQLite",
+      "Branch storage / working checkpoint coordinator / gated frontend",
+      "Domain transformation planners / transactional storage / reviewed UI"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-003.003",
+        "tests_or_scenarios": "Process exits both sides of COMMIT, exact history and duplicate retry tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-007.002",
+        "tests_or_scenarios": "Independent identity/retry/fault/source history tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-007.003",
+        "tests_or_scenarios": "Synthesis role/input/range/replay/fault tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-008.007",
+        "tests_or_scenarios": "WorkingFork backend/restart/fault tests; general Provenance panel reader pending",
+        "milestone": "G — accepted design / gated local code; actual runtime integration pending"
+      }
+    ],
+    "original_design_refs": "HPX-DOM-003",
+    "original_code_refs": "crates/domain/src/fork.rs;crates/storage/src/forks.rs;crates/storage/src/lib.rs",
+    "original_test_refs": "HPX-TEST-014; storage immutable history tests",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-004",
+    "statement": "Snapshots pin exact occurrence-context revisions without following newer heads",
+    "design_processes": [
+      "HPX-PROC-005",
+      "HPX-PROC-006"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-005.003",
+      "HPX-PROC-005.004",
+      "HPX-PROC-006.003"
+    ],
+    "components": [
+      "Domain composition planner / storage resolver",
+      "Pure graph validator / authorized read projections"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-005.003",
+        "tests_or_scenarios": "One-occurrence exact history/restart; general nested resolver not implemented",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-005.004",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-006.003",
+        "tests_or_scenarios": "Three repeated targeted history checks; live branch history workflow pending",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-DOM-003",
+    "original_code_refs": "crates/storage/src/lib.rs",
+    "original_test_refs": "historical reconstruction tests",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-005",
+    "statement": "Reject expansion cycles, allow reference cycles",
+    "design_processes": [
+      "HPX-PROC-005",
+      "HPX-PROC-006",
+      "HPX-PROC-017"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-006.001",
+      "HPX-PROC-005.005",
+      "HPX-PROC-017.002"
+    ],
+    "components": [
+      "Domain composition planner / storage resolver",
+      "Future independently authorized replicas / causal exchange",
+      "Pure graph validator / authorized read projections"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-005.005",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-006.001",
+        "tests_or_scenarios": "All 512 directed three-vertex graphs vs reachability oracle; model proof is separate",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-017.002",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-DOM-002",
+    "original_code_refs": "crates/domain/src/expansion.rs",
+    "original_test_refs": "512 directed three-vertex graph oracle comparison",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-006",
+    "statement": "Autosave mutable drafts after five-second idle without publishing immutable history",
+    "design_processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-004",
+      "HPX-PROC-008"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-003.002",
+      "HPX-PROC-008.003"
+    ],
+    "components": [
+      "Application command coordinator / encrypted SQLite",
+      "Branch storage / working checkpoint coordinator / gated frontend"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-003.002",
+        "tests_or_scenarios": "Exact Unicode/newline save/restart, lost reply and queued typing checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-008.003",
+        "tests_or_scenarios": "Checkpoint byte equality/restart/fault/wrapper tests",
+        "milestone": "G — accepted design / gated local code; actual runtime integration pending"
+      }
+    ],
+    "original_design_refs": "HPX-PROTO-001",
+    "original_code_refs": "crates/storage/src/lib.rs;frontend/src/runtime-adapter.js",
+    "original_test_refs": "Storage recovery passes; live adapter tests pending",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-007",
+    "statement": "Retry identical operations returns original receipt; changed reuse conflicts",
+    "design_processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-008"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-003.001",
+      "HPX-PROC-003.004"
+    ],
+    "components": [
+      "Application command coordinator / encrypted SQLite"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-003.001",
+        "tests_or_scenarios": "Changed retry/stale writer/principal isolation tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-003.004",
+        "tests_or_scenarios": "Runtime-adapter lost response/stale/delayed tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-PROTO-001",
+    "original_code_refs": "crates/storage/src/lib.rs",
+    "original_test_refs": "frontend/tests/runtime-adapter.test.js; crates/storage/src/lib.rs tests",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-008",
+    "statement": "Publish revisions, events, snapshots, heads and receipts atomically",
+    "design_processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-007",
+      "HPX-PROC-009"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-003.003",
+      "HPX-PROC-007.002",
+      "HPX-PROC-009.001"
+    ],
+    "components": [
+      "Application command coordinator / encrypted SQLite",
+      "Domain transformation planners / transactional storage / reviewed UI",
+      "Immutable annotation planners / storage / retrospective panels"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-003.003",
+        "tests_or_scenarios": "Process exits both sides of COMMIT, exact history and duplicate retry tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-007.002",
+        "tests_or_scenarios": "Independent identity/retry/fault/source history tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-009.001",
+        "tests_or_scenarios": "Comment Unicode/range/body/replay/restart tests and recorded workflow",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-006",
+    "original_code_refs": "crates/storage/src/lib.rs",
+    "original_test_refs": "four process-exit checkpoints",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-009",
+    "statement": "Sensitive payloads/drafts/indexes remain encrypted at rest",
+    "design_processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-016"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-016.001",
+      "HPX-PROC-003.002"
+    ],
+    "components": [
+      "Application command coordinator / encrypted SQLite",
+      "Crypto adapter / runtime guards / future core policy"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-003.002",
+        "tests_or_scenarios": "Exact Unicode/newline save/restart, lost reply and queued typing checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-016.001",
+        "tests_or_scenarios": "Tamper/context/randomization/limit vectors; no crypto Lean proof",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-012",
+    "original_code_refs": "crates/crypto/src/lib.rs;crates/storage/src/lib.rs",
+    "original_test_refs": "sentinel/tamper/wrong-passphrase tests",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-010",
+    "statement": "Authenticate encrypted HTTPS loopback before connecting real data",
+    "design_processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-002",
+      "HPX-PROC-016"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-001.001",
+      "HPX-PROC-002.002",
+      "HPX-PROC-016.003"
+    ],
+    "components": [
+      "Crypto adapter / runtime guards / future core policy",
+      "Runtime access / storage / crypto / native keychain",
+      "Rust runtime / embedded browser assets / development tooling"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-001.001",
+        "tests_or_scenarios": "Runtime startup/security tests; recorded transport checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-002.002",
+        "tests_or_scenarios": "Actual runtime cookie/origin/fragment checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-016.003",
+        "tests_or_scenarios": "Actual transport rejection harness and parser tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-API-002",
+    "original_code_refs": "crates/runtime/src/main.rs",
+    "original_test_refs": "frontend/scripts/check-runtime-tls.mjs; frontend/scripts/check-runtime-workflow.mjs; frontend/scripts/check-runtime-security.mjs --no-browser",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-011",
+    "statement": "Passphrase default and keychain alternative are distinct unlock paths",
+    "design_processes": [
+      "HPX-PROC-002",
+      "HPX-PROC-016"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-002.003",
+      "HPX-PROC-002.005",
+      "HPX-PROC-002.006"
+    ],
+    "components": [
+      "Runtime access / storage / crypto / native keychain"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-002.003",
+        "tests_or_scenarios": "Crypto envelope and storage unlock tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-002.005",
+        "tests_or_scenarios": "Keychain fault/replay and explicit isolated native roundtrip",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-002.006",
+        "tests_or_scenarios": "Native restart/passphrase fallback checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-012;HPX-ADR-014;HPX-FMT-001",
+    "original_code_refs": "crates/keychain/src/lib.rs;crates/storage/src/keychain.rs;crates/runtime/src/main.rs;frontend/src/runtime-adapter.js;frontend/src/app.js",
+    "original_test_refs": "native isolated provider test; fake-provider storage tests; runtime route tests; frontend adapter tests; frontend/scripts/check-keychain-workflow.mjs --native-keychain",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-012",
+    "statement": "Client-held mode remains unavailable until safe execution/egress support exists",
+    "design_processes": [
+      "HPX-PROC-016",
+      "HPX-PROC-017"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-016.004",
+      "HPX-PROC-016.005"
+    ],
+    "components": [
+      "Crypto adapter / runtime guards / future core policy"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-016.004",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-016.005",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-012",
+    "original_code_refs": "crates/runtime/src/main.rs",
+    "original_test_refs": "Future acceptance",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-013",
+    "statement": "Future non-trusted mode denies core-controlled plaintext export/publication",
+    "design_processes": [
+      "HPX-PROC-011",
+      "HPX-PROC-012",
+      "HPX-PROC-013",
+      "HPX-PROC-015",
+      "HPX-PROC-016"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-016.004",
+      "HPX-PROC-011.002",
+      "HPX-PROC-013.006",
+      "HPX-PROC-015.004"
+    ],
+    "components": [
+      "Crypto adapter / runtime guards / future core policy",
+      "Future compiler profiles / current local download / egress policy",
+      "Future core policy / rights evidence / report builder",
+      "Optional provider adapters / common operation semantics"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-011.002",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-013.006",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-015.004",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-016.004",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-012",
+    "original_code_refs": "",
+    "original_test_refs": "Future sink/permission tests",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-014",
+    "statement": "Users displays contributors rather than session presence",
+    "design_processes": [
+      "HPX-PROC-006",
+      "HPX-PROC-010"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-006.005",
+      "HPX-PROC-010.003"
+    ],
+    "components": [
+      "Identity and provenance domain / current publication views",
+      "Pure graph validator / authorized read projections"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-006.005",
+        "tests_or_scenarios": "Contributor exact snapshot/cursor/privacy checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-010.003",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-009",
+    "original_code_refs": "crates/storage/src/contributors.rs;frontend/src/runtime-contributors.js;frontend/src/publication-contributors.js",
+    "original_test_refs": "HPX-TEST-026; frontend/tests/publication-contributors.test.js",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-015",
+    "statement": "One predicate identity appears across overlapping browsing tags without duplicate facts",
+    "design_processes": [
+      "HPX-PROC-006",
+      "HPX-PROC-009"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-006.006",
+      "HPX-PROC-009.003"
+    ],
+    "components": [
+      "Immutable annotation planners / storage / retrospective panels",
+      "Pure graph validator / authorized read projections"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-006.006",
+        "tests_or_scenarios": "Canonical registry/version/role and dialog tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-009.003",
+        "tests_or_scenarios": "Participant/version/symmetry/qualifier/retry/fault tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-DOM-008",
+    "original_code_refs": "crates/storage/src/predicates.rs;crates/storage/src/assertions.rs;frontend/src/runtime-assertions.js",
+    "original_test_refs": "HPX-TEST-020; canonical catalogue/assertion tests",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-016",
+    "statement": "Negation, certainty, attribution and scope qualify the assertion",
+    "design_processes": [
+      "HPX-PROC-009"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-009.003",
+      "HPX-PROC-009.004"
+    ],
+    "components": [
+      "Immutable annotation planners / storage / retrospective panels"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-009.003",
+        "tests_or_scenarios": "Participant/version/symmetry/qualifier/retry/fault tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-009.004",
+        "tests_or_scenarios": "Review ancestry/stale source/history isolation tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-DOM-008",
+    "original_code_refs": "crates/storage/src/predicates.rs;crates/storage/src/assertions.rs;frontend/src/runtime-assertions.js",
+    "original_test_refs": "HPX-TEST-020; canonical catalogue/assertion tests",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-017",
+    "statement": "Provenance attribution must distinguish authorship, influence, adoption and verification",
+    "design_processes": [
+      "HPX-PROC-007",
+      "HPX-PROC-010",
+      "HPX-PROC-012",
+      "HPX-PROC-014"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-010.003",
+      "HPX-PROC-010.004",
+      "HPX-PROC-010.005",
+      "HPX-PROC-012.004",
+      "HPX-PROC-014.002"
+    ],
+    "components": [
+      "Future agent adapters / core application command boundary",
+      "Identity and provenance domain / current publication views",
+      "Untrusted input adapters / consistent storage backup / future restore"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-010.003",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-010.004",
+        "tests_or_scenarios": "Pinned derivation/read/restart/corruption tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-010.005",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-012.004",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-014.002",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-DOM-004",
+    "original_code_refs": "",
+    "original_test_refs": "Future event/capture tests",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-018",
+    "statement": "Fine-grained source ownership cannot be replaced by generic whole-buffer overwrites",
+    "design_processes": [
+      "HPX-PROC-004",
+      "HPX-PROC-005"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-004.001",
+      "HPX-PROC-005.002"
+    ],
+    "components": [
+      "Browser CodeMirror / owned-source adapter",
+      "Domain composition planner / storage resolver"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-004.001",
+        "tests_or_scenarios": "frontend/tests/owned-source.test.js; domain UTF8 validation",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-005.002",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-003",
+    "original_code_refs": "crates/runtime/src/main.rs",
+    "original_test_refs": "Future multi-owner tests",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-019",
+    "statement": "Retain history without arbitrary revision-count pruning",
+    "design_processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-008",
+      "HPX-PROC-016"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-003.006",
+      "HPX-PROC-007.007",
+      "HPX-PROC-008.006",
+      "HPX-PROC-016.007"
+    ],
+    "components": [
+      "Application command coordinator / encrypted SQLite",
+      "Branch storage / working checkpoint coordinator / gated frontend",
+      "Crypto adapter / runtime guards / future core policy",
+      "Domain transformation planners / transactional storage / reviewed UI"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-003.006",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-007.007",
+        "tests_or_scenarios": "Generation conflict, clear/no-op, overflow and immutable-source tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-008.006",
+        "tests_or_scenarios": "Batch stale/replay/rollback and restart tests; cross-subsystem integration pending",
+        "milestone": "G — accepted design / gated local code; actual runtime integration pending"
+      },
+      {
+        "process": "HPX-PROC-016.007",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-API-001;HPX-OWNER-001",
+    "original_code_refs": "crates/storage/src/lib.rs;crates/storage/src/history.rs;frontend/src/history-panel.js",
+    "original_test_refs": "HPX-TEST-010; history restart/corruption/budget tests; headless real workflow",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-020",
+    "statement": "Human-readable proof digest distinguishes model proofs from actual extracted Rust",
+    "design_processes": [
+      "HPX-PROC-018"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-018.001"
+    ],
+    "components": [
+      "Independent verification tooling / owner decision authority"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-018.001",
+        "tests_or_scenarios": "Recorded leanchecker and exact generated-byte replay; not rerun here",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-ASSUR-009;HPX-ALG-001",
+    "original_code_refs": "",
+    "original_test_refs": "scripts/check_rust_proof.py; proofs/lean/Hypergraph/Expansion.lean",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-021",
+    "statement": "Desktop layout/selection/source preservation remain usable during integration",
+    "design_processes": [
+      "HPX-PROC-004",
+      "HPX-PROC-018"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-004.002",
+      "HPX-PROC-004.003",
+      "HPX-PROC-004.004",
+      "HPX-PROC-004.005",
+      "HPX-PROC-004.006"
+    ],
+    "components": [
+      "Browser CodeMirror / owned-source adapter"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-004.002",
+        "tests_or_scenarios": "Formatting/structure browser cases; below-widget checks required per increment",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-004.003",
+        "tests_or_scenarios": "Outline/minimap/selection headless cases",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-004.004",
+        "tests_or_scenarios": "Both-theme desktop rendering and source-under-widget cases",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-004.005",
+        "tests_or_scenarios": "Owned-buffer component tests; full branch undo/restart workflow pending",
+        "milestone": "G — accepted design / gated local code; actual runtime integration pending"
+      },
+      {
+        "process": "HPX-PROC-004.006",
+        "tests_or_scenarios": "Tooltip and both-theme width/layout checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-009",
+    "original_code_refs": "frontend/src/app.js",
+    "original_test_refs": "56 fixture browser scenarios at0.7.0; current integration pending",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-022",
+    "statement": "No publishing without explicit owner request; SemVer classification preserved",
+    "design_processes": [
+      "HPX-PROC-018"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-018.004"
+    ],
+    "components": [
+      "Independent verification tooling / owner decision authority"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-018.004",
+        "tests_or_scenarios": "Version/link/license/release checks appropriate to actual milestone",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-ASSUR-005",
+    "original_code_refs": "",
+    "original_test_refs": "Review current owner instruction and source history",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-023",
+    "statement": "Keep serialization outside the pure domain; adapter types/conversions own persisted and wire representations.",
+    "design_processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-016",
+      "HPX-PROC-018"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-003.007",
+      "HPX-PROC-018.006"
+    ],
+    "components": [
+      "Application command coordinator / encrypted SQLite",
+      "Independent verification tooling / owner decision authority"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-003.007",
+        "tests_or_scenarios": "All-kind 1–27 wrappers reported; actual older-reader preservation 20–27 pending",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-018.006",
+        "tests_or_scenarios": "Historical builds/license inventories; no compilation in this review",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-ADR-006",
+    "original_code_refs": "crates/domain/src/records.rs",
+    "original_test_refs": "crates/storage/src/encoding.rs; cargo tree -p hypergraph-domain",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-024",
+    "statement": "Require explicit persistent record versions before durable real-data acceptance.",
+    "design_processes": [
+      "HPX-PROC-003"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-003.007"
+    ],
+    "components": [
+      "Application command coordinator / encrypted SQLite"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-003.007",
+        "tests_or_scenarios": "All-kind 1–27 wrappers reported; actual older-reader preservation 20–27 pending",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-ADR-007",
+    "original_code_refs": "crates/storage/src/encoding.rs;crates/storage/src/merges.rs;crates/storage/src/comments.rs",
+    "original_test_refs": "HPX-TEST-033;HPX-TEST-024; all-kind record/restart checks",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-025",
+    "statement": "At completion of Phase C archive previous documentation byte-for-byte under ignored .oldspecs.",
+    "design_processes": [
+      "HPX-PROC-018"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-018.005"
+    ],
+    "components": [
+      "Independent verification tooling / owner decision authority"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-018.005",
+        "tests_or_scenarios": "Existing migration hash/link/source-coverage checks; review checks separate",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-ADR-005",
+    "original_code_refs": "",
+    "original_test_refs": "implementation follow-up; migration verifier checks records only",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-026",
+    "statement": "Present Fork; Link; Embed; Merge; Copy as distinct actions with their identity and history semantics preserved",
+    "design_processes": [
+      "HPX-PROC-005",
+      "HPX-PROC-007",
+      "HPX-PROC-008"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-007.001",
+      "HPX-PROC-007.002",
+      "HPX-PROC-007.003",
+      "HPX-PROC-007.004",
+      "HPX-PROC-007.005",
+      "HPX-PROC-008.008"
+    ],
+    "components": [
+      "Branch storage / working checkpoint coordinator / gated frontend",
+      "Domain transformation planners / transactional storage / reviewed UI"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-007.001",
+        "tests_or_scenarios": "Clipboard dedup/corruption/opaque-entry/retry and prior old-reader preservation",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-007.002",
+        "tests_or_scenarios": "Independent identity/retry/fault/source history tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-007.003",
+        "tests_or_scenarios": "Synthesis role/input/range/replay/fault tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-007.004",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-007.005",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-008.008",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-002;HPX-SUB-009;HPX-DOM-004;HPX-GOV-004;HPX-ADR-015",
+    "original_code_refs": "frontend/src/functions-bar.js;crates/storage/src/forks.rs;crates/storage/src/clipboard.rs",
+    "original_test_refs": "HPX-TEST-013;HPX-TEST-014; action-set acceptance criteria",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-027",
+    "statement": "Use owner-supplied logo appropriately in application and documentation branding",
+    "design_processes": [
+      "HPX-PROC-004",
+      "HPX-PROC-018"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-001.002",
+      "HPX-PROC-004.006",
+      "HPX-PROC-018.005"
+    ],
+    "components": [
+      "Browser CodeMirror / owned-source adapter",
+      "Independent verification tooling / owner decision authority",
+      "Rust runtime / embedded browser assets / development tooling"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-001.002",
+        "tests_or_scenarios": "Recorded embedded/development asset hash parity",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-004.006",
+        "tests_or_scenarios": "Tooltip and both-theme width/layout checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-018.005",
+        "tests_or_scenarios": "Existing migration hash/link/source-coverage checks; review checks separate",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-009",
+    "original_code_refs": "frontend/index.html;frontend/src/runtime-adapter.js;frontend/build.mjs;crates/runtime/src/main.rs;README.md",
+    "original_test_refs": "real headless workflow asset hash and rendering checks",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-028",
+    "statement": "Explicitly discover contextual logical equivalence while preserving predicate identity and proof/identity distinctions",
+    "design_processes": [
+      "HPX-PROC-006",
+      "HPX-PROC-009"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-006.008"
+    ],
+    "components": [
+      "Pure graph validator / authorized read projections"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-006.008",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-DOM-008;HPX-SUB-009",
+    "original_code_refs": "crates/storage/src/predicate-catalog-v1.json;crates/storage/src/predicates.rs;frontend/src/relationship-catalog.js",
+    "original_test_refs": "HPX-TEST-017;HPX-TEST-020",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-029",
+    "statement": "Read-only graph of arbitrary selected authorised nodes with labelled circles/connectors; direction; n-ary roles; evidence and completeness",
+    "design_processes": [
+      "HPX-PROC-006",
+      "HPX-PROC-009"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-006.004",
+      "HPX-PROC-009.003"
+    ],
+    "components": [
+      "Immutable annotation planners / storage / retrospective panels",
+      "Pure graph validator / authorized read projections"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-006.004",
+        "tests_or_scenarios": "Graph budget/scope/history tests and recorded headless projection checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-009.003",
+        "tests_or_scenarios": "Participant/version/symmetry/qualifier/retry/fault tests",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-001;HPX-SUB-009",
+    "original_code_refs": "crates/storage/src/graph.rs;crates/storage/src/overlay_graph.rs;frontend/src/runtime-graph.js;frontend/src/overlay-graph.js",
+    "original_test_refs": "HPX-TEST-018;HPX-TEST-021;HPX-TEST-025",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-030",
+    "statement": "Future bundled Pandoc export with academic citations and selectable hypergraph content plus readable relation fallbacks and rights appendix",
+    "design_processes": [
+      "HPX-PROC-011",
+      "HPX-PROC-013",
+      "HPX-PROC-015"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-013.002",
+      "HPX-PROC-013.003",
+      "HPX-PROC-013.004",
+      "HPX-PROC-013.005",
+      "HPX-PROC-013.007",
+      "HPX-PROC-011.003"
+    ],
+    "components": [
+      "Future compiler profiles / current local download / egress policy",
+      "Future core policy / rights evidence / report builder"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-011.003",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-013.002",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-013.003",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-013.004",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-013.005",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      },
+      {
+        "process": "HPX-PROC-013.007",
+        "tests_or_scenarios": "Proposed contract/property/integration scenarios; no executable evidence claimed",
+        "milestone": "F — future obligation; mechanism incomplete"
+      }
+    ],
+    "original_design_refs": "HPX-SUB-008;HPX-ARCH-002;HPX-ARCH-003;HPX-GOV-004",
+    "original_code_refs": "",
+    "original_test_refs": "future per-format citation/identity/fallback/rights/policy/packaging fixtures",
+    "verification_path": "Review leaf invariants using cited tests; future/mixed scope needs executable acceptance and mechanism decisions",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  },
+  {
+    "requirement": "HPX-RQ-031",
+    "statement": "Pending edits use private working branches; provenance copy/paste checkpoints exact source without Commit; exact Commit can append replacement references retaining earlier history",
+    "design_processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-008"
+    ],
+    "leaf_processes": [
+      "HPX-PROC-003.002",
+      "HPX-PROC-008.003",
+      "HPX-PROC-008.004",
+      "HPX-PROC-008.005",
+      "HPX-PROC-008.006"
+    ],
+    "components": [
+      "Application command coordinator / encrypted SQLite",
+      "Branch storage / working checkpoint coordinator / gated frontend"
+    ],
+    "leaf_verification": [
+      {
+        "process": "HPX-PROC-003.002",
+        "tests_or_scenarios": "Exact Unicode/newline save/restart, lost reply and queued typing checks",
+        "milestone": "L — documented local implementation; historical checks reported, not rerun"
+      },
+      {
+        "process": "HPX-PROC-008.003",
+        "tests_or_scenarios": "Checkpoint byte equality/restart/fault/wrapper tests",
+        "milestone": "G — accepted design / gated local code; actual runtime integration pending"
+      },
+      {
+        "process": "HPX-PROC-008.004",
+        "tests_or_scenarios": "Atomic capture/replay/context/range/component tests; actual HTTPS integration pending",
+        "milestone": "G — accepted design / gated local code; actual runtime integration pending"
+      },
+      {
+        "process": "HPX-PROC-008.005",
+        "tests_or_scenarios": "Exact/changed/mismatch promotion and fault cases",
+        "milestone": "G — accepted design / gated local code; actual runtime integration pending"
+      },
+      {
+        "process": "HPX-PROC-008.006",
+        "tests_or_scenarios": "Batch stale/replay/rollback and restart tests; cross-subsystem integration pending",
+        "milestone": "G — accepted design / gated local code; actual runtime integration pending"
+      }
+    ],
+    "original_design_refs": "HPX-ADR-019;HPX-ADR-018;HPX-DOM-001;HPX-DOM-004;HPX-DATA-001;HPX-API-001",
+    "original_code_refs": "crates/domain/src/working.rs;crates/storage/src/working.rs;crates/storage/src/working_clipboard.rs",
+    "original_test_refs": "HPX-TEST-037",
+    "verification_path": "Review leaf invariants using cited tests; local evidence retains original reported scope",
+    "gap": "Compound requirement needs atomic decomposition; historical register status is not current complete delivery."
+  }
+]

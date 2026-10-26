@@ -1,0 +1,13 @@
+%% HPX-DIAG-029 — Recovery responsibilities and irrecoverable boundaries
+%% Scope: What can reopening, receipts, backup or repair actually recover?
+%% Local unless explicitly F / G
+flowchart LR
+ F{"Failure class"} -->|"transaction interruption"| T["SQLite reopen: old or complete new state"]
+ F -->|"lost reply"| R["Current authority plus original receipt"]
+ F -->|"acknowledged draft restart"| D["Exact authenticated mutable Draft slot"]
+ F -->|"keychain orphan"| K["Passphrase recovery and explicit scoped cleanup"]
+ F -->|"corrupt canonical record"| C["Fail closed; preserve file; valid backup/repair design needed"]
+ F -->|"derived index corruption"| I["TBD classify and deterministically rebuild; not every slot is derivable"]
+ F -->|"authentic old whole database"| O["Current local design has no freshness witness"]
+ F -->|"future remote uncertainty"| P["Explicit unknown and provider reconciliation"]
+ L["Legend: recovery responsibility, not guaranteed hardware survival; process-exit tests do not exhaust power loss"]

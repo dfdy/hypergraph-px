@@ -1,0 +1,24 @@
+%% HPX-DIAG-004 — Responsibility decomposition
+%% Scope: Which parent owns each reviewed process?
+%% Local unless explicitly F / G
+flowchart LR
+ H["HPX process responsibilities"]
+ H --> P001["HPX-PROC-001<br/>Application and runtime lifecycle"]
+ H --> P002["HPX-PROC-002<br/>Workspace access and enrollment"]
+ H --> P003["HPX-PROC-003<br/>Durable editing and publication"]
+ H --> P004["HPX-PROC-004<br/>Owned editing and presentation"]
+ H --> P005["HPX-PROC-005<br/>Document composition and exact closure"]
+ H --> P006["HPX-PROC-006<br/>Graph validation and read projections"]
+ H --> P007["HPX-PROC-007<br/>Intellectual transformations"]
+ H --> P008["HPX-PROC-008<br/>Named and private working branches"]
+ H --> P009["HPX-PROC-009<br/>Comments and semantic assertions"]
+ H --> P010["HPX-PROC-010<br/>Identity, attribution and provenance"]
+ H --> P011["HPX-PROC-011<br/>Rights, permissions and reporting"]
+ H --> P012["HPX-PROC-012<br/>Human–agent collaboration"]
+ H --> P013["HPX-PROC-013<br/>Export, compilation and publication artifacts"]
+ H --> P014["HPX-PROC-014<br/>Import, backup and restore"]
+ H --> P015["HPX-PROC-015<br/>External integrations and shared interfaces"]
+ H --> P016["HPX-PROC-016<br/>Security, crypto and trust lifecycle"]
+ H --> P017["HPX-PROC-017<br/>Future collaboration and federation"]
+ H --> P018["HPX-PROC-018<br/>Assurance, build and governance"]
+ L["Legend: decomposition only; arrows are not time, data, or dependencies"]

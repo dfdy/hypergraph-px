@@ -1,0 +1,12 @@
+%% HPX-DIAG-P010 — Identity, attribution and provenance subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-010<br/>Identity, attribution and provenance"]
+ P --> C0["HPX-PROC-010.001<br/>Resolve principal and device identity<br/>L"]
+ P --> C1["HPX-PROC-010.002<br/>Represent group and delegated identity<br/>F"]
+ P --> C2["HPX-PROC-010.003<br/>Track authored spans and attribution<br/>F"]
+ P --> C3["HPX-PROC-010.004<br/>Retain exact transformation evidence<br/>L"]
+ P --> C4["HPX-PROC-010.005<br/>Record consequential observable interactions<br/>F"]
+ P --> C5["HPX-PROC-010.006<br/>Represent contested attribution<br/>F"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

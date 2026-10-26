@@ -1,0 +1,169 @@
+{
+  "date": "2026-10-26",
+  "scope": "Analysis artifacts only; static/structural checks are not application correctness or standards conformance",
+  "checks": [
+    {
+      "check": "process_ids_unique",
+      "passed": true,
+      "detail": "18 parents and 114 leaves"
+    },
+    {
+      "check": "process_fields",
+      "passed": true,
+      "detail": "All requested fields, including explicit empty implementation/test evidence for future mechanisms"
+    },
+    {
+      "check": "tree_and_calls",
+      "passed": true,
+      "detail": "One responsibility parent per leaf; cross-family calls separately identified"
+    },
+    {
+      "check": "write_responsibility",
+      "passed": true,
+      "detail": "Structural check only: listed mechanism/authority; future unspecified protocols remain gaps, not passes of implementation"
+    },
+    {
+      "check": "future_status_honest",
+      "passed": true,
+      "detail": "No future/deferred leaf has an implementation claim"
+    },
+    {
+      "check": "implementation_paths",
+      "passed": true,
+      "detail": {
+        "code_supported_leaves": 57,
+        "missing": []
+      }
+    },
+    {
+      "check": "authority_boundary_present",
+      "passed": true,
+      "detail": "Contract presence only; not a proof of authorization enforcement"
+    },
+    {
+      "check": "evidence_classes",
+      "passed": true,
+      "detail": "All seven requested semantic classes"
+    },
+    {
+      "check": "exact_source_locators",
+      "passed": true,
+      "detail": {
+        "locators": 129,
+        "unmatched": []
+      }
+    },
+    {
+      "check": "finding_schema",
+      "passed": true,
+      "detail": "20 fully attributed findings"
+    },
+    {
+      "check": "requirements",
+      "passed": true,
+      "detail": "31 compound seeds, selected leaf/component/verification path and explicit atomic-coverage gap"
+    },
+    {
+      "check": "document_paths",
+      "passed": true,
+      "detail": "60 materialized contracts; reserved IDs explicitly excluded"
+    },
+    {
+      "check": "source_section_bytes",
+      "passed": true,
+      "detail": {
+        "sections": 1109,
+        "mismatches": [],
+        "encoding": "Raw span hash plus separately labelled LF-joined locator text hash; original whole-file hashes retained"
+      }
+    },
+    {
+      "check": "all_diagrams_parse_render_xml",
+      "passed": true,
+      "detail": {
+        "count": 51,
+        "errors": [],
+        "renderer": "11.12.2"
+      }
+    },
+    {
+      "check": "diagram_metadata_and_navigation",
+      "passed": true,
+      "detail": "Viewpoints, scope, milestone, evidence, exceptions/legends, valid process and child links"
+    },
+    {
+      "check": "all_leaves_diagrammed",
+      "passed": true,
+      "detail": "All leaf responsibilities appear in a family decomposition view"
+    },
+    {
+      "check": "dfd_named_channel_balance",
+      "passed": true,
+      "detail": "Eight named external channels identical at levels 0/1; lower diagrams are explicitly scoped zooms, not exhaustive decomposition claims"
+    },
+    {
+      "check": "bounded_model_and_mutants",
+      "passed": true,
+      "detail": {
+        "states": 8131,
+        "transitions": 18317,
+        "mutants_detected": 3,
+        "scope": "Depth 10 abstraction only, not HPX correspondence"
+      }
+    },
+    {
+      "check": "dependency_graph",
+      "passed": true,
+      "detail": {
+        "crate_cycles": [],
+        "frontend_cycles": [],
+        "limits": [
+          "Cargo normal local path dependencies only; no build/dev/target-conditional external graph.",
+          "Frontend static relative imports via conservative regex; dynamic imports/runtime calls/global shared state may be absent.",
+          "Storage super::* observations include test modules; they show shared namespace dependence, not precise call cycles.",
+          "Crate-level DAG does not prove runtime, semantic, callback or store-access acyclicity."
+        ]
+      }
+    },
+    {
+      "check": "offline_viewer",
+      "passed": true,
+      "detail": [
+        "51 selectable diagrams",
+        "exact selection",
+        "process search",
+        "linked child navigation",
+        "zoom control",
+        "no page JavaScript errors"
+      ]
+    },
+    {
+      "check": "local_markdown_links",
+      "passed": true,
+      "detail": {
+        "links": 1372,
+        "broken": []
+      }
+    },
+    {
+      "check": "original_files_unchanged",
+      "passed": true,
+      "detail": {
+        "baseline_files": 312,
+        "changed": []
+      }
+    },
+    {
+      "check": "git_state_preserved",
+      "passed": true,
+      "detail": {
+        "added_status_lines": [],
+        "removed_status_lines": [],
+        "commit_or_push": "None performed"
+      }
+    }
+  ],
+  "passed": true,
+  "failed_checks": [],
+  "visual_inspection": "Four original contact sheets and detailed conceptual/transaction/security previews inspected; final additional views and corrected notes inspected separately before handoff."
+}

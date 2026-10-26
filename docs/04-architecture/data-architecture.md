@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
 SQLite is selected. Encryption metadata leakage and whole-database rollback limitations remain explicit; database choice does not implement policy/federation.
 
@@ -30,6 +30,8 @@ SQLite authority, encrypted records, mutable drafts and atomic publication. The 
 ## Normative content
 
 One SQLite database coordinates encrypted immutable objects, mutable head/draft slots and encrypted operation receipts. WAL/FULL is durability machinery, not application history. Ciphertext metadata leaks opaque identifiers, types, generations, lengths/counts and access patterns; no whole-database rollback witness exists. The implementation does not rewrite every retained revision on each draft save. See [record representation](../07-implementation/data-structures/sqlite-records.md) and [publication protocol](../07-implementation/protocols/draft-publication.md).
+
+The source-era flow below retains its original implementation-status wording. The bounded one-owner writer now exists; [current evidence](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) distinguishes its integrated scope from gated branch work. [Recovery responsibilities](../08-assurance/recovery.md#authoritative-state-and-repair-boundary) distinguish authoritative mutable state from genuinely reconstructible indexes; a table named “index” is not permission to discard it. The freshness acceptance conflict remains explicit in the [threat model](../08-assurance/security-threat-model.md#unresolved-freshness-acceptance-scope--architecture-review).
 
 ### Data and command flow
 
@@ -69,3 +71,11 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 ## Source provenance
 
 - `HPX-SRC-0021` — `Specifications/ARCHITECTURE.md`, lines 28–43; SHA-256 `74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Future export compilation data
+
+HPX-RQ-030's proposed adapter consumes an immutable export view binding selected document/main/additional branch identities, exact revisions/snapshots or acknowledged draft sequence, occurrence/range contexts, selected retrospective annotation/provenance views, citation/style/locale resources and target profile/options. No later source/overlay head or browser DOM is substituted. Preserve role-labelled n-ary relationships and same-identity ancestry versus derivation, with readable per-format fallbacks and an authorized unresolved-rights appendix. Export XML/JSON schemas remain separately versioned future contracts, not a change to workspace/envelope/backup formats. [The export specification](../06-subsystems/import-export.md) defines this future scope; no persisted compilation manifest or converter implementation is claimed.
+
+## Working-branch design boundary, 2026-10-26
+
+[ADR019](decisions/0019-working-branches-and-reference-checkpoints.md) is adopted. Distinguish mutable autosave, immutable unpublished reference checkpoints and explicit committed snapshots. Local optional records20–27 and gated frontend wiring implement a bounded subset; complete actual-runtime and older-reader acceptance remains pending. Commit atomically stores text publication and eligible exact promotion evidence. A separate frozen, generation-bound private replacement operation retains originals; its failure never undoes already committed text. Broader reverse-reference/entity replacement remains future work. Exact fields and limits belong in the [record contract](../07-implementation/data-structures/sqlite-records.md), not duplicated architecture schemas. No SQL, record, envelope or protocol version changes here.

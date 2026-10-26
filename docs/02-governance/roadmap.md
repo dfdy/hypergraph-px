@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
 Current source publication is 1.0.0. The bounded one-owner HTTPS/SQLite workflow and relationship/provenance increments have synthetic integration evidence; real-document acceptance and broader branch/shared/platform scope remain unfinished. See the current development state.
 
@@ -30,6 +30,8 @@ Gated delivery sequence without speculative release dates. The retained contract
 ## Normative content
 
 The active sequence is core reconciliation → SQLite persistence/recovery → exact open/edit/autosave/restart/recover/commit/reconstruct workflow → authenticated encrypted browser/runtime integration and embedded packaging → incremental durable relationships/comments/provenance. Application development is paused; this migration does not resume it. Future keychain, scholarly integrations, client-held mode and federation retain separate acceptance gates. Mobile remains deferred.
+
+That sequence is the retained source-era plan. Its early milestones now have bounded local evidence; use [current scope](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) rather than interpreting the historical unimplemented statements below as current status. Application work is stopped after the latest wiring increment; this specification integration authorizes no new implementation or external service action.
 
 ### 7. Initial implementation order and gates
 
@@ -80,3 +82,27 @@ The owner clarified that the intended interface **Merge** action is to merge the
 Sequence this work after durable multiple-branch identity/head support, branch-specific recoverable drafts and safe branch selection/viewing. Then add current-versus-parent comparison and a reviewed Merge into the identified parent branch, with explicit conflict handling, atomic target publication and retained source/target histories. Branch viewing/switching can arrive before branch merging; local branching does not depend on federation or multi-user support.
 
 The parent branch is the intended destination, rather than a newly created independent document. The existing reviewed new-document synthesis remains a separately recorded implemented scope and does not fulfil this clarified branch-parent workflow. Preserve its historical approval/evidence in [ADR015](../04-architecture/decisions/0015-initial-merge-workflow.md#later-owner-clarification-parent-branch-merge). Before enabling branch-parent writes, specify parent-branch identification, merge-base/conflict review, handling of uncommitted current text and versioned same-identity ancestry/compatibility. No automatic commit, branch deletion or conflict resolution is implied.
+
+## Future Pandoc export and citation compilation — owner confirmation, 2026-10-26
+
+Schedule HPX-RQ-030 within stage6 remaining local integrations, after the exact authorized export model, relevant branch/closure selection and captured citation-resource foundations are available. Plan embedded/bundled Pandoc feasibility and distribution/license review, then verified target profiles for .docx/.odt/.rtf/.html/.tex/.typ/.xml/.json, academic citations/bibliographies and selectable branch/annotation/provenance/relationship supplements. Each profile needs explicit readable fallbacks and appended unresolved-rights reporting without overriding access or egress rules. Main-branch-only output can precede additional-branch export once its own input model is ready. This confirms future specification inclusion only: do not install Pandoc or reprioritize current implementation. See [the planned contract](../06-subsystems/import-export.md).
+
+## Working-branch refinement before branch integration, 2026-10-26
+
+The owner adopted ADR018 committed-snapshot child creation and then requested designing working branches now. [ADR019](../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md) precedes stage5 branch UI integration: private editing/checkpoints, automatic retained-source capture and exact promotion/replacement semantics must be reconciled first. Existing committed-passage comments remain within ADR017; branch Merge and future bundled export retain their separately scoped later plans. This refinement is neither an implicit Commit-on-copy policy nor implementation evidence.
+
+## Next implementation units after review integration
+
+These are small dependency-ordered units for a future explicit implementation resume. Use the existing state/test records, not mandatory new issues, reports or a sprint process. Current working functionality and full future scope remain intact. [Finding dispositions and impact](../09-guides/reference/implementation-resumption.md#architecture-review-integration-2026-10-26) supply the review trace.
+
+| Unit / capability | Authoritative specification / dependencies | Affected implementation | Acceptance / migration / approval |
+| --- | --- | --- | --- |
+| 1. Complete working-source inspection | ADR019; HPX-DATA-001 kind27 and browser/runtime contract; existing gated WorkingFork reader | storage/working_forks.rs; runtime route; frontend Provenance panel | Inspect exact retained unpublished source after edits/restart, with current permission and original receipt. No format change selected. Existing adopted scope; owner resume required. |
+| 2. Close branch/working integrated lifecycle | ADR018/019; HPX-RQ-031 acceptance; unit1 | RuntimeAdapter, branch/reference controls, CodeMirror context cache, storage branch/checkpoint/reference modules | Actual isolated HTTPS/SQLite capture, independent drafts, switch/undo/redo, delayed/lost replies, lock/restart, exact Commit and separately retried replacement; original evidence retained. Test actual older-reader20–27 preservation and invalidation after old writes. No migration assumed: if preservation fails, return for explicit backed-up rollout/compatibility decision. |
+| 3. Advertise only the verified bounded capabilities | Browser/runtime capabilities and HPX-TEST-038 remaining gates; unit2 | Runtime metadata; frontend capability gates; existing integration harness | Supported desktop widths/themes and source below table/math widgets, full actual workflow and clean test teardown before guarded exact-tested-binary manual refresh. No code/metadata enablement or handoff from this documentation task. |
+| 4. Establish audit/recovery contract before repair | HPX-ASSUR-006 authoritative/derived matrix; HPX-GAP-024 | Storage diagnostics and existing fault/restart tests; future restore adapter | Bounded read-only authenticated audit first. No guessed heads, lost drafts, opaque-record deletion or mutating repair until deterministic sources, backup/atomicity and recovery are specified. Migration/repair policy not selected; owner approval before changing authoritative data or recovery guarantees. |
+| 5. Measure concrete cost/quality scenarios | Testing strategy; supported workload selection | Existing storage/frontend/runtime checks, without new production framework | Measure receipt growth, large-source serialization/read work, mutex contention and desktop accessibility tasks; distinguish observations from accepted targets. No pruning, cache, lock redesign or numerical budget adopted. New quality thresholds require owner acceptance. |
+| 6. Resolve freshness scope before security acceptance | Threat model HPX-GAP-023; ADR003 and full recovery/portability requirements | Later storage/crypto/OS or independent witness design, if selected | First define which independent state an attacker can restore, offline/missing-witness outcome and intentional restore/device-transfer behavior. No absolute detection guarantee or reduced gate selected. Owner decision remains outstanding; this does not block synthetic development. |
+| 7. Select the next future feature only after its prerequisites | Existing stages5/6; HPX-GAP-004/006/008/011/012/013/014/021 | Relevant composition, rights, import/export, Zotero/GitHub/agent/MCP or federation adapter | Preserve full requirements. Decide exact policy/schema/compiler/remote reconciliation/causal conflict mechanisms when that feature is selected; retain privacy, approvals, formats and proof gates. No new formats, migrations, providers or permissions are adopted by this list. |
+
+Do not make all future designs prerequisites for the bounded local editor. Conversely, do not weaken rights, provenance, immutable history, mathematical semantics, interoperability, verification or federation ambition to reduce present workload. Organizational simplification means one concise increment record; technical optimizations require evidence and the same invariants.

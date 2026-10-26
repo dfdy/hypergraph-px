@@ -40,3 +40,6 @@
 
 # Previous project documentation, preserved locally by owner instruction.
 /.oldspecs/
+
+# Immutable unredacted specification masters remain local.
+/docproject/public-record/specification-snapshots/

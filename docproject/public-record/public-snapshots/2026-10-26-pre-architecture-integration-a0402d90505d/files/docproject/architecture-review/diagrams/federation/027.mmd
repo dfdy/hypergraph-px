@@ -1,0 +1,15 @@
+%% HPX-DIAG-027 — Future independent replicas and structural conflict
+%% Scope: Why are local DAG checks insufficient to promise federation convergence?
+%% Future only; logical counterexample
+flowchart LR
+ subgraph SA["Instance A - independent authority"]
+ A["Local expansion: X to Y<br/>acyclic"] --> OA["Authorized causal operation set A"]
+ end
+ subgraph SB["Instance B - independent authority"]
+ B["Local expansion: Y to X<br/>acyclic"] --> OB["Authorized causal operation set B"]
+ end
+ OA -.->|"F causal exchange, protocol unselected"| M{"Validate combined projection and authority"}
+ OB -.->|"F causal exchange, protocol unselected"| M
+ M -->|"naive union"| CY["X to Y to X cycle - cannot accept"]
+ M -->|"required future mechanism"| Q["Explicit convergent rejection / conflict / acceptance policy TBD"]
+ L["Legend: counterexample, not an implemented replication protocol; text CRDT / MLS alone do not resolve structure"]

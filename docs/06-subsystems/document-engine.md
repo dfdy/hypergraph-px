@@ -13,13 +13,15 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
 Fixture controls and future contracts are not durable service implementations. Capabilities must report unavailable honestly.
 
 Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 
 ## Responsibilities and boundaries
+
+Current readiness is linked from [the development state](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary). Retained source-era statements that SQLite is not selected or all durable features are unimplemented describe the earlier checkpoint. [ADR003](../04-architecture/decisions/0003-sqlite-local-writer.md) selects SQLite; later adopted ADRs distinguish bounded committed-passage features from gated private working checkpoints. Their implementation does not reduce the general ownership/composition requirements below. The existing new-document Synthesis remains distinct from the planned parent-branch Merge.
 
 Composition, source promotion, private clipboard, pinned/live reuse and publication gates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 

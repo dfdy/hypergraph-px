@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
 Acceptance criteria are requirements, not passing evidence. No application or proof tests are rerun by this migration.
 
@@ -124,3 +124,13 @@ For HPX-RQ-028, searching “logically equivalent” resolves to the existing eq
 For HPX-RQ-029, select arbitrary authorised nodes, including disconnected nodes and equal-labelled distinct identities. Verify labelled circles/connectors, direction, self/parallel relationship handling, n-ary role-preserving connectors, accessible keyboard/text inspection, explicit supported scope and bounded incomplete/unavailable results. Asserted relationships and recorded derivation must not acquire a proved status through display. Opening, changing selection, cancelling and closing preserve source bytes, editor selection and undo. A fixture or derivation-only projection is evidence only for its stated subset, not complete durable semantic graph delivery.
 
 The Lean-conversion proposal remains deferred by the owner's separate review; no acceptance claim or implementation dependency is inferred for it.
+
+## Planned bundled export acceptance
+
+For future HPX-RQ-030, test every requested target (.docx/.odt/.rtf/.html/.tex/.typ/.xml/.json) against its explicit writer/profile capabilities, selectable main/additional branches and annotation/provenance/relationship scopes. Verify captured APA/Harvard/Chicago/IEEE variants and bibliographies; exact occurrence/range identity and n-ary roles/direction; labelled readable fallbacks/loss reports; appended permission-scoped unresolved-rights reports without rights-dispute-only blocking; unchanged source/history and stale-plan rejection; hostile-input/resource limits and private artifact cleanup. Verify supported delivery requires no separate user Pandoc install while respecting HPX packaging, licensing and egress requirements. These are future acceptance obligations, not executed converter tests or approved format schemas.
+
+## Working-branch acceptance gate (HPX-RQ-031)
+
+Under accepted ADR019, demonstrate that autosave updates only the selected branch's recoverable working buffer and provenance copy/paste can checkpoint exact pending source without Commit. Capture before asynchronous work; later typing, switches, lock, delayed/lost replies, restart and undo/redo preserve independent branch buffers and frozen reference intent. Prove atomic checkpoint/reference/receipt and idempotent retry, current authority before replay, malformed/future source rejection, exact Unicode/newline/scalar ranges and no published-head change from capture. Exact Commit must retain original evidence and append an inspectable replacement; changed source must not silently retarget. Bound incoming-link work and preserve removed private-reference history. Verify independent working-source paste/Fork and actual older-reader preservation/upgrade behaviour, then inspect desktop controls/retry/promotion states and source below widgets in both themes. Run the isolated actual headless workflow and guarded exact tested-binary manual refresh before integrated delivery claims. Current local backend coverage is recorded separately; this gate is not complete.
+
+For avoidance of ambiguity, ADR019's publication boundaries are separate: Commit atomically publishes text, any eligible exact promotion fact and its original receipt; a later bounded generation-bound replacement batch has its own frozen operation/receipt. Test interruption between them, denied/stale/unknown batch outcomes, original-reference inspection and restart reconciliation. Batch failure must not undo already committed text. This is the adopted design, not a new requirement that replacements join the text transaction. Existing wrapper tests do not substitute for actual older-reader20–27 preservation or live branch-switch/undo/recovery checks. No capability advertisement or real-data acceptance is established by this specification refinement.

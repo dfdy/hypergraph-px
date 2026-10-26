@@ -1,0 +1,11 @@
+%% HPX-DIAG-033 — Exact owned source and browser projection
+%% Scope: How does a browser selection resolve to exact mixed-newline UTF8 bytes?
+%% Local unless explicitly F / G
+flowchart LR
+ S["Owned source: A + CRLF + emoji<br/>UTF8 total 7 bytes"] -->|"explicit projection"| B["Browser: A + LF + emoji<br/>UTF16 total 4 code units"]
+ B -->|"selection code units 2 through 4"| M(("004.001 exact owned mapping"))
+ S -->|"exact owned bytes and newline map"| M
+ M -->|"half-open UTF8 bytes 3 through 7"| V(("006.002 scalar/range/quote validation"))
+ V -->|"exact emoji quote"| R["Source binding for reviewed operation"]
+ V -->|"split scalar / stale source / wrong quote"| E["Reject; do not normalize or heuristic-remap"]
+ L["Legend: derived illustrative example, not real data; mapping depends on exact owned source; general multi-owner save is unsupported"]

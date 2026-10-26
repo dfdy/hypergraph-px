@@ -1,0 +1,15 @@
+%% HPX-DIAG-030 — Assurance and authority boundaries
+%% Scope: Which conclusions come from tests, proofs, code alignment, owner decisions or this review?
+%% Local unless explicitly F / G
+flowchart LR
+ SPEC["Scoped accepted requirements and decisions"] --> TEST["Ordinary unit / integration / crash / browser tests"]
+ SPEC --> MODEL["Four Lean rank/path model theorems"]
+ SRC["Actual Rust spend helper"] --> EXT["Pinned Charon / Aeneas translation"]
+ EXT --> PROOF["One checked extracted-helper theorem"]
+ REVIEW["This review: source trace, diagram rendering, bounded abstract model, static dependencies"] --> GAPS["Findings and proposed checks; no app correctness proof"]
+ TEST --> BOUND["Retain exact tested version, scope and environment"]
+ MODEL --> BOUND
+ PROOF --> BOUND
+ BOUND --> NO["No whole Kahn / storage / crypto / binary / federation proof"]
+ OWNER["Owner approval authority"] --> SPEC
+ L["Legend: arrows are evidence relationships, not automatic acceptance or publication permission"]

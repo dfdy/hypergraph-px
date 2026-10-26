@@ -1,0 +1,25 @@
+%% HPX-DIAG-015 — Working Copy, promotion and separate replacement
+%% Scope: Where is atomicity deliberately split to keep text publication independent?
+%% Gated code; explicit A/B/C atomicity boundaries
+sequenceDiagram
+ actor U as Human
+ participant B as Gated branch buffer
+ participant R as Application / storage
+ participant D as Encrypted SQLite
+ U->>B: Protected Copy pending exact selection
+ B->>R: Frozen WorkingCopy + current reference generation
+ R->>D: Tx A: authorize, save/checkpoint, reference/list, Receipt, COMMIT
+ R-->>B: Exact checkpoint source, not committed revision
+ U->>B: Explicit Commit
+ B->>R: Frozen selected branch Commit
+ R->>D: Tx B: text publication + exact eligible promotion + Receipt, COMMIT
+ R-->>B: Text committed
+ B->>R: Separate frozen Promote(publication,list generation)
+ R->>D: Tx C: authorize promotion, replacement retaining predecessor, Receipt, COMMIT
+ alt Batch fails or reply unknown
+ R-->>B: Pending / conflict / unknown batch
+ B->>B: Keep published text, reconcile original batch receipt
+ else Batch known
+ R-->>B: Actual replacement and retained original
+ end
+ Note over B,D: Gated implementation only, full runtime/older-reader/undo/restart evidence pending

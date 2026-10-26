@@ -1,0 +1,33 @@
+%% HPX-DIAG-006 — Subsystem DFD level 1
+%% Scope: How do parent information channels decompose without adding outside actors?
+%% Local unless explicitly F / G
+flowchart LR
+ U["Human"]
+ X["F: package/file boundary"]
+ V["F: external provider"]
+ K["Native keychain"]
+ subgraph SYS["Same HPX boundary as DIAG-005"]
+ A(("Access / crypto<br/>002 and 016"))
+ P(("Owned editing and publication<br/>003 / 004 / 008 / 009"))
+ E(("Exact read and presentation<br/>005 / 006 / 007"))
+ I(("F: import export providers<br/>011 through 015"))
+ D[("Encrypted canonical objects / mutable slots")]
+ P -->|"authorized encrypted records"| D
+ D -->|"authorized exact state"| E
+ A -->|"scoped access context"| P
+  P -->|"unlock and scoped access request"| A
+  A -->|"session and lock or unlock outcome"| E
+ P -->|"publication and draft facts"| E
+ E -->|"frozen authorized closure"| I
+ I -->|"validated proposed input"| P
+  I -->|"artifact and job result"| E
+ end
+ U -->|"owned source and reviewed operation"| P
+ E -->|"views receipts and permitted artifacts"| U
+ X -->|"untrusted package or review bytes"| I
+ I -->|"approved package or backup bytes"| X
+ I -->|"approved provider request"| V
+ V -->|"provider metadata or outcome"| I
+ A -->|"explicit native credential request"| K
+ K -->|"native credential result"| A
+ L["Legend: process circles; data stores cylinders; arrows are information; no implicit provider execution"]

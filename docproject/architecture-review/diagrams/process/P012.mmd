@@ -1,0 +1,12 @@
+%% HPX-DIAG-P012 — Human–agent collaboration subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-012<br/>Human–agent collaboration"]
+ P --> C0["HPX-PROC-012.001<br/>Connect an agent provider<br/>F"]
+ P --> C1["HPX-PROC-012.002<br/>Approve and disclose context<br/>F"]
+ P --> C2["HPX-PROC-012.003<br/>Receive suggestion or tool proposal<br/>F"]
+ P --> C3["HPX-PROC-012.004<br/>Accept or reject reviewed change<br/>F"]
+ P --> C4["HPX-PROC-012.005<br/>Cancel and inspect interaction history<br/>F"]
+ P --> C5["HPX-PROC-012.006<br/>Convert selected formal material to Lean<br/>D"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

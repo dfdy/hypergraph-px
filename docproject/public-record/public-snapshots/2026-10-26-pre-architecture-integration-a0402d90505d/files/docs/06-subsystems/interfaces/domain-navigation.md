@@ -1,0 +1,123 @@
+# Domain/navigation contract
+
+## Common metadata
+
+- **ID:** `HPX-API-001`
+- **Title:** Domain/navigation contract
+- **Purpose:** Pure domain and planned navigation APIs, with exact implemented versus proposed boundaries.
+- **Level:** `06-subsystems`
+- **Status:** `proposed`
+- **Maintainer:** project owner; agent-authored migration assembly
+- **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
+- **Upstream authority:** [HPX-DOM-001](<../../05-domain/core-object-model.md>); [HPX-DOM-002](<../../05-domain/hypergraph-mathematics.md>)
+- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
+- **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
+- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Last reviewed:** 2026-10-25
+
+
+
+Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
+
+## Provider and consumers
+
+Pure domain and planned navigation APIs, with exact implemented versus proposed boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+
+## Version and compatibility
+
+Pure domain and planned navigation APIs, with exact implemented versus proposed boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+
+## Messages and type schemas
+
+
+
+### Data structures and navigation: MU-F technical reference
+
+Source `HPX-SRC-0026`, original lines 1–6. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+
+Status: current data and navigation contract, 2026-10-24. The navigation/type table below remains proposed. The first implemented validator is documented in §9. Proposed names/contracts below will be replaced or linked to actual symbols as implementation proceeds. Domain wire fields and container choices await accepted decisions; the separate crypto envelope adapter is now documented in §10.
+
+Related requirements: [mathematical model](<../../05-domain/hypergraph-mathematics.md>), [encryption](<../security-cryptography.md>), [architecture](<../../04-architecture/system-architecture.md>) and the [product specification](<../../03-requirements/system-requirements.md>). This reference defines data/navigation mechanisms and marks proposed interfaces explicitly.
+
+### 3. Proposed navigation contracts
+
+Source `HPX-SRC-0026`, original lines 42–63. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+
+All names below are interface sketches. Every query needs an explicit consistent read view or exact snapshot, authorized principal/scope, and resource budget. Historical lookup does not grant current access. Return incomplete/denied/budget errors honestly; do not silently substitute a current revision.
+
+| Proposed operation | Inputs and result | Algorithm / expected baseline cost |
+|---|---|---|
+| `get_node` / `get_revision` | Authorized identity → verified record | Indexed lookup plus object verification/decoding bytes |
+| `children` / `parent_occurrence` | Manifest/context occurrence → ordered placements / exact parent | Adjacency/parent index; cost proportional to returned children after lookup |
+| `walk_document` | Resolved root → ordered occurrence/source spans | Iterative traversal, active-path tracking, O(expanded occurrences + emitted bytes) |
+| `find_occurrences` | Node and view scope → every permitted placement | Reverse occurrence index and bounded pagination; do not scan/render every document |
+| `outgoing_links` / `backlinks` | Identity/revision, edge type, scope → edges | Forward/reverse adjacency indexes; O(lookup + page) |
+| `ancestors` / `descendants` | Exact revision or occurrence graph → bounded reachability | O(V + E) over visited projection without an additional index |
+| `is_ancestor` / `common_bases` | Exact retained states → ancestry result/candidate bases | DAG traversal with budget; multiple bases remain explicit, not timestamp-selected |
+| `derivation_inputs` / `derived_outputs` | Immutable revision/event → ordered origins/results | Forward/reverse event index; preserve original revision rather than following result heads |
+| `resolve_snapshot` | Manifest + consistent selected view → complete bindings | Resolve reachable contexts/rules; validate ownership/permission/completeness before publication |
+| `reconstruct_snapshot` | Exact snapshot/profile → bytes + ordered source map | No live-head/provider/query lookup; bounded repeated rendering |
+| `impact_of_change` | Source revision/rule and scope → affected live dependants | Reverse reachability; pinned historical uses do not advance automatically |
+| `history_page` | Node/manifest/snapshot scope + cursor → immutable event page | Indexed causal/local publication order; stable cursor, no retained-history count cap |
+| `validate_move` | Exact structure/base, occurrence, destination → valid plan/conflict | Reachability from destination before edge insertion; preserve one parent and order |
+
+Here V/E refer to the traversed authorized projection, not automatically the entire workspace. Physical storage/index choice is unresolved, so logarithmic index access is a design target rather than a benchmarked guarantee. No algorithm avoids output-size cost for a complete rendering. An index must specify its exact scope—current state, retained history metadata, or optional historical full text.
+
+### 11. Planned workspace/reuse queries
+
+Source `HPX-SRC-0026`, original lines 144–146. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+
+The [workspace interface contract](<../document-engine.md>) adds unimplemented requirements, not Rust symbols: list collection memberships versus composition children; resolve revision-bound selection anchors; trace cross-document derivation; inspect contextual assertions; resolve a designated live track; and manage protected per-principal/workspace clipboard entries. All queries bind exact view/context, permissions and budgets. Anchor transforms report ambiguity rather than silently quote-matching another occurrence. Reverse occurrence/backlink/lineage indexes are reconstructible; private clipboard order and acknowledged entries are protected application state, not a graph index. Query/renderer results never grant mutation or historical-key authority. Actual APIs in §§9–10 are unchanged.
+
+
+## Preconditions, postconditions and errors
+
+Pure domain and planned navigation APIs, with exact implemented versus proposed boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+
+## Ordering, retry and idempotency
+
+Pure domain and planned navigation APIs, with exact implemented versus proposed boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+
+## Authentication and authorisation
+
+Pure domain and planned navigation APIs, with exact implemented versus proposed boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+
+## Examples and conformance tests
+
+Use the source-grounded examples/evidence above and [acceptance gates](<../../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
+
+## Source provenance
+
+- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 1–6; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 42–63; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 144–146; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+
+## Current domain/adapter boundary, 2026-10-25
+
+`crates/domain` now has no dependencies or serialization derives. Identifiers, anchors, snapshot bindings and UTF-16/UTF-8 validators remain pure domain types. Storage/runtime DTO fields explicitly use codecs in `crates/storage/src/encoding.rs`; decoding checks exact 32-byte array shape/range, and snapshot-binding DTOs check their field set. Scalar-coordinate tests and the unchanged extracted spend-helper proof were replayed; no general graph navigation implementation or whole-validator proof follows. See [implementation evidence](../../09-guides/reference/implementation-resumption.md).
+
+## Initial immutable history and anchor queries, 2026-10-25
+
+The one-owner storage adapter now implements `Workspace::history_page` in [history.rs](../../../crates/storage/src/history.rs) and `Workspace::resolve_anchor` in [anchors.rs](../../../crates/storage/src/anchors.rs). Each query uses one consistent SQLite read transaction and checks the current authenticated catalog principal/device and document membership before returning protected data. This is the current sole-owner model, not selective multi-user historical disclosure or a capability grant.
+
+History follows exact immutable revision parents through existing primary-key lookups and verifies each event, snapshot and occurrence/revision binding. A page accepts 1–32 entries and has a 16 MiB encrypted-object read budget after the bounded catalog/head slots. A byte-limited partial page returns the next unconsumed revision; an entry that cannot fit an empty page fails explicitly. Pages have no revision-count retention cap, do not scan all retained history, and do not sort by fabricated timestamps. Cursors are inclusive immutable revision IDs, validated against the requested document on each read; newly appended commits cannot shift an older page. No new index, stored record kind, database/envelope version, revision or snapshot is created by browsing.
+
+The result is local publication metadata (`revision`, `parent`, `snapshot`, `operation`, recorded publisher `actor`/`device`, UTF-8 `text_bytes`) and `next`. Recorded publication does not prove original text authorship. The browser validates scope, identities, chain continuity and cursor shape; delayed responses cannot replace another document's history. It shows one bounded page and exact read-only historical snapshots, with byte-preserving download. Current drafts are unchanged. The initial linear single-node ancestry remains narrower than the future revision DAG and cross-identity derivation contracts.
+
+Anchor resolution requires an exact document, snapshot, revision, full occurrence path and half-open UTF-8 byte range. Snapshot bindings must match the supplied revision/path; split scalars, reversed/out-of-range offsets, wrong scope and missing historical objects fail. Empty ranges resolve as points. No current head, text-match guess, Unicode/newline normalization, promotion, durable clipboard entry or mutation is substituted. Tests use repeated text, emoji, combining marks and mixed line endings across edits/restart; see [the test register](../../registers/tests.csv).
+
+## Bounded publication-contributor adapter query
+
+`Workspace::publication_contributors` derives publisher evidence from the same validated immutable ancestry used by `history_page`. It is an adapter query in [contributors.rs](../../../crates/storage/src/contributors.rs), not a new pure-domain identity or authoritative index. The requested snapshot binds the first event; encrypted continuation tokens bind every later page to that document/snapshot lineage while current permission is rechecked. The [runtime contract](browser-runtime.md#snapshot-bound-publication-contributors) specifies its incomplete family coverage, resource bounds, current-context pins and nonpersistent cursor representation. No new durable record or source write is performed.
+
+## Initial immutable comment paging
+
+`Workspace::comments_page` in `crates/storage/src/comments.rs` uses one authorized SQLite read transaction and an exact text-snapshot context. It follows an inclusive immutable revision cursor through the separate document comment paging chain, checks original command receipts/digests and exact participant sources, and reports retrospective comment scope explicitly. New comments do not shift older pages; no automatic retention cap/pruning or same-node ancestry is inferred from this chain. The pure domain comment planner remains independent of DTOs/codecs/storage. Exact bounds are specified in the runtime and record references; actual executable evidence is tracked separately.
+
+## Proposed working-source boundary
+
+[ADR019](../../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md) proposes explicit content/working-branch context and typed immutable checkpoint sources for copy/paste that needs provenance. Capture the exact owned source/sequence before asynchronous work; never resolve an old reference through a moving branch head. Current document-only routes retain their original designated branch. Working-source DTOs are not implemented or accepted as existing Source fields. Promotion can add exact replacement evidence; changed source remains pinned for review.
+
+## Gated branch/working navigation wiring, 2026-10-26
+
+RuntimeAdapter now retains buffer identity independently of selected document projection: queued mutations resolve a frozen document/content-branch context, child writes carry the branch explicitly, and lock drains all retained buffers. The app caches CodeMirror state/selection/undo/scroll under that context and shows committed-source review before creating a child. Branch history uses encrypted document/branch/snapshot-bound cursors; back/forward paging retains the original view snapshot after newer commits. Current doc-only routes keep original-branch meaning. Adaptive source capture saves exact pending source before an atomic private working checkpoint/reference; committed bytes retain the existing committed-reference route. Text Commit and private replacement batches are independent acknowledgements. Capability advertisement and actual runtime acceptance remain held; component/mocked checks are not an integrated navigation delivery claim.

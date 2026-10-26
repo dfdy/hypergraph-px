@@ -15,3 +15,5 @@ Level `06-subsystems`. This is navigation, not a new requirement. See the [docum
 - [Workspace Storage](<workspace-storage.md>) — `HPX-SUB-006`; proposed.
 
 Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
+
+- [Future export and compilation scope](import-export.md) — HPX-SUB-008; owner-confirmed bundled Pandoc targets/citations/content selection; mechanisms proposed and implementation deferred.

@@ -1,0 +1,11 @@
+{
+  "files": 327,
+  "bytes": 12888115,
+  "high_confidence_secret_hits": [],
+  "local_path_metadata_files": [
+    "docproject/architecture-review/validation/diagram-results-initial.json",
+    "docproject/architecture-review/validation/diagram-results.json",
+    "docproject/architecture-review/validation/renderer-provenance.json"
+  ],
+  "scope": "docs, legal, four root documentation/licence files and completed supporting review; no private inputs/runtime/source archives"
+}

@@ -1,0 +1,11 @@
+%% HPX-DIAG-032 — N-ary relationship and selected historical graph scope
+%% Scope: How does one reviewed claim retain roles without becoming pairwise facts or complete outgoing knowledge?
+%% Local unless explicitly F / G
+flowchart LR
+ A["Selected Assertion node<br/>one identity and revision<br/>predicate version / review / qualifiers"]
+ A -->|"role 1; exact historical range"| S1["Selected document A context<br/>retained source binding"]
+ A -->|"role 2; exact historical range"| S2["Selected document B context<br/>retained source binding"]
+ A -->|"repeated role remains distinct incidence"| S1
+ A -.->|"outside-selection incidence count only"| O["Unselected participant not drawn as a content node"]
+ S1 -->|"inspect exact passage, never current-head substitution"| H["Historical source view"]
+ L["Legend: illustrative claim, not a real user record; at most 16 selected nodes, shared source-work budget 64; no clique or logical proof"]

@@ -1,0 +1,15 @@
+%% HPX-DIAG-021 — Document, content branch and immutable revision lifecycles
+%% Scope: Which mutable heads advance without changing logical node or retained versions?
+%% Local unless explicitly F / G
+stateDiagram-v2
+ [*] --> InitialDocument: atomic create new document/node/root occurrence
+ InitialDocument --> EditingOriginalBranch: selected owned buffer
+ EditingOriginalBranch --> EditingOriginalBranch: mutable Save, same published head
+ EditingOriginalBranch --> NewCommittedHead: explicit same-node Commit
+ NewCommittedHead --> EditingOriginalBranch: rebase draft, old revisions immutable
+ NewCommittedHead --> IndependentNamedChild: G reviewed committed-snapshot child
+ IndependentNamedChild --> IndependentNamedChild: own Save / Commit, same document/node
+ NewCommittedHead --> IndependentForkDocument: reviewed Fork, distinct node
+ note right of IndependentNamedChild: Branch creation relation is not a cross-node derivation
+ note right of NewCommittedHead: A Revision has no mutable content transition, new revision gets new identity
+ note right of IndependentForkDocument: Original parent pending draft remains untouched

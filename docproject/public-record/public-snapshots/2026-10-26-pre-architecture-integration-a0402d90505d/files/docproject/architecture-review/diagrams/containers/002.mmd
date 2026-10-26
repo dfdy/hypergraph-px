@@ -1,0 +1,22 @@
+%% HPX-DIAG-002 — Execution containers and deployment boundary
+%% Scope: Which units execute, and what is absent from the release runtime?
+%% Local unless explicitly F / G
+flowchart TB
+ subgraph HOST["Trusted host / current trusted-server mode"]
+  subgraph B["Isolated browser origin"]
+   UI["CodeMirror / KaTeX / panels"] --> AD["Owned-buffer RuntimeAdapter"]
+  end
+  subgraph EXE["One Rust release executable"]
+   TLS["HTTPS / exact origin / cookie"] --> APP["Authorized operation coordinator"]
+   APP --> DOM["Pure domain plans and validators"]
+   APP --> ST["Storage DTO / SQLite coordinator"]
+   ST --> CR["Crypto adapter"]
+   AS["Embedded frontend asset bytes"]
+  end
+  AD -->|"authenticated encrypted loopback"| TLS
+  AS --> UI
+  ST --> DB[("Encrypted SQLite objects / slots / WAL")]
+  ST --> KC["Native keychain, explicit only"]
+ end
+ BUILD["Build-time Node / Lean / bundler"] -.->|"assets and assurance; no runtime server"| EXE
+ L["Legend: execution units are boxes; DB is storage; build dependency is dashed"]

@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
 Owner messages override procedural source text. This task is documentation-only; implementation and publication remain paused.
 
@@ -28,6 +28,12 @@ Human authority, agent change boundaries and evidence discipline. The retained c
 Human authority, agent change boundaries and evidence discipline. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Normative content
+
+### Proportionate current work records
+
+For the current owner-and-agent arrangement, use the existing development-state handoff and update only affected requirement/test/compatibility/decision rows for a material increment. Preserve the minimal chain **finding → requirement/decision → specification → code impact → actual or pending check**. A minor factual correction does not require another report, ADR, GitHub issue, PR or approval round. Create an ADR when choosing consequential semantics, not merely to restate an accepted rule. External issue/comment actions and publication still require their own authorization.
+
+The source-era procedures below retain their historical context; references to a bounded issue are not a requirement to contact GitHub for each local increment. Current navigation is [docs/README.md](../README.md), and current execution scope is in the [development state](../09-guides/reference/DEVELOPMENT_STATE.md). The owner's review-integration instruction authorizes documentation corrections only. Application work remains stopped. This reduces record duplication, not mathematical precision, exceptional cases, test obligations, future capability or human authority over substantive design/security changes.
 
 
 

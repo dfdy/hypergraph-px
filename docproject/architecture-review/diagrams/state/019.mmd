@@ -1,0 +1,15 @@
+%% HPX-DIAG-019 — Working checkpoint and reference lifecycle
+%% Scope: Which transitions retain exact unpublished source and which need a later explicit operation?
+%% Local unless explicitly F / G
+stateDiagram-v2
+ [*] --> MutableDraft
+ MutableDraft --> MutableDraft: idle autosave, no checkpoint/Commit
+ MutableDraft --> ExactCheckpoint: provenance operation atomically captures source
+ ExactCheckpoint --> ExactCheckpoint: later typing leaves checkpoint unchanged
+ ExactCheckpoint --> Promoted: explicit Commit with full latest exact match
+ ExactCheckpoint --> RetainedWorkingHistory: changed source or ineligible older checkpoint
+ Promoted --> PendingReplacement: private reference candidate exists
+ PendingReplacement --> ActualReplacement: separate authorized CAS batch commits
+ PendingReplacement --> PendingReplacement: denied / stale / unknown batch, text remains committed
+ ActualReplacement --> ActualReplacement: original checkpoint and predecessor retained
+ note right of MutableDraft: Gated implementation, content branch identity stays separate

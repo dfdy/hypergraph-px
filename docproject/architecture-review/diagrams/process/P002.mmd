@@ -1,0 +1,13 @@
+%% HPX-DIAG-P002 — Workspace access and enrollment subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-002<br/>Workspace access and enrollment"]
+ P --> C0["HPX-PROC-002.001<br/>Create encrypted workspace<br/>L"]
+ P --> C1["HPX-PROC-002.002<br/>Bootstrap browser session<br/>L"]
+ P --> C2["HPX-PROC-002.003<br/>Unlock with passphrase<br/>L"]
+ P --> C3["HPX-PROC-002.004<br/>Lock workspace<br/>L"]
+ P --> C4["HPX-PROC-002.005<br/>Enroll native keychain alternative<br/>L"]
+ P --> C5["HPX-PROC-002.006<br/>Unlock explicitly through keychain<br/>L"]
+ P --> C6["HPX-PROC-002.007<br/>Remove enrollment and recover orphan<br/>L"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

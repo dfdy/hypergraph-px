@@ -1,0 +1,15 @@
+%% HPX-DIAG-001 — HPX system context
+%% Scope: Who uses HPX, which actors and optional services are outside its authority?
+%% Local unless explicitly F / G
+flowchart LR
+  U["Owner / local human"] -->|"read, edit, review"| H
+  subgraph HOST["Trusted local host - current boundary"]
+    H["HPX local application"] --> S[("Encrypted workspace SQLite")]
+    H -->|"explicit native enrollment / unlock"| K["OS keychain - external trust"]
+  end
+  H -.->|"F: approved context"| A["Agent provider"]
+  Z["F: Zotero desktop / cloud"] -.->|"read-only metadata"| H
+  H -.->|"F: reviewed export / encrypted backup"| G["GitHub"]
+  P["F: portable packages / Word reviews"] -.->|"untrusted input"| H
+  H -.->|"F: authorized exchange"| R["Independent replica"]
+  L["Legend: solid = local responsibility; dashed F = future; outside boxes have independent authority"]

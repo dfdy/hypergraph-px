@@ -1,0 +1,20 @@
+%% HPX-DIAG-005 — Context DFD level 0
+%% Scope: Which information crosses the whole-system boundary?
+%% Local unless explicitly F / G
+flowchart LR
+ U["Human"]
+ X["F: package/file boundary"]
+ V["F: external provider"]
+ K["Native keychain"]
+ subgraph SYS["HPX boundary"]
+ H(("0 HPX"))
+ end
+ U -->|"owned source and reviewed operation"| H
+ H -->|"views receipts and permitted artifacts"| U
+ X -->|"untrusted package or review bytes"| H
+ H -->|"approved package or backup bytes"| X
+ H -->|"approved provider request"| V
+ V -->|"provider metadata or outcome"| H
+ H -->|"explicit native credential request"| K
+ K -->|"native credential result"| H
+ L["Legend: arrows carry named information, not control; F = future"]

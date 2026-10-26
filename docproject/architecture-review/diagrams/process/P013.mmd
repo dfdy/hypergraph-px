@@ -1,0 +1,13 @@
+%% HPX-DIAG-P013 — Export, compilation and publication artifacts subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-013<br/>Export, compilation and publication artifacts"]
+ P --> C0["HPX-PROC-013.001<br/>Download current owned Markdown<br/>L"]
+ P --> C1["HPX-PROC-013.002<br/>Freeze exact compilation closure<br/>F"]
+ P --> C2["HPX-PROC-013.003<br/>Compile Markdown and HTML<br/>F"]
+ P --> C3["HPX-PROC-013.004<br/>Provide bundled academic Pandoc formats<br/>F"]
+ P --> C4["HPX-PROC-013.005<br/>Freeze citations and bibliography<br/>F"]
+ P --> C5["HPX-PROC-013.006<br/>Deliver and expire artifacts safely<br/>F"]
+ P --> C6["HPX-PROC-013.007<br/>Export provenance archive and relationship fallbacks<br/>F"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

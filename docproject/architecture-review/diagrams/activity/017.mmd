@@ -1,0 +1,17 @@
+%% HPX-DIAG-017 — Source transform and immutable annotation workflow
+%% Scope: How do source validation, review and publication preserve identity distinctions?
+%% Local unless explicitly F / G
+flowchart TD
+ A["Capture exact committed source"] --> V{"Current scope / exact UTF8 quote valid?"}
+ V -->|"no"| X["Reject; recapture explicitly"]
+ V -->|"yes"| T{"Reviewed operation"}
+ T -->|"Fork one input"| F["New Node; parentless first Revision; separate derivation"]
+ T -->|"Synthesis 2-8 inputs"| S["Reviewed output; new Node; ordered derivation"]
+ T -->|"Comment"| C["Immutable exact-passage retrospective entity"]
+ T -->|"Assertion"| R["Role-labelled claim / review ancestry"]
+ F --> W["Atomic encrypted objects/indexes/receipt"]
+ S --> W
+ C --> W
+ R --> W
+ W --> E["Return exact entity IDs; source history unchanged"]
+ L["Legend: diamonds are decisions/control; arrows here are workflow, not DFD information channels"]

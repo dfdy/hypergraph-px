@@ -1,0 +1,1047 @@
+[
+  {
+    "id": "HPX-CLM-001",
+    "classification": 1,
+    "claim": "Owner decisions and inherited accepted passages retain scoped authority; editorial proposed status does not revoke them.",
+    "scope": "Authority, all milestones",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "sources": [
+      {
+        "path": "docs/README.md",
+        "line": 7,
+        "quote": "The owner has approved the documentation migration procedure and explicitly decided retained immutable history, serialization outside domain and explicit record versions before real-data acceptance. Those decisions are recorded in [the owner record](02-governance/OWNER_DECISIONS.md) and decision ADRs. Inherited accepted source obligations retain their scope. New editorial assemblies are `proposed` pending topic review; that does not revoke existi",
+        "needle": "Inherited",
+        "matched": true
+      },
+      {
+        "path": "docs/02-governance/OWNER_DECISIONS.md",
+        "line": 1,
+        "quote": "# Owner decisions and execution authority",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0959",
+      "HPX-EV-0039"
+    ]
+  },
+  {
+    "id": "HPX-CLM-002",
+    "classification": 1,
+    "claim": "Release is one Rust executable with embedded browser assets; build-time Node and Lean are not runtime servers.",
+    "scope": "Accepted release constraint",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "sources": [
+      {
+        "path": "docs/registers/requirements.csv",
+        "line": 2,
+        "quote": "HPX-RQ-001,HPX-REQ-002,One Rust release executable embeds frontend assets; no Node/Lean/database server at runtime,HPX-SRC-0032; Specifications/SPECIFICATION.md:L1; # Hypergraph PX MU-F — product specification,preserve source priority; no new ranking,existing source scope; no invented date,HPX-ARCH-001,crates/runtime/build.rs,Pending embedded/browser parity,local code builds; delivery unverified,source-reported evidence; not rerun in documentatio",
+        "needle": "HPX-RQ-001",
+        "matched": true
+      },
+      {
+        "path": "docs/08-assurance/build-and-release.md",
+        "line": 32,
+        "quote": "The current full-workspace build includes an embedded runtime and therefore needs prepared frontend assets. Earlier library-only installation prose is historical. See [developer setup](../09-guides/developers/getting-started.md) for the distinct fixture and full-build paths. Source-derived commands are documentation, not proof that the newest working tree has passed every check. Publication remains held; migration approval is not commit/push auth",
+        "needle": "embedded",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/document-engine.md",
+        "line": 107,
+        "quote": "Logical capabilities (identity, content/anchors, composition, revisions, references, provenance, snapshots, private clipboard, queries, permissions and integrations) are modules inside the application boundary, not mandatory microservices. Browser, REST and MCP converge on the same authorized planner/publication semantics. Canonical records, reconstructible indexes and protected private user state have distinct responsibilities. SQLite is an avai",
+        "needle": "single Rust release executable",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-EXT-fef8423fcf51",
+      "HPX-EV-0728",
+      "HPX-EV-0434"
+    ]
+  },
+  {
+    "id": "HPX-CLM-003",
+    "classification": 1,
+    "claim": "Exact UTF8 bytes/newlines and owned UTF16 mapping are required; no generic multi-owner whole-buffer save.",
+    "scope": "Local whole-owner editor; general multi-owner deferred",
+    "processes": [
+      "HPX-PROC-004",
+      "HPX-PROC-006"
+    ],
+    "sources": [
+      {
+        "path": "docs/05-domain/text-and-anchors.md",
+        "line": 7,
+        "quote": "- **Purpose:** Exact UTF8 text, UTF16 browser coordinates, historical anchors and ownership boundaries.",
+        "needle": "UTF",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/interfaces/browser-runtime.md",
+        "line": 57,
+        "quote": "| B: local editor | Create/open document, exact owned projection, draft autosave/recovery, explicit commit, error/conflict handling | Authentication/unlock design, authoritative identities/source mapping, encrypted durable drafts/publication and real recovery tests |",
+        "needle": "owned",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0408",
+      "HPX-EV-0564"
+    ]
+  },
+  {
+    "id": "HPX-CLM-004",
+    "classification": 1,
+    "claim": "Revision ancestry remains same-node; cross-identity Fork/Synthesis uses separate exact derivation.",
+    "scope": "Conceptual and bounded local implementation",
+    "processes": [
+      "HPX-PROC-005",
+      "HPX-PROC-007"
+    ],
+    "sources": [
+      {
+        "path": "docs/05-domain/core-object-model.md",
+        "line": 42,
+        "quote": "Node is stable intellectual content identity; Revision is an immutable same-node content state. Document is a named composition identity, not a plaintext file. Branch is an independently identified evolving selection. Occurrence is a placement, distinct from content and preserved on moves. Manifest is immutable ordered structure. Snapshot closes an exact manifest plus occurrence-path-specific revision bindings; it must never resolve using current",
+        "needle": "Revision",
+        "matched": true
+      },
+      {
+        "path": "docs/05-domain/provenance-model.md",
+        "line": 36,
+        "quote": "Fork/extraction creates a new content identity with explicit provenance from exact source revisions/ranges. A source from another identity is not a same-identity revision parent. Represent a multi-input/multi-output transformation as an event with ordered input and output revision references, operation parameters, actor/device attribution, exact source ranges and contribution mappings. This incidence representation preserves the distinction betwe",
+        "needle": "Fork/extraction",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0348",
+      "HPX-EV-0395"
+    ]
+  },
+  {
+    "id": "HPX-CLM-005",
+    "classification": 1,
+    "claim": "Occurrence identity, order and structural parent differ from logical node identity; snapshots close exact path bindings.",
+    "scope": "General domain; one-occurrence local writer",
+    "processes": [
+      "HPX-PROC-005"
+    ],
+    "sources": [
+      {
+        "path": "docs/05-domain/document-semantics.md",
+        "line": 30,
+        "quote": "### Identities, occurrences and temporal state",
+        "needle": "occurrence",
+        "matched": true
+      },
+      {
+        "path": "docs/05-domain/core-object-model.md",
+        "line": 42,
+        "quote": "Node is stable intellectual content identity; Revision is an immutable same-node content state. Document is a named composition identity, not a plaintext file. Branch is an independently identified evolving selection. Occurrence is a placement, distinct from content and preserved on moves. Manifest is immutable ordered structure. Snapshot closes an exact manifest plus occurrence-path-specific revision bindings; it must never resolve using current",
+        "needle": "Snapshot",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0364",
+      "HPX-EV-0348"
+    ]
+  },
+  {
+    "id": "HPX-CLM-006",
+    "classification": 1,
+    "claim": "Save acknowledges mutable Draft; explicit Commit appends revision/snapshot/publication/head/draft/receipt atomically.",
+    "scope": "Local publication",
+    "processes": [
+      "HPX-PROC-003"
+    ],
+    "sources": [
+      {
+        "path": "docs/07-implementation/protocols/draft-publication.md",
+        "line": 78,
+        "quote": "| Save outcome unknown | Connection/reply lost; preserve text and reconcile the original operation |",
+        "needle": "Save",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/data-architecture.md",
+        "line": 32,
+        "quote": "One SQLite database coordinates encrypted immutable objects, mutable head/draft slots and encrypted operation receipts. WAL/FULL is durability machinery, not application history. Ciphertext metadata leaks opaque identifiers, types, generations, lengths/counts and access patterns; no whole-database rollback witness exists. The implementation does not rewrite every retained revision on each draft save. See [record representation](../07-implementati",
+        "needle": "One SQLite",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0716",
+      "HPX-EV-0160"
+    ]
+  },
+  {
+    "id": "HPX-CLM-007",
+    "classification": 1,
+    "claim": "Original frozen operation and digest reconcile unknown acknowledgements without replacing later typing.",
+    "scope": "Local bounded retry protocol",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-004"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/interfaces/browser-runtime.md",
+        "line": 18,
+        "quote": "Candidate endpoints in source contracts remain sketches. The local /api/v1 implementation is provisional and not a frozen complete wire contract.",
+        "needle": "frozen",
+        "matched": true
+      },
+      {
+        "path": "docs/07-implementation/protocols/draft-publication.md",
+        "line": 47,
+        "quote": "-> return original action/commit receipt",
+        "needle": "receipt",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0559",
+      "HPX-EV-0715"
+    ]
+  },
+  {
+    "id": "HPX-CLM-008",
+    "classification": 1,
+    "claim": "Current optional record kinds reach 27; SQL schema, record wrappers, crypto envelopes and HTTP contract versions are independent.",
+    "scope": "Local dirty working tree; integration incomplete",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-008"
+    ],
+    "sources": [
+      {
+        "path": "docs/07-implementation/data-structures/sqlite-records.md",
+        "line": 193,
+        "quote": "Optional immutable encrypted kind27, strict wrapper1, is addressed by the independent output DocumentId. `storage/working_forks.rs` stores `{kind:working_fork,transformation,operation,actor,device,input:<Working Source>,output:<committed Source>}`. `{command:working_fork,plan:{title,source,quote}}` validates the exact retained checkpoint passage and current permission before creating the independent node/document, parentless first revision/closed",
+        "needle": "27",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0007-explicit-record-versions.md",
+        "line": 1,
+        "quote": "# Explicit persistent record versions",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0697",
+      "HPX-EV-0238"
+    ]
+  },
+  {
+    "id": "HPX-CLM-009",
+    "classification": 1,
+    "claim": "Keychain enrollment is explicit with retained passphrase recovery, verified encrypted backup and opt-in schema 2.",
+    "scope": "Accepted and bounded local native evidence",
+    "processes": [
+      "HPX-PROC-002",
+      "HPX-PROC-014"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/decisions/0014-keychain-unlock-policy.md",
+        "line": 29,
+        "quote": "4. Upgrading a schema-1 workspace requires a separately invoked enrollment/upgrade action while unlocked. Create and verify a consistent encrypted SQLite backup with restrictive permissions before the transaction. Preserve all existing encrypted record bytes and logical history. Add the table and change `user_version` atomically; do not upgrade merely by opening a file. Define explicit readers for supported schema 1 and 2; future/unknown versions",
+        "needle": "backup",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0268"
+    ]
+  },
+  {
+    "id": "HPX-CLM-010",
+    "classification": 1,
+    "claim": "Native secret creation and DB commit require ordered compensation; crash-created orphan is not speculatively overwritten.",
+    "scope": "Keychain failure lifecycle",
+    "processes": [
+      "HPX-PROC-002"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/decisions/0014-keychain-unlock-policy.md",
+        "line": 30,
+        "quote": "5. Enrollment creates a new provider item before committing its database wrapper. On database failure, remove only the just-created item. If cleanup fails, report the orphaned-item condition while retaining the working passphrase route. Never replace an existing item whose secret/wrapper cannot be verified. Removing enrollment commits database-wrapper removal before deleting that workspace's provider item; failed deletion is reported without clai",
+        "needle": "orphan",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0268"
+    ]
+  },
+  {
+    "id": "HPX-CLM-011",
+    "classification": 1,
+    "claim": "HTTPS verified loopback and exact origin/session checks precede protected routes; no HTTP fallback.",
+    "scope": "Current trusted-server loopback",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-016"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/interfaces/browser-runtime.md",
+        "line": 140,
+        "quote": "Each document queues captured saves/commits independently. Later typing and other documents are never overwritten by delayed replies. Lock first suspends edits, drains queued document changes and creation, then requests the idempotent server lock. Save failure restores editability while retaining source and pending operations; an unknown lock outcome keeps editing suspended until lock is confirmed. Cached editor states remain read-only while swit",
+        "needle": "HTTPS",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0004-local-https-bootstrap.md",
+        "line": 1,
+        "quote": "# Existing ADR 0004, retain decision identity/status",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0572",
+      "HPX-EV-0207"
+    ]
+  },
+  {
+    "id": "HPX-CLM-012",
+    "classification": 1,
+    "claim": "Non-trusted future plaintext egress is denied in core policy; client-held mode remains unavailable.",
+    "scope": "Future mode gate, not delivered client-held mode",
+    "processes": [
+      "HPX-PROC-011",
+      "HPX-PROC-012",
+      "HPX-PROC-013",
+      "HPX-PROC-016"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/privacy-and-data-protection.md",
+        "line": 38,
+        "quote": "Status: required future functionality, unimplemented. When client-held/local encryption with a non-trusted server is selected, the core must deny application-controlled plaintext disclosure paths. **GitHub publication/pushing and document export are disabled**, including local Markdown/HTML/PDF/LaTeX/Word downloads and direct browser Blob/download shortcuts. Possession of client keys, read access, an integration credential or a confirmation dialo",
+        "needle": "GitHub publication/pushing and document export are disabled",
+        "matched": true
+      },
+      {
+        "path": "docs/03-requirements/system-requirements.md",
+        "line": 85,
+        "quote": "Future client-held/non-trusted mode must deny application-controlled plaintext egress at the core, including GitHub publication and document export, across all UI/API/MCP/client/background paths. Client keys, read rights and confirmation cannot bypass that mode policy. See the [future egress requirement](<../06-subsystems/security-cryptography.md>). This stricter rule supersedes earlier client-side export/disclosure allowances; it remains unimple",
+        "needle": "Future client-held/non-trusted mode",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0776",
+      "HPX-EV-0109"
+    ]
+  },
+  {
+    "id": "HPX-CLM-013",
+    "classification": 1,
+    "claim": "AEAD binds expected context and ciphertext; it is neither authorization nor a freshness witness.",
+    "scope": "Current crypto assumption",
+    "processes": [
+      "HPX-PROC-016"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/security-threat-model.md",
+        "line": 32,
+        "quote": "Threat boundaries include unlocked Rust memory, browser-delivered assets, loopback TLS/session/origin, encrypted SQL data, retained history/private clipboard, external disclosure and future federation. AEAD does not detect a complete rollback to an earlier valid workspace. Rust-held keys remain trusted-server custody. Hostile hosting code delivery requires an independently trusted client/update path for a stronger client-held guarantee. Local fil",
+        "needle": "AEAD",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/formats/crypto-envelopes.md",
+        "line": 1,
+        "quote": "# HGOB/HGWK envelope formats",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0797",
+      "HPX-EV-0465"
+    ]
+  },
+  {
+    "id": "HPX-CLM-014",
+    "classification": 1,
+    "claim": "The bounded local database has no whole-database rollback witness.",
+    "scope": "Explicit local residual limit",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-016"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/data-architecture.md",
+        "line": 32,
+        "quote": "One SQLite database coordinates encrypted immutable objects, mutable head/draft slots and encrypted operation receipts. WAL/FULL is durability machinery, not application history. Ciphertext metadata leaks opaque identifiers, types, generations, lengths/counts and access patterns; no whole-database rollback witness exists. The implementation does not rewrite every retained revision on each draft save. See [record representation](../07-implementati",
+        "needle": "no whole-database",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/formats/hpx-workspace.md",
+        "line": 48,
+        "quote": "Encrypted catalog authenticates the list of documents and the owner/device context. Each document has a branch head, current draft and immutable root manifest/occurrence. Immutable object insert is create-only; existing records cannot be overwritten by the API. Sealed records authenticate expected kind, identity and generation. Referenced missing/corrupt objects fail; never substitute latest revisions. This detects substitution and many corruptio",
+        "needle": "rollback",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0160",
+      "HPX-EV-0482"
+    ]
+  },
+  {
+    "id": "HPX-CLM-015",
+    "classification": 5,
+    "claim": "The inherited threat statement requires rejecting rollback/replay before durable editing, while the local architecture explicitly lacks whole-DB freshness.",
+    "scope": "Gate wording tension; distinguish replay/CAS from restoration of authentic old database",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-016"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/security-threat-model.md",
+        "line": 60,
+        "quote": "AEAD authenticates bytes/context but does not establish latest state or reject authentic stale envelopes. The storage/application design must bind key policy, catalogue, publication and heads to reject rollback/replay before durable editing. Epoch numbers alone neither rotate keys nor grant historical access.",
+        "needle": "reject rollback",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/data-architecture.md",
+        "line": 32,
+        "quote": "One SQLite database coordinates encrypted immutable objects, mutable head/draft slots and encrypted operation receipts. WAL/FULL is durability machinery, not application history. Ciphertext metadata leaks opaque identifiers, types, generations, lengths/counts and access patterns; no whole-database rollback witness exists. The implementation does not rewrite every retained revision on each draft save. See [record representation](../07-implementati",
+        "needle": "no whole-database",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0800",
+      "HPX-EV-0160"
+    ]
+  },
+  {
+    "id": "HPX-CLM-016",
+    "classification": 5,
+    "claim": "Component status still calls domain Serde present and application/transport planned; accepted refactor and later evidence describe implemented local behavior.",
+    "scope": "Historical status presented in current summaries; not competing domain rules",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/component-architecture.md",
+        "line": 18,
+        "quote": "OWNER-003 requires serialization outside domain. Current domain Serde usage is nonconforming local work to refactor later, without changing code here.",
+        "needle": "Current domain Serde",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0006-domain-serialization-boundary.md",
+        "line": 1,
+        "quote": "# Serialization outside the pure domain",
+        "needle": null,
+        "matched": true
+      },
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 30,
+        "quote": "1. Removed Serde derives/dependency from `crates/domain`. Storage/runtime identifier fields now use exact-width adapter codecs; snapshot-binding DTOs own serialization. Command bytes/field order used for receipt digests are preserved by a compatibility vector. Pure Unicode validators and expansion source are unchanged.",
+        "needle": "Removed Serde",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0143",
+      "HPX-EV-0228",
+      "HPX-EV-0850"
+    ]
+  },
+  {
+    "id": "HPX-CLM-017",
+    "classification": 1,
+    "claim": "Comments attach to exact committed passages as immutable retrospective entities; replies/edit/resolve are excluded.",
+    "scope": "Accepted bounded comments",
+    "processes": [
+      "HPX-PROC-009"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/decisions/0017-initial-durable-comments.md",
+        "line": 1,
+        "quote": "# First durable document comments",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0289"
+    ]
+  },
+  {
+    "id": "HPX-CLM-018",
+    "classification": 1,
+    "claim": "Typed assertions retain ordered roles, definition versions, immutable review ancestry and distinct text-snapshot binding.",
+    "scope": "Local assertion overlays; review is not truth",
+    "processes": [
+      "HPX-PROC-009"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/decisions/0010-semantic-annotation-snapshots.md",
+        "line": 1,
+        "quote": "# First durable semantic assertions and snapshot scope",
+        "needle": null,
+        "matched": true
+      },
+      {
+        "path": "docs/05-domain/assertions-and-predicates.md",
+        "line": 7,
+        "quote": "- **Purpose:** Stable predicate identity, role-labelled assertions, overlapping tags and claim properties.",
+        "needle": "role",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0248",
+      "HPX-EV-0328"
+    ]
+  },
+  {
+    "id": "HPX-CLM-019",
+    "classification": 1,
+    "claim": "Named child starts from reviewed committed snapshot and preserves parent pending draft.",
+    "scope": "Accepted gated local branch design",
+    "processes": [
+      "HPX-PROC-008"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/decisions/0018-initial-local-branches.md",
+        "line": 1,
+        "quote": "# First local branch creation and editing",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0296"
+    ]
+  },
+  {
+    "id": "HPX-CLM-020",
+    "classification": 1,
+    "claim": "Autosave remains mutable private working state; provenance operations checkpoint exact pending source without Commit.",
+    "scope": "Accepted working-branch design; gated implementation",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-008"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md",
+        "line": 55,
+        "quote": "Automatic saving/checkpointing advances private working state only. Explicit Commit validates the captured working state against the selected content branch's expected head, appends the ordinary immutable same-node revision/closed snapshot/event, advances that content branch and rebases the working buffer atomically. Browser typing after the captured sequence remains pending. The working branch survives as the editing context for subsequent work;",
+        "needle": "Automatic saving",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0309"
+    ]
+  },
+  {
+    "id": "HPX-CLM-021",
+    "classification": 1,
+    "claim": "Exact promotion belongs to Commit; replacement links use bounded separately acknowledged post-Commit batch and retain original references.",
+    "scope": "Latest local gated implementation explicitly supersedes earlier atomic-with-Commit replacement",
+    "processes": [
+      "HPX-PROC-008"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md",
+        "line": 61,
+        "quote": "Do not scan and rewrite an unbounded set of incoming links in the Commit transaction. The design requires an encrypted bounded reverse-reference query before automatic replacement is enabled. Publish the promotion fact with Commit, then process explicitly scoped replacement batches using frozen operation IDs, current authorization and compare-and-swap on each mutable reference head. Keep incomplete work inspectable and restartable; a failed batch",
+        "needle": "Publish the promotion",
+        "matched": true
+      },
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 444,
+        "quote": "Corrected the earlier private replacement implementation to follow accepted ADR019: Commit stores text/promotion and its receipt independently; a separate strict WorkingClipboard Promote mutation, with expected current-list generation and source publication ID, applies bounded replacements under its own frozen operation/receipt. Failure or unknown acknowledgement in that batch does not undo published text. Current publication/document/branch auth",
+        "needle": "Corrected the earlier private replacement",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0309",
+      "HPX-EV-0911"
+    ]
+  },
+  {
+    "id": "HPX-CLM-022",
+    "classification": 1,
+    "claim": "Neither branch nor working-copy capability is advertised at the current wiring checkpoint; actual runtime/older-reader integration remains pending.",
+    "scope": "Latest baseline checkpoint",
+    "processes": [
+      "HPX-PROC-008",
+      "HPX-PROC-018"
+    ],
+    "sources": [
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 442,
+        "quote": "Added gated frontend branch review/selection, independent document/branch buffer identities, branch-scoped child Save/Commit, frozen retries, all-buffer lock quiescence and separate CodeMirror state/selection/undo/scroll caches. Adaptive protected capture saves the captured pending source and uses atomic WorkingCopy only when its bytes differ from the current committed snapshot; exact committed source retains the existing clipboard path. Added wo",
+        "needle": "advertises neither",
+        "matched": true
+      },
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 452,
+        "quote": "On a future owner resume: connect the kind27 Working Fork reader to the general Provenance panel; test actual branch/working source workflows behind explicit test-only capability setup; complete actual older-reader preservation for20–27, frozen lost/delayed acknowledgement/source and branch-switch undo/restart checks, exact publication/replacement recovery and both-theme source-under-widget visuals. Only then enable advertised capabilities and ru",
+        "needle": "On a future owner resume: connect the kind27",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0911",
+      "HPX-EV-0911"
+    ]
+  },
+  {
+    "id": "HPX-CLM-023",
+    "classification": 1,
+    "claim": "Selected graph is bounded and scoped; n-ary assertions are incidence groups; working-source Fork is excluded from this projection.",
+    "scope": "Local read model; no general graph completeness claim",
+    "processes": [
+      "HPX-PROC-006"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/interfaces/browser-runtime.md",
+        "line": 223,
+        "quote": "Only selected endpoints are drawn. Boundary counts concern supported incidences of selected nodes, not a scan of all unselected outgoing references. A query validates at most 64 distinct assertion participant source bindings, failing with a limit error beyond that work budget; current document/Fork checks retain their own bounded reads. Queries publish nothing and do not reject reference cycles as if they were recursive document expansion. Genera",
+        "needle": "64 distinct",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/graph-engine.md",
+        "line": 85,
+        "quote": "The graph now additionally supports explicitly selected assertion nodes alongside document nodes. Each n-ary claim remains one revisioned content entity, with ordered, role-labelled incidences to the selected historical participant contexts. Duplicate roles/ranges remain explicit occurrences; no pairwise-fact expansion or logical inference is performed. Owner review/qualifiers remain visible and distinct from checked proof. Exact source inspectio",
+        "needle": "Each n-ary claim remains",
+        "matched": true
+      },
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 452,
+        "quote": "On a future owner resume: connect the kind27 Working Fork reader to the general Provenance panel; test actual branch/working source workflows behind explicit test-only capability setup; complete actual older-reader preservation for20–27, frozen lost/delayed acknowledgement/source and branch-switch undo/restart checks, exact publication/replacement recovery and both-theme source-under-widget visuals. Only then enable advertised capabilities and ru",
+        "needle": "working-edge exclusions",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0582",
+      "HPX-EV-0548",
+      "HPX-EV-0911"
+    ]
+  },
+  {
+    "id": "HPX-CLM-024",
+    "classification": 1,
+    "claim": "Contributor publication evidence is not authorship, presence or complete attribution.",
+    "scope": "Bounded exact-snapshot local view",
+    "processes": [
+      "HPX-PROC-006",
+      "HPX-PROC-010"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/interfaces/domain-navigation.md",
+        "line": 109,
+        "quote": "## Bounded publication-contributor adapter query",
+        "needle": "contributor",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0627"
+    ]
+  },
+  {
+    "id": "HPX-CLM-025",
+    "classification": 7,
+    "claim": "Portable package bytes/schemas and full restore, general rights policy and federation mechanisms remain open future work.",
+    "scope": "Future; no delivered roundtrip/convergence claim",
+    "processes": [
+      "HPX-PROC-011",
+      "HPX-PROC-014",
+      "HPX-PROC-017"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/external-integrations.md",
+        "line": 32,
+        "quote": "Source inputs propose workspace-centric .hpx, .hpxz portable packages, .hpx.json interchange and .hpxe encrypted backups. Only the .hpx local slice has accepted implementation design. The other byte formats, streaming encryption, compression, dependency/asset packaging and round-trip contracts remain TBD. Proposed GitHub backup is separate from Markdown publication: locally encrypt, create-only remote names with race-safe preconditions, verify be",
+        "needle": ".hpxz",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/component-architecture.md",
+        "line": 60,
+        "quote": "- Offline operation validation, membership/revocation, replication protocol and federation acceptance.",
+        "needle": "Offline operation validation",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0448",
+      "HPX-EV-0148"
+    ]
+  },
+  {
+    "id": "HPX-CLM-026",
+    "classification": 7,
+    "claim": "Academic export includes retained citations, selectable graph/branch content, relationship fallbacks and rights reports; exact compiler and XML/JSON schemas unselected.",
+    "scope": "Owner-confirmed future inclusion",
+    "processes": [
+      "HPX-PROC-013"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/import-export.md",
+        "line": 20,
+        "quote": "The owner confirmed including the future bundled/embedded Pandoc export request in specifications and plans. That product scope is accepted as a future requirement; this document's mechanism details remain a proposed refinement until selected and verified. It does not install Pandoc, introduce a runtime dependency, choose an unreviewed library/version, enable export, authorize provider access or reprioritize current implementation. Existing impor",
+        "needle": "Pandoc",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0552"
+    ]
+  },
+  {
+    "id": "HPX-CLM-027",
+    "classification": 7,
+    "claim": "GitHub jobs require approved exact bytes/destination/remote precondition and explicit unknown state; SQLite and provider writes cannot be atomic.",
+    "scope": "Future optional integration",
+    "processes": [
+      "HPX-PROC-015"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/external-integrations.md",
+        "line": 87,
+        "quote": "GitHub writes cannot participate in an atomic local graph transaction. Use an encrypted/authenticated durable job/outbox with the approved input and explicit queued/running/succeeded/conflict/failed/**outcome unknown** states; add cancellation-requested/irreversible-result handling as applicable. Success needs a verified remote commit/result bound to that job and destination. A local response failure after provider success is not evidence that no",
+        "needle": "unknown",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0451"
+    ]
+  },
+  {
+    "id": "HPX-CLM-028",
+    "classification": 7,
+    "claim": "Word reviews require selected exact base and explicit ambiguity; Zotero desktop and cloud remain separately authenticated read-only paths.",
+    "scope": "Future optional integrations",
+    "processes": [
+      "HPX-PROC-014",
+      "HPX-PROC-015"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/external-integrations.md",
+        "line": 113,
+        "quote": "### Target and matching",
+        "needle": "Target and matching",
+        "matched": true
+      },
+      {
+        "path": "docs/03-requirements/system-requirements.md",
+        "line": 105,
+        "quote": "The [workspace interface specification](<../06-subsystems/document-engine.md>) extends the desktop contract with independent chapter documents in versioned composite works, per-user/workspace protected provenance clipboards, explicit selection promotion, repeated paste-as-fork, pinned/live transclusion and contextual semantic assertions. Exact history, ownership, authorization and recovery are prerequisites for these durable capabilities. Clipboa",
+        "needle": "Zotero targets separately authenticated",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0455",
+      "HPX-EV-0110"
+    ]
+  },
+  {
+    "id": "HPX-CLM-029",
+    "classification": 7,
+    "claim": "AI providers and MCP must converge on core scoped operations; observable interaction evidence is not hidden reasoning.",
+    "scope": "Future agent/tool contract; detailed interaction schemas missing",
+    "processes": [
+      "HPX-PROC-012",
+      "HPX-PROC-015"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/document-engine.md",
+        "line": 107,
+        "quote": "Logical capabilities (identity, content/anchors, composition, revisions, references, provenance, snapshots, private clipboard, queries, permissions and integrations) are modules inside the application boundary, not mandatory microservices. Browser, REST and MCP converge on the same authorized planner/publication semantics. Canonical records, reconstructible indexes and protected private user state have distinct responsibilities. SQLite is an avai",
+        "needle": "Browser, REST and MCP converge",
+        "matched": true
+      },
+      {
+        "path": "docs/03-requirements/system-requirements.md",
+        "line": 101,
+        "quote": "Human and agent principals remain distinct. Context selection, model output and document instructions grant no permissions. Proposals freeze exact targets, action scope, model/actor attribution and expected state; approval rechecks current rights. Mock proposal/approval/recovery precedes live authoring. External model disclosure is explicit and mode-dependent.",
+        "needle": "Human and agent principals remain distinct",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0434",
+      "HPX-EV-0110"
+    ]
+  },
+  {
+    "id": "HPX-CLM-030",
+    "classification": 1,
+    "claim": "Four checked Lean model theorems and one extracted spend-helper theorem do not prove full Rust Kahn or application.",
+    "scope": "Dated checked evidence, not rerun",
+    "processes": [
+      "HPX-PROC-006",
+      "HPX-PROC-018"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/formal-validation-digest.md",
+        "line": 26,
+        "quote": "**Evidence date:** 2026-10-24. **Toolchain:** Lean/Lake 4.35.0. **Current inventory:** four checked Lean model theorems and one checked theorem about an Aeneas-extracted real Rust helper. The full Rust graph validator remains unproved. This is a maintained evaluation record for developers and mathematicians, not a claim that the application or Rust graph algorithm is formally verified.",
+        "needle": "Current inventory",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0743"
+    ]
+  },
+  {
+    "id": "HPX-CLM-031",
+    "classification": 2,
+    "claim": "Union of locally acyclic structural edge sets need not be acyclic; convergence requires additional acceptance semantics.",
+    "scope": "Logical counterexample, future federation",
+    "processes": [
+      "HPX-PROC-017"
+    ],
+    "sources": [
+      {
+        "path": "docs/05-domain/hypergraph-mathematics.md",
+        "line": 7,
+        "quote": "- **Purpose:** Constrained graph projections, traversal bounds and separation of structural/reference cycles.",
+        "needle": "cycle",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/component-architecture.md",
+        "line": 56,
+        "quote": "- Ordered placement representation, structural conflict acceptance and live text/branch concurrency semantics; a text CRDT does not validate graph moves.",
+        "needle": "CRDT",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0377",
+      "HPX-EV-0148"
+    ]
+  },
+  {
+    "id": "HPX-CLM-032",
+    "classification": 6,
+    "claim": "No complete deterministic repair protocol classifies authoritative mutable drafts versus reconstructible indexes.",
+    "scope": "Missing local recovery contract, not proof all records are reconstructible",
+    "processes": [
+      "HPX-PROC-003"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/component-architecture.md",
+        "line": 57,
+        "quote": "- Durable publication order, writer isolation, fsync/recovery, integrity verification, index rebuilding and draft acknowledgements.",
+        "needle": "index rebuilding",
+        "matched": true
+      },
+      {
+        "path": "docs/07-implementation/data-structures/sqlite-records.md",
+        "line": 44,
+        "quote": "## Indices and operations",
+        "needle": "Indices and operations",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0148",
+      "HPX-EV-0682"
+    ]
+  },
+  {
+    "id": "HPX-CLM-033",
+    "classification": 6,
+    "claim": "Exact portable certificate lifecycle and supported distribution/platform matrix are not completed by one local trust enrollment.",
+    "scope": "Portable deployment gate",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-016"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/local-browser-trust-proposal.md",
+        "line": 1,
+        "quote": "# Local browser certificate trust proposal",
+        "needle": null,
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0016-local-development-signing.md",
+        "line": 1,
+        "quote": "# Stable local development signing identity",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0760",
+      "HPX-EV-0280"
+    ]
+  },
+  {
+    "id": "HPX-CLM-034",
+    "classification": 2,
+    "claim": "Persistent receipt count grows with acknowledged operation count even when draft text slot is overwritten.",
+    "scope": "Analytical storage growth, no measured exhaustion",
+    "processes": [
+      "HPX-PROC-003"
+    ],
+    "sources": [
+      {
+        "path": "docs/07-implementation/data-structures/sqlite-records.md",
+        "line": 89,
+        "quote": "An absent slot is logical generation 0 with no entries. The first changing mutation creates generation 1; later changes use encrypted slot CAS. Exact-source recapture reuses its entry and generation, while each command retains its own encrypted receipt. Empty clear does not advance generation. The private clipboard admits up to 128 entries, rejecting overflow atomically rather than pruning source history. Removing/clearing references never delete",
+        "needle": "each command retains its own encrypted receipt",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0689"
+    ]
+  },
+  {
+    "id": "HPX-CLM-035",
+    "classification": 3,
+    "claim": "The storage execute function inserts a StoredReceipt for successful Save as well as publication commands.",
+    "scope": "Code corroboration of receipt growth; code is not source of intended requirement",
+    "processes": [
+      "HPX-PROC-003"
+    ],
+    "sources": [
+      {
+        "path": "crates/storage/src/lib.rs",
+        "line": 837,
+        "quote": "let receipt = Receipt { operation, outcome };",
+        "needle": "let receipt = Receipt { operation, outcome };",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-EXT-ca59a3bc2570"
+    ]
+  },
+  {
+    "id": "HPX-CLM-036",
+    "classification": 4,
+    "claim": "Repeated source validation/serialization may dominate large working-copy operations; no latency benchmark establishes a bottleneck.",
+    "scope": "Performance hypothesis supported by call shape",
+    "processes": [
+      "HPX-PROC-008"
+    ],
+    "sources": [
+      {
+        "path": "crates/storage/src/working.rs",
+        "line": 151,
+        "quote": "if serde_json::to_vec(request)",
+        "needle": "serde_json::to_vec(request)",
+        "matched": true
+      },
+      {
+        "path": "crates/storage/src/working_clipboard.rs",
+        "line": 222,
+        "quote": "let view = working::source_view(cipher, db, catalog, source.clone())?;",
+        "needle": "working::source_view",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-EXT-6d3b17f99de8",
+      "HPX-EV-EXT-db1c097f776c"
+    ]
+  },
+  {
+    "id": "HPX-CLM-037",
+    "classification": 6,
+    "claim": "Quantitative performance, complete accessibility and portable platform acceptance thresholds remain unspecified.",
+    "scope": "Assurance completeness gap",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/testing-strategy.md",
+        "line": 51,
+        "quote": "## Pass/fail or measurement thresholds",
+        "needle": "Pass/fail or measurement thresholds",
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0814"
+    ]
+  },
+  {
+    "id": "HPX-CLM-038",
+    "classification": 1,
+    "claim": "Retention is immutable by default; deletion/redaction requires separate approved design, not an automatic quota remedy.",
+    "scope": "All retained canonical history",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-008",
+      "HPX-PROC-016"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/decisions/0011-retained-history.md",
+        "line": 1,
+        "quote": "# Retained immutable committed history",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "evidence": [
+      "HPX-EV-0255"
+    ]
+  }
+]

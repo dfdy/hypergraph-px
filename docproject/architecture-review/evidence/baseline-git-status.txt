@@ -1,0 +1,67 @@
+ M crates/domain/src/lib.rs
+ M crates/domain/src/records.rs
+ M crates/runtime/src/main.rs
+ M crates/storage/src/encoding.rs
+ M crates/storage/src/history.rs
+ M crates/storage/src/lib.rs
+ M docs/02-governance/roadmap.md
+ M docs/03-requirements/acceptance-criteria.md
+ M docs/03-requirements/system-requirements.md
+ M docs/04-architecture/README.md
+ M docs/04-architecture/component-architecture.md
+ M docs/04-architecture/data-architecture.md
+ M docs/05-domain/core-object-model.md
+ M docs/05-domain/provenance-model.md
+ M docs/05-domain/text-and-anchors.md
+ M docs/06-subsystems/README.md
+ M docs/06-subsystems/external-integrations.md
+ M docs/06-subsystems/formats/hpx-workspace.md
+ M docs/06-subsystems/frontend-interaction.md
+ M docs/06-subsystems/interfaces/browser-runtime.md
+ M docs/06-subsystems/interfaces/domain-navigation.md
+ M docs/07-implementation/data-structures/sqlite-records.md
+ M docs/08-assurance/formal-validation-digest.md
+ M docs/09-guides/reference/DEVELOPMENT_STATE.md
+ M docs/09-guides/reference/implementation-resumption.md
+ M docs/registers/compatibility.csv
+ M docs/registers/decisions.csv
+ M docs/registers/document-inventory.csv
+ M docs/registers/open-questions.csv
+ M docs/registers/requirements.csv
+ M docs/registers/tests.csv
+ M docs/registers/traceability.csv
+ M frontend/scripts/check-runtime-workflow.mjs
+ M frontend/src/app.js
+ M frontend/src/history-panel.js
+ M frontend/src/publication-contributors.js
+ M frontend/src/runtime-adapter.js
+ M frontend/src/runtime-contributors.js
+ M frontend/src/runtime-graph.js
+ M frontend/styles.css
+ M frontend/tests/publication-contributors.test.js
+?? crates/domain/src/comment.rs
+?? crates/domain/src/working.rs
+?? crates/storage/src/branches.rs
+?? crates/storage/src/comments.rs
+?? crates/storage/src/working.rs
+?? crates/storage/src/working_clipboard.rs
+?? crates/storage/src/working_forks.rs
+?? docproject/
+?? docs/04-architecture/decisions/0017-initial-durable-comments.md
+?? docs/04-architecture/decisions/0018-initial-local-branches.md
+?? docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md
+?? docs/06-subsystems/import-export.md
+?? frontend/scripts/capture-runtime-readme.mjs
+?? frontend/scripts/comments-workflow.mjs
+?? frontend/scripts/history-isolation-workflow.mjs
+?? frontend/src/runtime-branches-panel.js
+?? frontend/src/runtime-comments-panel.js
+?? frontend/src/runtime-comments.js
+?? frontend/src/runtime-working-clipboard-panel.js
+?? frontend/src/runtime-working-clipboard.js
+?? frontend/tests/browser/contributor-colours.spec.js
+?? frontend/tests/browser/history-panel.spec.js
+?? frontend/tests/browser/working-branches.spec.js
+?? frontend/tests/runtime-branches.test.js
+?? frontend/tests/runtime-comments.test.js
+?? frontend/tests/runtime-working-clipboard.test.js

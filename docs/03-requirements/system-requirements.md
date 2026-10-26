@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
 Inherited accepted obligations remain effective. The editorial migration is proposed; no functionality is newly claimed delivered.
 
@@ -28,6 +28,8 @@ Observable requirements and invariant commitments, independent of implementation
 Observable requirements and invariant commitments, independent of implementation completeness. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Normative content
+
+Implementation-status words in retained source passages below belong to their recorded milestone. The [current scope/evidence summary](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) and [requirement register](../registers/requirements.csv) distinguish accepted obligations, local implementation, verified scope and future work. This clarification changes no requirement: in particular general composition, same-identity branch Merge, rights/authority, academic export, client-held mode and federation retain their full intended scope even where implementation is deferred. Thirty-one registered compound seeds and source-coverage counts are not an exhaustive set of individually verified atomic obligations.
 
 
 
@@ -139,3 +141,11 @@ Expose **Fork, Link, Embed, Merge and Copy** as distinct action names. The owner
 - **HPX-RQ-029:** Provide a read-only graph of any selected authorised nodes as labelled circles and their relationships as labelled connectors, preserving direction, n-ary roles, context, completeness and evidence status. See [graph view contract](../06-subsystems/graph-engine.md#owner-approved-selected-node-graph-view-2026-10-25).
 
 The owner explicitly deferred the separately proposed statement/relationship-to-Lean conversion workflow. It is not an adopted requirement or an enabled feature by this review.
+
+## Owner-confirmed future bundled export scope, 2026-10-26
+
+HPX-RQ-030 records future embedded/bundled Pandoc integration without a separate user installation, targeting .docx/.odt/.rtf/.html/.tex/.typ/.xml/.json and academic citation styles including APA/Harvard/Chicago/IEEE with bibliographies. Offer selected-document main-branch output and explicitly selectable additional branches, provenance, annotations and sentence/paragraph/section/other-node relationships. Define native representations and readable fallbacks per format, preserve exact source/view/role/evidence context and append permitted unresolved-rights reports without blocking export solely for such disputes. Existing authorization and confidentiality/egress rules remain mandatory. This is accepted future product scope, not an immediate implementation priority, converter/version adoption or a claim of installed writer support. See the [planned export contract](../06-subsystems/import-export.md).
+
+## HPX-RQ-031: private working branches and exact provenance checkpoints
+
+The owner explicitly adopted [ADR019](../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md) on2026-10-26. Pending edits belong to a private working branch associated with the selected content branch. Autosave acknowledges that branch's exact recoverable buffer; provenance-bearing copy/paste can automatically retain an exact immutable checkpoint without advancing published content. Explicit Commit remains the publication boundary. Exact source correspondence may produce new committed replacement references with inspectable predecessor/promotion evidence; original links/checkpoints remain retained. Changed source stays historical working evidence until explicit review, without heuristic relocation. Current authorization applies to capture, replay, inspection and replacement. This accepted design precedes branch UI integration; backend tests are not complete clipboard/paste/branch delivery evidence.

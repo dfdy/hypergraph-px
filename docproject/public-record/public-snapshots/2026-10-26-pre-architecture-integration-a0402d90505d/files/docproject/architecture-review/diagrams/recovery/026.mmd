@@ -1,0 +1,15 @@
+%% HPX-DIAG-026 — Request and operation failure propagation
+%% Scope: Which failures reject, remain uncertain, or need scoped compensation?
+%% Local unless explicitly F / G
+flowchart TD
+ A["Incoming operation"] --> G{"TLS/session/framing/limit valid?"}
+ G -->|"no"| R["Reject before application route"]
+ G -->|"yes"| V{"Current authority / exact source / generation valid?"}
+ V -->|"no"| C["Conflict or integrity error; no writes"]
+ V -->|"yes"| T["One SQLite mutation transaction"]
+ T -->|"error/crash before COMMIT"| O["Old state after reopen"]
+ T -->|"COMMIT durable"| N["New state plus original receipt"]
+ N --> Q{"Reply known?"}
+ Q -->|"no"| U["Unknown; reconcile frozen receipt, preserve later typing"]
+ Q -->|"yes"| E["Exact outcome"]
+ L["Legend: workflow/control; external keychain/provider effects use their separate compensation views"]

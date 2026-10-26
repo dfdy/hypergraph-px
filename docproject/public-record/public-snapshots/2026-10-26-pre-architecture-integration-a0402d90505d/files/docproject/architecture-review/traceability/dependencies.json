@@ -1,0 +1,696 @@
+{
+  "local_crates": {
+    "hypergraph-crypto": "crates/crypto/Cargo.toml",
+    "hypergraph-domain": "crates/domain/Cargo.toml",
+    "hypergraph-keychain": "crates/keychain/Cargo.toml",
+    "hypergraph-runtime": "crates/runtime/Cargo.toml",
+    "hypergraph-storage": "crates/storage/Cargo.toml"
+  },
+  "crate_edges": [
+    [
+      "hypergraph-runtime",
+      "hypergraph-keychain"
+    ],
+    [
+      "hypergraph-runtime",
+      "hypergraph-storage"
+    ],
+    [
+      "hypergraph-runtime",
+      "hypergraph-domain"
+    ],
+    [
+      "hypergraph-storage",
+      "hypergraph-keychain"
+    ],
+    [
+      "hypergraph-storage",
+      "hypergraph-domain"
+    ],
+    [
+      "hypergraph-storage",
+      "hypergraph-crypto"
+    ]
+  ],
+  "crate_cycles": [],
+  "frontend_modules": [
+    "frontend/src/adapter.js",
+    "frontend/src/app.js",
+    "frontend/src/assertion-composer.js",
+    "frontend/src/assertion-history.js",
+    "frontend/src/assertion-properties.js",
+    "frontend/src/authorship.js",
+    "frontend/src/captured-assertion.js",
+    "frontend/src/column-widths.js",
+    "frontend/src/context-actions.js",
+    "frontend/src/contributor-evidence.js",
+    "frontend/src/control-labels.js",
+    "frontend/src/document-fork-graph.js",
+    "frontend/src/document-presentation.js",
+    "frontend/src/fixtures.js",
+    "frontend/src/formatting.js",
+    "frontend/src/functions-bar.js",
+    "frontend/src/history-panel.js",
+    "frontend/src/math-view.js",
+    "frontend/src/math.js",
+    "frontend/src/merge-composer.js",
+    "frontend/src/minimap.js",
+    "frontend/src/outline-tree.js",
+    "frontend/src/overlay-graph.js",
+    "frontend/src/owned-source.js",
+    "frontend/src/publication-contributors.js",
+    "frontend/src/relationship-catalog.js",
+    "frontend/src/relationship-details.js",
+    "frontend/src/relationship-dialog.js",
+    "frontend/src/relationship-markers.js",
+    "frontend/src/relationships.js",
+    "frontend/src/runtime-adapter.js",
+    "frontend/src/runtime-assertions-panel.js",
+    "frontend/src/runtime-assertions.js",
+    "frontend/src/runtime-branches-panel.js",
+    "frontend/src/runtime-clipboard-panel.js",
+    "frontend/src/runtime-clipboard.js",
+    "frontend/src/runtime-comments-panel.js",
+    "frontend/src/runtime-comments.js",
+    "frontend/src/runtime-contributors.js",
+    "frontend/src/runtime-derivation.js",
+    "frontend/src/runtime-graph.js",
+    "frontend/src/runtime-working-clipboard-panel.js",
+    "frontend/src/runtime-working-clipboard.js",
+    "frontend/src/selection.js",
+    "frontend/src/sentence-provenance-view.js",
+    "frontend/src/sentence-provenance.js",
+    "frontend/src/source-markers.js",
+    "frontend/src/source-selection.js",
+    "frontend/src/structure-guides.js",
+    "frontend/src/table-view.js",
+    "frontend/src/tables.js",
+    "frontend/src/tooltips.js"
+  ],
+  "frontend_static_import_edges": [
+    [
+      "frontend/src/app.js",
+      "frontend/src/adapter.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/assertion-properties.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/authorship.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/column-widths.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/context-actions.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/document-presentation.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/fixtures.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/formatting.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/functions-bar.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/history-panel.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/math-view.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/merge-composer.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/minimap.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/outline-tree.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/owned-source.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/relationship-catalog.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/relationship-details.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/relationship-dialog.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/relationship-markers.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/relationships.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/runtime-adapter.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/runtime-assertions-panel.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/runtime-branches-panel.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/runtime-clipboard-panel.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/runtime-comments-panel.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/runtime-contributors.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/runtime-derivation.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/runtime-graph.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/runtime-working-clipboard-panel.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/sentence-provenance-view.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/sentence-provenance.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/source-selection.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/structure-guides.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/table-view.js"
+    ],
+    [
+      "frontend/src/app.js",
+      "frontend/src/tooltips.js"
+    ],
+    [
+      "frontend/src/assertion-history.js",
+      "frontend/src/assertion-properties.js"
+    ],
+    [
+      "frontend/src/captured-assertion.js",
+      "frontend/src/assertion-properties.js"
+    ],
+    [
+      "frontend/src/captured-assertion.js",
+      "frontend/src/runtime-assertions.js"
+    ],
+    [
+      "frontend/src/document-presentation.js",
+      "frontend/src/source-markers.js"
+    ],
+    [
+      "frontend/src/functions-bar.js",
+      "frontend/src/context-actions.js"
+    ],
+    [
+      "frontend/src/functions-bar.js",
+      "frontend/src/selection.js"
+    ],
+    [
+      "frontend/src/math-view.js",
+      "frontend/src/authorship.js"
+    ],
+    [
+      "frontend/src/math-view.js",
+      "frontend/src/math.js"
+    ],
+    [
+      "frontend/src/math-view.js",
+      "frontend/src/tables.js"
+    ],
+    [
+      "frontend/src/merge-composer.js",
+      "frontend/src/owned-source.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/authorship.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/document-presentation.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/math-view.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/math.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/relationship-markers.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/relationships.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/sentence-provenance-view.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/sentence-provenance.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/table-view.js"
+    ],
+    [
+      "frontend/src/minimap.js",
+      "frontend/src/tables.js"
+    ],
+    [
+      "frontend/src/overlay-graph.js",
+      "frontend/src/assertion-properties.js"
+    ],
+    [
+      "frontend/src/overlay-graph.js",
+      "frontend/src/document-fork-graph.js"
+    ],
+    [
+      "frontend/src/overlay-graph.js",
+      "frontend/src/runtime-assertions.js"
+    ],
+    [
+      "frontend/src/relationship-catalog.js",
+      "crates/storage/src/predicate-catalog-v1.json"
+    ],
+    [
+      "frontend/src/relationship-details.js",
+      "frontend/src/relationship-catalog.js"
+    ],
+    [
+      "frontend/src/relationship-dialog.js",
+      "frontend/src/assertion-properties.js"
+    ],
+    [
+      "frontend/src/relationship-dialog.js",
+      "frontend/src/relationship-catalog.js"
+    ],
+    [
+      "frontend/src/relationship-dialog.js",
+      "frontend/src/relationship-details.js"
+    ],
+    [
+      "frontend/src/relationship-markers.js",
+      "frontend/src/assertion-properties.js"
+    ],
+    [
+      "frontend/src/relationship-markers.js",
+      "frontend/src/relationship-catalog.js"
+    ],
+    [
+      "frontend/src/relationship-markers.js",
+      "frontend/src/relationships.js"
+    ],
+    [
+      "frontend/src/relationships.js",
+      "frontend/src/assertion-properties.js"
+    ],
+    [
+      "frontend/src/relationships.js",
+      "frontend/src/context-actions.js"
+    ],
+    [
+      "frontend/src/relationships.js",
+      "frontend/src/document-presentation.js"
+    ],
+    [
+      "frontend/src/relationships.js",
+      "frontend/src/math.js"
+    ],
+    [
+      "frontend/src/relationships.js",
+      "frontend/src/relationship-catalog.js"
+    ],
+    [
+      "frontend/src/runtime-adapter.js",
+      "frontend/src/captured-assertion.js"
+    ],
+    [
+      "frontend/src/runtime-adapter.js",
+      "frontend/src/document-fork-graph.js"
+    ],
+    [
+      "frontend/src/runtime-adapter.js",
+      "frontend/src/overlay-graph.js"
+    ],
+    [
+      "frontend/src/runtime-adapter.js",
+      "frontend/src/publication-contributors.js"
+    ],
+    [
+      "frontend/src/runtime-adapter.js",
+      "frontend/src/runtime-assertions.js"
+    ],
+    [
+      "frontend/src/runtime-adapter.js",
+      "frontend/src/runtime-clipboard.js"
+    ],
+    [
+      "frontend/src/runtime-adapter.js",
+      "frontend/src/runtime-comments.js"
+    ],
+    [
+      "frontend/src/runtime-adapter.js",
+      "frontend/src/runtime-working-clipboard.js"
+    ],
+    [
+      "frontend/src/runtime-assertions-panel.js",
+      "frontend/src/assertion-composer.js"
+    ],
+    [
+      "frontend/src/runtime-assertions-panel.js",
+      "frontend/src/assertion-history.js"
+    ],
+    [
+      "frontend/src/runtime-assertions-panel.js",
+      "frontend/src/assertion-properties.js"
+    ],
+    [
+      "frontend/src/runtime-assertions.js",
+      "frontend/src/assertion-properties.js"
+    ],
+    [
+      "frontend/src/runtime-comments-panel.js",
+      "frontend/src/owned-source.js"
+    ],
+    [
+      "frontend/src/runtime-comments.js",
+      "frontend/src/runtime-assertions.js"
+    ],
+    [
+      "frontend/src/runtime-contributors.js",
+      "frontend/src/contributor-evidence.js"
+    ],
+    [
+      "frontend/src/runtime-contributors.js",
+      "frontend/src/publication-contributors.js"
+    ],
+    [
+      "frontend/src/runtime-graph.js",
+      "frontend/src/document-fork-graph.js"
+    ],
+    [
+      "frontend/src/selection.js",
+      "frontend/src/context-actions.js"
+    ],
+    [
+      "frontend/src/sentence-provenance-view.js",
+      "frontend/src/sentence-provenance.js"
+    ],
+    [
+      "frontend/src/sentence-provenance.js",
+      "frontend/src/document-presentation.js"
+    ],
+    [
+      "frontend/src/sentence-provenance.js",
+      "frontend/src/math.js"
+    ],
+    [
+      "frontend/src/source-markers.js",
+      "frontend/src/math.js"
+    ],
+    [
+      "frontend/src/source-selection.js",
+      "frontend/src/math.js"
+    ],
+    [
+      "frontend/src/source-selection.js",
+      "frontend/src/selection.js"
+    ],
+    [
+      "frontend/src/source-selection.js",
+      "frontend/src/tables.js"
+    ],
+    [
+      "frontend/src/structure-guides.js",
+      "frontend/src/document-presentation.js"
+    ],
+    [
+      "frontend/src/table-view.js",
+      "frontend/src/authorship.js"
+    ],
+    [
+      "frontend/src/table-view.js",
+      "frontend/src/math-view.js"
+    ],
+    [
+      "frontend/src/table-view.js",
+      "frontend/src/tables.js"
+    ],
+    [
+      "frontend/src/tooltips.js",
+      "frontend/src/control-labels.js"
+    ]
+  ],
+  "frontend_cycles": [],
+  "unresolved_relative_imports": [],
+  "storage_super_glob_imports": [
+    {
+      "path": "crates/storage/src/anchors.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/anchors.rs",
+      "line": 50,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/assertions.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/assertions.rs",
+      "line": 903,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/branches.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/branches.rs",
+      "line": 654,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/clipboard.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/clipboard.rs",
+      "line": 406,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/comments.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/comments.rs",
+      "line": 326,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/contributors.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/contributors.rs",
+      "line": 176,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/encoding.rs",
+      "line": 43,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/encoding.rs",
+      "line": 58,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/encoding.rs",
+      "line": 73,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/encoding.rs",
+      "line": 91,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/encoding.rs",
+      "line": 156,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/forks.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/forks.rs",
+      "line": 201,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/graph.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/graph.rs",
+      "line": 144,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/history.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/history.rs",
+      "line": 221,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/keychain.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/keychain.rs",
+      "line": 390,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/lib.rs",
+      "line": 1283,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/merges.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/merges.rs",
+      "line": 262,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/overlay_graph.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/overlay_graph.rs",
+      "line": 207,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/predicates.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/predicates.rs",
+      "line": 185,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/working.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/working.rs",
+      "line": 555,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/working_clipboard.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/working_clipboard.rs",
+      "line": 497,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/working_forks.rs",
+      "line": 3,
+      "test_section_included": true
+    },
+    {
+      "path": "crates/storage/src/working_forks.rs",
+      "line": 192,
+      "test_section_included": true
+    }
+  ],
+  "limits": [
+    "Cargo normal local path dependencies only; no build/dev/target-conditional external graph.",
+    "Frontend static relative imports via conservative regex; dynamic imports/runtime calls/global shared state may be absent.",
+    "Storage super::* observations include test modules; they show shared namespace dependence, not precise call cycles.",
+    "Crate-level DAG does not prove runtime, semantic, callback or store-access acyclicity."
+  ]
+}

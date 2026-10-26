@@ -1,0 +1,46 @@
+{
+  "verified_at": "2026-10-26T22:09:35.320866+02:00",
+  "scope": "Documentation refinement only; no application test/proof replay or publication",
+  "snapshot": "docproject/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d",
+  "snapshot_files_rechecked": 327,
+  "archive_sha256_pass": true,
+  "independent_shasum_pass": true,
+  "archive_control_files_rechecked": 9,
+  "original_files_lost": 0,
+  "protected_preexisting_files_checked": 231,
+  "protected_files_changed": [],
+  "requirement_entries_non_status_fields_unchanged": 31,
+  "core_domain_ADR_formal_legal_files_unchanged": 29,
+  "unchanged_CSV_rows_preserved_byte_for_byte": 3399,
+  "changed_CSV_rows_with_original_endings": 40,
+  "diagram_sources_and_SVG_pairs_unchanged": 51,
+  "review_local_links_checked": 1379,
+  "review_broken_links": [],
+  "offline_viewer_checks": {
+    "headless": true,
+    "network": "All requests aborted; inline SVG and JS only",
+    "personal_profile": false,
+    "application_runtime": false,
+    "checks": [
+      "51 selectable diagrams",
+      "exact selection",
+      "process search",
+      "linked child navigation",
+      "zoom control",
+      "no page JavaScript errors"
+    ],
+    "passed": true
+  },
+  "finding_dispositions": {
+    "B": 5,
+    "A": 5,
+    "D": 3,
+    "C": 7
+  },
+  "git_commit": "a0402d90505d2e667fcd00fab793eb56d279a7cb",
+  "git_branch": "main",
+  "publication_status": "INTENDED_FOR_PUBLIC_RELEASE — NOT_YET_APPROVED",
+  "pending_security_decision": "HPX-GAP-023; owner clarification only, no exception or witness approved",
+  "errors": [],
+  "passed": true
+}

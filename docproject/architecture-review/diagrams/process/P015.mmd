@@ -1,0 +1,12 @@
+%% HPX-DIAG-P015 — External integrations and shared interfaces subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-015<br/>External integrations and shared interfaces"]
+ P --> C0["HPX-PROC-015.001<br/>Read Zotero desktop library<br/>F"]
+ P --> C1["HPX-PROC-015.002<br/>Read Zotero cloud library<br/>F"]
+ P --> C2["HPX-PROC-015.003<br/>Connect GitHub and select destination<br/>F"]
+ P --> C3["HPX-PROC-015.004<br/>Publish reviewed Markdown to GitHub<br/>F"]
+ P --> C4["HPX-PROC-015.005<br/>Store create-only encrypted remote backup<br/>F"]
+ P --> C5["HPX-PROC-015.006<br/>Expose common REST and MCP commands<br/>F"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

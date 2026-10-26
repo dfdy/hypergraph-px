@@ -1,0 +1,20 @@
+%% HPX-DIAG-025 — Trust and plaintext boundaries
+%% Scope: Where is plaintext visible, and which guarantees depend on trusted delivery or the host?
+%% Local unless explicitly F / G
+flowchart TB
+ subgraph UNTRUSTED["Untrusted inputs / external services"]
+ I["Requests / packages / provider output"]
+ P["F: model / GitHub / export recipient"]
+ end
+ subgraph HOST["Trusted host assumption - unlocked process and browser can see plaintext"]
+ B["Same-origin client code and owned plaintext"] -->|"verified HTTPS / exact Origin / cookie"| R["Authorized application route"]
+ R --> A{"Current authority and expected source?"}
+ A -->|"yes"| C["Plaintext processing in trusted-server mode"]
+ A -->|"no"| X["Deny without mutation/disclosure"]
+ C --> K["AEAD using caller-expected context"]
+ K --> D[("Encrypted SQLite and WAL; metadata remains visible")]
+ end
+ I -->|"strict parser and bounds"| R
+ C -.->|"F: approved trusted-mode egress only"| P
+ N["Client-held unavailable; non-trusted plaintext egress denied; independent trusted client needed against hostile host delivery"]
+ L["Legend: dashed = gated future egress; encryption at rest does not protect unlocked host compromise or whole-DB rollback"]

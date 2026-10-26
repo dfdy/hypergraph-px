@@ -179,3 +179,7 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 - `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 15–22; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 23–28; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 29–37; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Future bundled Pandoc compilation
+
+The owner confirmed HPX-RQ-030 as future scope on 2026-10-26. [Import/export specification HPX-SUB-008](import-export.md) now records the target formats, captured academic citation styles and bibliographies, explicit main/additional branch and hypergraph-content selection, native/fallback relationship representations and appended unresolved-rights report. Keep existing exact-source choices and confidentiality/authorization gates. Packaging, binding, profile schemas and deterministic resource capture remain design gates; no new converter/provider is enabled or installed.

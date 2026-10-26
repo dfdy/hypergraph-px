@@ -1,0 +1,15 @@
+%% HPX-DIAG-024 — Future export and Word review workflows
+%% Scope: Where must selection, review, ambiguity and egress approval remain explicit?
+%% Future only
+flowchart LR
+ U["Human chooses operation"] --> Q{"Export or Word review?"}
+ Q -->|"export"| C["Freeze exact branch/graph closure and resources"]
+ C --> P["Compile versioned profile; role fallback and rights report"]
+ P --> E{"Current egress permitted?"}
+ E -->|"yes"| A["Deliver exact approved artifact"]
+ E -->|"no"| X["Denied; no plaintext destination"]
+ Q -->|"import Word review"| W["Bound archive; no macros/network; choose exact base"]
+ W --> M{"Exact / ambiguous / unmatched?"}
+ M --> R["Explicit human review; unverified Word identity kept separate"]
+ R --> H["Revalidate targets and authority before apply"]
+ L["Legend: all F; no selected compiler, DOCX apply protocol or XML/JSON schema is implied"]

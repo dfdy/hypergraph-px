@@ -1,0 +1,19 @@
+{
+  "name": "mermaid",
+  "version": "11.12.2",
+  "license": "MIT",
+  "repository": {
+    "url": "git+https://github.com/mermaid-js/mermaid.git",
+    "type": "git"
+  },
+  "registry_metadata": "https://registry.npmjs.org/mermaid/11.12.2",
+  "tarball": "https://registry.npmjs.org/mermaid/-/mermaid-11.12.2.tgz",
+  "integrity": "sha512-n34QPDPEKmaeCG4WDMGy0OT6PSyxKCfy2pJgShP+Qow2KLrvWjclwbc3yXfSIf4BanqWEhQEpngWwNp/XhZt6w==",
+  "bundle_sha256": "d0830a6c05546e9edb8fe20a8f545f3e0dc7c4c3134d584bad9c13a99d7a71e0",
+  "bundle_bytes": 2754895,
+  "cache": "<RENDERER_CACHE>",
+  "license_members": [
+    "package/LICENSE"
+  ],
+  "installation": "No package installation or lifecycle scripts; selected static files extracted only"
+}

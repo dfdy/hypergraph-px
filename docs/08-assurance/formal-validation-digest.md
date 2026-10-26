@@ -194,3 +194,11 @@ Initial replay attempts failed on unrelated registry resolution, then on changed
 ## 1.0.0 source-publication replay, 2026-10-26
 
 The existing pinned translator/Charon bundle was selected explicitly from its local cache, and Lean/Lake 4.35.0 was selected explicitly after default-path attempts reported missing tools. Fresh extraction from the unchanged Rust helper again matched the tracked generated Spend.lean bytes; locked backend dependencies, theorem build, the same three-standard-axiom report and leanchecker SpendProof passed. The four unchanged graph model theorems and leanchecker Hypergraph also passed. Project package metadata is now 1.0.0; source/proof hashes and toolchain pins remain unchanged. Ordinary Rust/storage/browser checks are recorded separately in the current development state and do not extend this bounded proof correspondence.
+
+## Replay with the added comment planner, 2026-10-26
+
+Adding the dependency-free `comment` module did not change the pinned expansion/spend source or existing Lean models. Fresh Charon/Aeneas extraction again matched Spend.lean exactly; locked dependency/build checks, the unchanged three-standard-axiom report and leanchecker SpendProof passed. The comment planner has ordinary executable tests only; this replay establishes no new comment/storage/crypto/UI correspondence theorem. The four graph-model results retain their prior recorded replay scope.
+
+## Working-checkpoint planner boundary, 2026-10-26
+
+`crates/domain/src/working.rs` adds a dependency-free exact acknowledged-source/range/quote capture planner and the distinct CheckpointId identity. Ordinary Rust cases exercise repeated Unicode/mixed newlines and stale/split/empty/mismatched inputs. These additions are not extracted or checked by the recorded spend-helper/graph Lean correspondence. The spend/expansion sources are unchanged; no new proof replay, checkpoint theorem or whole-application correspondence is claimed. Storage checkpoint/promotion and branch operations are separate executable-test evidence.

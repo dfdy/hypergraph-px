@@ -13,9 +13,9 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
-OWNER-003 requires serialization outside domain. Current domain Serde usage is nonconforming local work to refactor later, without changing code here.
+OWNER-003 requires serialization outside domain. That refactor is implemented: [ADR006](decisions/0006-domain-serialization-boundary.md) records adapter-owned codecs and dependency-free domain records. Current readiness and unfinished integration are summarized in the [development state](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary); historical status below is retained with its original scope.
 
 Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 
@@ -29,7 +29,9 @@ Pure domain, application, storage/crypto and transport dependency directions. Th
 
 ## Normative content
 
-Owner-approved boundary: domain types and deterministic validators do not depend on Serde, SQLite, HTTP or cryptographic/key providers. Storage/transport representations belong to their adapters with explicit checked conversions. Purity is not identical to dependency freedom. Current Serde derives/dependency in domain are an implementation discrepancy; this migration does not remove them. The [serialization decision](decisions/0006-domain-serialization-boundary.md) records the required follow-up.
+Owner-approved boundary: domain types and deterministic validators do not depend on Serde, SQLite, HTTP or cryptographic/key providers. Storage/transport representations belong to their adapters with explicit checked conversions. Purity is not identical to dependency freedom. The [serialization decision](decisions/0006-domain-serialization-boundary.md) records the completed local refactor and its compatibility evidence. This documentation integration changes no code or representation.
+
+The following retained source table's implementation-status column describes its earlier checkpoint, not current delivery. Application authorization/orchestration is a logical responsibility currently hosted in `crates/storage`; it does not require a separate crate or service. Browser/REST and future MCP/provider adapters must use the same authorized command/expected-state/receipt semantics. Keep current authority checks before protected replay. A new application module, crate, caching layer or finer lock is not mandated by the review: demonstrate a concrete benefit and preserve transaction/authority boundaries first.
 
 ### Responsibility boundaries
 
@@ -62,6 +64,8 @@ Source `HPX-SRC-0021`, original lines 50–60. Preserved contract/evidence wordi
 Make routine mechanism choices within the approved requirements and record them in an ADR before code. Ask only when a consequential unresolved product/security decision requires owner input. Local publication timestamps cannot establish global federation causality. MLS is a candidate transport/group-key mechanism, not an adopted graph synchronization protocol.
 
 ### Workspace reuse and investigation design dependencies
+
+The retained passage below predates accepted [ADR019](decisions/0019-working-branches-and-reference-checkpoints.md). Its explicit-publication wording describes committed-source promotion; it is not permission to force Commit for pending-source copy. Accepted private working checkpoints retain exact pending bytes without Commit, with separate post-Commit replacement batches. General multi-owner composition and Paste All remain separately gated.
 
 Source `HPX-SRC-0021`, original lines 72–81. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
@@ -96,3 +100,7 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 - `HPX-SRC-0021` — `Specifications/ARCHITECTURE.md`, lines 13–27; SHA-256 `74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0021` — `Specifications/ARCHITECTURE.md`, lines 50–60; SHA-256 `74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0021` — `Specifications/ARCHITECTURE.md`, lines 72–81; SHA-256 `74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Future bundled document conversion boundary
+
+Owner-confirmed HPX-RQ-030 adds a future Pandoc conversion adapter behind the application-authorized export plan. Keep the pure domain independent of converter libraries, file serialization and process execution; capture exact content/branch/annotation/citation resources before conversion, and recheck egress/permissions before delivery. Reconcile embedded versus bundled-helper packaging with the single Rust executable requirement before adoption; do not introduce a user-installed Pandoc dependency as a fallback. Versions, licenses, bindings, helpers, target profiles and limits require review. No converter is selected or installed by this architecture refinement. See [format scope and fallbacks](../06-subsystems/import-export.md).

@@ -1,0 +1,11 @@
+%% HPX-DIAG-P017 — Future collaboration and federation subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-017<br/>Future collaboration and federation"]
+ P --> C0["HPX-PROC-017.001<br/>Exchange causal operations<br/>F"]
+ P --> C1["HPX-PROC-017.002<br/>Reconcile concurrent text and structure<br/>F"]
+ P --> C2["HPX-PROC-017.003<br/>Reconcile membership and historical keys<br/>F"]
+ P --> C3["HPX-PROC-017.004<br/>Recover from partitions and retries<br/>F"]
+ P --> C4["HPX-PROC-017.005<br/>Resolve cross-instance authority<br/>F"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

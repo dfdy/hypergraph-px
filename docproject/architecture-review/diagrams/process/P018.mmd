@@ -1,0 +1,12 @@
+%% HPX-DIAG-P018 — Assurance, build and governance subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-018<br/>Assurance, build and governance"]
+ P --> C0["HPX-PROC-018.001<br/>Check mathematical models and extraction<br/>L"]
+ P --> C1["HPX-PROC-018.002<br/>Validate complete edit/recovery workflows<br/>L"]
+ P --> C2["HPX-PROC-018.003<br/>Assess performance, usability and accessibility<br/>F"]
+ P --> C3["HPX-PROC-018.004<br/>Prepare explicitly authorized publication<br/>L"]
+ P --> C4["HPX-PROC-018.005<br/>Record decisions and maintain traceability<br/>L"]
+ P --> C5["HPX-PROC-018.006<br/>Review dependencies and build executable<br/>L"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

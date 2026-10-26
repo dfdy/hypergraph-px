@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
 
 
@@ -109,3 +109,15 @@ Anchor resolution requires an exact document, snapshot, revision, full occurrenc
 ## Bounded publication-contributor adapter query
 
 `Workspace::publication_contributors` derives publisher evidence from the same validated immutable ancestry used by `history_page`. It is an adapter query in [contributors.rs](../../../crates/storage/src/contributors.rs), not a new pure-domain identity or authoritative index. The requested snapshot binds the first event; encrypted continuation tokens bind every later page to that document/snapshot lineage while current permission is rechecked. The [runtime contract](browser-runtime.md#snapshot-bound-publication-contributors) specifies its incomplete family coverage, resource bounds, current-context pins and nonpersistent cursor representation. No new durable record or source write is performed.
+
+## Initial immutable comment paging
+
+`Workspace::comments_page` in `crates/storage/src/comments.rs` uses one authorized SQLite read transaction and an exact text-snapshot context. It follows an inclusive immutable revision cursor through the separate document comment paging chain, checks original command receipts/digests and exact participant sources, and reports retrospective comment scope explicitly. New comments do not shift older pages; no automatic retention cap/pruning or same-node ancestry is inferred from this chain. The pure domain comment planner remains independent of DTOs/codecs/storage. Exact bounds are specified in the runtime and record references; actual executable evidence is tracked separately.
+
+## Working-source boundary
+
+[ADR019](../../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md) is adopted and has gated local content/working-branch context and typed immutable checkpoint source DTOs. Capture the exact owned source/sequence before asynchronous work; never resolve an old reference through a moving branch head. Current document-only routes retain their original designated branch. Separate versioned working-source records preserve the existing committed Source shape; do not append working variants silently to strict legacy payloads. Promotion can add exact replacement evidence through a separate post-Commit batch; changed source remains pinned for review. The following wiring checkpoint and [current evidence](../../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) state the unfinished runtime/reader acceptance.
+
+## Gated branch/working navigation wiring, 2026-10-26
+
+RuntimeAdapter now retains buffer identity independently of selected document projection: queued mutations resolve a frozen document/content-branch context, child writes carry the branch explicitly, and lock drains all retained buffers. The app caches CodeMirror state/selection/undo/scroll under that context and shows committed-source review before creating a child. Branch history uses encrypted document/branch/snapshot-bound cursors; back/forward paging retains the original view snapshot after newer commits. Current doc-only routes keep original-branch meaning. Adaptive source capture saves exact pending source before an atomic private working checkpoint/reference; committed bytes retain the existing committed-reference route. Text Commit and private replacement batches are independent acknowledgements. Capability advertisement and actual runtime acceptance remain held; component/mocked checks are not an integrated navigation delivery claim.

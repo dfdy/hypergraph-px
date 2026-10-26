@@ -1,0 +1,356 @@
+{
+  "renderer": "11.12.2",
+  "browser": "<LOCAL_BROWSER_CACHE>/chromium-1248/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "headless": true,
+  "network": "All browser requests aborted; no personal profile or app server",
+  "results": [
+    {
+      "id": "HPX-DIAG-001",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1232.484375 762.3198852539062",
+      "elapsed_ms": 81,
+      "source_sha256": "75fbfebf65a0815ec09f1c8b7b0865c947ae3148eb444054b94640f808eee9c5"
+    },
+    {
+      "id": "HPX-DIAG-002",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1916 1116.426513671875",
+      "elapsed_ms": 23,
+      "source_sha256": "a78544b3248720e34abf2f75a5848a6042cfd9349937fc379cd98c67a6f688cf"
+    },
+    {
+      "id": "HPX-DIAG-003",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1181.21875 726",
+      "elapsed_ms": 14,
+      "source_sha256": "690a286523880a4537ebe7789af543c855d52a3db9d0ab31573cc5f3a2b25d49"
+    },
+    {
+      "id": "HPX-DIAG-004",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P001",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P002",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P003",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P004",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P005",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P006",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P007",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P008",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P009",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P010",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P011",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P012",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P013",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P014",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P015",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P016",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P017",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-P018",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-005",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1122.46875 387",
+      "elapsed_ms": 12,
+      "source_sha256": "bbe7ee8ec40799f33fb8010cb941c6a574f89c642f826deae74f5827a09b89a0"
+    },
+    {
+      "id": "HPX-DIAG-006",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-007",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1608.109375 410.95703125",
+      "elapsed_ms": 10,
+      "source_sha256": "dd292cb6fb857452a22a6002458c14eab7314dd95964ce4aff94207cb0aeeec4"
+    },
+    {
+      "id": "HPX-DIAG-008",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1628.59375 498.9264831542969",
+      "elapsed_ms": 9,
+      "source_sha256": "7979dfa46ff4dbc92a292f4080a7a764deefa04832c7bf99268cdc5f8ad5a2e1"
+    },
+    {
+      "id": "HPX-DIAG-009",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1556.125 504.3171081542969",
+      "elapsed_ms": 11,
+      "source_sha256": "594e20e1439bfb015635664364103ad669cb9ec53a984d84bdb44bd8c5cf4de3"
+    },
+    {
+      "id": "HPX-DIAG-010",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 669 1282.25",
+      "elapsed_ms": 43,
+      "source_sha256": "961709acad813a1bf10750d9a7cb42aaeaa14fe599880f8f2ebcabb062dfbde5"
+    },
+    {
+      "id": "HPX-DIAG-011",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0.9247512817382812 2091.234375 398.07525634765625",
+      "elapsed_ms": 13,
+      "source_sha256": "d305b388477219cfd71819811a2bcdcee14c2a0c14ca0fa2659bcfb868700ae3"
+    },
+    {
+      "id": "HPX-DIAG-012",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-013",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Parse error on line 20:\n...ping is not promised\n-----------------------^\nExpecting 'SOLID_OPEN_ARROW', 'DOTTED_OPEN_ARROW', 'SOLID_ARROW', 'BIDIRECTIONAL_SOLID_ARROW', 'DOTTED_ARROW', 'BIDIRECTIONAL_DOTTED_ARROW', 'SOLID_CROSS', 'DOTTED_CROSS', 'SOLID_POINT', 'DOTTED_POINT', got 'NEWLINE'\n    at Parser.parseError (<RENDERER_CACHE>/mermaid.min.js:1629:15160)\n    at Parser.parse (<RENDERER_CACHE>/mermaid.min.js:1631:179)\n    at Diagram.fromText (<RENDERER_CACHE>/mermaid.min.js:2764:256)\n    at async Object.parse (<RENDERER_CACHE>/mermaid.min.js:2765:1406)"
+    },
+    {
+      "id": "HPX-DIAG-014",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Parse error on line 17:\n...= complete new state R-->>B: Original r\n-----------------------^\nExpecting 'SOLID_OPEN_ARROW', 'DOTTED_OPEN_ARROW', 'SOLID_ARROW', 'BIDIRECTIONAL_SOLID_ARROW', 'DOTTED_ARROW', 'BIDIRECTIONAL_DOTTED_ARROW', 'SOLID_CROSS', 'DOTTED_CROSS', 'SOLID_POINT', 'DOTTED_POINT', got 'NEWLINE'\n    at Parser.parseError (<RENDERER_CACHE>/mermaid.min.js:1629:15160)\n    at Parser.parse (<RENDERER_CACHE>/mermaid.min.js:1631:179)\n    at Diagram.fromText (<RENDERER_CACHE>/mermaid.min.js:2764:256)\n    at getDiagramFromText (<RENDERER_CACHE>/mermaid.min.js:2771:2591)\n    at Object.parse (<RENDERER_CACHE>/mermaid.min.js:2765:1412)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5344\n    at new Promise (<anonymous>)\n    at performCall (<RENDERER_CACHE>/mermaid.min.js:2771:5321)\n    at executeQueue (<RENDERER_CACHE>/mermaid.min.js:2771:5198)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5465"
+    },
+    {
+      "id": "HPX-DIAG-015",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Parse error on line 8:\n...ist, Receipt; COMMIT R-->>B: Exact chec\n-----------------------^\nExpecting 'SOLID_OPEN_ARROW', 'DOTTED_OPEN_ARROW', 'SOLID_ARROW', 'BIDIRECTIONAL_SOLID_ARROW', 'DOTTED_ARROW', 'BIDIRECTIONAL_DOTTED_ARROW', 'SOLID_CROSS', 'DOTTED_CROSS', 'SOLID_POINT', 'DOTTED_POINT', got 'NEWLINE'\n    at Parser.parseError (<RENDERER_CACHE>/mermaid.min.js:1629:15160)\n    at Parser.parse (<RENDERER_CACHE>/mermaid.min.js:1631:179)\n    at Diagram.fromText (<RENDERER_CACHE>/mermaid.min.js:2764:256)\n    at getDiagramFromText (<RENDERER_CACHE>/mermaid.min.js:2771:2591)\n    at Object.parse (<RENDERER_CACHE>/mermaid.min.js:2765:1412)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5344\n    at new Promise (<anonymous>)\n    at performCall (<RENDERER_CACHE>/mermaid.min.js:2771:5321)\n    at executeQueue (<RENDERER_CACHE>/mermaid.min.js:2771:5198)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5465"
+    },
+    {
+      "id": "HPX-DIAG-016",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Parse error on line 9:\n...rprint and authority S->>K: Create uniq\n-----------------------^\nExpecting 'SOLID_OPEN_ARROW', 'DOTTED_OPEN_ARROW', 'SOLID_ARROW', 'BIDIRECTIONAL_SOLID_ARROW', 'DOTTED_ARROW', 'BIDIRECTIONAL_DOTTED_ARROW', 'SOLID_CROSS', 'DOTTED_CROSS', 'SOLID_POINT', 'DOTTED_POINT', got 'NEWLINE'\n    at Parser.parseError (<RENDERER_CACHE>/mermaid.min.js:1629:15160)\n    at Parser.parse (<RENDERER_CACHE>/mermaid.min.js:1631:179)\n    at Diagram.fromText (<RENDERER_CACHE>/mermaid.min.js:2764:256)\n    at getDiagramFromText (<RENDERER_CACHE>/mermaid.min.js:2771:2591)\n    at Object.parse (<RENDERER_CACHE>/mermaid.min.js:2765:1412)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5344\n    at new Promise (<anonymous>)\n    at performCall (<RENDERER_CACHE>/mermaid.min.js:2771:5321)\n    at executeQueue (<RENDERER_CACHE>/mermaid.min.js:2771:5198)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5465"
+    },
+    {
+      "id": "HPX-DIAG-017",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1206 1171.421875",
+      "elapsed_ms": 16,
+      "source_sha256": "0f421e40381792a4236a695b542f9515932984c62fb3ea92c025caac12060a43"
+    },
+    {
+      "id": "HPX-DIAG-018",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1110.3828125 1018",
+      "elapsed_ms": 39,
+      "source_sha256": "98807d9b366eaa0f10d455cea848b40f2c945cfcbd11617345d511b66995565b"
+    },
+    {
+      "id": "HPX-DIAG-019",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1627.9140625 958.25",
+      "elapsed_ms": 62,
+      "source_sha256": "a288793ffa770d51789fb1ad32fc1320ddcef91e900356d430dd0c2761d59208"
+    },
+    {
+      "id": "HPX-DIAG-020",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1679.1851806640625 598",
+      "elapsed_ms": 52,
+      "source_sha256": "22cff29313d9e2cc96c93e047939e384e7b0c559bdc2ed3842d245a8f8be8645"
+    },
+    {
+      "id": "HPX-DIAG-021",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1858.0523681640625 948.1499633789062",
+      "elapsed_ms": 64,
+      "source_sha256": "3286e736997661d4dfef80c4bdf32fab219fd71759a68353048763e08d711059"
+    },
+    {
+      "id": "HPX-DIAG-022",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Parse error on line 12:\n... right of Applied: F: concrete schemas, ...\n-----------------------^\nExpecting 'SPACE', 'NL', 'HIDE_EMPTY', 'scale', 'COMPOSIT_STATE', 'STRUCT_STOP', 'STATE_DESCR', 'ID', 'FORK', 'JOIN', 'CHOICE', 'CONCURRENT', 'note', 'acc_title', 'acc_descr', 'acc_descr_multiline_value', 'CLICK', 'classDef', 'style', 'class', 'direction_tb', 'direction_bt', 'direction_rl', 'direction_lr', 'EDGE_STATE', got 'DESCR'\n    at Parser.parseError (<RENDERER_CACHE>/mermaid.min.js:1937:8016)\n    at Parser.parse (<RENDERER_CACHE>/mermaid.min.js:1939:177)\n    at Diagram.fromText (<RENDERER_CACHE>/mermaid.min.js:2764:256)\n    at getDiagramFromText (<RENDERER_CACHE>/mermaid.min.js:2771:2591)\n    at Object.parse (<RENDERER_CACHE>/mermaid.min.js:2765:1412)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5344\n    at new Promise (<anonymous>)\n    at performCall (<RENDERER_CACHE>/mermaid.min.js:2771:5321)\n    at executeQueue (<RENDERER_CACHE>/mermaid.min.js:2771:5198)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5465"
+    },
+    {
+      "id": "HPX-DIAG-023",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Parse error on line 18:\n...actly-once guarantee\n-----------------------^\nExpecting 'SOLID_OPEN_ARROW', 'DOTTED_OPEN_ARROW', 'SOLID_ARROW', 'BIDIRECTIONAL_SOLID_ARROW', 'DOTTED_ARROW', 'BIDIRECTIONAL_DOTTED_ARROW', 'SOLID_CROSS', 'DOTTED_CROSS', 'SOLID_POINT', 'DOTTED_POINT', got 'NEWLINE'\n    at Parser.parseError (<RENDERER_CACHE>/mermaid.min.js:1629:15160)\n    at Parser.parse (<RENDERER_CACHE>/mermaid.min.js:1631:179)\n    at Diagram.fromText (<RENDERER_CACHE>/mermaid.min.js:2764:256)\n    at getDiagramFromText (<RENDERER_CACHE>/mermaid.min.js:2771:2591)\n    at Object.parse (<RENDERER_CACHE>/mermaid.min.js:2765:1412)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5344\n    at new Promise (<anonymous>)\n    at performCall (<RENDERER_CACHE>/mermaid.min.js:2771:5321)\n    at executeQueue (<RENDERER_CACHE>/mermaid.min.js:2771:5198)\n    at <RENDERER_CACHE>/mermaid.min.js:2771:5465"
+    },
+    {
+      "id": "HPX-DIAG-024",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1967.296875 522.9296875",
+      "elapsed_ms": 15,
+      "source_sha256": "7fa8130fd9185c8bbb0fa8e0f37071b655bb6338c11933d71805ed3f88d8f200"
+    },
+    {
+      "id": "HPX-DIAG-025",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1695 1257.426513671875",
+      "elapsed_ms": 16,
+      "source_sha256": "dee01f49b83a66d12be5fae95cab8858cc1011b793a99601f2f98304f646390a"
+    },
+    {
+      "id": "HPX-DIAG-026",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 978.0625 1506.5",
+      "elapsed_ms": 15,
+      "source_sha256": "7083bbec96566d865f64e7d1225bde463f8493afe8b66156491eeb5ef8336671"
+    },
+    {
+      "id": "HPX-DIAG-027",
+      "parsed": false,
+      "rendered": false,
+      "error": "Error: page.evaluate: Error: Invalid SVG XML\n    at eval (eval at evaluate (:370:30), <anonymous>:5:49)\n    at async <anonymous>:396:30"
+    },
+    {
+      "id": "HPX-DIAG-028",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1250.38671875 550",
+      "elapsed_ms": 14,
+      "source_sha256": "68b42d585ab8a832c69d45b8822c2a9a8498600d27fa7e501231e666a61b9e0c"
+    },
+    {
+      "id": "HPX-DIAG-029",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 786 1038",
+      "elapsed_ms": 13,
+      "source_sha256": "c17a7948562039d14c9e47561c0de88c85c8a126ebb622187b1102c88a9fa4a0"
+    },
+    {
+      "id": "HPX-DIAG-030",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1516 690",
+      "elapsed_ms": 13,
+      "source_sha256": "310c3cc6c83993069224b5e4363523b92ecb59dda262bdd0bac7b40e5ce3fdc2"
+    }
+  ]
+}

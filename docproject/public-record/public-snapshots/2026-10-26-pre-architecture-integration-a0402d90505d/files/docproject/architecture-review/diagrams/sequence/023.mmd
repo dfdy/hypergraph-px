@@ -1,0 +1,21 @@
+%% HPX-DIAG-023 — Future GitHub publication with unknown outcome
+%% Scope: Why can an approved remote write have an unknown result without allowing blind replay?
+%% Future optional integration
+sequenceDiagram
+ actor U as Human
+ participant H as HPX policy and job coordinator
+ participant D as Encrypted local outbox
+ participant G as GitHub API
+ H-->>U: Exact bytes, destination/visibility, remote precondition
+ U->>H: Approve frozen plan
+ H->>D: Persist scoped queued job
+ H->>G: Conditional write with provider-specific expected head
+ alt Known provider response
+ G-->>H: Success / conflict / failure
+ H->>D: Record known outcome
+ else Reply lost
+ H->>D: Record UNKNOWN, not failed/no-write
+ H->>G: Inspect actual remote state under exact job
+ G-->>H: Reconciliation evidence or still unknown
+ end
+ Note over D,G: No atomic transaction spans SQLite and provider, no exactly-once guarantee

@@ -1,0 +1,137 @@
+[
+  {
+    "id": "HPX-INV-001",
+    "invariant": "Same-node ancestry differs from cross-identity derivation",
+    "processes": "003.003 / 007.002-.003 / 008.007",
+    "diagrams": "010 / 014 / 017",
+    "mechanism": "Domain planners and storage exact source checks",
+    "verification": "Fork/Synthesis/WorkingFork identity and immutable parent tests",
+    "limits": "Not proved for complete application; four rank-model theorems do not address identity"
+  },
+  {
+    "id": "HPX-INV-002",
+    "invariant": "Logical identity differs from occurrence and ordered placement",
+    "processes": "005.002-.006",
+    "diagrams": "010 / 021",
+    "mechanism": "Domain composition contract; first writer one occurrence",
+    "verification": "Future move/reuse/repeated nested-path closure property tests",
+    "limits": "General multi-owner composition and structural publication incomplete"
+  },
+  {
+    "id": "HPX-INV-003",
+    "invariant": "Snapshot closes exact revision/resource bindings; no live heads",
+    "processes": "005.003 / 006.003 / 013.002",
+    "diagrams": "010 / 014 / 024",
+    "mechanism": "One authorized storage read and exact retained snapshot",
+    "verification": "Unicode/newline/history/restart and cursor scope checks",
+    "limits": "General closure/export compiler resources future"
+  },
+  {
+    "id": "HPX-INV-004",
+    "invariant": "Save is durable mutable Draft, not text Commit/checkpoint",
+    "processes": "003.002 / 008.003",
+    "diagrams": "013 / 019",
+    "mechanism": "CAS Draft and operation receipt transaction",
+    "verification": "Idle Save without revision advance; exact restart; capture separately",
+    "limits": "Review abstraction checks no Save/capture text publication; not app extraction"
+  },
+  {
+    "id": "HPX-INV-005",
+    "invariant": "Unknown outcomes reuse frozen operation bytes and original receipt",
+    "processes": "003.001 / 003.004",
+    "diagrams": "013 / 026",
+    "mechanism": "Application authority before receipt replay and digest equality",
+    "verification": "Lost/delayed reply, changed reuse, queued edits and cross-branch checks",
+    "limits": "Review late-ack/wrong-branch mutant counterexamples; actual branch integration pending"
+  },
+  {
+    "id": "HPX-INV-006",
+    "invariant": "Revision/snapshot/event/head/draft/receipt publish all-or-none",
+    "processes": "003.003",
+    "diagrams": "014 / 026",
+    "mechanism": "One BEGIN IMMEDIATE/COMMIT transaction",
+    "verification": "Fault checkpoints and process exits before/after COMMIT",
+    "limits": "Review partial-publication mutant caught; no fsync/hardware proof"
+  },
+  {
+    "id": "HPX-INV-007",
+    "invariant": "Exact promotion retains checkpoint; replacement is separate batch",
+    "processes": "008.005-.006",
+    "diagrams": "011 / 015 / 019",
+    "mechanism": "Text transaction stores promotion, later CAS batch stores replacements",
+    "verification": "Changed full-source/base/range, stale list, lost batch reply/restart tests",
+    "limits": "Only latest eligible checkpoint/private list supported; broad entity replacement deferred"
+  },
+  {
+    "id": "HPX-INV-008",
+    "invariant": "Expansion DAG constraint does not forbid reference cycles",
+    "processes": "005.005 / 006.001 / 017.002",
+    "diagrams": "027 / 030",
+    "mechanism": "Pure bounded Kahn validator on caller-supplied projection",
+    "verification": "512 three-vertex graphs differential test; future union-conflict cases",
+    "limits": "Four Lean rank/path model proofs; only spend helper extracted correspondence"
+  },
+  {
+    "id": "HPX-INV-009",
+    "invariant": "Current authority and disclosure permission precede protected read/replay",
+    "processes": "002 / 003.001 / 011 / 016",
+    "diagrams": "016 / 025",
+    "mechanism": "Authenticated catalog owner/device, route session and source checks",
+    "verification": "Revoked/missing/cross-workspace/cross-branch/unknown outcome tests",
+    "limits": "Future delegation, group history access and policy algebra incomplete"
+  },
+  {
+    "id": "HPX-INV-010",
+    "invariant": "Sensitive records encrypted before SQL/WAL; caller supplies context",
+    "processes": "016.001-.002",
+    "diagrams": "012 / 025",
+    "mechanism": "AEAD with expected workspace/logical binding/purpose/epoch",
+    "verification": "Tamper/substitution/nonce/resource/passphrase wrapper tests; sentinel probes",
+    "limits": "No hostile unlocked-host confidentiality or whole-DB freshness witness"
+  },
+  {
+    "id": "HPX-INV-011",
+    "invariant": "Non-trusted mode denies core-controlled plaintext egress",
+    "processes": "011.002 / 012.002 / 013.006 / 016.004",
+    "diagrams": "024 / 025",
+    "mechanism": "Future common mode/policy boundary",
+    "verification": "Proposed deny direct/API/background/clipboard/print/mixed-source/mode-change tests",
+    "limits": "Client-held unavailable; current own-host browser cannot enforce hostile delivery isolation"
+  },
+  {
+    "id": "HPX-INV-012",
+    "invariant": "Retrospective annotation review does not rewrite text Snapshot or truth",
+    "processes": "009.001-.004",
+    "diagrams": "017 / 020",
+    "mechanism": "Separate immutable entity revision/index family",
+    "verification": "Exact old passage/comment; assertion review ancestry; snapshot isolation tests",
+    "limits": "Replies/edit/resolve/general semantic proof not delivered"
+  },
+  {
+    "id": "HPX-INV-013",
+    "invariant": "Native keychain side effects require ordered compensation",
+    "processes": "002.005-.007",
+    "diagrams": "016 / 029",
+    "mechanism": "Backup then native create before DB commit; remove DB before native",
+    "verification": "Denied/existing/wrong-secret/crash orphan/remove/restart/passphrase fallback tests",
+    "limits": "Crash-orphan cleanup after lock is scoped manual recovery, not automatic durable queue"
+  },
+  {
+    "id": "HPX-INV-014",
+    "invariant": "Provider uncertainty is not proof of no external effect",
+    "processes": "012.005 / 015.004-.005",
+    "diagrams": "022 / 023",
+    "mechanism": "Future encrypted outbox and provider-specific conditional operations",
+    "verification": "Proposed lost-success-reply, restart, remote race and permission-change scenarios",
+    "limits": "No atomic cross-provider SQLite transaction or exactly-once proof"
+  },
+  {
+    "id": "HPX-INV-015",
+    "invariant": "Immutable retention and exact bytes survive view edits and reference changes",
+    "processes": "003 / 004 / 007.007 / 008.006 / 016.007",
+    "diagrams": "010 / 015 / 029",
+    "mechanism": "Append-only canonical history; protected private list CAS; owned-source mapping",
+    "verification": "Source byte equality/undo/remove/clear/replacement tests",
+    "limits": "No arbitrary history pruning; erasure/redaction needs separate owner-approved design"
+  }
+]

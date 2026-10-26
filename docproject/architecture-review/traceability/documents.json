@@ -1,0 +1,521 @@
+[
+  {
+    "id": "HPX-PRIN-002",
+    "path": "docs/01-purpose/principles.md",
+    "processes": [
+      "HPX-PROC-011"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-PRIN-001",
+    "path": "docs/01-purpose/project-purpose.md",
+    "processes": [
+      "HPX-PROC-010",
+      "HPX-PROC-011"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-PRIN-004",
+    "path": "docs/01-purpose/scope-and-non-goals.md",
+    "processes": [
+      "HPX-PROC-010",
+      "HPX-PROC-011"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-GOV-006",
+    "path": "docs/02-governance/ai-development-protocol.md",
+    "processes": [
+      "HPX-PROC-012"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-GOV-002",
+    "path": "docs/02-governance/licensing-policy.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-GOV-004",
+    "path": "docs/02-governance/roadmap.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-REQ-004",
+    "path": "docs/03-requirements/acceptance-criteria.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-REQ-002",
+    "path": "docs/03-requirements/system-requirements.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-REQ-001",
+    "path": "docs/03-requirements/user-needs.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ARCH-002",
+    "path": "docs/04-architecture/component-architecture.md",
+    "processes": [
+      "HPX-PROC-017"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ARCH-003",
+    "path": "docs/04-architecture/data-architecture.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ARCH-001",
+    "path": "docs/04-architecture/system-architecture.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-017"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-DOM-001",
+    "path": "docs/05-domain/core-object-model.md",
+    "processes": [
+      "HPX-PROC-005",
+      "HPX-PROC-010"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-DOM-003",
+    "path": "docs/05-domain/document-semantics.md",
+    "processes": [
+      "HPX-PROC-005"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-DOM-002",
+    "path": "docs/05-domain/hypergraph-mathematics.md",
+    "processes": [
+      "HPX-PROC-006",
+      "HPX-PROC-017"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-DOM-004",
+    "path": "docs/05-domain/provenance-model.md",
+    "processes": [
+      "HPX-PROC-007",
+      "HPX-PROC-010"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-DOM-006",
+    "path": "docs/05-domain/text-and-anchors.md",
+    "processes": [
+      "HPX-PROC-004"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-SUB-002",
+    "path": "docs/06-subsystems/document-engine.md",
+    "processes": [
+      "HPX-PROC-005",
+      "HPX-PROC-007",
+      "HPX-PROC-013"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-SUB-011",
+    "path": "docs/06-subsystems/external-integrations.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-011",
+      "HPX-PROC-012",
+      "HPX-PROC-013",
+      "HPX-PROC-015",
+      "HPX-PROC-017"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-SUB-009",
+    "path": "docs/06-subsystems/frontend-interaction.md",
+    "processes": [
+      "HPX-PROC-004",
+      "HPX-PROC-012"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-SUB-001",
+    "path": "docs/06-subsystems/graph-engine.md",
+    "processes": [
+      "HPX-PROC-006"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-SUB-008",
+    "path": "docs/06-subsystems/import-export.md",
+    "processes": [
+      "HPX-PROC-011",
+      "HPX-PROC-013",
+      "HPX-PROC-014",
+      "HPX-PROC-015"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-SUB-012",
+    "path": "docs/06-subsystems/security-cryptography.md",
+    "processes": [
+      "HPX-PROC-016"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-SUB-006",
+    "path": "docs/06-subsystems/workspace-storage.md",
+    "processes": [
+      "HPX-PROC-002",
+      "HPX-PROC-003"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ALG-001",
+    "path": "docs/07-implementation/formal-invariants.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ASSUR-005",
+    "path": "docs/08-assurance/build-and-release.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ASSUR-003",
+    "path": "docs/08-assurance/privacy-and-data-protection.md",
+    "processes": [
+      "HPX-PROC-011",
+      "HPX-PROC-016"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ASSUR-006",
+    "path": "docs/08-assurance/recovery.md",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-014"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ASSUR-002",
+    "path": "docs/08-assurance/security-threat-model.md",
+    "processes": [
+      "HPX-PROC-016"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ASSUR-001",
+    "path": "docs/08-assurance/testing-strategy.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-GUIDE-001",
+    "path": "docs/09-guides/documentation-plan.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-DOM-008",
+    "path": "docs/05-domain/assertions-and-predicates.md",
+    "processes": [
+      "HPX-PROC-009"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-FMT-001",
+    "path": "docs/06-subsystems/formats/hpx-workspace.md",
+    "processes": [
+      "HPX-PROC-014"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-FMT-002",
+    "path": "docs/06-subsystems/formats/crypto-envelopes.md",
+    "processes": [
+      "HPX-PROC-016"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-API-001",
+    "path": "docs/06-subsystems/interfaces/domain-navigation.md",
+    "processes": [
+      "HPX-PROC-006",
+      "HPX-PROC-007",
+      "HPX-PROC-010"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-API-002",
+    "path": "docs/06-subsystems/interfaces/browser-runtime.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-002",
+      "HPX-PROC-004",
+      "HPX-PROC-015"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-API-003",
+    "path": "docs/06-subsystems/interfaces/crypto-adapter.md",
+    "processes": [
+      "HPX-PROC-016"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-DATA-001",
+    "path": "docs/07-implementation/data-structures/sqlite-records.md",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-008"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-PROTO-001",
+    "path": "docs/07-implementation/protocols/draft-publication.md",
+    "processes": [
+      "HPX-PROC-003"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ALGO-001",
+    "path": "docs/07-implementation/algorithms/expansion-validation.md",
+    "processes": [
+      "HPX-PROC-006"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-GUIDE-002",
+    "path": "docs/09-guides/developers/getting-started.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-GUIDE-005",
+    "path": "docs/09-guides/developers/formal-validation.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-GUIDE-006",
+    "path": "docs/09-guides/reference/development-evidence.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ADR-001",
+    "path": "docs/04-architecture/decisions/0001-foundation-decisions.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ADR-002",
+    "path": "docs/04-architecture/decisions/0002-trusted-server-envelopes.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ADR-003",
+    "path": "docs/04-architecture/decisions/0003-sqlite-local-writer.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ADR-004",
+    "path": "docs/04-architecture/decisions/0004-local-https-bootstrap.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ADR-005",
+    "path": "docs/04-architecture/decisions/0005-documentation-migration.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ADR-006",
+    "path": "docs/04-architecture/decisions/0006-domain-serialization-boundary.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ADR-007",
+    "path": "docs/04-architecture/decisions/0007-explicit-record-versions.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ADR-011",
+    "path": "docs/04-architecture/decisions/0011-retained-history.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ASSUR-009",
+    "path": "docs/08-assurance/formal-validation-digest.md",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-GUIDE-007",
+    "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+    "processes": [
+      "HPX-PROC-008",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ADR-014",
+    "path": "docs/04-architecture/decisions/0014-keychain-unlock-policy.md",
+    "processes": [
+      "HPX-PROC-002",
+      "HPX-PROC-014"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ADR-010",
+    "path": "docs/04-architecture/decisions/0010-semantic-annotation-snapshots.md",
+    "processes": [
+      "HPX-PROC-009"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ADR-015",
+    "path": "docs/04-architecture/decisions/0015-initial-merge-workflow.md",
+    "processes": [
+      "HPX-PROC-007"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ADR-016",
+    "path": "docs/04-architecture/decisions/0016-local-development-signing.md",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-018"
+    ],
+    "disposition": "Supporting constraint / governance / assurance context; family-level mapping only"
+  },
+  {
+    "id": "HPX-ADR-017",
+    "path": "docs/04-architecture/decisions/0017-initial-durable-comments.md",
+    "processes": [
+      "HPX-PROC-009"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ADR-018",
+    "path": "docs/04-architecture/decisions/0018-initial-local-branches.md",
+    "processes": [
+      "HPX-PROC-008"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  },
+  {
+    "id": "HPX-ADR-019",
+    "path": "docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md",
+    "processes": [
+      "HPX-PROC-008"
+    ],
+    "disposition": "Direct process-contract source; inspect claim register for semantic scope"
+  }
+]

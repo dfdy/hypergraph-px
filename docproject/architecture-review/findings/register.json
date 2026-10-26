@@ -1,0 +1,951 @@
+[
+  {
+    "id": "HPX-FIND-001",
+    "title": "Rollback acceptance wording exceeds the bounded local freshness guarantee",
+    "category": "Contradiction / security risk",
+    "severity": "High",
+    "confidence": "High for wording; no exploit demonstrated",
+    "status": "Confirmed documentary tension",
+    "scope": "Current durable-edit acceptance",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-016"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/security-threat-model.md",
+        "line": 60,
+        "quote": "AEAD authenticates bytes/context but does not establish latest state or reject authentic stale envelopes. The storage/application design must bind key policy, catalogue, publication and heads to reject rollback/replay before durable editing. Epoch numbers alone neither rotate keys nor grant historical access.",
+        "needle": "reject rollback/replay before durable editing",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/data-architecture.md",
+        "line": 32,
+        "quote": "One SQLite database coordinates encrypted immutable objects, mutable head/draft slots and encrypted operation receipts. WAL/FULL is durability machinery, not application history. Ciphertext metadata leaks opaque identifiers, types, generations, lengths/counts and access patterns; no whole-database rollback witness exists. The implementation does not rewrite every retained revision on each draft save. See [record representation](../07-implementati",
+        "needle": "no whole-database rollback witness",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/formats/hpx-workspace.md",
+        "line": 48,
+        "quote": "Encrypted catalog authenticates the list of documents and the owner/device context. Each document has a branch head, current draft and immutable root manifest/occurrence. Immutable object insert is create-only; existing records cannot be overwritten by the API. Sealed records authenticate expected kind, identity and generation. Referenced missing/corrupt objects fail; never substitute latest revisions. This detects substitution and many corruptio",
+        "needle": "not complete rollback",
+        "matched": true
+      }
+    ],
+    "problem": "The inherited threat clause says storage/application must reject rollback/replay before durable editing. The local SQLite contract expressly accepts the absence of a whole-database freshness witness. CAS and authenticated receipts reject selected stale commands; AEAD does not reject restoration of a complete authentic old database.",
+    "consequences": "A reader cannot tell whether current bounded editing is an approved exception, whether the gate means only per-operation replay, or whether durable editing is still prohibited. This is an acceptance ambiguity, not evidence that AEAD was misimplemented.",
+    "demonstration": "Compare the exact three passages. Thought experiment: replace the entire workspace and WAL state with an older valid consistent image. Its tags can remain authentic. No real workspace was rolled back in this review.",
+    "alternative_interpretations": "The threat clause may have meant mixed-record substitution or stale-command replay only. That interpretation is narrower than its unqualified wording and needs authority, not inference.",
+    "possible_remedies": "Clarify the threat/gate scope and explicitly accept the bounded residual risk, or design an independently retained monotonic witness and its recovery/trust model.",
+    "tradeoffs": "Narrowing the gate changes acceptance policy; an external witness adds availability, backup/restore and hostile-host dependencies and does not follow automatically from a key epoch.",
+    "next_action": "Ask the owner to resolve gate scope before claiming real-data freshness acceptance. Preserve the residual limitation in user-facing deployment guidance.",
+    "owner_approval": "Yes — security/acceptance scope decision; this review makes no change.",
+    "priority": "P1 — clarify before real-data security acceptance",
+    "likelihood": "Ambiguity is present; actual rollback requires an actor able to restore storage."
+  },
+  {
+    "id": "HPX-FIND-002",
+    "title": "Current summaries retain superseded implementation status",
+    "category": "Maintainability concern / contradiction",
+    "severity": "Medium",
+    "confidence": "High",
+    "status": "Confirmed documentation drift",
+    "scope": "Architecture and requirement status navigation",
+    "processes": [
+      "HPX-PROC-018"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/component-architecture.md",
+        "line": 18,
+        "quote": "OWNER-003 requires serialization outside domain. Current domain Serde usage is nonconforming local work to refactor later, without changing code here.",
+        "needle": "Current domain Serde usage",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0006-domain-serialization-boundary.md",
+        "line": 18,
+        "quote": "Implementation update, 2026-10-25: domain Serde/dependencies have been removed. The [adapter codecs](../../../crates/storage/src/encoding.rs) preserve identifier/command encodings; [current evidence](../../09-guides/reference/implementation-resumption.md) distinguishes ordinary tests and proof replay.",
+        "needle": "domain Serde/dependencies have been removed",
+        "matched": true
+      },
+      {
+        "path": "docs/registers/requirements.csv",
+        "line": 2,
+        "quote": "HPX-RQ-001,HPX-REQ-002,One Rust release executable embeds frontend assets; no Node/Lean/database server at runtime,HPX-SRC-0032; Specifications/SPECIFICATION.md:L1; # Hypergraph PX MU-F — product specification,preserve source priority; no new ranking,existing source scope; no invented date,HPX-ARCH-001,crates/runtime/build.rs,Pending embedded/browser parity,local code builds; delivery unverified,source-reported evidence; not rerun in documentatio",
+        "needle": "HPX-RQ-001",
+        "matched": true
+      },
+      {
+        "path": "docs/registers/requirements.csv",
+        "line": 29,
+        "quote": "HPX-RQ-028,HPX-REQ-002,Explicitly discover contextual logical equivalence while preserving predicate identity and proof/identity distinctions,Explicit owner separate review 2026-10-25; adopted clarification/graph; Lean conversion deferred,explicit owner requirement,current target specification,HPX-DOM-008;HPX-SUB-009,crates/storage/src/predicate-catalog-v1.json;crates/storage/src/predicates.rs;frontend/src/relationship-catalog.js,HPX-TEST-017;HPX",
+        "needle": "HPX-RQ-028",
+        "matched": true
+      },
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 448,
+        "quote": "Validation: **120 Rust tests** pass (3 crypto +20 domain +1 keychain +6 runtime +90 storage), including new cross-branch/snapshot cursor checks, independent working-source Fork/restart/fault/replay and all kind1–27 authenticated wrappers. Existing native opt-in/crash-worker entries remain directly ignored; the crash parent invokes its worker. Full **133 Node tests** pass, including six new branch/reference transport cases. **Eight targeted isolat",
+        "needle": "120 Rust tests",
+        "matched": true
+      }
+    ],
+    "problem": "Component summaries still call domain serialization nonconforming and application/transport planned. Other current records explicitly report the refactor and integrated local increments. The requirement register also retains old delivery fields beside newer evidence. Historical passages are legitimate; unlabelled current-status entry points are misleading.",
+    "consequences": "Contributors may repeat finished work, infer inconsistent layering or enable unfinished capability from the wrong checkpoint. Current design rules remain coherent once historical status is separated.",
+    "demonstration": "Compare component lines with accepted ADR006, actual domain Cargo manifest and latest state. Trace RQ001 and RQ028 status fields to their original milestone; do not replace an unknown claim with a guessed pass.",
+    "alternative_interpretations": "Many statements are deliberately preserved historical evidence. The defect is present-tense summary/navigation scope, not retention of history or authority determined by date.",
+    "possible_remedies": "Add an explicitly scoped current-status table generated from a reviewed milestone manifest; label retained source status and link to its checkpoint. Keep accepted requirements stable.",
+    "tradeoffs": "A generated manifest reduces drift but needs one accountable maintainer and links to real checks; copying all history into a second current table would worsen duplication.",
+    "next_action": "Prepare a documentation-only reconciliation proposal with exact affected rows and dated evidence, preserving the original passages.",
+    "owner_approval": "Routine factual reconciliation can follow existing authority; any acceptance change still needs owner decision.",
+    "priority": "P1 — before another implementation handoff",
+    "likelihood": "High: contradictory entry-point summaries already exist."
+  },
+  {
+    "id": "HPX-FIND-003",
+    "title": "Recoverable-index repair is a named responsibility without a complete protocol",
+    "category": "Missing specification / data integrity risk",
+    "severity": "High",
+    "confidence": "High",
+    "status": "Confirmed specification gap",
+    "scope": "Local corruption recovery, future general indexes",
+    "processes": [
+      "HPX-PROC-003.006",
+      "HPX-PROC-014"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/component-architecture.md",
+        "line": 57,
+        "quote": "- Durable publication order, writer isolation, fsync/recovery, integrity verification, index rebuilding and draft acknowledgements.",
+        "needle": "index rebuilding",
+        "matched": true
+      },
+      {
+        "path": "docs/07-implementation/data-structures/sqlite-records.md",
+        "line": 44,
+        "quote": "## Indices and operations",
+        "needle": "Indices and operations",
+        "matched": true
+      },
+      {
+        "path": "docs/08-assurance/recovery.md",
+        "line": 34,
+        "quote": "### Failure and recovery",
+        "needle": "Failure and recovery",
+        "matched": true
+      }
+    ],
+    "problem": "The architecture calls indexes recoverable but does not exhaustively classify every catalog/head/private-reference/assertion index as canonical or derived, define authoritative rebuild inputs, or specify deterministic head choice, quarantine, repair atomicity and interrupted repair recovery. Mutable acknowledged drafts are authoritative state, not disposable indexes.",
+    "consequences": "A future repair tool might invent a current head from unordered history, lose the latest acknowledged draft, or silently erase opaque optional records. Current fail-closed corruption behavior is safer than an unspecified repair.",
+    "demonstration": "The record document’s index section is generic scaffolding. Compare actual mutable slots and encrypted receipts: a save receipt digest alone is insufficient to recreate overwritten draft text.",
+    "alternative_interpretations": "A fail-closed first slice may intentionally defer repair. That is acceptable if explicitly framed as a limitation and not a rebuild guarantee.",
+    "possible_remedies": "Create an authoritative/derived-state matrix and repair design: exact inputs, authorization, deterministic output, preserving originals, backup/quarantine, atomic swap and interruption tests.",
+    "tradeoffs": "Retaining full request text solely for repair increases plaintext-history sensitivity and storage; refusing repair preserves integrity but reduces availability.",
+    "next_action": "Design a minimal offline audit report before any mutating repair; define which acknowledged data can only come from a valid backup.",
+    "owner_approval": "Yes for reconstruction/repair policy and any retention change.",
+    "priority": "P1 — before claiming corruption recovery",
+    "likelihood": "Corruption frequency unmeasured; consequences are high if repair is attempted."
+  },
+  {
+    "id": "HPX-FIND-004",
+    "title": "Working branches have not passed their required integrated lifecycle",
+    "category": "Verification gap / data integrity risk",
+    "severity": "High",
+    "confidence": "High",
+    "status": "Confirmed remaining gate; no failing app workflow demonstrated",
+    "scope": "Gated branch/checkpoint/reference increment",
+    "processes": [
+      "HPX-PROC-004.005",
+      "HPX-PROC-008"
+    ],
+    "sources": [
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 442,
+        "quote": "Added gated frontend branch review/selection, independent document/branch buffer identities, branch-scoped child Save/Commit, frozen retries, all-buffer lock quiescence and separate CodeMirror state/selection/undo/scroll caches. Adaptive protected capture saves the captured pending source and uses atomic WorkingCopy only when its bytes differ from the current committed snapshot; exact committed source retains the existing clipboard path. Added wo",
+        "needle": "advertises neither capability",
+        "matched": true
+      },
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 340,
+        "quote": "On a future owner resume, reconcile the unverified signing experiment before the next build/handoff: development-signing helpers and imports in manual-runtime-update.mjs/refresh-manual-runtime.mjs currently validate the installed identity, but signature validity is **not** evidence of Keychain continuity. Do not deploy the experimental signer as a claimed fix. Choose an owner-approved Apple-issued signing route or explicitly restore the prior dev",
+        "needle": "On a future owner resume",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md",
+        "line": 75,
+        "quote": "## Required checks before delivery",
+        "needle": "Required checks before delivery",
+        "matched": true
+      }
+    ],
+    "problem": "Backend, transport and component checks do not establish actual branch-switch undo/recovery, live checkpoint capture, lost/delayed acknowledgement, text promotion and separately retried replacement across HTTPS/SQLite/restart. The general Provenance panel reader for working-source Fork also remains unconnected.",
+    "consequences": "Advertising these capabilities prematurely could expose source/context confusion or incomplete inspection despite sound local primitives. The current non-advertisement is a useful containment boundary.",
+    "demonstration": "Latest state explicitly lists unexecuted runtime/reader/below-widget gates. The bounded abstract review model catches hypothetical wrong-branch acknowledgement and partial-publication mutants but cannot establish implementation correctness.",
+    "alternative_interpretations": "This is unfinished authorized work rather than a known implementation bug. Existing committed-passage features retain their prior acceptance.",
+    "possible_remedies": "Keep capabilities gated; connect missing reader, then execute the exact synthetic matrix already demanded by ADR019, including crash between text Commit and replacement and original receipt replay.",
+    "tradeoffs": "A narrow test-only capability setup exercises code without publishing unsupported UI. More unit tests alone will not close the cross-subsystem gate.",
+    "next_action": "On a future implementation resume, finish the reader and one real isolated lifecycle before widening scope. No implementation is performed here.",
+    "owner_approval": "No new design approval for existing adopted scope; explicit resume is needed after the owner stop.",
+    "priority": "P1 — before enabling branch/working capabilities",
+    "likelihood": "Integration failure likelihood unknown; evidence absence is certain."
+  },
+  {
+    "id": "HPX-FIND-005",
+    "title": "Immutable retry receipts cause growth beyond retained text history",
+    "category": "Scalability risk / inefficiency",
+    "severity": "Medium",
+    "confidence": "High for growth; low for practical impact",
+    "status": "Confirmed structural growth; resource exhaustion hypothetical",
+    "scope": "All acknowledged local mutations",
+    "processes": [
+      "HPX-PROC-003.002",
+      "HPX-PROC-003.004",
+      "HPX-PROC-018.003"
+    ],
+    "sources": [
+      {
+        "path": "docs/07-implementation/data-structures/sqlite-records.md",
+        "line": 89,
+        "quote": "An absent slot is logical generation 0 with no entries. The first changing mutation creates generation 1; later changes use encrypted slot CAS. Exact-source recapture reuses its entry and generation, while each command retains its own encrypted receipt. Empty clear does not advance generation. The private clipboard admits up to 128 entries, rejecting overflow atomically rather than pruning source history. Removing/clearing references never delete",
+        "needle": "each command retains its own encrypted receipt",
+        "matched": true
+      },
+      {
+        "path": "crates/storage/src/lib.rs",
+        "line": 837,
+        "quote": "let receipt = Receipt { operation, outcome };",
+        "needle": "let receipt = Receipt { operation, outcome };",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0011-retained-history.md",
+        "line": 1,
+        "quote": "# Retained immutable committed history",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "problem": "Every successful mutating operation retains an immutable encrypted receipt even though autosave overwrites mutable Draft. With S changing Save operations, receipt count is Θ(S), independent of explicit Commit count. Five-second idle is a trigger, not a mandatory perpetual save frequency.",
+    "consequences": "Long-lived editing may grow the DB and backup cost despite few committed revisions. This is not evidence that each save rewrites all historical text; receipts normally retain outcome/digest rather than the whole request.",
+    "demonstration": "Inspect the unconditional receipt insertion after the successful command dispatch. A hypothetical one changing save every five seconds of eight active hours gives 5,760 receipts/day; this is an input assumption, not an observed usage or size measurement.",
+    "alternative_interpretations": "Durable idempotency deliberately needs receipts; operation rate may be modest and storage cheap. No benchmark establishes an unacceptable cost.",
+    "possible_remedies": "Measure real encrypted receipt/index/WAL growth with representative workloads. Consider explicit quotas/backpressure, safe no-op suppression or owner-approved retry/retention semantics before any compaction design.",
+    "tradeoffs": "Deleting receipts can break original-result replay and violate retained-history rules. Reusing IDs for changed commands is never an optimization. Full-history pruning is not an authorized remedy.",
+    "next_action": "Add storage-growth measurements to acceptance and state the supported retry horizon/retention policy before proposing mutation.",
+    "owner_approval": "Measurements routine; receipt expiry/erasure or semantic retention changes require owner approval.",
+    "priority": "P2 — before long-lived workspace scale claims",
+    "likelihood": "Certain asymptotic growth; capacity impact workload dependent."
+  },
+  {
+    "id": "HPX-FIND-006",
+    "title": "Working-source capture repeats whole-source serialization and validation",
+    "category": "Inefficiency / potential opportunity",
+    "severity": "Medium",
+    "confidence": "Medium",
+    "status": "Code-supported hypothesis; no measured bottleneck",
+    "scope": "Gated WorkingCopy and private reference reads",
+    "processes": [
+      "HPX-PROC-008.003",
+      "HPX-PROC-008.004",
+      "HPX-PROC-008.006"
+    ],
+    "sources": [
+      {
+        "path": "crates/storage/src/working.rs",
+        "line": 151,
+        "quote": "if serde_json::to_vec(request)",
+        "needle": "serde_json::to_vec(request)",
+        "matched": true
+      },
+      {
+        "path": "crates/storage/src/working_clipboard.rs",
+        "line": 222,
+        "quote": "let view = working::source_view(cipher, db, catalog, source.clone())?;",
+        "needle": "let view = working::source_view",
+        "matched": true
+      },
+      {
+        "path": "crates/storage/src/lib.rs",
+        "line": 32,
+        "quote": "pub const MAX_TEXT_BYTES: usize = 2 * 1024 * 1024;",
+        "needle": "pub const MAX_TEXT_BYTES",
+        "matched": true
+      }
+    ],
+    "problem": "Working requests carry complete text plus selected quote; validation serializes them to enforce wire-size limits. Source view reconstruction is repeated from private-reference paths. A required pending save plus checkpoint can logically persist N bytes in Draft and N+Q in retained checkpoint payload, before JSON/envelope overhead.",
+    "consequences": "Time and transient memory scale at least linearly with source bytes; repeated exact-source resolution across K entries can approach O(KN) bytes processed without an authorization-safe transaction cache. This estimate is conditional on shared sources and actual call paths, not a benchmark.",
+    "demonstration": "Static call inspection identifies serialization and source_view calls. N≤2 MiB, Q≤N currently; 2N+Q is logical stored source duplication, not exact SQL bytes. JSON escaping can expand a control-heavy payload and is explicitly bounded/rejected.",
+    "alternative_interpretations": "Repeated validation intentionally catches tampered/authenticated references. The small bounded list and text ceiling may make cost acceptable.",
+    "possible_remedies": "Profile large mixed-Unicode/control-character capture and list reads. If needed, cache validated immutable source within one authorized read transaction and avoid duplicate serialization using an exact bounded encoder.",
+    "tradeoffs": "Cross-transaction caching risks stale permission/context. Public plaintext hashes or global dedup would change privacy/identity assumptions and are not justified by this finding.",
+    "next_action": "Measure allocation/serialization/decryption counts per operation before refactoring; preserve exact bytes and fail-closed bounds.",
+    "owner_approval": "Routine bounded optimization can follow specifications; privacy/format changes require owner decision.",
+    "priority": "P2 — investigate after integration correctness",
+    "likelihood": "Repeated work is present; user-visible latency unknown."
+  },
+  {
+    "id": "HPX-FIND-007",
+    "title": "One workspace mutex can couple slow crypto and reads to edit latency",
+    "category": "Scalability risk / architectural coupling",
+    "severity": "Medium",
+    "confidence": "Medium",
+    "status": "Confirmed serialization structure; impact hypothetical",
+    "scope": "Current local runtime contention",
+    "processes": [
+      "HPX-PROC-002.003",
+      "HPX-PROC-003",
+      "HPX-PROC-006",
+      "HPX-PROC-016.003"
+    ],
+    "sources": [
+      {
+        "path": "crates/runtime/src/main.rs",
+        "line": 859,
+        "quote": "Ok(r) => match state.lock() {",
+        "needle": "match state.lock()",
+        "matched": true
+      },
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 72,
+        "quote": "The next independent transport checks found and corrected fragmented-header limit overshoot and repeated delimiter rescanning. Header termination must fit within 16 KiB, independent of read fragmentation; scanning retains only the necessary three-byte overlap. Socket reads/writes, including internal TLS record/handshake I/O, share one ten-second deadline rather than a per-read inactivity timeout. Requests whose deadline elapsed while waiting for ",
+        "needle": "does not cancel an already executing KDF/transaction",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/interfaces/browser-runtime.md",
+        "line": 146,
+        "quote": "The current runtime bounds complete headers to 16 KiB, including fragmented reads; body declarations remain bounded to 14 MiB and duplicate framing fields are rejected. Header delimiter scanning is linear. A single ten-second deadline covers underlying socket reads/writes through TLS and is checked before a queued route starts. It does not cancel an already executing storage/KDF operation; unknown outcomes still reconcile via the same operation I",
+        "needle": "16",
+        "matched": true
+      }
+    ],
+    "problem": "The service admits bounded workers but routes workspace work through shared state. KDF or a long authorized storage/read operation may serialize other requests. The socket deadline prevents stale queued work from starting but is not cancellation of an executing KDF or transaction.",
+    "consequences": "A slow unlock/query/capture can delay Save or lock response and create unknown transport outcomes. Sixteen ingress workers do not mean sixteen parallel workspace operations; local single-user scope limits expected load.",
+    "demonstration": "Static runtime lock acquisition and documented deadline limit confirm structure. Argon2 uses 64 MiB per derivation; do not multiply by sixteen as if all derivations run concurrently under the same lock.",
+    "alternative_interpretations": "Coarse serialization is a deliberate simple consistency boundary and may be entirely adequate for one user.",
+    "possible_remedies": "Measure concurrent save/history/unlock/lock workloads. If needed separate session state and safe immutable reads or use an explicit bounded coordinator queue while preserving current authorization and writer ordering.",
+    "tradeoffs": "Finer locks/read caches increase race and stale-authority risks; a new server architecture is not justified without measurements.",
+    "next_action": "Publish supported latency/load budgets and profile contention before changing concurrency.",
+    "owner_approval": "No approval for measurement; concurrency/authorization redesign should be reviewed.",
+    "priority": "P2 — before multi-user/performance claims",
+    "likelihood": "Contention possible; workload incidence unknown."
+  },
+  {
+    "id": "HPX-FIND-008",
+    "title": "Application authorization is concentrated in the storage crate",
+    "category": "Architectural coupling / maintainability concern",
+    "severity": "Medium",
+    "confidence": "High for structure; medium for remedy",
+    "status": "Confirmed implementation concentration; improvement proposal",
+    "scope": "Storage feature growth and alternate interfaces",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-008",
+      "HPX-PROC-015.006"
+    ],
+    "sources": [
+      {
+        "path": "docs/04-architecture/component-architecture.md",
+        "line": 42,
+        "quote": "| Application layer | Trusted principal/device resolution, command authorization, exact expected-state checks, previews and receipts | Planned |",
+        "needle": "Application layer",
+        "matched": true
+      },
+      {
+        "path": "crates/storage/src/lib.rs",
+        "line": 645,
+        "quote": "pub fn receipt(&self, id: OperationId) -> Result<Receipt> {",
+        "needle": "pub fn receipt",
+        "matched": true
+      },
+      {
+        "path": "crates/storage/src/working.rs",
+        "line": 3,
+        "quote": "use super::*;",
+        "needle": "use super::*;",
+        "matched": true
+      },
+      {
+        "path": "crates/domain/Cargo.toml",
+        "line": 1,
+        "quote": "[package]",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "problem": "The intended application responsibility is separate from persistence, but the present storage crate hosts principal/device checks, command dispatch/replay and transaction orchestration. Sibling feature modules share the parent namespace. Cargo dependencies are acyclic and domain remains dependency-free; no missing microservice is implied.",
+    "consequences": "Adding MCP/providers may tempt duplication of authorization/expected-state semantics. Shared namespace access makes it harder to identify the minimum privilege/data interface for each feature.",
+    "demonstration": "Static dependency report: five local crates, six path edges, no local crate SCC; 52 frontend modules/101 recognized imports/no static SCC. Thirty-eight storage super::* occurrences include tests, not thirty-eight production cycles.",
+    "alternative_interpretations": "A single crate can contain well-separated layers; separate packages do not guarantee architecture. Current code may be a proportionate local slice.",
+    "possible_remedies": "First document a narrow application operation facade and storage transaction capabilities. Consider an internal application module only when a second real adapter needs it; avoid empty services.",
+    "tradeoffs": "Moving serialization or pure validation back into domain would violate adopted boundaries. Over-abstracting every feature adds indirection and transaction-lifetime complexity.",
+    "next_action": "Draw a precise call/data-access map for the next interface and enforce domain purity, current-authority-before-replay and one-operation semantics.",
+    "owner_approval": "Routine internal separation within contracts; public API changes follow explicit compatibility policy.",
+    "priority": "P2 — before a second command transport",
+    "likelihood": "Growth-driven maintenance risk; no present dependency cycle demonstrated."
+  },
+  {
+    "id": "HPX-FIND-009",
+    "title": "Additive branch records lack actual older-reader preservation evidence",
+    "category": "Verification gap / interoperability risk",
+    "severity": "High",
+    "confidence": "High",
+    "status": "Confirmed remaining compatibility gate",
+    "scope": "Gated kinds 20–27 and strict command outcomes",
+    "processes": [
+      "HPX-PROC-003.007",
+      "HPX-PROC-008"
+    ],
+    "sources": [
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 452,
+        "quote": "On a future owner resume: connect the kind27 Working Fork reader to the general Provenance panel; test actual branch/working source workflows behind explicit test-only capability setup; complete actual older-reader preservation for20–27, frozen lost/delayed acknowledgement/source and branch-switch undo/restart checks, exact publication/replacement recovery and both-theme source-under-widget visuals. Only then enable advertised capabilities and ru",
+        "needle": "actual older-reader preservation for20–27",
+        "matched": true
+      },
+      {
+        "path": "docs/07-implementation/data-structures/sqlite-records.md",
+        "line": 91,
+        "quote": "This is an optional record in the existing generic slots layout; SQL schemas 1/2, original nine payload layouts, HGOB/HGWK and contract 1 stay unchanged. Readers that do not implement the clipboard can continue ordinary document reads/writes while preserving its opaque slot. They do not implement the new capability or parse its added receipt outcome. A pre-clipboard tested build opened, saved and committed an isolated upgraded workspace while pre",
+        "needle": "Readers that do not implement the clipboard",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md",
+        "line": 71,
+        "quote": "Before durable writes are enabled, specify whether an existing workspace gets working metadata lazily or through an explicit backed-up upgrade, and how an older reader's ordinary writes invalidate any cached working-base claims. A missing checkpoint is an error, never permission to reconstruct it from a newer draft. Old readers must preserve unknown optional ciphertext byte-for-byte, or the upgrade must explicitly require a newer reader with back",
+        "needle": "Old readers must preserve",
+        "matched": true
+      }
+    ],
+    "problem": "Wrapper tests establish shape/authentication for new records, but do not establish that an actual older executable preserves them during ordinary writes, or that old-reader writes safely invalidate cached working-base assumptions. Strict new receipt outcomes cannot be reconciled by unaware clients merely because HTTP contract remains 1.",
+    "consequences": "An unaware writer might preserve opaque rows yet make cached working lineage stale; supported readers need honest capability/receipt limits. Independent version domains are correct but require a compatibility matrix.",
+    "demonstration": "Earlier recorded old-reader checks cover prior optional kinds; the newest checkpoint explicitly lists 20–27 as pending. No old binary is executed during this review.",
+    "alternative_interpretations": "New features are currently gated, containing the exposure. Generic tables do permit opaque preservation, but that is a design claim until exercised.",
+    "possible_remedies": "Execute a representative old/new reader matrix with byte-identical optional ciphertext checks and current-reader revalidation after old Save/Commit. Specify command/outcome support separately from ordinary document compatibility.",
+    "tradeoffs": "Requiring a minimum reader is simpler than preserving every old behavior but changes rollout/backup expectations; do not bump unrelated formats automatically.",
+    "next_action": "Close the actual matrix before advertising capabilities or accepting persistent real data in this increment.",
+    "owner_approval": "No new approval for existing required tests; incompatible rollout policy needs owner approval.",
+    "priority": "P1 — before enabling branch/working writes",
+    "likelihood": "Unknown compatibility failure probability; evidence absence certain."
+  },
+  {
+    "id": "HPX-FIND-010",
+    "title": "Rights and mandate requirements lack an executable core policy model",
+    "category": "Missing specification / security risk",
+    "severity": "High",
+    "confidence": "High",
+    "status": "Confirmed future contract gap",
+    "scope": "Future exports, sharing and provider context",
+    "processes": [
+      "HPX-PROC-011",
+      "HPX-PROC-012",
+      "HPX-PROC-013",
+      "HPX-PROC-015"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/import-export.md",
+        "line": 57,
+        "quote": "Unresolved attribution/licensing conflicts must not by themselves prevent an otherwise authorized export. Append an in-document unresolved-rights report identifying the permitted affected content, evidence/uncertainty and unresolved claims; do not invent a clearance or ownership resolution. Its detail is permission-scoped and must not leak withheld identities or content. Where no native appendix structure exists, retain a clearly labelled report ",
+        "needle": "Unresolved attribution/licensing conflicts",
+        "matched": true
+      },
+      {
+        "path": "docs/08-assurance/privacy-and-data-protection.md",
+        "line": 40,
+        "quote": "Use one authoritative policy/command boundary across browser, native/trusted client, REST, MCP, plugins and background workers. UI capability flags and disabled buttons reflect the decision; every direct command, retry and sink must independently enforce it. The future trusted client must route file/download, OS clipboard, printing, integrations and provider network calls through its core execution boundary. An authorized plaintext-capable client",
+        "needle": "one authoritative policy/command boundary",
+        "matched": true
+      },
+      {
+        "path": "docs/08-assurance/security-threat-model.md",
+        "line": 50,
+        "quote": "Queries must distinguish missing data from inaccessible historical references without leaking unauthorized existence. Decide whether an authorized user may see an opaque reference or whether even the relation must be hidden. Group membership and current read rights are not automatically access to all historical keys. Revocation cannot undo prior plaintext disclosure.",
+        "needle": "Group membership and current read rights",
+        "matched": true
+      }
+    ],
+    "problem": "The contracts establish scoped authorization, contested attribution/licensing and confidentiality gates, but do not select versioned policy inputs, grant/delegation algebra, conflict precedence representation, revocation timing or a minimal decision interface. Named-holder and mandate workflows are requested review topics; separate adoption or executable schemas were not located. Rights reporting itself can reveal sensitive claims.",
+    "consequences": "Independent exporters/agents may implement different allow/deny rules, or confuse unresolved rights with access denial. Mixed-input output could launder confidential material if the mode gate is only a UI check.",
+    "demonstration": "Construct a decision table for authorized source plus disputed licence, unauthorized source plus consent, and mixed trusted/non-trusted sources. The high-level outcomes are constrained; exact persisted authority evidence and evaluator remain unspecified.",
+    "alternative_interpretations": "The current sole-owner local slice does not require a complete multi-user rights engine. This finding gates the dependent future features, not existing editing.",
+    "possible_remedies": "Specify a small shared authorization/egress decision contract, evidence versions, precedence and explainable denial/report scopes before implementing each outbound adapter.",
+    "tradeoffs": "A universal legal rules engine would be excessive. Preserve claim uncertainty and owner decisions without asserting legal truth or blocking authorized exports solely for unresolved claims.",
+    "next_action": "Owner review of the minimal policy decision table and historical disclosure rules.",
+    "owner_approval": "Yes — authority, disclosure and conflict policy.",
+    "priority": "P1 when outbound or shared features are selected",
+    "likelihood": "High risk of divergent implementations if deferred past adapter implementation."
+  },
+  {
+    "id": "HPX-FIND-011",
+    "title": "Bundled academic compiler must reconcile packaging and determinism",
+    "category": "Missing specification / architectural trade-off",
+    "severity": "Medium",
+    "confidence": "High",
+    "status": "Confirmed future design choice",
+    "scope": "Future Pandoc/academic export",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-013"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/import-export.md",
+        "line": 26,
+        "quote": "Plan for an embedded or bundled Pandoc integration without requiring the user to install Pandoc separately. The delivery mechanism must be reconciled with HPX's single-Rust-executable packaging requirement before implementation: an externally installed converter is not an acceptable silent fallback. An embedded library versus a packaged resource/helper and any controlled extraction/lifecycle mechanism remain an explicit design gate. Review depend",
+        "needle": "single-Rust-executable packaging requirement",
+        "matched": true
+      },
+      {
+        "path": "docs/registers/requirements.csv",
+        "line": 2,
+        "quote": "HPX-RQ-001,HPX-REQ-002,One Rust release executable embeds frontend assets; no Node/Lean/database server at runtime,HPX-SRC-0032; Specifications/SPECIFICATION.md:L1; # Hypergraph PX MU-F — product specification,preserve source priority; no new ranking,existing source scope; no invented date,HPX-ARCH-001,crates/runtime/build.rs,Pending embedded/browser parity,local code builds; delivery unverified,source-reported evidence; not rerun in documentatio",
+        "needle": "HPX-RQ-001",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/import-export.md",
+        "line": 50,
+        "quote": "| `.xml` | A specifically named, versioned export schema/profile containing text, occurrence/range IDs and typed reference/incidence/provenance structures; retain readable labels and explicit unsupported-field diagnostics. Generic XML is not itself a sufficiently specified format. |",
+        "needle": "Generic XML",
+        "matched": true
+      }
+    ],
+    "problem": "Owner-confirmed bundled/embedded Pandoc removes a separate installation step but does not select a binding/helper distribution. The one-executable runtime constraint, writer versions, XML/JSON schemas, templates/styles/locale and external resource behavior are not yet reconciled in an executable format profile.",
+    "consequences": "A later exporter could silently depend on another installed process, fetch mutable resources or generate non-reconstructible citations/relationships. This is an unresolved design constraint, not proof that the requirements are impossible together.",
+    "demonstration": "Compare release packaging and future compiler clauses. Enumerate embedded library versus bundled/extracted helper versus narrower compatible writer; no package or compiler was installed for this review.",
+    "alternative_interpretations": "A bundled helper may satisfy user experience while requiring an explicit interpretation of one executable. An embedded implementation may satisfy packaging but increase build/licensing complexity.",
+    "possible_remedies": "Write a compiler ADR with licence/provenance, packaging, sandbox/resource limits and exact reproducibility profile; separately select XML/JSON semantics and PDF route.",
+    "tradeoffs": "More formats increase maintenance and loss mappings. Avoid general compiler abstractions beyond the owner-confirmed targets.",
+    "next_action": "Owner decides packaging interpretation after a concrete alternatives study; freeze a minimal MD/HTML academic profile first.",
+    "owner_approval": "Yes — packaging/format scope; no decision inferred here.",
+    "priority": "P2 before academic export implementation",
+    "likelihood": "Future contradiction possible, not a confirmed impossible requirement."
+  },
+  {
+    "id": "HPX-FIND-012",
+    "title": "Portable package and restore contracts are not ready for durable interchange",
+    "category": "Missing specification / data integrity risk",
+    "severity": "High",
+    "confidence": "High",
+    "status": "Confirmed future format gap",
+    "scope": "Portable import/export/backup/restore",
+    "processes": [
+      "HPX-PROC-013.007",
+      "HPX-PROC-014"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/external-integrations.md",
+        "line": 32,
+        "quote": "Source inputs propose workspace-centric .hpx, .hpxz portable packages, .hpx.json interchange and .hpxe encrypted backups. Only the .hpx local slice has accepted implementation design. The other byte formats, streaming encryption, compression, dependency/asset packaging and round-trip contracts remain TBD. Proposed GitHub backup is separate from Markdown publication: locally encrypt, create-only remote names with race-safe preconditions, verify be",
+        "needle": ".hpxz",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/formats/hpx-workspace.md",
+        "line": 55,
+        "quote": "## Compatibility and migration",
+        "needle": "Compatibility and migration",
+        "matched": true
+      },
+      {
+        "path": "docs/08-assurance/recovery.md",
+        "line": 40,
+        "quote": "Durability assumes local filesystem, functioning SQLite VFS/fsync and storage hardware. No network filesystem support. Newly created file is create-only with restrictive permissions on Unix; reject symlink opens where supported. Parent directories must be user-controlled; no claim against a malicious same-user host. Consistent backup requires SQLite backup API; copying a live database or just ignoring WAL is unsupported. Portable `.hpxz`/`.hpx.js",
+        "needle": "copying a live database",
+        "matched": true
+      }
+    ],
+    "problem": "Names .hpxz/.hpx.json/.hpxe do not supply complete bytes/schema, closure, size/stream limits, identity collision rules, algorithm negotiation, signatures, key recovery or roundtrip guarantees. Current consistent SQLite backup is specific to native enrollment, not a delivered portable restore.",
+    "consequences": "Premature formats can permanently lose nested source bindings or import misleading identity/authority. Copying a live WAL DB is explicitly unsupported and must not substitute for backup.",
+    "demonstration": "Attempt a paper roundtrip of repeated occurrence paths, retrospective assertions, private checkpoints and unknown optional records. Current high-level contracts do not define all encodings or inclusion/disclosure rules.",
+    "alternative_interpretations": "Deferral is intentional; a native encrypted snapshot is useful within its documented scope and need not solve general interchange.",
+    "possible_remedies": "Design a minimal versioned interchange manifest with exact closure and unknown-record policy; bounded staged validation; create-only restore; corruption/roundtrip vectors and migration strategy.",
+    "tradeoffs": "Streaming reduces memory but complicates authenticated all-or-nothing import; packaging every private record may disclose more than a recipient is authorized to see.",
+    "next_action": "Owner selects inclusion/privacy and identity policy before any real package acceptance.",
+    "owner_approval": "Yes for durable format acceptance and selective disclosure.",
+    "priority": "P1 before portable real-data interchange",
+    "likelihood": "High cost of format mistakes after distribution; no current import failure demonstrated."
+  },
+  {
+    "id": "HPX-FIND-013",
+    "title": "Remote job recovery has sound high-level states but missing executable reconciliation",
+    "category": "Missing specification / reliability risk",
+    "severity": "High",
+    "confidence": "High",
+    "status": "Confirmed future recovery gap",
+    "scope": "GitHub and other provider side effects",
+    "processes": [
+      "HPX-PROC-015.004",
+      "HPX-PROC-015.005",
+      "HPX-PROC-012.005"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/external-integrations.md",
+        "line": 87,
+        "quote": "GitHub writes cannot participate in an atomic local graph transaction. Use an encrypted/authenticated durable job/outbox with the approved input and explicit queued/running/succeeded/conflict/failed/**outcome unknown** states; add cancellation-requested/irreversible-result handling as applicable. Success needs a verified remote commit/result bound to that job and destination. A local response failure after provider success is not evidence that no",
+        "needle": "unknown",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/external-integrations.md",
+        "line": 89,
+        "quote": "Enforce a provider-side concurrency condition matching the promised remote-head contract. Reading a head then performing an unconditional write is a check/write race; the Contents API's file blob SHA is not itself an expected branch-head condition. Evaluate a suitable atomic expected-head operation and prove its actual failure/retry semantics during implementation. GitHub documents file SHA in [Contents API](https://docs.github.com/en/rest/repos/",
+        "needle": "expectedHeadOid",
+        "matched": true
+      }
+    ],
+    "problem": "The documentation correctly separates approval, local outbox and provider conditional writes, including unknown outcomes. Exact durable job schema, provider-specific identity/equality probes, lease/retry rules, cancellation, credential revocation and crash recovery remain to select.",
+    "consequences": "A naive retry could duplicate a foreign change or overwrite a concurrent remote update even though the local job appears failed. A local receipt cannot by itself prove a provider did or did not write.",
+    "demonstration": "Sequence: provider accepts conditional write; reply is lost; process crashes before recording success. The planned unknown state is necessary, but precise probe/reconcile behavior remains unspecified.",
+    "alternative_interpretations": "This is a deliberate future gate, not a discovered bug in an existing GitHub publisher; no such live publisher is claimed.",
+    "possible_remedies": "Define one provider operation end-to-end: frozen exact bytes/precondition, encrypted job, transition table, reconciliation evidence and user review of still-unknown state. Keep create-only backup distinct from Markdown update.",
+    "tradeoffs": "Provider APIs have different preconditions (branch expectedHeadOid versus file SHA); hiding them behind a false exactly-once abstraction harms correctness.",
+    "next_action": "Design/fault-model the smallest GitHub publication before provider connection and implementation.",
+    "owner_approval": "Yes for connection, credentials and publication; routine mock modelling is already within future design scope.",
+    "priority": "P1 before any provider write implementation",
+    "likelihood": "Lost reply and remote races are ordinary distributed-system failure modes."
+  },
+  {
+    "id": "HPX-FIND-014",
+    "title": "Concurrent structural acceptance needs more than local acyclicity",
+    "category": "Data integrity risk / missing specification",
+    "severity": "High",
+    "confidence": "High for counterexample",
+    "status": "Confirmed mathematical risk; future mechanism absent",
+    "scope": "Future federation and multi-user structure",
+    "processes": [
+      "HPX-PROC-005.005",
+      "HPX-PROC-017.002"
+    ],
+    "sources": [
+      {
+        "path": "docs/05-domain/hypergraph-mathematics.md",
+        "line": 46,
+        "quote": "| Expansion | Directed acyclic dependency projection | Recursively included content; reject accepted expansion cycles |",
+        "needle": "acyclic",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/component-architecture.md",
+        "line": 56,
+        "quote": "- Ordered placement representation, structural conflict acceptance and live text/branch concurrency semantics; a text CRDT does not validate graph moves.",
+        "needle": "a text CRDT does not validate graph moves",
+        "matched": true
+      },
+      {
+        "path": "docs/07-implementation/algorithms/expansion-validation.md",
+        "line": 44,
+        "quote": "The implementation uses iterative Kahn validation and ordered maps. Parallel edges and repeated dependencies are valid. A successful run spends exactly 2V + 2E defined work units, stores O(V + E) data and performs O((V + E) log V) ordered-map work (with a constant empty case). It mutates no input and does not require storage, network, keys or a principal. Its caller must supply the complete correct projection and authorize any records used to bui",
+        "needle": "projection",
+        "matched": true
+      }
+    ],
+    "problem": "Two locally accepted acyclic expansion updates may form a cycle when combined. Single-parent occurrence constraints can likewise conflict. The local Kahn validator checks a supplied projection; it does not choose a globally convergent rejection/acceptance policy or prove the caller closure complete.",
+    "consequences": "Replicas might accept different documents or repeatedly reject each other without a specified causal/authority conflict rule. Reading order and DAG order cannot substitute for conflict semantics.",
+    "demonstration": "Actual review counterexample in model-results.json: A accepts X→Y, B accepts Y→X; each is acyclic, union is cyclic. This is independent of text CRDT correctness.",
+    "alternative_interpretations": "The architecture explicitly recognizes federation as gated. No claim that current local operation is defective follows.",
+    "possible_remedies": "Specify authoritative operation identity, causal context, deterministic structural acceptance/conflict representation, rights evaluation and partial-knowledge behavior before choosing replication transport.",
+    "tradeoffs": "Central ordering simplifies validity but changes availability/authority; decentralized deterministic conflict policy needs explicit user-visible outcomes and retained rejected proposals.",
+    "next_action": "Owner chooses availability/conflict semantics after a two-replica bounded model; do not infer MLS solves graph convergence.",
+    "owner_approval": "Yes — distributed authority and conflict semantics.",
+    "priority": "P1 before collaboration/federation architecture commitment",
+    "likelihood": "Counterexample certain under naive union; actual future policy unselected."
+  },
+  {
+    "id": "HPX-FIND-015",
+    "title": "Agent proposal approval needs a versioned target and authority contract",
+    "category": "Missing specification / security risk",
+    "severity": "High",
+    "confidence": "High",
+    "status": "Confirmed future application-boundary gap",
+    "scope": "Future AI and MCP mutation",
+    "processes": [
+      "HPX-PROC-012",
+      "HPX-PROC-015.006"
+    ],
+    "sources": [
+      {
+        "path": "docs/06-subsystems/document-engine.md",
+        "line": 107,
+        "quote": "Logical capabilities (identity, content/anchors, composition, revisions, references, provenance, snapshots, private clipboard, queries, permissions and integrations) are modules inside the application boundary, not mandatory microservices. Browser, REST and MCP converge on the same authorized planner/publication semantics. Canonical records, reconstructible indexes and protected private user state have distinct responsibilities. SQLite is an avai",
+        "needle": "Browser, REST and MCP converge",
+        "matched": true
+      },
+      {
+        "path": "docs/03-requirements/system-requirements.md",
+        "line": 101,
+        "quote": "Human and agent principals remain distinct. Context selection, model output and document instructions grant no permissions. Proposals freeze exact targets, action scope, model/actor attribution and expected state; approval rechecks current rights. Mock proposal/approval/recovery precedes live authoring. External model disclosure is explicit and mode-dependent.",
+        "needle": "Proposals freeze exact targets",
+        "matched": true
+      },
+      {
+        "path": "docs/02-governance/ai-development-protocol.md",
+        "line": 65,
+        "quote": "12. At each completed milestone, record its scope and actual validation evidence, commit the relevant source/documentation, and push to the configured GitHub remote without asking again for routine approval. A milestone is a bounded, reviewable outcome, not every edit. Preserve unrelated work, exclude secrets/runtime data, and never force-push to bypass divergent history. Verify push success; if push or CI fails, investigate and report the actual",
+        "needle": "approval",
+        "matched": true
+      }
+    ],
+    "problem": "High-level rules require explicit provider connection, permitted exact context, proposals and human authorization, but do not yet define complete proposal schema, target/expected-head binding, approval expiry, delegated tool scopes, cancellation/replay and consequential interaction retention.",
+    "consequences": "A stale or changed tool payload could inherit an approval intended for a different exact plan; untrusted model text may be mistaken for authority if alternate interfaces bypass the coordinator.",
+    "demonstration": "Paper test: human reviews target revision R, another action advances to R2, agent submits a modified patch under old approval. Required rejection/review principle is clear; exact message/evidence protocol remains missing.",
+    "alternative_interpretations": "No live agent mutation feature is delivered; UI placeholders and future specification are correctly distinct from integration.",
+    "possible_remedies": "Define minimal frozen proposal/approval data and route all accepted edits through existing application expected-state and receipt semantics. Mock prompt injection, stale target, revoked grant, lost reply and changed-operation cases before live providers.",
+    "tradeoffs": "Recording every provider message can increase sensitive retention; capture consequential observable evidence with approved scope rather than private chain-of-thought.",
+    "next_action": "Review scoped approval and disclosure design before any live credential or tool mutation.",
+    "owner_approval": "Yes — provider connection, disclosure and delegation policy.",
+    "priority": "P1 before live agent mutation",
+    "likelihood": "Known general failure mode; no present exploit demonstrated."
+  },
+  {
+    "id": "HPX-FIND-016",
+    "title": "Local TLS trust evidence does not close portable distribution lifecycle",
+    "category": "Missing specification / portability risk",
+    "severity": "High",
+    "confidence": "High",
+    "status": "Confirmed release-readiness gap",
+    "scope": "Installer, certificate renewal/removal, platform support",
+    "processes": [
+      "HPX-PROC-001",
+      "HPX-PROC-016.006"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/local-browser-trust-proposal.md",
+        "line": 1,
+        "quote": "# Local browser certificate trust proposal",
+        "needle": null,
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0016-local-development-signing.md",
+        "line": 1,
+        "quote": "# Stable local development signing identity",
+        "needle": null,
+        "matched": true
+      },
+      {
+        "path": "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+        "line": 92,
+        "quote": "Keychain UI visual/browser acceptance remains unexecuted under the owner's browser preference; earlier UI screenshots do not verify the new controls. No real-data acceptance, portable keychain/support matrix, hostile-host protection, rotation/rollback witness, revocation/erasure, complete trust lifecycle or publication is claimed. Use [ADR014](../../04-architecture/decisions/0014-keychain-unlock-policy.md) and [HPX-TEST-009](../../registers/tests",
+        "needle": "portable",
+        "matched": true
+      }
+    ],
+    "problem": "An approved local certificate and verified Chromium preflight establish a scoped development workflow. They do not supply portable trust enrollment, certificate expiry/renewal/removal, distribution signing identity continuity or a complete supported-platform keychain/browser matrix. The failed self-signing experiment was reverted to approved ad-hoc development signing.",
+    "consequences": "New users may face blocked startup or repeated credential prompts; tempting certificate-warning bypasses would violate the trust requirement. Signing an executable does not itself establish TLS browser trust.",
+    "demonstration": "Compare bounded local trust evidence, ADR016 outcome and future release/platform gates. No trust store, certificate or native secret was touched in this review.",
+    "alternative_interpretations": "A local developer-only milestone can be valid with explicit manual steps; it need not promise a consumer installer.",
+    "possible_remedies": "Define the intended release audience/platform matrix and a reviewed certificate lifecycle with fingerprint checks, failure rollback and uninstall. Evaluate Apple-issued signing separately with its own credentials.",
+    "tradeoffs": "Automated trust installation needs explicit owner/user authorization and platform-specific handling; stronger independent client delivery is a distinct hostile-host requirement.",
+    "next_action": "Owner chooses distribution support and signing route before portable release claims.",
+    "owner_approval": "Yes — trust installation and signing credentials require separate authorization.",
+    "priority": "P1 before portable release",
+    "likelihood": "Certain missing platform coverage; failure incidence outside tested host unknown."
+  },
+  {
+    "id": "HPX-FIND-017",
+    "title": "Quality acceptance lacks measurable workloads and platform thresholds",
+    "category": "Verification gap / excessive specification placement",
+    "severity": "Medium",
+    "confidence": "High",
+    "status": "Confirmed assurance gap",
+    "scope": "Performance, accessibility, recovery and portability",
+    "processes": [
+      "HPX-PROC-004",
+      "HPX-PROC-018.003"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/testing-strategy.md",
+        "line": 51,
+        "quote": "## Pass/fail or measurement thresholds",
+        "needle": "Pass/fail or measurement thresholds",
+        "matched": true
+      },
+      {
+        "path": "docs/06-subsystems/frontend-interaction.md",
+        "line": 270,
+        "quote": "Records carry unitKind (sentence, paragraph or section), independent of the transformation kind and direction. Sentence labels remain inline. Paragraph/section rows reserve 22px above their source line and reuse the same glyphs, individual actions, 1500 ms tooltip delay and source-neutral selection behavior. No Markdown blank lines are inserted. The Navigator reserves matching space and renders the same row geometry; its controls remain inert.",
+        "needle": "1500",
+        "matched": true
+      },
+      {
+        "path": "docs/03-requirements/acceptance-criteria.md",
+        "line": 1,
+        "quote": "# Acceptance and Conformance",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "problem": "Some interaction details are precise (desktop widths, source-neutral widgets and tooltip delay), while generic assurance sections defer performance, accessibility and platform thresholds. Exact UI constraints are owner requirements, not defects; their repetition across levels increases maintenance cost when no single current assurance matrix exists.",
+    "consequences": "A feature can pass examples yet have no agreed latency, workload size, keyboard/screenreader or failure budget. Repeated presentation details may drift while major quality risks remain unmeasurable.",
+    "demonstration": "The testing strategy explicitly forbids fabricated benchmark/WCAG/platform claims and provides generic threshold text. Existing synthetic desktop evidence is valuable but narrower than full quality acceptance.",
+    "alternative_interpretations": "Early local scope may intentionally prioritize source correctness over performance and broad platform support. Do not manufacture numerical targets.",
+    "possible_remedies": "Create a small owner-reviewed quality scenario matrix: input size, concurrent contexts, operation, environment, required behavior and measurement; keep detailed presentation values in one source with cross-references.",
+    "tradeoffs": "Premature hard targets can constrain implementation without user value. Choose workloads from actual use and clearly label observations versus acceptance thresholds.",
+    "next_action": "Agree first supported workloads and accessibility scenarios before scale/conformance claims.",
+    "owner_approval": "Yes for new acceptance thresholds; measuring current behavior is routine.",
+    "priority": "P2 before broader quality claims",
+    "likelihood": "Coverage gap certain; practical dissatisfaction unknown."
+  },
+  {
+    "id": "HPX-FIND-018",
+    "title": "Compound requirement seeds and source counts overstate completeness if treated as proof",
+    "category": "Maintainability concern / verification gap",
+    "severity": "Medium",
+    "confidence": "High",
+    "status": "Confirmed traceability granularity limit",
+    "scope": "All requirements and migration evidence",
+    "processes": [
+      "HPX-PROC-018.005"
+    ],
+    "sources": [
+      {
+        "path": "docs/registers/requirements.csv",
+        "line": 31,
+        "quote": "HPX-RQ-030,HPX-REQ-002,Future bundled Pandoc export with academic citations and selectable hypergraph content plus readable relation fallbacks and rights appendix,Explicit owner-confirmed INPUT.md item4 on 2026-10-26; future documentation inclusion only,future planning; not an immediate implementation priority,roadmap stage6 after exact export/branch/citation foundations,HPX-SUB-008;HPX-ARCH-002;HPX-ARCH-003;HPX-GOV-004,,future per-format citatio",
+        "needle": "HPX-RQ-030",
+        "matched": true
+      },
+      {
+        "path": "docs/registers/claim-coverage.csv",
+        "line": 1,
+        "quote": "section_id,source_id,original_path,start_line,end_line,destination_id,destination_path,destination_section,disposition,source_section_sha256,review_status,current_source_path,archive_member",
+        "needle": null,
+        "matched": true
+      },
+      {
+        "path": "docs/MIGRATION-REPORT.md",
+        "line": 9,
+        "quote": "## Deliverables and coverage",
+        "needle": "coverage",
+        "matched": true
+      },
+      {
+        "path": "docs/03-requirements/system-requirements.md",
+        "line": 1,
+        "quote": "# System Requirements",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "problem": "The register has 31 compound seeds rather than an exhaustive atomized requirement set. Existing historical claim/coverage counts and this review’s 60-document paths demonstrate coverage bookkeeping, not individual correctness or complete architecture. Broad academic export and working-branch rows contain many independent acceptance obligations.",
+    "consequences": "A nominal 31/31 mapping can hide missing rights-policy types, exact formats, error cases and verification targets. Generic template headings are not implemented mechanisms.",
+    "demonstration": "Decompose RQ030 into selection/closure, compiler packaging, citations, per-format role mapping, rights reports and schemas. One row cannot certify all six independently. This review maps all seeds but explicitly refuses atomic coverage percentage.",
+    "alternative_interpretations": "Compound seeds are reasonable during migration when original statements and acceptance are preserved. The risk arises only when consumers treat them as exhaustive testable units.",
+    "possible_remedies": "Incrementally derive atomic obligations only for the next selected feature, retaining source lines, adoption scope, process leaf, verification method and unresolved mechanism. Keep source coverage separate from semantic coverage.",
+    "tradeoffs": "Full retroactive atomization is costly and could accidentally invent requirements; do not replace adopted source meaning with editorial decomposition.",
+    "next_action": "Use the next branch integration and export design as two small traceability pilots.",
+    "owner_approval": "Routine trace maintenance; changing requirement meaning needs owner decision.",
+    "priority": "P2 — before declaring feature completeness",
+    "likelihood": "High risk of reporting misuse; no source-loss claim made."
+  },
+  {
+    "id": "HPX-FIND-019",
+    "title": "Formal correspondence should target cross-subsystem contracts incrementally",
+    "category": "Potential opportunity / verification gap",
+    "severity": "Medium",
+    "confidence": "High",
+    "status": "Confirmed assurance boundary; proposed next step",
+    "scope": "Publication, checkpoint promotion and request reconciliation",
+    "processes": [
+      "HPX-PROC-003",
+      "HPX-PROC-008",
+      "HPX-PROC-018.001"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/formal-validation-digest.md",
+        "line": 26,
+        "quote": "**Evidence date:** 2026-10-24. **Toolchain:** Lean/Lake 4.35.0. **Current inventory:** four checked Lean model theorems and one checked theorem about an Aeneas-extracted real Rust helper. The full Rust graph validator remains unproved. This is a maintained evaluation record for developers and mathematicians, not a claim that the application or Rust graph algorithm is formally verified.",
+        "needle": "full Rust graph validator remains unproved",
+        "matched": true
+      },
+      {
+        "path": "docs/08-assurance/formal-validation-digest.md",
+        "line": 44,
+        "quote": "| Internal `expansion::spend` | Charon extraction from unchanged Rust, Aeneas translation, exact generated-source replay and `spend_spec` theorem | **Extracted semantics checked.** Exhaustion preserves the counter; successful accounting increments once without overflow/panic. This trusts the extraction/translation/backend boundary; see §7. |",
+        "needle": "spend",
+        "matched": true
+      },
+      {
+        "path": "docs/07-implementation/protocols/draft-publication.md",
+        "line": 1,
+        "quote": "# Draft acknowledgement and atomic commit protocol",
+        "needle": null,
+        "matched": true
+      }
+    ],
+    "problem": "Existing proofs accurately disclose their narrow scope. Cross-subsystem properties—late acknowledgement preserving newer source, source-type separation, atomic publication/receipt, and failure-independent post-Commit replacement—remain primarily executable-test contracts. The review model checks an abstraction, not extracted Rust or browser execution.",
+    "consequences": "Correct local validators do not by themselves prevent context or ordering errors in the complete workflow. A whole-application proof would be disproportionate and is not implied by current formal evidence.",
+    "demonstration": "The review explores 8,131 abstract states/18,317 transitions through depth 10, and finds short counterexamples in three deliberately wrong variants. Those mutants are not HPX defects. Crypto/fsync/auth revocation/Unicode are outside the model.",
+    "alternative_interpretations": "Existing integration/fault tests may provide sufficient practical assurance; formalization is an opportunity, not a prerequisite invented by this review.",
+    "possible_remedies": "Promote a few critical invariants into reusable state-machine contracts and property/fault tests; consider extraction/model correspondence only where source/toolchain boundaries are tractable.",
+    "tradeoffs": "Every extra model needs correspondence maintenance. Strong claims about code require extraction/refinement evidence, not a bigger handwritten state machine.",
+    "next_action": "Keep the small model as review evidence and select one high-value property for implementation-connected checking after integration.",
+    "owner_approval": "No new approval for analysis; choosing new acceptance/proof obligations needs owner review.",
+    "priority": "P2 — after closing immediate integration gaps",
+    "likelihood": "Potential benefit supported; no proof defect found."
+  },
+  {
+    "id": "HPX-FIND-020",
+    "title": "Crash tests and enrollment backup do not establish complete disaster recovery",
+    "category": "Verification gap / reliability risk",
+    "severity": "High",
+    "confidence": "High",
+    "status": "Confirmed evidence limit",
+    "scope": "Disk failure, power loss, corruption and restore",
+    "processes": [
+      "HPX-PROC-003.005",
+      "HPX-PROC-014",
+      "HPX-PROC-018.002"
+    ],
+    "sources": [
+      {
+        "path": "docs/08-assurance/recovery.md",
+        "line": 32,
+        "quote": "The storage test corpus records restart-exact Unicode/CRLF drafts, explicit commit/historical reconstruction, duplicate/changed retry, stale-writer rejection, rollback on injected error, wrong-password/ciphertext substitution/future-schema failures and real process exit on both sides of COMMIT. No claim is made that process exits exhaust power-loss/hardware/fsync-failure scenarios. Consistent backup and portable restore are future capabilities; c",
+        "needle": "No claim is made that process exits exhaust power-loss",
+        "matched": true
+      },
+      {
+        "path": "docs/04-architecture/decisions/0014-keychain-unlock-policy.md",
+        "line": 29,
+        "quote": "4. Upgrading a schema-1 workspace requires a separately invoked enrollment/upgrade action while unlocked. Create and verify a consistent encrypted SQLite backup with restrictive permissions before the transaction. Preserve all existing encrypted record bytes and logical history. Add the table and change `user_version` atomically; do not upgrade merely by opening a file. Define explicit readers for supported schema 1 and 2; future/unknown versions",
+        "needle": "backup",
+        "matched": true
+      },
+      {
+        "path": "docs/08-assurance/recovery.md",
+        "line": 40,
+        "quote": "Durability assumes local filesystem, functioning SQLite VFS/fsync and storage hardware. No network filesystem support. Newly created file is create-only with restrictive permissions on Unix; reject symlink opens where supported. Parent directories must be user-controlled; no claim against a malicious same-user host. Consistent backup requires SQLite backup API; copying a live database or just ignoring WAL is unsupported. Portable `.hpxz`/`.hpx.js",
+        "needle": "functioning SQLite VFS/fsync",
+        "matched": true
+      }
+    ],
+    "problem": "Process-exit injections show transaction-boundary behavior under the tested filesystem. They do not exhaust disk-full, fsync/VFS errors, torn storage, damaged backup, credential loss or restoration to a new trusted environment. Enrollment’s verified encrypted backup is a useful narrow increment, not a complete recovery product.",
+    "consequences": "Acknowledged data durability is conditional on the local storage stack; users lack a fully specified general restore procedure. Failure to distinguish these scopes can overstate survivability.",
+    "demonstration": "Read the explicit filesystem/hardware assumptions and narrow backup evidence. No hardware/power-loss or corrupt-backup experiment is executed in this review.",
+    "alternative_interpretations": "SQLite/FULL and OS guarantees can be reasonable assumptions for the first slice; exhaustive fault simulation is not always cost-effective.",
+    "possible_remedies": "Specify supported failure envelope and an isolated backup/restore rehearsal with missing/corrupt key wrapper, truncated backup, disk-full/fsync failure and process restart outcomes. Preserve originals and distinguish unavailable from irrecoverable data.",
+    "tradeoffs": "Fault-injection adapters and platform testing cost effort; portable recovery must also avoid granting historical keys beyond intended recipients.",
+    "next_action": "Before real-data recovery claims, select a minimal supported restore design and evidence plan.",
+    "owner_approval": "Yes for recovery guarantees, format and credential policy; isolated analytical/fault tests are routine.",
+    "priority": "P1 before disaster-recovery claims",
+    "likelihood": "Hardware failure likelihood unmeasured; evidence limit certain."
+  }
+]

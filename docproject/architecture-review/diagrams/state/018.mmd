@@ -1,0 +1,18 @@
+%% HPX-DIAG-018 — Workspace and buffer state machines
+%% Scope: Which session/unlock states permit editing and which acknowledgement states remain uncertain?
+%% Local unless explicitly F / G
+stateDiagram-v2
+ [*] --> Locked
+ Locked --> Unlocked: explicit successful passphrase / enrolled native unlock
+ Locked --> Locked: wrong credential / invalid format
+ Unlocked --> Editing: select owned document and branch
+ Editing --> SaveInFlight: freeze exact Save
+ SaveInFlight --> Editing: exact acknowledgement, preserve later typing
+ SaveInFlight --> UnknownReadOnly: outcome uncertain / lock requested
+ UnknownReadOnly --> Editing: reconcile original receipt and context
+ Editing --> LockDraining: explicit lock
+ LockDraining --> Locked: pending operations resolved, server lock known
+ LockDraining --> UnknownReadOnly: lock outcome unknown
+ Unlocked --> Locked: explicit lock
+ note right of Locked: Bootstrap cookie is separate from data-key unlock
+ note right of UnknownReadOnly: Do not silently enable another context or replace source

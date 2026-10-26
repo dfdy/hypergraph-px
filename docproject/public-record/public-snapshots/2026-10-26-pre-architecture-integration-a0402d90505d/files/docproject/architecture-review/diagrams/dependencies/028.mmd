@@ -1,0 +1,17 @@
+%% HPX-DIAG-028 — Dependency and contention structure
+%% Scope: Which dependencies are acyclic and where is responsibility concentrated?
+%% Local unless explicitly F / G
+flowchart TD
+ RT["Rust runtime"] --> ST["Storage coordinator and sibling modules"]
+ RT --> DM["Pure domain"]
+ RT --> KC["Native keychain"]
+ ST --> DM
+ ST --> CR["Crypto"]
+ ST --> KC
+ ST --> SQ["SQLite"]
+ FE["Frontend app.js coordinator"] --> AD["runtime-adapter and feature panels"]
+ AD --> HTTP["Strict HTTPS contract"]
+ RT --> MUT["One workspace mutex; bounded 16-worker ingress"]
+ MUT --> ST
+ WARN["Observed local crate graph DAG; storage modules share super imports; broad frontend orchestration is a maintenance risk, not proof of a cycle"]
+ L["Legend: dependency arrows; frontend and Rust are connected by protocol, not linked imports; regex graph limits in dependency report"]

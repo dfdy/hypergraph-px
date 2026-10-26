@@ -21,3 +21,9 @@ Unpopulated future topics remain reserved in the [document register](../register
 - [Accepted first Merge workflow](decisions/0015-initial-merge-workflow.md) — HPX-ADR-015; reviewed synthesis accepted; later parent-branch intent planned in stage5.
 
 - [Local development signing identity](decisions/0016-local-development-signing.md) — HPX-ADR-016; identity and exact user code-signing trust approved; continuity test awaits the specific temporary-item native grant.
+
+- [Accepted first durable comments](decisions/0017-initial-durable-comments.md) — HPX-ADR-017; owner adopted committed-passage comments first; wider lifecycle and draft anchors deferred.
+
+- [Accepted first local branch source policy](decisions/0018-initial-local-branches.md) — HPX-ADR-018; owner selected committed snapshots; implementation is in progress and branch Merge remains separate.
+
+- [Working branches and reference checkpoints](decisions/0019-working-branches-and-reference-checkpoints.md) — HPX-ADR-019; owner adopted this design; backend checkpoint/reference verification is separate from pending frontend delivery.

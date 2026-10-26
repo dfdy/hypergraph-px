@@ -1,0 +1,10 @@
+%% HPX-DIAG-008 — Transformation and annotation lower DFD
+%% Scope: How do exact sources feed new entities while source history stays retained?
+%% Local unless explicitly F / G
+flowchart LR
+ U["Reviewed command boundary"] -->|"source bindings / quote / target plan"| V(("006.002 exact validation"))
+ D[("Encrypted source history and current authority")] -->|"exact owned source"| V
+ V -->|"validated source evidence"| T(("007 Fork / Synthesis or 009 annotation"))
+ T -->|"new identity derivation OR annotation revision; original receipt"| O[("Encrypted canonical objects / indexes")]
+ T -->|"new entity IDs / rejection"| U
+ L["Legend: source data is read, never rewritten; derivation differs from same-node parents"]

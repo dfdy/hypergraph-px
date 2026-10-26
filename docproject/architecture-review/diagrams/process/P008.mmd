@@ -1,0 +1,14 @@
+%% HPX-DIAG-P008 — Named and private working branches subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-008<br/>Named and private working branches"]
+ P --> C0["HPX-PROC-008.001<br/>Create named child from committed snapshot<br/>G"]
+ P --> C1["HPX-PROC-008.002<br/>Select and recover branch context<br/>G"]
+ P --> C2["HPX-PROC-008.003<br/>Checkpoint unpublished working source<br/>G"]
+ P --> C3["HPX-PROC-008.004<br/>Capture working source reference atomically<br/>G"]
+ P --> C4["HPX-PROC-008.005<br/>Record exact promotion with Commit<br/>G"]
+ P --> C5["HPX-PROC-008.006<br/>Replace eligible private references after Commit<br/>G"]
+ P --> C6["HPX-PROC-008.007<br/>Fork unpublished checkpoint<br/>G"]
+ P --> C7["HPX-PROC-008.008<br/>Merge same-identity branches<br/>F"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

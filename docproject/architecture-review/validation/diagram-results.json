@@ -1,0 +1,467 @@
+{
+  "renderer": "11.12.2",
+  "browser": "<LOCAL_BROWSER_CACHE>/chromium-1248/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+  "headless": true,
+  "network": "All browser requests aborted; no personal profile or app server",
+  "results": [
+    {
+      "id": "HPX-DIAG-001",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1232.484375 762.3198852539062",
+      "elapsed_ms": 70,
+      "source_sha256": "75fbfebf65a0815ec09f1c8b7b0865c947ae3148eb444054b94640f808eee9c5"
+    },
+    {
+      "id": "HPX-DIAG-002",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1916 1116.426513671875",
+      "elapsed_ms": 23,
+      "source_sha256": "a78544b3248720e34abf2f75a5848a6042cfd9349937fc379cd98c67a6f688cf"
+    },
+    {
+      "id": "HPX-DIAG-003",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1181.21875 726",
+      "elapsed_ms": 14,
+      "source_sha256": "690a286523880a4537ebe7789af543c855d52a3db9d0ab31573cc5f3a2b25d49"
+    },
+    {
+      "id": "HPX-DIAG-004",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 2630",
+      "elapsed_ms": 24,
+      "source_sha256": "ddec92f22249b96770ec77a8a1746575d790042c5d4769771243f91468aaef2e"
+    },
+    {
+      "id": "HPX-DIAG-P001",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 902",
+      "elapsed_ms": 12,
+      "source_sha256": "c4b8cfb019d9e12e4952922e676094cc125bcb60af9cc6dd0ba17b155abd48ce"
+    },
+    {
+      "id": "HPX-DIAG-P002",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1126",
+      "elapsed_ms": 11,
+      "source_sha256": "f402689d69653c79001578194e4b6e970fdaf14cd19f03cd046089f849b74ef0"
+    },
+    {
+      "id": "HPX-DIAG-P003",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1150",
+      "elapsed_ms": 12,
+      "source_sha256": "844bf31bc978cf672b6ab8e0255c3955dc85215401a20cc2222082a971d42207"
+    },
+    {
+      "id": "HPX-DIAG-P004",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1174",
+      "elapsed_ms": 12,
+      "source_sha256": "78017479f82185c723bce2e5db189d2602f28b3fc67938f317da9fa36763392e"
+    },
+    {
+      "id": "HPX-DIAG-P005",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1150",
+      "elapsed_ms": 12,
+      "source_sha256": "424a23aa5030a7e2147fec9749a90c01ff4f7376883d3ac40041d97f91aefee4"
+    },
+    {
+      "id": "HPX-DIAG-P006",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1326",
+      "elapsed_ms": 13,
+      "source_sha256": "d16756b8e1a05a60351f086a3efb4eec08faf0dac02570c7ac467faec0c70c20"
+    },
+    {
+      "id": "HPX-DIAG-P007",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1150",
+      "elapsed_ms": 11,
+      "source_sha256": "df8d32b03890fea36ef1117068cbaf5e7a14d87f7ddff0c4c28d88f0dd7a1be0"
+    },
+    {
+      "id": "HPX-DIAG-P008",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1374",
+      "elapsed_ms": 11,
+      "source_sha256": "8332191d93e523085ba55b455eddc50ecf3c1b880c3a6ab8c66531e8c15325d7"
+    },
+    {
+      "id": "HPX-DIAG-P009",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 822",
+      "elapsed_ms": 8,
+      "source_sha256": "9a299ff6edba4dc93fcf2a32771e3df0f2be500fcfae5acea36f2cdca5b520c2"
+    },
+    {
+      "id": "HPX-DIAG-P010",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1022",
+      "elapsed_ms": 9,
+      "source_sha256": "a47e2bbf2655291049f60bc4a14eb67fb9e8ff2362fe068d573f11921f828ede"
+    },
+    {
+      "id": "HPX-DIAG-P011",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 670",
+      "elapsed_ms": 15,
+      "source_sha256": "769b6d692a6fe1c00745af6adf3036d5391e62233679f4e7fff4f31cd03e174c"
+    },
+    {
+      "id": "HPX-DIAG-P012",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 998",
+      "elapsed_ms": 17,
+      "source_sha256": "3450195dcf377dee00eecb475ebc0e3e26c6b6e97384b9f50f8e5ffe55ad5c88"
+    },
+    {
+      "id": "HPX-DIAG-P013",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1198",
+      "elapsed_ms": 13,
+      "source_sha256": "e6fc2d86b7c744ff5af8cca1510202bfce1e6917758ac3b888daff0476968971"
+    },
+    {
+      "id": "HPX-DIAG-P014",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 846",
+      "elapsed_ms": 9,
+      "source_sha256": "d3b6253cd2e13520c57c99401275e783b89121be6430aa969609a875aa80078a"
+    },
+    {
+      "id": "HPX-DIAG-P015",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 974",
+      "elapsed_ms": 9,
+      "source_sha256": "192dc4a487595fe79c47e748abf9cafe4918efa8203b2d3c0ba1183f36814c4f"
+    },
+    {
+      "id": "HPX-DIAG-P016",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1222",
+      "elapsed_ms": 10,
+      "source_sha256": "26ae2ab2b11107d9370e9c9140804c989f0e44bd30fef82293febe1104bc606c"
+    },
+    {
+      "id": "HPX-DIAG-P017",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 846",
+      "elapsed_ms": 9,
+      "source_sha256": "e8465f69022d3c95973252b04ffc49c601ec94850f4bd074c63962d5197c41e6"
+    },
+    {
+      "id": "HPX-DIAG-P018",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 586 1022",
+      "elapsed_ms": 9,
+      "source_sha256": "a1113998f984748aee20717a2271a1dcde2707dfe920541c90f5a0e5c1b4563a"
+    },
+    {
+      "id": "HPX-DIAG-005",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1122.46875 387",
+      "elapsed_ms": 11,
+      "source_sha256": "bbe7ee8ec40799f33fb8010cb941c6a574f89c642f826deae74f5827a09b89a0"
+    },
+    {
+      "id": "HPX-DIAG-006",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 2633.15625 726.2389526367188",
+      "elapsed_ms": 22,
+      "source_sha256": "41952c0364dc971eff07ad62d5b9b6fc82d51777ea18db9742a33d16fb31613f"
+    },
+    {
+      "id": "HPX-DIAG-007",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1608.109375 410.95703125",
+      "elapsed_ms": 10,
+      "source_sha256": "dd292cb6fb857452a22a6002458c14eab7314dd95964ce4aff94207cb0aeeec4"
+    },
+    {
+      "id": "HPX-DIAG-008",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1628.59375 498.9264831542969",
+      "elapsed_ms": 9,
+      "source_sha256": "7979dfa46ff4dbc92a292f4080a7a764deefa04832c7bf99268cdc5f8ad5a2e1"
+    },
+    {
+      "id": "HPX-DIAG-009",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1556.125 504.3171081542969",
+      "elapsed_ms": 10,
+      "source_sha256": "594e20e1439bfb015635664364103ad669cb9ec53a984d84bdb44bd8c5cf4de3"
+    },
+    {
+      "id": "HPX-DIAG-010",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 669 1282.25",
+      "elapsed_ms": 42,
+      "source_sha256": "961709acad813a1bf10750d9a7cb42aaeaa14fe599880f8f2ebcabb062dfbde5"
+    },
+    {
+      "id": "HPX-DIAG-011",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0.9247512817382812 2091.234375 398.07525634765625",
+      "elapsed_ms": 13,
+      "source_sha256": "d305b388477219cfd71819811a2bcdcee14c2a0c14ca0fa2659bcfb868700ae3"
+    },
+    {
+      "id": "HPX-DIAG-012",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1437.25 678.426513671875",
+      "elapsed_ms": 12,
+      "source_sha256": "b3a6998f992fdf229fc4d4c4389b9c8ecdb0aa86470335f4e1359fdecad7b23b"
+    },
+    {
+      "id": "HPX-DIAG-013",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "-50 -10 1293.5 862",
+      "elapsed_ms": 14,
+      "source_sha256": "f0315d9d6a609b0ed58cbaf1b2edd967c886eed8eea4650c03eab59ff7f413d1"
+    },
+    {
+      "id": "HPX-DIAG-014",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "-50 -10 1525 805",
+      "elapsed_ms": 8,
+      "source_sha256": "6dddbcb9813c136abb13f84fdb0a817b27eb2018ac74b1cf9d78ca24f136350d"
+    },
+    {
+      "id": "HPX-DIAG-015",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "-50 -10 1687 920",
+      "elapsed_ms": 8,
+      "source_sha256": "dd74fd0db1481607f7965060e0558e645dbf70bc413a52e7a40dd9a7bc4d2ee3"
+    },
+    {
+      "id": "HPX-DIAG-016",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "-50 -10 1573.5 817",
+      "elapsed_ms": 9,
+      "source_sha256": "a5a1e60c4f2b9bc0be166971aa9c70fcf7237170ab795e2c2b8bbc802042cd79"
+    },
+    {
+      "id": "HPX-DIAG-017",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1206 1171.421875",
+      "elapsed_ms": 14,
+      "source_sha256": "0f421e40381792a4236a695b542f9515932984c62fb3ea92c025caac12060a43"
+    },
+    {
+      "id": "HPX-DIAG-018",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1110.3828125 1018",
+      "elapsed_ms": 43,
+      "source_sha256": "98807d9b366eaa0f10d455cea848b40f2c945cfcbd11617345d511b66995565b"
+    },
+    {
+      "id": "HPX-DIAG-019",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1111.050048828125 1004.25",
+      "elapsed_ms": 38,
+      "source_sha256": "ff344dd7afaebcaa4521bb14f2b6bccc7f926c3d96a6fcb6e8ef467a8d0eea8b"
+    },
+    {
+      "id": "HPX-DIAG-020",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1215.9820556640625 644",
+      "elapsed_ms": 30,
+      "source_sha256": "8a193265604b30d609f2c5807146e4e79e0fb007a09ec946717dcd32356e47f4"
+    },
+    {
+      "id": "HPX-DIAG-021",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1027.5609130859375 970.1499633789062",
+      "elapsed_ms": 34,
+      "source_sha256": "232bd458b1b6084f84cae64bb408b6cdc2ca2c8e08f3ef5e271bdf2fbc7f3a5d"
+    },
+    {
+      "id": "HPX-DIAG-022",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 514.03125 1150",
+      "elapsed_ms": 44,
+      "source_sha256": "534a967b686cc468a8b3b2f064299f6d88d96a6e241e75f06cdf5de24dbeb710"
+    },
+    {
+      "id": "HPX-DIAG-023",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "-50 -10 1376.5 714",
+      "elapsed_ms": 8,
+      "source_sha256": "1e5bfe42d0253277c735cf2b21b218612956b2f718e0573f963cc8e37556bd27"
+    },
+    {
+      "id": "HPX-DIAG-024",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1967.296875 522.9296875",
+      "elapsed_ms": 14,
+      "source_sha256": "7fa8130fd9185c8bbb0fa8e0f37071b655bb6338c11933d71805ed3f88d8f200"
+    },
+    {
+      "id": "HPX-DIAG-025",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1695 1257.426513671875",
+      "elapsed_ms": 16,
+      "source_sha256": "dee01f49b83a66d12be5fae95cab8858cc1011b793a99601f2f98304f646390a"
+    },
+    {
+      "id": "HPX-DIAG-026",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 978.0625 1506.5",
+      "elapsed_ms": 14,
+      "source_sha256": "7083bbec96566d865f64e7d1225bde463f8493afe8b66156491eeb5ef8336671"
+    },
+    {
+      "id": "HPX-DIAG-027",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1664.3125 532",
+      "elapsed_ms": 13,
+      "source_sha256": "beb4c9e73b60da3aa24e8e769e4d248cf50202f4bcf8ef6a8bc4b973fb905f4a"
+    },
+    {
+      "id": "HPX-DIAG-028",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1250.38671875 550",
+      "elapsed_ms": 15,
+      "source_sha256": "68b42d585ab8a832c69d45b8822c2a9a8498600d27fa7e501231e666a61b9e0c"
+    },
+    {
+      "id": "HPX-DIAG-029",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 786 1038",
+      "elapsed_ms": 11,
+      "source_sha256": "c17a7948562039d14c9e47561c0de88c85c8a126ebb622187b1102c88a9fa4a0"
+    },
+    {
+      "id": "HPX-DIAG-030",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 1516 690",
+      "elapsed_ms": 15,
+      "source_sha256": "310c3cc6c83993069224b5e4363523b92ecb59dda262bdd0bac7b40e5ce3fdc2"
+    },
+    {
+      "id": "HPX-DIAG-031",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 2097.40625 464",
+      "elapsed_ms": 11,
+      "source_sha256": "dd329f74d5ee6683114d9392ca225f3206deb432b6b38a51a955678614f00cd7"
+    },
+    {
+      "id": "HPX-DIAG-032",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 7 1250.71875 464",
+      "elapsed_ms": 8,
+      "source_sha256": "65cc4f6755d74f1a235a6d8096dcf8f3f69702dec1c19201c1fb19c079a2c478"
+    },
+    {
+      "id": "HPX-DIAG-033",
+      "parsed": true,
+      "rendered": true,
+      "svg_xml": true,
+      "viewBox": "0 0 2123.046875 398.5",
+      "elapsed_ms": 8,
+      "source_sha256": "53bae7c7e10473922fc1571e651ae042506a1fdcef9cc1f20c54e122c942e703"
+    }
+  ]
+}

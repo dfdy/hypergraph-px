@@ -22,6 +22,12 @@ Accepted specifications own only their bounded subjects. Requirements constrain 
 
 These are abstraction levels, not waterfall phases. Work may refine them in both directions. Prefer concise source-backed documents and links over repeated normative definitions or empty templates.
 
+## Architectural review integration
+
+The owner authorized integration of supported review findings on 2026-10-26. Before any specification edit, **327 files** were preserved and verified byte-for-byte in the [pre-integration historical snapshot](../docproject/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d/README.md), including the supporting non-authoritative review. The unredacted immutable master remains local. The owner subsequently authorized redaction and GitHub publication of the linked public derivative; it preserves 324 payloads exactly and redacts only local paths in three reports. Ignored private originals remain excluded. See the [publication record](09-guides/reference/documentation-publication-2026-10-26.md).
+
+Use the [current scope and evidence summary](09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) for readiness and the [integration record](09-guides/reference/implementation-resumption.md#architecture-review-integration-2026-10-26) for finding dispositions, implementation effects and unresolved owner decisions. Retained source-era status statements are historical evidence; accepted semantics survive, but those statements do not override explicitly recorded later implementation or acceptance limits. The [roadmap](02-governance/roadmap.md#next-implementation-units-after-review-integration) gives the bounded next work. Application implementation remains stopped.
+
 ## Constitution
 
 Use progressive precision and one authoritative definition per claim. Separate intent, decisions, implementation and evidence. Specify proportionately to risk and preserve bidirectional traceability where practical. Keep version-controlled UTF8 text, explicit uncertainty and maintained verification; never invent missing details or promote a proposal automatically. Preserve human approval authority and publicly inspectable contribution records without publishing private inputs.

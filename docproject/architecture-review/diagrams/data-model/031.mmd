@@ -1,0 +1,14 @@
+%% HPX-DIAG-031 — Publication, branch and actor bindings
+%% Scope: Which identities authorize a current action and which records merely retain historical attribution?
+%% Local unless explicitly F / G
+flowchart LR
+ C["Authenticated encrypted catalog"] --> P["Current Principal / Device"]
+ P -->|"current authorization before replay"| OP["Frozen OperationId and exact command digest"]
+ OP --> RC["Original encrypted Receipt"]
+ OP --> EV["Immutable publication event: actor / device / operation"]
+ EV --> RV["Same-node Revision and closed Snapshot"]
+ CB["Content branch mutable head"] --> RV
+ DR["Independent branch Draft"] -->|"selected content branch context"| CB
+ DR -->|"exact base revision; mutable Save with generation"| RV
+ EV -->|"recorded publisher evidence only"| CV["Contributor view - not original authorship or presence"]
+ L["Legend: historical actor identity is evidence, never a current permission grant; general groups/delegation are future"]

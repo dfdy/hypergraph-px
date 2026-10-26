@@ -1,0 +1,25 @@
+%% HPX-DIAG-016 — Keychain enrollment compensation
+%% Scope: How are SQLite and native keychain partial failure handled without weakening passphrase recovery?
+%% Local unless explicitly F / G
+sequenceDiagram
+ actor U as Unlocked owner
+ participant S as Storage
+ participant F as Encrypted backup
+ participant K as Native keychain
+ participant D as SQLite
+ U->>S: Explicit enroll
+ S->>F: Consistent backup / verify fingerprint / fsync
+ S->>D: BEGIN writer, recheck current fingerprint and authority
+ S->>K: Create unique random device secret
+ alt Native create denied / existing
+ K-->>S: Failure, never overwrite existing item
+ S->>D: ROLLBACK
+ else New item created
+ S->>D: Optional wrapper and schema 2, COMMIT
+ alt DB fails before COMMIT
+ S->>K: Compensate only newly created expected item
+ else Crash leaves orphan
+ Note over S,K: Scoped manual inspection, no speculative reenrollment overwrite
+ end
+ end
+ Note over S,D: Original passphrase wrapper and record ciphertext remain, removal commits DB deletion before native deletion

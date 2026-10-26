@@ -1,0 +1,55 @@
+{
+  "parent": "HPX-DIAG-005",
+  "child": "HPX-DIAG-006",
+  "channels": [
+    {
+      "entity": "U",
+      "direction": "in",
+      "label": "owned source and reviewed operation",
+      "child_process": "P"
+    },
+    {
+      "entity": "U",
+      "direction": "out",
+      "label": "views receipts and permitted artifacts",
+      "child_process": "E"
+    },
+    {
+      "entity": "X",
+      "direction": "in",
+      "label": "untrusted package or review bytes",
+      "child_process": "I"
+    },
+    {
+      "entity": "X",
+      "direction": "out",
+      "label": "approved package or backup bytes",
+      "child_process": "I"
+    },
+    {
+      "entity": "V",
+      "direction": "out",
+      "label": "approved provider request",
+      "child_process": "I"
+    },
+    {
+      "entity": "V",
+      "direction": "in",
+      "label": "provider metadata or outcome",
+      "child_process": "I"
+    },
+    {
+      "entity": "K",
+      "direction": "out",
+      "label": "explicit native credential request",
+      "child_process": "A"
+    },
+    {
+      "entity": "K",
+      "direction": "in",
+      "label": "native credential result",
+      "child_process": "A"
+    }
+  ],
+  "limits": "Balances named system-boundary channels, not a proof of all semantic payload fields. Lower DFDs explicitly expose their own application/policy/store boundary."
+}

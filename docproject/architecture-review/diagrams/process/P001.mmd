@@ -1,0 +1,12 @@
+%% HPX-DIAG-P001 — Application and runtime lifecycle subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-001<br/>Application and runtime lifecycle"]
+ P --> C0["HPX-PROC-001.001<br/>Start configured runtime<br/>L"]
+ P --> C1["HPX-PROC-001.002<br/>Serve embedded frontend<br/>L"]
+ P --> C2["HPX-PROC-001.003<br/>Shut down and reopen<br/>L"]
+ P --> C3["HPX-PROC-001.004<br/>Discover an update<br/>F"]
+ P --> C4["HPX-PROC-001.005<br/>Install an approved update<br/>F"]
+ P --> C5["HPX-PROC-001.006<br/>Refresh manual development runtime<br/>L"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

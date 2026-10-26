@@ -1,0 +1,10 @@
+%% HPX-DIAG-007 — Durable Save and Commit lower DFD
+%% Scope: Which data transforms into encrypted records and an acknowledgement?
+%% Local unless explicitly F / G
+flowchart LR
+ U["Authenticated operation boundary"] -->|"frozen operation and expected context"| P(("003.001 Validate plan"))
+ D[("Encrypted catalog / head / draft / receipts")] -->|"current authority and state"| P
+ P -->|"authorized exact plan"| W(("003.002 Save or 003.003 Commit"))
+ W -->|"mutable draft and original receipt; Commit also immutable publication"| D
+ W -->|"committed receipt / conflict / error"| U
+ L["Legend: data arrows only; one BEGIN IMMEDIATE transaction encloses protected read-check-write-receipt"]

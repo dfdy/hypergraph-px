@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
 Recorded checks retain original source/toolchain/time scope. No new software validation claim follows from documentation assembly.
 
@@ -58,6 +58,16 @@ Managed keys, KDF outputs, explicitly owned Argon2 Block memory, AEAD-held keys 
 Fresh random nonces avoid exposing equal plaintext through deterministic ciphertext addresses; ciphertext size, access patterns and reuse of already-stored objects remain visible. No padding/ORAM or global plaintext deduplication is implemented. Wrong passphrase/key/context and authenticated-byte tampering fail authentication without revealing which secret was wrong.
 
 AEAD authenticates bytes/context but does not establish latest state or reject authentic stale envelopes. The storage/application design must bind key policy, catalogue, publication and heads to reject rollback/replay before durable editing. Epoch numbers alone neither rotate keys nor grant historical access.
+
+### Unresolved freshness acceptance scope — architecture review
+
+HPX-FIND-001 identifies a conflict between the preceding inherited gate and [ADR003](../04-architecture/decisions/0003-sqlite-local-writer.md), which explicitly leaves whole-database rollback outside the initial guarantee. The current writer has authenticated records, expected-state checks and original receipts; these do not establish detection of restoration of an entire authentic older database. No existing requirement is narrowed by this review integration, and no full freshness acceptance is claimed.
+
+The owner decision is tracked as HPX-GAP-023 in [open questions](../registers/open-questions.csv): **A**, retain the inherited freshness gate and require a separately reviewed witness/recovery design before claiming that acceptance; or **B**, explicitly approve a bounded initial-local exception for authentic whole-database rollback while retaining the stronger future requirement. Recommendation pending owner review: A, because a review cannot itself reduce the accepted security guarantee. Either choice preserves current synthetic evidence; neither implements a witness, authorizes real-data use or changes trust settings. A witness design must address backup/restore, unavailable witnesses and independently retained authority; a local epoch alone is insufficient.
+
+The owner requested simpler wording and then asked whether detection is possible, explicitly **without answering the approval question**. Detection is conditional on independent evidence of the latest accepted state: a separate record may detect replacement of the workspace alone, but cannot establish freshness if the attacker can restore that record together with the workspace. A separately trusted device/service or suitable protected counter is a possible design direction, not an adopted HPX dependency or a verified facility on the owner's platform. Define the attacker's restoration scope, trusted state, crash-consistent update order, legitimate backup restore/device transfer and an explicit unknown result when evidence is missing **before asking for final acceptance scope**. Keep the existing gate and ADR003 limit visible meanwhile; do not interpret a clarification request as approval of either alternative.
+
+Method references: [RFC5116 §1.2](https://datatracker.ietf.org/doc/html/rfc5116#section-1.2) separates authenticated encryption from replay protection; the [TPM2 counter interface](https://tpm2-tools.readthedocs.io/en/latest/man/tpm2_nvincrement.1/) demonstrates that protected counter mechanisms exist in some environments. Neither source specifies an HPX witness or guarantees resistance to compromise/restoration of its entire trusted environment.
 
 
 ## Examples and counterexamples

@@ -1,0 +1,14 @@
+%% HPX-DIAG-P006 — Graph validation and read projections subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-006<br/>Graph validation and read projections"]
+ P --> C0["HPX-PROC-006.001<br/>Validate expansion DAG<br/>L"]
+ P --> C1["HPX-PROC-006.002<br/>Validate exact source anchors<br/>L"]
+ P --> C2["HPX-PROC-006.003<br/>Page and compare immutable history<br/>L"]
+ P --> C3["HPX-PROC-006.004<br/>Project selected hypergraph<br/>L"]
+ P --> C4["HPX-PROC-006.005<br/>Read contributor publication evidence<br/>L"]
+ P --> C5["HPX-PROC-006.006<br/>Browse predicate definitions and roles<br/>L"]
+ P --> C6["HPX-PROC-006.007<br/>Query general concepts and backlinks<br/>F"]
+ P --> C7["HPX-PROC-006.008<br/>Discover contextual logical equivalence<br/>F"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

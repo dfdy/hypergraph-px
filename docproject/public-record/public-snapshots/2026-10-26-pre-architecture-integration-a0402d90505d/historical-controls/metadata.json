@@ -1,0 +1,22 @@
+{
+  "snapshot_id": "2026-10-26-pre-architecture-integration-a0402d90505d",
+  "publication_status": "INTENDED_FOR_PUBLIC_RELEASE — NOT_YET_APPROVED",
+  "source_commit": "a0402d90505d2e667fcd00fab793eb56d279a7cb",
+  "source_branch": "main",
+  "snapshot_local_time": "2026-10-26T21:41:00.482536+02:00",
+  "snapshot_date": "2026-10-26",
+  "source_working_tree_dirty": true,
+  "source_is": "Exact current dirty working-tree bytes, not HEAD-only documentation",
+  "purpose": "Permanent unmodified pre-integration specifications and the completed supporting architecture review",
+  "relationship": "Active docs/ remains authoritative; this snapshot is historical evidence only. Integration will be recorded in existing development/roadmap/register documents.",
+  "scope": "docs, legal, four root documentation/licence files and completed supporting review; no private inputs/runtime/source archives",
+  "file_count": 327,
+  "bytes": 12888115,
+  "exclusions": {
+    ".oldspecs/": "Ignored private source/provenance archive; existing active registers preserve identities and hashes; no private originals republished.",
+    "INPUT.md; LOCAL_BUILD_AND_RUN.md": "Private owner input and local instructions remain outside public-intended snapshot.",
+    "Application/proof sources, tests, build/runtime data, keys, .git, caches": "Not specification contents; no runtime/private data or credentials included. Code references remain source context, not archived implementation.",
+    ".DS_Store; __pycache__": "Incidental OS/interpreter metadata, not documentation."
+  },
+  "publication_review": "Local path/tool metadata, authorship/source attribution, screenshot fixtures, third-party provenance and licensing require human clearance; no publication authorization."
+}

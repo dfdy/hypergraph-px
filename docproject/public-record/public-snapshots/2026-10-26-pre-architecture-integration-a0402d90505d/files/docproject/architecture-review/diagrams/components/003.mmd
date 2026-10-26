@@ -1,0 +1,15 @@
+%% HPX-DIAG-003 — Responsibility and code-level direction
+%% Scope: Where do authorization, pure planning, serialization and cryptography belong?
+%% Local unless explicitly F / G
+flowchart TD
+ RT["crates/runtime - transport DTOs and sessions"] --> ST["crates/storage - application coordinator and storage DTOs"]
+ RT --> DM["crates/domain - pure records / plans"]
+ RT --> KC["crates/keychain - native provider"]
+ ST --> DM
+ ST --> CR["crates/crypto - byte envelopes / KDF"]
+ ST --> KC
+ ST --> SQ["rusqlite / bundled SQLite"]
+ FE["Browser modules"] -->|"strict HTTPS commands; no Rust import"| RT
+ DM --> NIL["No Serde / database / HTTP / crypto dependency"]
+ WARN["Application responsibility is hosted in storage today; intended layer is not a separate running service"]
+ L["Legend: solid arrow = dependency / invocation; process boundaries are in DIAG-002"]

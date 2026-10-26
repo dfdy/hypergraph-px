@@ -86,3 +86,7 @@ The [five-action document contract](../06-subsystems/document-engine.md#owner-di
 ## Current independent Fork projection
 
 The initial durable Fork records an exact committed input range and the new identity's initial output revision/snapshot in one immutable transformation record. The new node's first revision has no same-node parent. Subsequent edits change its revision history while the derivation stays pinned. The read-only document/Fork graph displays those historical incidences against separately labelled current committed node contexts; it does not claim that the current source/output texts remain equal, that ownership establishes original authorship, or that a recorded derivation is a logical proof. General semantic assertions and their snapshot inclusion policy remain under [accepted HPX-ADR-010](../04-architecture/decisions/0010-semantic-annotation-snapshots.md), with separately versioned retrospective overlays adopted by the owner; durable implementation follows.
+
+## Working-source and promotion proposal, 2026-10-26
+
+[ADR019](../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md) designs exact private working checkpoints for provenance-bearing copy/paste at the owner's request. References retain their captured source; a later exact Commit may publish promotion and replacement evidence without mutating original links or inferring an anchor relocation. Semantic assertion/comment/derivation participant changes require new authorized entity revisions. No draft-reference or replacement mechanism is delivered.

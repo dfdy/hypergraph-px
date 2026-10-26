@@ -1,0 +1,11 @@
+%% HPX-DIAG-P009 — Comments and semantic assertions subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-009<br/>Comments and semantic assertions"]
+ P --> C0["HPX-PROC-009.001<br/>Publish immutable passage comment<br/>L"]
+ P --> C1["HPX-PROC-009.002<br/>Inspect comments against historical text<br/>L"]
+ P --> C2["HPX-PROC-009.003<br/>Publish typed n-ary assertion<br/>L"]
+ P --> C3["HPX-PROC-009.004<br/>Review assertion and retain ancestry<br/>L"]
+ P --> C4["HPX-PROC-009.005<br/>Extend comment lifecycle<br/>F"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

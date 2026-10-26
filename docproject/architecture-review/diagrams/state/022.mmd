@@ -1,0 +1,15 @@
+%% HPX-DIAG-022 — Future human-agent proposal state
+%% Scope: What separates provider output, human approval and authority to apply?
+%% Future contract only
+stateDiagram-v2
+ [*] --> Disconnected
+ Disconnected --> Connected: explicit scoped provider setup
+ Connected --> ContextReviewed: exact permitted context and mode gate
+ ContextReviewed --> RequestInFlight: approved frozen request
+ RequestInFlight --> Proposal: bounded untrusted response
+ RequestInFlight --> UnknownExternalOutcome: timeout / cancellation uncertainty
+ Proposal --> Rejected: human rejects
+ Proposal --> ReviewedPlan: human reviews exact targets and payload
+ ReviewedPlan --> Applied: current authority and expected heads revalidated
+ ReviewedPlan --> StaleOrDenied: target changed / authority denied
+ note right of Applied: Future concrete schemas, durable journal and cancellation protocol unspecified

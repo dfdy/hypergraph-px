@@ -13,9 +13,11 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-26
 
 Recorded checks retain original source/toolchain/time scope. No new software validation claim follows from documentation assembly.
+
+The checkpoint counts retained below are historical. The [current scope/evidence summary](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) and [test register](../registers/tests.csv) separate integrated local behavior, gated branch/working code and future acceptance. This refinement executes documentation/archive checks only; it does not rerun application tests or promote the review's abstract model into implementation proof.
 
 Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 
@@ -50,7 +52,15 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 
 ## Pass/fail or measurement thresholds
 
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
+Correctness gates remain in [acceptance criteria](../03-requirements/acceptance-criteria.md), [publication protocol](../07-implementation/protocols/draft-publication.md) and [recovery](recovery.md). New performance/accessibility/platform thresholds require an explicit supported scenario and owner acceptance; no invented latency target or WCAG/platform conformance follows from passing examples.
+
+For the next selected workload, record input size, operation/context count, environment, observed time/memory/storage, exact result and source-byte/history invariants. Reuse the existing test/work record rather than a new metrics system. HPX-FIND-005/006/007/017 motivate these investigations:
+
+- Changing autosaves and retained receipts: measure DB/WAL/backup growth against acknowledged Save and explicit Commit counts. Idle timing is not a fixed perpetual save frequency. Preserve original-result replay and immutable history; no retry horizon, receipt expiry or pruning is adopted.
+- Large working-source capture/list inspection and simultaneous Save/history/unlock: measure serialization, allocations, authenticated source reads and mutex waiting before introducing caches, new representations, finer locks or services. A socket deadline does not cancel an executing KDF/transaction. Any optimization must retain exact bytes, current authority and operation atomicity.
+- Supported desktop keyboard/screenreader and source-under-widget workflows: identify the intended user task and expected behavior; retain theme/width/selection/undo requirements. Broader accessibility/platform acceptance stays explicit and unclaimed until checked.
+
+Analytical complexity and repeated-work hypotheses are not measured regressions. General federation, compiler/export and recovery acceptance remain deferred with their full requirements intact. Four Lean model theorems, an extracted-helper theorem, a handwritten bounded review model and ordinary executable tests remain distinct evidence classes.
 
 ## Automated reports
 

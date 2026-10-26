@@ -1,0 +1,11 @@
+%% HPX-DIAG-009 — Future export lower DFD
+%% Scope: Which captured information determines an artifact and prevents silent head refresh?
+%% Future only
+flowchart LR
+ U["Approved selection / format boundary"] -->|"exact selection and profile"| C(("013.002 freeze closure"))
+ S[("Authorized retained source / citation resources")] -->|"exact bindings"| C
+ C -->|"closed inputs and versioned resources"| P(("013.003-.005 compile"))
+ R["011 policy / rights evidence"] -->|"permitted report and egress decision"| P
+ P -->|"artifact plus losses / rights appendix"| E(("013.006 deliver"))
+ E -->|"permitted artifact or failed/unknown result"| U
+ L["Legend: all processes F; compiler, schemas and job lifecycle remain incomplete; no current integration claim"]

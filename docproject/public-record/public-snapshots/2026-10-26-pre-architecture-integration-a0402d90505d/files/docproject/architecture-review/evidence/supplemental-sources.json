@@ -1,0 +1,26 @@
+[
+  {
+    "evidence_id": "HPX-EV-EXT-ca59a3bc2570",
+    "path": "crates/storage/src/lib.rs",
+    "sha256": "23a50e7d113b70fc51b7fb36aff23ea9cb62d2eca43d57a64cdcdda2945b515c",
+    "role": "Supplemental CSV or code evidence, not a replacement for intended documentation"
+  },
+  {
+    "evidence_id": "HPX-EV-EXT-6d3b17f99de8",
+    "path": "crates/storage/src/working.rs",
+    "sha256": "0cdad703c3f281ded0a70418dc7838f6b7715df3dabe4aef659fb68e2eaa14fc",
+    "role": "Supplemental CSV or code evidence, not a replacement for intended documentation"
+  },
+  {
+    "evidence_id": "HPX-EV-EXT-db1c097f776c",
+    "path": "crates/storage/src/working_clipboard.rs",
+    "sha256": "ac07db33f880f95eb613d099a7eeea5e5e30cde8f7019420de567f355c237258",
+    "role": "Supplemental CSV or code evidence, not a replacement for intended documentation"
+  },
+  {
+    "evidence_id": "HPX-EV-EXT-fef8423fcf51",
+    "path": "docs/registers/requirements.csv",
+    "sha256": "b6502a12430e4d1ad73f36e2216351dbf350766d9be4f08223578f1b0df576db",
+    "role": "Supplemental CSV or code evidence, not a replacement for intended documentation"
+  }
+]

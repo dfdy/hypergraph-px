@@ -1,0 +1,15 @@
+%% HPX-DIAG-012 — Physical encrypted storage responsibilities
+%% Scope: How do conceptual objects map to storage without conflating schema and payload versions?
+%% Local unless explicitly F / G
+flowchart TB
+ DB["SQLite application_id 0x48505831<br/>default schema 1; explicit enrollment schema 2"]
+ DB --> BOOT["bootstrap: workspace / epoch / HGWK wrapper"]
+ DB --> OB[("objects: kind + opaque id32 + HGOB ciphertext<br/>insert-only API")]
+ DB --> SL[("slots: kind + opaque id32 + generation + HGOB ciphertext<br/>CAS mutable state")]
+ DB --> KC["schema 2 optional keychain_unlock wrapper"]
+ OB --> PAY["Authenticated strict payload<br/>record_version 1 / record_kind / payload"]
+ SL --> PAY
+ PAY --> K["Kinds 1-9 original; 10-19 additive local; 20-27 gated branches/working"]
+ DB --> WAL["WAL / FULL durability, not provenance history"]
+ NOTE["Clear metadata leaks kind/opaque ID/generation/size/count; no whole-DB rollback witness"]
+ L["Legend: conceptual model is DIAG-010/011; transport contract and envelope versions are separate"]

@@ -1,0 +1,79 @@
+{
+  "python": "3.14.8",
+  "source_sha256": "1afa6db4a262bc7e673862e5e9a5f76de40d4080b4bf6296114d58504f0244f3",
+  "bounds": {
+    "branches": 2,
+    "local_edit_sequences_per_branch": 2,
+    "new_commits_per_branch": 1,
+    "outstanding_frozen_operation": 1,
+    "transition_depth": 10
+  },
+  "assumptions": [
+    "Source sequence is an abstract exact byte string; UTF8/range correctness is not modelled.",
+    "Fixed authenticated owner; revocation, generation CAS conflicts, keychain, crypto and fsync are outside this model.",
+    "At most one pending operation globally; this understates concurrent browser contexts.",
+    "Precommit failure is atomic by construction; implementation atomicity must still be tested.",
+    "Checkpoint has at most one retained sequence per branch in this model; real history is not pruned."
+  ],
+  "valid_model": {
+    "mutant": null,
+    "violation": null,
+    "states": 8131,
+    "edges": 18317,
+    "max_transition_depth": 10
+  },
+  "mutants": [
+    {
+      "mutant": "late_ack",
+      "violation": "acknowledgement changed newer UI source",
+      "counterexample": [
+        "freeze save branch 0",
+        "type branch 0",
+        "atomic persist save branch 0",
+        "MUTANT ack overwrites newer typing"
+      ],
+      "states_before_violation": 147,
+      "edges_before_violation": 232
+    },
+    {
+      "mutant": "wrong_branch",
+      "violation": "acknowledgement mutated durable state / wrong branch",
+      "counterexample": [
+        "type branch 0",
+        "freeze save branch 0",
+        "switch branch",
+        "atomic persist save branch 0",
+        "MUTANT ack writes focused branch"
+      ],
+      "states_before_violation": 234,
+      "edges_before_violation": 402
+    },
+    {
+      "mutant": "partial_commit",
+      "violation": "publication missing atomic receipt",
+      "counterexample": [
+        "freeze commit branch 0",
+        "MUTANT publish without receipt"
+      ],
+      "states_before_violation": 21,
+      "edges_before_violation": 23
+    }
+  ],
+  "federation_counterexample": {
+    "A": [
+      [
+        "X",
+        "Y"
+      ]
+    ],
+    "B": [
+      [
+        "Y",
+        "X"
+      ]
+    ],
+    "A_acyclic": true,
+    "B_acyclic": true,
+    "union_acyclic": false
+  }
+}

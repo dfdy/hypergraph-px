@@ -1,0 +1,27 @@
+%% HPX-DIAG-010 — Conceptual identity, placement and immutable closure
+%% Scope: Which relationships are conceptual identity and which are version or occurrence bindings?
+%% Local unless explicitly F / G
+classDiagram
+ class Document
+ class Node
+ class Revision
+ class Occurrence
+ class Manifest
+ class Snapshot
+ class Transformation
+ class ExactSource
+ class AssertionRevision
+ class Comment
+ Document --> Node : local content identity
+ Node "1" <-- "many" Revision : same node only
+ Revision --> Revision : immutable same-node parent
+ Manifest "1" --> "many" Occurrence : ordered placement
+ Occurrence --> Node : references identity
+ Snapshot --> Manifest : exact version
+ Snapshot --> Revision : occurrence-path bindings
+ ExactSource --> Snapshot : exact range and path
+ Transformation --> ExactSource : typed inputs / outputs
+ AssertionRevision --> ExactSource : ordered roles
+ Comment --> ExactSource : committed passage
+ note for Transformation "Cross-identity derivation is not a Revision parent"
+ note for Snapshot "Closed historical resources; no moving head lookup"

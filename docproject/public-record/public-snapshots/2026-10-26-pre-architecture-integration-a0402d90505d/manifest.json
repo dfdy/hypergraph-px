@@ -1,0 +1,1700 @@
+{
+  "scope": "redacted public derivative; historical-controls are source evidence only",
+  "files": [
+    {
+      "path": "MERMAID-LICENSE.txt",
+      "bytes": 1089,
+      "sha256": "ec9fb67dcb25eccc416ed56e1aab819222c805a2a4bfe4cb19e7556bf2ffde80"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2102,
+      "sha256": "837d9c0211f848b019280ed108861e200e53edfa8bcd30b979bdfdde6e4e0456"
+    },
+    {
+      "path": "files/AGENTS.md",
+      "bytes": 6402,
+      "sha256": "f8984580f0923cd0cd2da4c521028b7b09434a6a61b115cd419ff3ee7472d12f"
+    },
+    {
+      "path": "files/CHANGELOG.md",
+      "bytes": 2647,
+      "sha256": "3e07d70925c29dc67e879eec4d6bb310c9087f5cff9388c287ddbe22addf73bc"
+    },
+    {
+      "path": "files/LICENSE",
+      "bytes": 34523,
+      "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
+    },
+    {
+      "path": "files/README.md",
+      "bytes": 9221,
+      "sha256": "52a4b50fbda4f759edff8f771be1a4507347fce7535e9c1d36cb46e70cc6638d"
+    },
+    {
+      "path": "files/docproject/architecture-review/README.md",
+      "bytes": 7111,
+      "sha256": "77758c78667be92eb03dfb80654f065b8579d13dc90f6b40a4ee59b71daac2cd"
+    },
+    {
+      "path": "files/docproject/architecture-review/architecture-assessment.md",
+      "bytes": 5668,
+      "sha256": "31dbf54b4712b365557deb75886b36010ee2c85e4a0d0773d97d076732870b08"
+    },
+    {
+      "path": "files/docproject/architecture-review/coverage-report.md",
+      "bytes": 4204,
+      "sha256": "908ab7d365deb6a0e0065af1aeb8e02cb3b7908cbd603ca640cd30ac0ad3c465"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/README.md",
+      "bytes": 66312,
+      "sha256": "7d6795f33000e1c9f9507b9664e4e0dee352c264d3621e8b385f5ddaff04b353"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/activity/017.mmd",
+      "bytes": 922,
+      "sha256": "0f421e40381792a4236a695b542f9515932984c62fb3ea92c025caac12060a43"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/activity/017.svg",
+      "bytes": 22964,
+      "sha256": "ccdd9db12502643e68501d55e037804082df7602e421a96583cf7c9efe3985e1"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/activity/024.mmd",
+      "bytes": 872,
+      "sha256": "7fa8130fd9185c8bbb0fa8e0f37071b655bb6338c11933d71805ed3f88d8f200"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/activity/024.svg",
+      "bytes": 22085,
+      "sha256": "2ac34c2f5c6ca769ed4e7bd40226705aa1edfb14677de4762316b8fb7fb04fe1"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/assurance/030.mmd",
+      "bytes": 1000,
+      "sha256": "310c3cc6c83993069224b5e4363523b92ecb59dda262bdd0bac7b40e5ce3fdc2"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/assurance/030.svg",
+      "bytes": 20752,
+      "sha256": "30bdcbaa6825980c376f00e6b89abd4ed928bbf36a0f90e16275143ed37c90e5"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/components/003.mmd",
+      "bytes": 860,
+      "sha256": "690a286523880a4537ebe7789af543c855d52a3db9d0ab31573cc5f3a2b25d49"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/components/003.svg",
+      "bytes": 19232,
+      "sha256": "cbbce6bf5043c9398f4de656db8d1af50ff9684103925a3b2352b422b851830e"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/containers/002.mmd",
+      "bytes": 1022,
+      "sha256": "a78544b3248720e34abf2f75a5848a6042cfd9349937fc379cd98c67a6f688cf"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/containers/002.svg",
+      "bytes": 22599,
+      "sha256": "98dbc3c03cdb20ff579931e8c8d4d6ec436742415f91d327a0003c6cb8b4c644"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/context/001.mmd",
+      "bytes": 851,
+      "sha256": "75fbfebf65a0815ec09f1c8b7b0865c947ae3148eb444054b94640f808eee9c5"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/context/001.svg",
+      "bytes": 20454,
+      "sha256": "714d199d610f04a416805582768deddbade1d65e2b798db490bcdd0a2022aa6c"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/005.mmd",
+      "bytes": 713,
+      "sha256": "bbe7ee8ec40799f33fb8010cb941c6a574f89c642f826deae74f5827a09b89a0"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/005.svg",
+      "bytes": 18020,
+      "sha256": "b16988cd7d36b18c4e80ca8740c9444ecef580ed6a1b94207ece99c500be59da"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/006.mmd",
+      "bytes": 1403,
+      "sha256": "41952c0364dc971eff07ad62d5b9b6fc82d51777ea18db9742a33d16fb31613f"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/006.svg",
+      "bytes": 30881,
+      "sha256": "f6bde251ed3ae1eed640a31192076f6066a988d834bc10661fc1a72076db94c7"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/007.mmd",
+      "bytes": 690,
+      "sha256": "dd292cb6fb857452a22a6002458c14eab7314dd95964ce4aff94207cb0aeeec4"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/007.svg",
+      "bytes": 14385,
+      "sha256": "e17bed604443cdbf42e1d54a15a1d1fe36100005a0dc0871efd473a30c4e51e3"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/008.mmd",
+      "bytes": 719,
+      "sha256": "7979dfa46ff4dbc92a292f4080a7a764deefa04832c7bf99268cdc5f8ad5a2e1"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/008.svg",
+      "bytes": 14781,
+      "sha256": "dfed6ea39659c253ad693a85c8fed87a489c9d6b660a758ba96b97b1c222806a"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/009.mmd",
+      "bytes": 754,
+      "sha256": "594e20e1439bfb015635664364103ad669cb9ec53a984d84bdb44bd8c5cf4de3"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/009.svg",
+      "bytes": 16380,
+      "sha256": "c75f25e14ee67514e1ad5860533858e835614b0afe224158f81ba31727254a06"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/033.mmd",
+      "bytes": 857,
+      "sha256": "53bae7c7e10473922fc1571e651ae042506a1fdcef9cc1f20c54e122c942e703"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-flow/033.svg",
+      "bytes": 15921,
+      "sha256": "b28a6c1d25de9a05368a90ba8acc170d6fea4e813424f54838b742b104950437"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-model/010.mmd",
+      "bytes": 1077,
+      "sha256": "961709acad813a1bf10750d9a7cb42aaeaa14fe599880f8f2ebcabb062dfbde5"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-model/010.svg",
+      "bytes": 48228,
+      "sha256": "0aa03f4aba183436db6328ab41323f4e4bda4d018064309eebd4402dd53237dc"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-model/011.mmd",
+      "bytes": 836,
+      "sha256": "d305b388477219cfd71819811a2bcdcee14c2a0c14ca0fa2659bcfb868700ae3"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-model/011.svg",
+      "bytes": 18272,
+      "sha256": "4b9fc014f83cf9dd78871acc597b62ac245a534bba4284978ff39e894e779fb9"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-model/012.mmd",
+      "bytes": 1039,
+      "sha256": "b3a6998f992fdf229fc4d4c4389b9c8ecdb0aa86470335f4e1359fdecad7b23b"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-model/012.svg",
+      "bytes": 19230,
+      "sha256": "a4b20a6a1db88769df7880621e03b8fd358bf03c4af90b26b280d6a9ff23f12d"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-model/031.mmd",
+      "bytes": 958,
+      "sha256": "dd329f74d5ee6683114d9392ca225f3206deb432b6b38a51a955678614f00cd7"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/data-model/031.svg",
+      "bytes": 19802,
+      "sha256": "33b36f6cb6c0465ade3c7a2f5d6039b4643d0faef6f1c5157337325484e1ad9d"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/dependencies/028.mmd",
+      "bytes": 856,
+      "sha256": "68b42d585ab8a832c69d45b8822c2a9a8498600d27fa7e501231e666a61b9e0c"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/dependencies/028.svg",
+      "bytes": 23048,
+      "sha256": "25400bd3898219d76835313d2cede9bbf610c0a67305fdb1702371902ef001c6"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/federation/027.mmd",
+      "bytes": 929,
+      "sha256": "beb4c9e73b60da3aa24e8e769e4d248cf50202f4bcf8ef6a8bc4b973fb905f4a"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/federation/027.svg",
+      "bytes": 16901,
+      "sha256": "4f42f53f130aeb88d64dd927e4013c8afdba65d063f6dafcc16a4bb806047bb1"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/graph/032.mmd",
+      "bytes": 942,
+      "sha256": "65cc4f6755d74f1a235a6d8096dcf8f3f69702dec1c19201c1fb19c079a2c478"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/graph/032.svg",
+      "bytes": 14170,
+      "sha256": "cc488e16a74cd7ac45fc44bee361f96f23b69a26bbae835831a999e9ef9792f4"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/index.json",
+      "bytes": 69706,
+      "sha256": "a518e707015e6f95362b9c07c96bb42e77aa804c1a83faa85cb5ee6bac47880a"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/004.mmd",
+      "bytes": 1458,
+      "sha256": "ddec92f22249b96770ec77a8a1746575d790042c5d4769771243f91468aaef2e"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/004.svg",
+      "bytes": 31909,
+      "sha256": "cf816d5fe52a48e7842c64c05e9ae332ff8736095e6892e1dbfe0afaf946c4f6"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P001.mmd",
+      "bytes": 720,
+      "sha256": "c4b8cfb019d9e12e4952922e676094cc125bcb60af9cc6dd0ba17b155abd48ce"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P001.svg",
+      "bytes": 15406,
+      "sha256": "3b00d43030a9b8c3056b1467389e887de1565ec075200ec08feb42b038d79763"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P002.mmd",
+      "bytes": 803,
+      "sha256": "f402689d69653c79001578194e4b6e970fdaf14cd19f03cd046089f849b74ef0"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P002.svg",
+      "bytes": 16674,
+      "sha256": "cca55789158f7995bdfe0a35302b3eb5a9d6e8478bd25f0f249bfd33c1f59d87"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P003.mmd",
+      "bytes": 831,
+      "sha256": "844bf31bc978cf672b6ab8e0255c3955dc85215401a20cc2222082a971d42207"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P003.svg",
+      "bytes": 16688,
+      "sha256": "b709a22e7390f9bb44de758be03876528d1abeb078ac96c127c942da09e8cb76"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P004.mmd",
+      "bytes": 850,
+      "sha256": "78017479f82185c723bce2e5db189d2602f28b3fc67938f317da9fa36763392e"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P004.svg",
+      "bytes": 16696,
+      "sha256": "49bef1b597884cdde63761a8bcc4ac4cafec1b956d20ce2184ad4f2d17573d08"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P005.mmd",
+      "bytes": 855,
+      "sha256": "424a23aa5030a7e2147fec9749a90c01ff4f7376883d3ac40041d97f91aefee4"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P005.svg",
+      "bytes": 16718,
+      "sha256": "3d6a8c9f4d88ba404384dc7d840193f6d32bfc91b20aeea5df14133066237c1a"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P006.mmd",
+      "bytes": 927,
+      "sha256": "d16756b8e1a05a60351f086a3efb4eec08faf0dac02570c7ac467faec0c70c20"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P006.svg",
+      "bytes": 18169,
+      "sha256": "dcc6226be850d2de6650fca58c38d819033f135fa4f2fa79d65d894e7e8d71c2"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P007.mmd",
+      "bytes": 826,
+      "sha256": "df8d32b03890fea36ef1117068cbaf5e7a14d87f7ddff0c4c28d88f0dd7a1be0"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P007.svg",
+      "bytes": 16795,
+      "sha256": "e9c166f72280d9a50ec55516c56b50387beb86e67363b261717efea17738d1f5"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P008.mmd",
+      "bytes": 951,
+      "sha256": "8332191d93e523085ba55b455eddc50ecf3c1b880c3a6ab8c66531e8c15325d7"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P008.svg",
+      "bytes": 18184,
+      "sha256": "9a04a2ebedc49a9c2f90635d3959dc79b78dcb913dbe2553b65967e20698676b"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P009.mmd",
+      "bytes": 694,
+      "sha256": "9a299ff6edba4dc93fcf2a32771e3df0f2be500fcfae5acea36f2cdca5b520c2"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P009.svg",
+      "bytes": 14011,
+      "sha256": "793dada6ffed76ed241395d5b69435b534faf50e1cd8f05f3df50986218a500c"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P010.mmd",
+      "bytes": 803,
+      "sha256": "a47e2bbf2655291049f60bc4a14eb67fb9e8ff2362fe068d573f11921f828ede"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P010.svg",
+      "bytes": 15419,
+      "sha256": "1da849658e10b093d89a65be91d3a7203f1217997aeb50f5ca3f9cb84ff0aad1"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P011.mmd",
+      "bytes": 641,
+      "sha256": "769b6d692a6fe1c00745af6adf3036d5391e62233679f4e7fff4f31cd03e174c"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P011.svg",
+      "bytes": 12653,
+      "sha256": "9785c784860230e7bf9557ef59bda1fc78ef28a3dbc351218c4bbb85adf3e509"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P012.mmd",
+      "bytes": 761,
+      "sha256": "3450195dcf377dee00eecb475ebc0e3e26c6b6e97384b9f50f8e5ffe55ad5c88"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P012.svg",
+      "bytes": 15417,
+      "sha256": "e564fd769422945e857284212360c17a1d74fe3dd758dac41cc11efa0de18a61"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P013.mmd",
+      "bytes": 887,
+      "sha256": "e6fc2d86b7c744ff5af8cca1510202bfce1e6917758ac3b888daff0476968971"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P013.svg",
+      "bytes": 16789,
+      "sha256": "33070b16653f198ee0c2ef8a26e47416fa84a12f4e79f0744d6297ceca9372e8"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P014.mmd",
+      "bytes": 689,
+      "sha256": "d3b6253cd2e13520c57c99401275e783b89121be6430aa969609a875aa80078a"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P014.svg",
+      "bytes": 14001,
+      "sha256": "5b2dbff270b344f0060f3f07223a2a8aca097a866168ee4a071b797d853f05b0"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P015.mmd",
+      "bytes": 795,
+      "sha256": "192dc4a487595fe79c47e748abf9cafe4918efa8203b2d3c0ba1183f36814c4f"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P015.svg",
+      "bytes": 15482,
+      "sha256": "053205a2aec16c6c0b4d650ac40f1108181d50e4fd5a8fe7e5db362a4d7df022"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P016.mmd",
+      "bytes": 865,
+      "sha256": "26ae2ab2b11107d9370e9c9140804c989f0e44bd30fef82293febe1104bc606c"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P016.svg",
+      "bytes": 16762,
+      "sha256": "836e41f806eda6156c3f19cdf1ed65e0e3da2a518feeda53d298378f7cea5ff5"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P017.mmd",
+      "bytes": 710,
+      "sha256": "e8465f69022d3c95973252b04ffc49c601ec94850f4bd074c63962d5197c41e6"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P017.svg",
+      "bytes": 14014,
+      "sha256": "88a410500261cd8780879e7a03832bd41a2d5e66574537d0789f0af1f95155e0"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P018.mmd",
+      "bytes": 822,
+      "sha256": "a1113998f984748aee20717a2271a1dcde2707dfe920541c90f5a0e5c1b4563a"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/process/P018.svg",
+      "bytes": 15433,
+      "sha256": "edf4a4fdc0bcf7e47c52f82b3c2fbcd3c478103596ae09cbcd001b113eb80180"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/recovery/026.mmd",
+      "bytes": 849,
+      "sha256": "7083bbec96566d865f64e7d1225bde463f8493afe8b66156491eeb5ef8336671"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/recovery/026.svg",
+      "bytes": 21672,
+      "sha256": "b369e50503acb172900db02ef8c4825d3578464c2a17b2eb3f292a118cac1da9"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/recovery/029.mmd",
+      "bytes": 1028,
+      "sha256": "c17a7948562039d14c9e47561c0de88c85c8a126ebb622187b1102c88a9fa4a0"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/recovery/029.svg",
+      "bytes": 18938,
+      "sha256": "e1fe48efea57e926c966d50fc4d2358ec4ce2a570cead6559bd92d36dcb9bf17"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/security/025.mmd",
+      "bytes": 1196,
+      "sha256": "dee01f49b83a66d12be5fae95cab8858cc1011b793a99601f2f98304f646390a"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/security/025.svg",
+      "bytes": 20493,
+      "sha256": "ecf40ca16fcbf8d80dc2cc7561fbac2bef2b8b41d6105a2fc5b54a7150138871"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/013.mmd",
+      "bytes": 975,
+      "sha256": "f0315d9d6a609b0ed58cbaf1b2edd967c886eed8eea4650c03eab59ff7f413d1"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/013.svg",
+      "bytes": 27432,
+      "sha256": "20e2fd46458a620df4ba19b612b5534cddd323f090faefb8b3839910037623fd"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/014.mmd",
+      "bytes": 1033,
+      "sha256": "6dddbcb9813c136abb13f84fdb0a817b27eb2018ac74b1cf9d78ca24f136350d"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/014.svg",
+      "bytes": 27354,
+      "sha256": "c0ff29be47ea56f9e9d0ebec5eeaae8d054267d69bc3d39951b9ec0e42d4ac69"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/015.mmd",
+      "bytes": 1210,
+      "sha256": "dd74fd0db1481607f7965060e0558e645dbf70bc413a52e7a40dd9a7bc4d2ee3"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/015.svg",
+      "bytes": 28262,
+      "sha256": "b4789a0bce27b08fdeb17707a422db935ee4945409d665d19ef393d5ed72b391"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/016.mmd",
+      "bytes": 1035,
+      "sha256": "a5a1e60c4f2b9bc0be166971aa9c70fcf7237170ab795e2c2b8bbc802042cd79"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/016.svg",
+      "bytes": 28386,
+      "sha256": "86623b5f06b1a1846a7b77e3a11221766d49d35ec617d0ff6a04b96e136892be"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/023.mmd",
+      "bytes": 894,
+      "sha256": "1e5bfe42d0253277c735cf2b21b218612956b2f718e0573f963cc8e37556bd27"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/sequence/023.svg",
+      "bytes": 26643,
+      "sha256": "b3d4c8e0f622b673e3e8544c78887c28a1b360897ed2f3c23a4bc149ffda3eec"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/018.mmd",
+      "bytes": 1037,
+      "sha256": "98807d9b366eaa0f10d455cea848b40f2c945cfcbd11617345d511b66995565b"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/018.svg",
+      "bytes": 235538,
+      "sha256": "849b87c4e4d147e47364fcf071881f40483728726d754c0022e4f66a477d9d3b"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/019.mmd",
+      "bytes": 1060,
+      "sha256": "ff344dd7afaebcaa4521bb14f2b6bccc7f926c3d96a6fcb6e8ef467a8d0eea8b"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/019.svg",
+      "bytes": 236158,
+      "sha256": "3de56e74a5ff191cba93f06195c1e2087b491357d81eeaab101d554a73c1d8cf"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/020.mmd",
+      "bytes": 817,
+      "sha256": "8a193265604b30d609f2c5807146e4e79e0fb007a09ec946717dcd32356e47f4"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/020.svg",
+      "bytes": 194371,
+      "sha256": "62a6c50da3f0ea9ff706aec72c1a7148ba12607c62bc6367cb9f0f664ad5797a"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/021.mmd",
+      "bytes": 1133,
+      "sha256": "232bd458b1b6084f84cae64bb408b6cdc2ca2c8e08f3ef5e271bdf2fbc7f3a5d"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/021.svg",
+      "bytes": 201332,
+      "sha256": "00d214bfedba8634917a049d88747c359fe19a0d0d62dba1200cdad978254572"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/022.mmd",
+      "bytes": 879,
+      "sha256": "534a967b686cc468a8b3b2f064299f6d88d96a6e241e75f06cdf5de24dbeb710"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/state/022.svg",
+      "bytes": 366545,
+      "sha256": "0be8e4a8a0d3904a174cea388c42cd630615cbe04f444b22b7b0f5a58701beb0"
+    },
+    {
+      "path": "files/docproject/architecture-review/diagrams/viewer.html",
+      "bytes": 2325181,
+      "sha256": "a661b28ffca0726644be18e36405a9ce5fe2301293acead48a575d0457e9bcc0"
+    },
+    {
+      "path": "files/docproject/architecture-review/evidence/baseline-commit.txt",
+      "bytes": 41,
+      "sha256": "cf28ecb47a28529329c444f82ca5922d9d3aed33ffeda2709cf2ef655b0fc422"
+    },
+    {
+      "path": "files/docproject/architecture-review/evidence/baseline-files.json",
+      "bytes": 50041,
+      "sha256": "c507bfea8027a22c8980c520e66421df4253b892c57c36078e8a379accb03ae7"
+    },
+    {
+      "path": "files/docproject/architecture-review/evidence/baseline-git-status.txt",
+      "bytes": 2788,
+      "sha256": "53fddfa96687e160c9dc5b7b8e3ef9f751cb3d51b7578c6f9136ced3bb1b5c7b"
+    },
+    {
+      "path": "files/docproject/architecture-review/evidence/claims.json",
+      "bytes": 45306,
+      "sha256": "91223ea3ef20aff537b33a951913f3d7a76cb206a9c6f841e6abb7ca8295f01f"
+    },
+    {
+      "path": "files/docproject/architecture-review/evidence/document-inventory.csv",
+      "bytes": 49918,
+      "sha256": "1cc866689016ed8279b35f58c1d6adcf6eb5dd0f772480e2afdea891dcf8b886"
+    },
+    {
+      "path": "files/docproject/architecture-review/evidence/preliminary-assessment.md",
+      "bytes": 2836,
+      "sha256": "31f50963f4ec365c52ad71ce5b6ff33c49633cb884296ce97dafa7c370fbf19c"
+    },
+    {
+      "path": "files/docproject/architecture-review/evidence/sections.json",
+      "bytes": 933539,
+      "sha256": "f356d1218de06d76327fdb85f845e140745a12e9815a38308e33fa5cebfbee58"
+    },
+    {
+      "path": "files/docproject/architecture-review/evidence/supplemental-sources.json",
+      "bytes": 1115,
+      "sha256": "89106a93710dc5b1ce2e20cef5062ff3d144bcbccd9d9fc6699e87f8aaaceec3"
+    },
+    {
+      "path": "files/docproject/architecture-review/evidence-register.md",
+      "bytes": 21230,
+      "sha256": "30cd2a2dc3a4594fef4717e40155af378e8c604a60750644bc117c096b4752ab"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-001.md",
+      "bytes": 4082,
+      "sha256": "03e323168f2cc99689d0f371c8ab20dd7c93868345680b5fddc4e17517e344c0"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-002.md",
+      "bytes": 4859,
+      "sha256": "90dce17f9992a452b53101915299379b201187a28d97ad5069507598aa7ccee9"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-003.md",
+      "bytes": 2966,
+      "sha256": "d79c2f51464c3234f85a9a8b9fda65d254066c47e98008ffe8935fa1c20471ed"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-004.md",
+      "bytes": 3818,
+      "sha256": "0ea872b1e2efa56c638cc8eb01300ac253138ab153752db085e3ebb569a3fa96"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-005.md",
+      "bytes": 3435,
+      "sha256": "210c9633734bf67423653c34711e75ea7ad09df6ceb21fb4f6da5b5c69fc5a0f"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-006.md",
+      "bytes": 3060,
+      "sha256": "15ef1a72a89259a70c94f42c8bc0348b9e0de36f8145acd6ec1a920ab710d271"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-007.md",
+      "bytes": 3568,
+      "sha256": "ee9e26cfad7c10daf7049b11600a0ea446a99d5d3a2fe7c7a0a32913aceda002"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-008.md",
+      "bytes": 3169,
+      "sha256": "c1545ef2c9abebb9534fecb9271daf784c02592b13b03033dfaa2014e3bad61a"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-009.md",
+      "bytes": 4217,
+      "sha256": "81fb7d64176fc492b64886a62f22f5a06186cca0a9fd488539b24166f5c499e8"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-010.md",
+      "bytes": 4130,
+      "sha256": "c59eec5568b6cddc62251639bbd7e07ba5e73dad2c40bd3126295bacfa86cf45"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-011.md",
+      "bytes": 3845,
+      "sha256": "84c4b49fbfe35ef753dde25c04f2417ac5f18f5a752dff2207b5e068a167d7c8"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-012.md",
+      "bytes": 3546,
+      "sha256": "c1a10ba949b86c73c7482e807420c54c37f189699d9cf5292a16052c058b985a"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-013.md",
+      "bytes": 3519,
+      "sha256": "c698aa86c21b72768a02f1f6779e369c6f0e6cf4f29e844c299ad51281b6fbd0"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-014.md",
+      "bytes": 3482,
+      "sha256": "6ba9c65292f9b1963255eb438e5577e691226e8ed0ab4cafcaf39a2dfbefd569"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-015.md",
+      "bytes": 3920,
+      "sha256": "578dbfccdd5c03e2f7eaa7905b017176e6b1d9e47cb309edfed91193ab719afd"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-016.md",
+      "bytes": 3327,
+      "sha256": "c6ff65c8e6888308165211aa1e40599339da4fefb899141d2f3c7d131f934718"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-017.md",
+      "bytes": 3234,
+      "sha256": "94ff6f5e552633a8cc0e295025c11f6fffd5443dfa14670887186e0d08ceb7e0"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-018.md",
+      "bytes": 3482,
+      "sha256": "d52648086381006f9e39dd367eb188eafbc4085db59f0cd68f0bc6431299feff"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-019.md",
+      "bytes": 3686,
+      "sha256": "0fecb00882a8c2734d441ff4a9f5fb0acc840658d475bc9fe8af8cd72520f49e"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/HPX-FIND-020.md",
+      "bytes": 4050,
+      "sha256": "e6a1f1bfe20820e722548133f94d2faae1f609b33b2985f99e7cb2b7398f30e5"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/README.md",
+      "bytes": 5440,
+      "sha256": "71d94fd45eb7d40621d0b90f6d6a6980ae6c603ff2dbdc6f1fa5a40b437ce2ef"
+    },
+    {
+      "path": "files/docproject/architecture-review/findings/register.json",
+      "bytes": 74965,
+      "sha256": "b3fbe4522bce2ec6e49250fbadf2b536a3da694e09ba45c6a38ba17d317165b6"
+    },
+    {
+      "path": "files/docproject/architecture-review/formal-analysis/README.md",
+      "bytes": 6736,
+      "sha256": "6f9ff9adccd788a0b9df318ec41c46e94e33e714fb262b577f4fbbb359e6aaef"
+    },
+    {
+      "path": "files/docproject/architecture-review/formal-analysis/check_model.py",
+      "bytes": 6594,
+      "sha256": "1afa6db4a262bc7e673862e5e9a5f76de40d4080b4bf6296114d58504f0244f3"
+    },
+    {
+      "path": "files/docproject/architecture-review/formal-analysis/model-results.json",
+      "bytes": 2252,
+      "sha256": "6df0e3d5379fcb61d4481914db47e6d96be990429f27cc748b74f0c07010f562"
+    },
+    {
+      "path": "files/docproject/architecture-review/open-questions.md",
+      "bytes": 3919,
+      "sha256": "16719f954bf009f8740dab0214951d03de3fba0ede4de6fc64fa1084cca7cdbf"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-001.md",
+      "bytes": 19175,
+      "sha256": "72086cc7d9c5266dc72c1720023dd1f076403d888b0bfc11b50cb0ef3495f69e"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-002.md",
+      "bytes": 21144,
+      "sha256": "06810299d2a34bf03c5ca6501d688aee0cd78a1cff53155bf9e26672b88310ce"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-003.md",
+      "bytes": 23359,
+      "sha256": "99d7f62cd35f57dabb7b28b53b4baf5e8a6716a7bb23ac6d6a30b00edcd9fbb4"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-004.md",
+      "bytes": 21573,
+      "sha256": "eabbee0b5f80597019527c05a2529101b65dac32d9754da271edcf990107cff3"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-005.md",
+      "bytes": 22051,
+      "sha256": "3cb965b98a35a431f48cab887c9e924749ec631547cda769341d0aaa2c2a9c40"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-006.md",
+      "bytes": 26262,
+      "sha256": "b3003a630968f5c8d895cb3d315339ea8458cfbd92fd8889b1f40a4eaf262b09"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-007.md",
+      "bytes": 23019,
+      "sha256": "9e7904918e2318d340324f0c7d364fb30d2777f555652c23397790911bec13b3"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-008.md",
+      "bytes": 28392,
+      "sha256": "3b95a79a120ccd18c1dcb932945c1041e39a2bc06182513f3516419c16792c56"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-009.md",
+      "bytes": 16852,
+      "sha256": "a61437e3561333542b66d70b815ffda2cc0099f56e0e709b55d6e8afcd41d2c9"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-010.md",
+      "bytes": 18940,
+      "sha256": "c222164b4c690b64bf54d8cd677d4bd3e269b36895291760acbc5e2dca4f7fe5"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-011.md",
+      "bytes": 15271,
+      "sha256": "03b574891da12fbe6f520399140c1455d6377536fb0022b90024a905ecd87469"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-012.md",
+      "bytes": 19439,
+      "sha256": "d5e779841b505ddb57b1f0d207a49cbe6467cc3d4b200a4712522c136adaa5b4"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-013.md",
+      "bytes": 22604,
+      "sha256": "20d75892bdc219e88cd53af280c22ddf79ce6e4e4142503029f07b1f25b82655"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-014.md",
+      "bytes": 17416,
+      "sha256": "270064ce5a2ea321004485793ac33c729c611eeb2146a347910a60925e79576e"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-015.md",
+      "bytes": 19915,
+      "sha256": "b90bdef26d52b553d764a1fbd8d922433ff7159cae693a7a8bf11fa18ee8d89f"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-016.md",
+      "bytes": 24042,
+      "sha256": "6584c37911eee3da30ca6bb0c1c29ad71931b1640c2e0eceda396a19897c049f"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-017.md",
+      "bytes": 17568,
+      "sha256": "bae0968bb34b7a89ca7fb072d357bf8db7a1b9572b98ded674a19d3159426ab6"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-catalogue/HPX-PROC-018.md",
+      "bytes": 21005,
+      "sha256": "c509d852527f60964eece4bb100d500f54e72be713864e9eacee3222bd87d7e6"
+    },
+    {
+      "path": "files/docproject/architecture-review/process-inventory.md",
+      "bytes": 11167,
+      "sha256": "a0ff27c03e6eabea9ca94838acac335519f37750b4c515e2f4717e4d2b6ba11a"
+    },
+    {
+      "path": "files/docproject/architecture-review/recommendations.md",
+      "bytes": 3865,
+      "sha256": "0adff5a987fa1af692883a64353258ec897581782355ab982f5051355e1b0401"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/README.md",
+      "bytes": 594,
+      "sha256": "68fdc4f9fd4aa34dce2aa323a93168ffb1ce5fa0fe798f635cfa587fa23edb89"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/dependencies.json",
+      "bytes": 16951,
+      "sha256": "08116be590bd69a819f47b341cb398dc1a673e4d7a01822a838f53b7b2c3ac31"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/dfd-balancing.json",
+      "bytes": 1345,
+      "sha256": "0f17b8e7f0dbcc1b4ce548cb5061b4bb7f3b6c8c7323b9796bab554d6b4bdb7d"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/documents.json",
+      "bytes": 15403,
+      "sha256": "f7831b4641887376c3641801a38360328592725a764ad6699e96dc22bcadff82"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/documents.md",
+      "bytes": 10612,
+      "sha256": "42caddf9ee3bb7074e3de765130bbbe0e548f1ca9ca530d4e1cd30d41d486b5c"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/failure-analysis.md",
+      "bytes": 4312,
+      "sha256": "3e84d32e8b193778ed5068ba89bc9967977832a74f97ebd5ab5c09c29eef18f3"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/invariants.json",
+      "bytes": 6791,
+      "sha256": "b349977c86124b8933583af0717e7fa52e1624934d09ccba2a1facb9f33ebd00"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/invariants.md",
+      "bytes": 5315,
+      "sha256": "b1d402f60375b7bfef13ec2cd1f533ea94862366eb70d5b6c00950b12a592539"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/process-model.json",
+      "bytes": 618644,
+      "sha256": "2e471e7ba024b9e1244c286b3e5aa9f894ca2262aecd0a37bf480fe05850690a"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/requirements.json",
+      "bytes": 51967,
+      "sha256": "9a61d174941aae9b39a5a8d15bec049c76b623296c5a9a9f90dda488095f5525"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/requirements.md",
+      "bytes": 16147,
+      "sha256": "52efb2910e20fce1c85e87481d83daac9630cb21a2d039edee33c9b4a7cc4ae9"
+    },
+    {
+      "path": "files/docproject/architecture-review/traceability/threat-analysis.md",
+      "bytes": 3274,
+      "sha256": "bcdd3033aec4dd5d734d8778359dffe677030c74f9c1eee7a4a00faa3a468765"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/artifact-manifest.json",
+      "bytes": 32217,
+      "sha256": "e2521ab706b0fc3657fd9bc3bcb9f55d8e50d6e2b008683b5e3517162c95cf4c"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/build_diagrams.py",
+      "bytes": 38636,
+      "sha256": "c44a6bc817f01f8164458f8bb0d738d1e7dd802b67ffe5138e8afc9639f2ba00"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/build_findings.py",
+      "bytes": 45477,
+      "sha256": "80754192ca919a3570f66e9a30c93599399955247b5dc05d3a677d8fb370815d"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/build_reports.py",
+      "bytes": 46011,
+      "sha256": "b8f53e3a5e54910e22cedb394f71c312c9a7569035bf230e100e1349e6f98dbf"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/build_review.py",
+      "bytes": 93424,
+      "sha256": "acfc4e82928e0a0641c16511cbcdd2cbe718cb55dfae849523c28e3c7dd0767d"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/build_viewer.py",
+      "bytes": 5636,
+      "sha256": "5a91c8f9baef374259e17074a442b2bbef0ec323979dc749aef6133913050d20"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/check_viewer.cjs",
+      "bytes": 2322,
+      "sha256": "50a54ac2559f3c4067a6df8d8eb02f7880c9389a6f294950cfbd266b65858770"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/contact-sheet-1.png",
+      "bytes": 232592,
+      "sha256": "23744c6eb4eb19f0b97b04d4441f175478e6e8e013a9a92a8ed1943cf3413ff7"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/contact-sheet-2.png",
+      "bytes": 256335,
+      "sha256": "df15b8d815d19dd89c5581bf924e5ebd08d54a6854e91aa146fc749545c115b0"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/contact-sheet-3.png",
+      "bytes": 299624,
+      "sha256": "3e96e520a124998a1d0b235f291cc05184f1b1933c97dc7e0e18993e0168644e"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/contact-sheet-4.png",
+      "bytes": 293565,
+      "sha256": "3e82a79658f5ab9d3fd0411f26975f4d117a6839062463d47d24f9b3a725d71c"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/contact-sheet-5.png",
+      "bytes": 71354,
+      "sha256": "6405a80fc8538dc5fa59bac1c5ee6fafb623bcb74aae86f7705d029f7e3fdf42"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/dependencies.py",
+      "bytes": 3139,
+      "sha256": "b5b66f03772b37dde74eb5c0102958845d2732ffe6f605dbb10240fe8c017c9f"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/detail-010.png",
+      "bytes": 78457,
+      "sha256": "e11306c0cb38b307e949458958771e7ed5cc5758ffc3d2e6ba73db024f3d9e0a"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/detail-015.png",
+      "bytes": 104094,
+      "sha256": "d178f3feef3223b87be266b713071ced772217af865643529cb2dad21a2ab5f1"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/detail-025.png",
+      "bytes": 123349,
+      "sha256": "fa5bedebe59989fd3883c4afb7c17d919b6eb20ed50cf895c9c8c8df50d24723"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/diagram-results-initial.json",
+      "bytes": 17116,
+      "sha256": "eb26169de485d68684bbf23231b36f2b6406363d041202556ad0e242d88b72f9"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/diagram-results.json",
+      "bytes": 13750,
+      "sha256": "e4357d9f864cab9adf9d36598bea30cb5e1f31ce96e1d887ecfb384feeec86f7"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/render_diagrams.cjs",
+      "bytes": 5591,
+      "sha256": "63fca6e6c40f5782e604499a79e819b329549e465836d3b268dc9d2e0af9a75b"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/renderer-provenance.json",
+      "bytes": 724,
+      "sha256": "44809574da4e0605997977533c69d78e746e7bbb466d35388811882104a9e453"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/results.json",
+      "bytes": 5006,
+      "sha256": "26c4703e4e69f10b427438508c18bfb7871de0da9e215dae2254280ae7cba6d7"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/validate_review.py",
+      "bytes": 12511,
+      "sha256": "dbc4651b5fbedf5ac53755b38322d606c37ad037f93f9aa95554950efd8e4196"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/viewer-desktop.png",
+      "bytes": 184851,
+      "sha256": "b33f2c665b3e982779dccfa741e09b043f6d855d152eaf4c40de920de9bb7d5f"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation/viewer-results.json",
+      "bytes": 340,
+      "sha256": "69f2103313f71d01f94bb6e0e484b5ee650c918f29af1bb45f4866bccfe4eb4a"
+    },
+    {
+      "path": "files/docproject/architecture-review/validation-report.md",
+      "bytes": 6759,
+      "sha256": "aa42b39392579f9a969a255fef8ce110d98054430cd7fd5e599af24119012f2a"
+    },
+    {
+      "path": "files/docs/01-purpose/README.md",
+      "bytes": 564,
+      "sha256": "7fadb37b00b9b104ba93462340c472aa7b0213e9371ab62c1c44a9b175d32e88"
+    },
+    {
+      "path": "files/docs/01-purpose/principles.md",
+      "bytes": 3463,
+      "sha256": "45af8394978d023fd66b8d25e4462ad851bbfb8ad1da4184b0d14daf3789abf2"
+    },
+    {
+      "path": "files/docs/01-purpose/project-purpose.md",
+      "bytes": 12099,
+      "sha256": "a83e74a8fd3ab9310129aaa841e4516a301bc833157eae96fe0a7e09a7a84fe2"
+    },
+    {
+      "path": "files/docs/01-purpose/scope-and-non-goals.md",
+      "bytes": 4490,
+      "sha256": "ca29c67f6575b6ba577fd501f3b2194fbd37660c63c1a0763f311bba44e11f79"
+    },
+    {
+      "path": "files/docs/02-governance/OWNER_DECISIONS.md",
+      "bytes": 2332,
+      "sha256": "38fde5fae916c6e05ce4f38f529a24eebc07b26559475f2d5c0f91d7982b9272"
+    },
+    {
+      "path": "files/docs/02-governance/README.md",
+      "bytes": 681,
+      "sha256": "7a6b854316a8737bb141debfd31332a01eb9902a764f178a4b8272a04407c810"
+    },
+    {
+      "path": "files/docs/02-governance/ai-development-protocol.md",
+      "bytes": 10130,
+      "sha256": "6f99797d03cb289c1ec9483b4174950ac41095086e35b93c6b82bbb54f847172"
+    },
+    {
+      "path": "files/docs/02-governance/licensing-policy.md",
+      "bytes": 9685,
+      "sha256": "c1aeaa213937b6a98622415ef200351285ca8d0c9f8f38b1520af9fa0c2ce74a"
+    },
+    {
+      "path": "files/docs/02-governance/roadmap.md",
+      "bytes": 10256,
+      "sha256": "1207f54cf0abce2e3e2c20e7ff685ccadc82169baccb59c1911d52791340ef19"
+    },
+    {
+      "path": "files/docs/03-requirements/README.md",
+      "bytes": 568,
+      "sha256": "3532b9779ee894ea8da28ef286c458b37a56c4af8170c9a131f725f3eaae7ed8"
+    },
+    {
+      "path": "files/docs/03-requirements/acceptance-criteria.md",
+      "bytes": 14928,
+      "sha256": "b8a4a4fd0cf630fe79359d8e51e56d8c1d2ca2edd58076e946705e04a2d86fe5"
+    },
+    {
+      "path": "files/docs/03-requirements/system-requirements.md",
+      "bytes": 20599,
+      "sha256": "ae4218703efe40a738216cdfd22be9bc8f97352275f6095e44873c738d7ce295"
+    },
+    {
+      "path": "files/docs/03-requirements/user-needs.md",
+      "bytes": 14267,
+      "sha256": "7f725f1128b9ca2c16f5c201b2cd248843bbc1b69c7c1385ecba9e555b004292"
+    },
+    {
+      "path": "files/docs/04-architecture/README.md",
+      "bytes": 2954,
+      "sha256": "86fa731aa40fbc1b2082edd90578897a79be778423122cd1d3786062ec636e42"
+    },
+    {
+      "path": "files/docs/04-architecture/component-architecture.md",
+      "bytes": 11055,
+      "sha256": "d54dcd400b26ec76ed02aee6271c801f2be06f124b236a221d5ef97a24e810dd"
+    },
+    {
+      "path": "files/docs/04-architecture/data-architecture.md",
+      "bytes": 6898,
+      "sha256": "109994cb3a1d59167050ec3ce7999e3093760db1211a4f450f3a484efcfa7c48"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0001-foundation-decisions.md",
+      "bytes": 5430,
+      "sha256": "14a3f4fb022f907c19cd52770c09ded8e49575554dbb00102ae600ac629028a4"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0002-trusted-server-envelopes.md",
+      "bytes": 9168,
+      "sha256": "cc5c001b89fcdfb891f43d7acebe5157140a3797b49878d557662d5ad0529c63"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0003-sqlite-local-writer.md",
+      "bytes": 7055,
+      "sha256": "fd1295559ea388802f514cb634dc9d465273093235f1bf69050010008d7b99d3"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0004-local-https-bootstrap.md",
+      "bytes": 7052,
+      "sha256": "bcc8c8062f3eed34faeeeb535b3a5cce2f7f4877e42a38d4167abeaad94d9518"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0005-documentation-migration.md",
+      "bytes": 3814,
+      "sha256": "2ccae1ca9298a79213801c575eeceb98e2bb722dfaf437944a2e3ff8b3526756"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0006-domain-serialization-boundary.md",
+      "bytes": 4006,
+      "sha256": "71289e39c9554a1988023920ff4cb9f2315f21bab59abb05d3f317f1d7a82701"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0007-explicit-record-versions.md",
+      "bytes": 4232,
+      "sha256": "ec82d9a4d088de3bf9fdb057d3ba858ed2db142c92a560e5efe3f826690e9124"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0010-semantic-annotation-snapshots.md",
+      "bytes": 5502,
+      "sha256": "a9d0937d5b674ea87f103f51d040426238d72dea03940abfbf8d3b2dd47089b8"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0011-retained-history.md",
+      "bytes": 3708,
+      "sha256": "84526458edd89140e4f08ab47483c11c5a60860576e88a7c7730d4a2e4929e51"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0014-keychain-unlock-policy.md",
+      "bytes": 10283,
+      "sha256": "96fe7cb10d659731ffc878bc488cadfad1ce87564584373b6b62c9ddfd7c7fea"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0015-initial-merge-workflow.md",
+      "bytes": 6248,
+      "sha256": "4e9845f32d484f7668930a3f3c6e3a2a5f38418588c5dd7047566120c94ff966"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0016-local-development-signing.md",
+      "bytes": 12757,
+      "sha256": "7e11b188f1a840c00f6814e2a43fb65fb16a8b9f33e39b6cdf040df1b8047855"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0017-initial-durable-comments.md",
+      "bytes": 5293,
+      "sha256": "23c156993ba2a7cd33239f9c64dd926926f528fca4956cac491a459df1737141"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0018-initial-local-branches.md",
+      "bytes": 7081,
+      "sha256": "bf7e1beb1e40ba3ae9783a008b334c68fa1fb0db31afdc0bcd0052f4dc035f94"
+    },
+    {
+      "path": "files/docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md",
+      "bytes": 15367,
+      "sha256": "6a7929d888689f09eb5eaf42e26fa1bfe169f5726c4529c6731383665d238b09"
+    },
+    {
+      "path": "files/docs/04-architecture/system-architecture.md",
+      "bytes": 5351,
+      "sha256": "59faead4ef78bae55b3e488fc75e248fd9abf9e7cfc66e1b33680be285a4ba2c"
+    },
+    {
+      "path": "files/docs/05-domain/README.md",
+      "bytes": 874,
+      "sha256": "df4d62277a2272322ed203c29fb150300cb820eaee8e6e88e228905e335b97dc"
+    },
+    {
+      "path": "files/docs/05-domain/assertions-and-predicates.md",
+      "bytes": 11369,
+      "sha256": "df723d939d94ae6daeb189981f21b00f7c62b5e6d8f011b67e7aae28d0cc78aa"
+    },
+    {
+      "path": "files/docs/05-domain/core-object-model.md",
+      "bytes": 12929,
+      "sha256": "2eecc594c82dadc71b2e727a422f065ecdebce345e31b39da2393a53252c1df5"
+    },
+    {
+      "path": "files/docs/05-domain/document-semantics.md",
+      "bytes": 12508,
+      "sha256": "effb72f1858286c0654677b5d85b9962189ceebd8c5cc8c65341fb0e474e9dca"
+    },
+    {
+      "path": "files/docs/05-domain/hypergraph-mathematics.md",
+      "bytes": 9322,
+      "sha256": "a6be7b8c26b1689a174d1f89eba051486bcd6c9d152dd4922fa3060c03dc9823"
+    },
+    {
+      "path": "files/docs/05-domain/provenance-model.md",
+      "bytes": 10110,
+      "sha256": "55f9c953ceedcd29905d4b4bbfb8e7f26f728276997c1aaf9d2da22a5432f7ac"
+    },
+    {
+      "path": "files/docs/05-domain/text-and-anchors.md",
+      "bytes": 12907,
+      "sha256": "9a6faa6843d00226a93dfbc0f863502da7e4f27521fa946802ab9a0bd84df4f0"
+    },
+    {
+      "path": "files/docs/06-subsystems/README.md",
+      "bytes": 1467,
+      "sha256": "37a30a48cff1b0965011bf26aa63a7f787fbe534d17380c7a36ff51865ac2fe6"
+    },
+    {
+      "path": "files/docs/06-subsystems/document-engine.md",
+      "bytes": 23544,
+      "sha256": "819f623df3944d2efe8ea3b9566bb7dc4756e2c66ba0bdc66977fa4f5e04a71a"
+    },
+    {
+      "path": "files/docs/06-subsystems/external-integrations.md",
+      "bytes": 25746,
+      "sha256": "29c0ef69b62c5ac47511fb65af5ddbb881ca7567aedaa13610fd187f4aa723e4"
+    },
+    {
+      "path": "files/docs/06-subsystems/formats/crypto-envelopes.md",
+      "bytes": 6411,
+      "sha256": "b808a74a0f5ec960d7dd3795fb6ffa0bb533eaeadfcbf0505deec88e7268ba6e"
+    },
+    {
+      "path": "files/docs/06-subsystems/formats/hpx-workspace.md",
+      "bytes": 10669,
+      "sha256": "5a93a8cac38ae5217ea1e655e8b5a369baad196a4bcd717b320417f45b9e4915"
+    },
+    {
+      "path": "files/docs/06-subsystems/frontend-interaction.md",
+      "bytes": 69756,
+      "sha256": "79e45371b050ea3d2e4fd55c69f187fafda3ba47992f62425fc7f6371ba68bf0"
+    },
+    {
+      "path": "files/docs/06-subsystems/graph-engine.md",
+      "bytes": 10837,
+      "sha256": "27d7f5d0668b53d0481193e3b55c42810f698858a106065deb2892f9ef45fda9"
+    },
+    {
+      "path": "files/docs/06-subsystems/import-export.md",
+      "bytes": 10419,
+      "sha256": "ca54b22998770ff393e0202f21bf1be9b5937d753b7cedf660fd4e61987ded47"
+    },
+    {
+      "path": "files/docs/06-subsystems/interfaces/browser-runtime.md",
+      "bytes": 58603,
+      "sha256": "99e792294eb98764e5e3e316bf1224ae61955bbe1678238a837937ff0bcadb9c"
+    },
+    {
+      "path": "files/docs/06-subsystems/interfaces/crypto-adapter.md",
+      "bytes": 10419,
+      "sha256": "e97aac28342dbf2c3cc16c38b1a5df5d69c8096aa394a3d5bfb571ccdab2f03f"
+    },
+    {
+      "path": "files/docs/06-subsystems/interfaces/domain-navigation.md",
+      "bytes": 15341,
+      "sha256": "1b3f7020e2af7991e52842a1ccf3007670eba890a74ec9d7ffc654dca044a00d"
+    },
+    {
+      "path": "files/docs/06-subsystems/security-cryptography.md",
+      "bytes": 18470,
+      "sha256": "d337e609b9fefe3d3eb49c25482cc7a39ff6970466cf7393e7993a4db4dc024d"
+    },
+    {
+      "path": "files/docs/06-subsystems/workspace-storage.md",
+      "bytes": 5345,
+      "sha256": "886d604e19925d38a56408cbf2f06f88b15e024b630ce056f9bf2864ed60f915"
+    },
+    {
+      "path": "files/docs/07-implementation/README.md",
+      "bytes": 771,
+      "sha256": "47cbcb624a4378deb1f7d7bc7037de730fd8b37e0860df592fd188b562cac72b"
+    },
+    {
+      "path": "files/docs/07-implementation/algorithms/expansion-validation.md",
+      "bytes": 6362,
+      "sha256": "a673dcd86bf5ec33e5a0181a93571481a0877aef45f1ccb52853de475b53605f"
+    },
+    {
+      "path": "files/docs/07-implementation/data-structures/sqlite-records.md",
+      "bytes": 35696,
+      "sha256": "faaa5410cabcadf2f828d8c4e85057988044545d4c3543f759122591eb618ec5"
+    },
+    {
+      "path": "files/docs/07-implementation/formal-invariants.md",
+      "bytes": 8421,
+      "sha256": "5c9150c1dcb8c33814b8f508fc38c361a38a6259d8438e10a8d998c53a250e68"
+    },
+    {
+      "path": "files/docs/07-implementation/protocols/draft-publication.md",
+      "bytes": 13190,
+      "sha256": "d6afafbc096e601c3a9723faefbdb5cc0c6df5667820b47f4f50837889ccba18"
+    },
+    {
+      "path": "files/docs/08-assurance/README.md",
+      "bytes": 1233,
+      "sha256": "ad8933992846b3246577d230efaad2663b21e183d67e977ce53dede063063903"
+    },
+    {
+      "path": "files/docs/08-assurance/build-and-release.md",
+      "bytes": 5488,
+      "sha256": "e0d4022de75b0a506f6840a9acb87eb18488201c2480fa7b96d2c9710e19d7cc"
+    },
+    {
+      "path": "files/docs/08-assurance/documentation-records-move.md",
+      "bytes": 3844,
+      "sha256": "ff2130a0e45654cf46458d14e24d87145d66dd6038097538688eef873a122f27"
+    },
+    {
+      "path": "files/docs/08-assurance/formal-validation-digest.md",
+      "bytes": 22630,
+      "sha256": "9829e4d76f5f4870845dea7424a99dadbde8b9df28d65f41d50e0c689b01d746"
+    },
+    {
+      "path": "files/docs/08-assurance/local-browser-trust-proposal.md",
+      "bytes": 10000,
+      "sha256": "f9e9bc4613568b7b6498057efb539c7a20f9526b7900c871c22cbef42e090c34"
+    },
+    {
+      "path": "files/docs/08-assurance/migration-verification.md",
+      "bytes": 4852,
+      "sha256": "4883f3ce7bd0c18d84e920a8adc36c51b600c2377ac104cb4781ed1f1435378c"
+    },
+    {
+      "path": "files/docs/08-assurance/privacy-and-data-protection.md",
+      "bytes": 7287,
+      "sha256": "d8b200643ac4792e4c708a99ec662413740493a2cdab414f4fd5e697f707d97d"
+    },
+    {
+      "path": "files/docs/08-assurance/recovery.md",
+      "bytes": 4970,
+      "sha256": "122647df8c67c504fb19ba7eb44e63ceb44e4a67612cbeeff947a7e3cdee4776"
+    },
+    {
+      "path": "files/docs/08-assurance/security-threat-model.md",
+      "bytes": 8140,
+      "sha256": "8192659818f80eea78f319579aebe83d743c93e0578fb71d6f15a43f2ff12567"
+    },
+    {
+      "path": "files/docs/08-assurance/testing-strategy.md",
+      "bytes": 5017,
+      "sha256": "122f691ddf56f841a25d00b759725531354977bba004919e27840c9e5ded19f6"
+    },
+    {
+      "path": "files/docs/09-guides/README.md",
+      "bytes": 884,
+      "sha256": "3f9d016987af30dc5971634e0c876021924930a1bfd94545ea02318eddb9c609"
+    },
+    {
+      "path": "files/docs/09-guides/developers/formal-validation.md",
+      "bytes": 6650,
+      "sha256": "20b2ad5f358392d8d4ea5a4fa00e7846532f657efcd409994a6fb03e93c38887"
+    },
+    {
+      "path": "files/docs/09-guides/developers/getting-started.md",
+      "bytes": 5622,
+      "sha256": "e3c1c8a0d8fdd07cf42c23c1406839b76491d7b8dbe5e61a33e5da6da0118ecd"
+    },
+    {
+      "path": "files/docs/09-guides/documentation-plan.md",
+      "bytes": 3365,
+      "sha256": "9590f8f4b0a6f845fd3b4269db0935b9b1984bdc539eeabb9c1c15a74210fc23"
+    },
+    {
+      "path": "files/docs/09-guides/reference/DEVELOPMENT_STATE.md",
+      "bytes": 104324,
+      "sha256": "ae02bf1c029f8b13afe22f653028378a2189c68043c98f59bc2e1d1aed7332e9"
+    },
+    {
+      "path": "files/docs/09-guides/reference/development-evidence.md",
+      "bytes": 6262,
+      "sha256": "11204c00a68e0939006bb637ecd17d8a1bb005cfbff68c0f020460b192e75186"
+    },
+    {
+      "path": "files/docs/09-guides/reference/implementation-resumption.md",
+      "bytes": 16998,
+      "sha256": "0c050f17345d402047b3ae07e0be7282ac8489113f1738b80bd9b2d4253d4049"
+    },
+    {
+      "path": "files/docs/09-guides/reference/source-publication-0.8.0.md",
+      "bytes": 2574,
+      "sha256": "72a5ed635bdcc1a32bf02f2666518943888fdc43986211adaff318f77b33294a"
+    },
+    {
+      "path": "files/docs/09-guides/reference/source-publication-1.0.0.md",
+      "bytes": 4882,
+      "sha256": "1fdb147490258877e341cbddf79409dd97eb43ffc10b7bf8350c0a3bc4cf42c3"
+    },
+    {
+      "path": "files/docs/MIGRATION-AGENT-PROTOCOL.md",
+      "bytes": 4756,
+      "sha256": "a4691a5d0674769d4d9b1a1132998ec7845a47152e69b9f9b71b5e70436fb7cf"
+    },
+    {
+      "path": "files/docs/MIGRATION-REPORT.md",
+      "bytes": 4577,
+      "sha256": "743c6428aad70d1b43a355a560321ac464a1b78999e3dc87aeb16b0a9e611a77"
+    },
+    {
+      "path": "files/docs/README.md",
+      "bytes": 4862,
+      "sha256": "28563381c421e1db1a1c1e0d76c1ab240b967e3c7904b06f31c7cb9c78a6ce7d"
+    },
+    {
+      "path": "files/docs/assets/desktop-preview-0.7.0.png",
+      "bytes": 239196,
+      "sha256": "45267b8f93cc18e66913ccad81c9582cbedb2566b05e2bc7faabff0937636088"
+    },
+    {
+      "path": "files/docs/assets/desktop-preview.png",
+      "bytes": 231810,
+      "sha256": "3ab2048c5fc034e91d4f7c1aea6d4717ecd7e8526ab6efdf075a68fee4976676"
+    },
+    {
+      "path": "files/docs/assets/logo.png",
+      "bytes": 741473,
+      "sha256": "35137d064146164b7a7a227e3c9a82e31b0ec2e8634d6869e02ba16858c9b9ae"
+    },
+    {
+      "path": "files/docs/registers/README.md",
+      "bytes": 2419,
+      "sha256": "4123e2ea85b235e6758b328e538891097aa3a5c8192617566adb949e6bc76f8c"
+    },
+    {
+      "path": "files/docs/registers/assumptions.csv",
+      "bytes": 530,
+      "sha256": "c33f5733808f1e973b9b2a526777e817f2e0bdc19dfe4ee367f0f687e2213ba3"
+    },
+    {
+      "path": "files/docs/registers/claim-coverage.csv",
+      "bytes": 73781,
+      "sha256": "e9d09f586b70decc6789e4fd94cc746611fe0c0acea334998733b62129e4ecb7"
+    },
+    {
+      "path": "files/docs/registers/claims.csv",
+      "bytes": 339363,
+      "sha256": "f2772bb2c90090f2b8a0b454f038ef405c28c47e8e26451d49ea558ee7bd6476"
+    },
+    {
+      "path": "files/docs/registers/compatibility.csv",
+      "bytes": 5915,
+      "sha256": "76fca36eb80af64130820c6ffdcaa088aaddb9471022556c4932436a3097ea58"
+    },
+    {
+      "path": "files/docs/registers/conflicts.csv",
+      "bytes": 14594,
+      "sha256": "616d9a588b8c43c569251afb8b2bb91d389c0d6cfe630ee5c75ad429b5ea1a60"
+    },
+    {
+      "path": "files/docs/registers/contributions.csv",
+      "bytes": 476,
+      "sha256": "f4113d1060e4691ae58f0d1a659be5051821ab384427471d4c19866d2e6dc7d6"
+    },
+    {
+      "path": "files/docs/registers/decisions.csv",
+      "bytes": 8137,
+      "sha256": "f087e0c7f26f68fbb4edc99190a454e0191d347f7ae911e032ddb4aec27b1e70"
+    },
+    {
+      "path": "files/docs/registers/document-inventory.csv",
+      "bytes": 29334,
+      "sha256": "cde3d8719d9edad387d2d94a3e5e93b607c83f554ef2c1f82f214b11ae976fc4"
+    },
+    {
+      "path": "files/docs/registers/documentation-archive.json",
+      "bytes": 43801,
+      "sha256": "a50164258969be14f08fb29611a2028a4d84b044bb7206998523da49fcb1ab54"
+    },
+    {
+      "path": "files/docs/registers/existing-link-findings.csv",
+      "bytes": 38842,
+      "sha256": "f0136e554aca6778b6eb57e9e3cb02c11bc39151af3708ed173d737f241fc6a5"
+    },
+    {
+      "path": "files/docs/registers/implementation-collateral.csv",
+      "bytes": 24116,
+      "sha256": "adc3b17bd1777a543ff86785f0ddef5a2f03f5d26aad815b471994dce0004a77"
+    },
+    {
+      "path": "files/docs/registers/migration-map.csv",
+      "bytes": 353941,
+      "sha256": "1c96cb0e7825e7e17afda6a6a4d25d7de0eb5eb7390ca15cfdb3224e2aacb16d"
+    },
+    {
+      "path": "files/docs/registers/open-questions.csv",
+      "bytes": 7287,
+      "sha256": "8bff173100895307450d146b321af5364ca3fe7227574b22cfe5813a2091b2e3"
+    },
+    {
+      "path": "files/docs/registers/requirements.csv",
+      "bytes": 21857,
+      "sha256": "b6502a12430e4d1ad73f36e2216351dbf350766d9be4f08223578f1b0df576db"
+    },
+    {
+      "path": "files/docs/registers/research.csv",
+      "bytes": 370,
+      "sha256": "03e1d31c9bf131b73d71d2f1aebdc9e8227fb3f1fb1aea5b56b9565c0fa6f673"
+    },
+    {
+      "path": "files/docs/registers/risks.csv",
+      "bytes": 866,
+      "sha256": "30c77e604258fdd83fef0a38992e9ce841e61d9173dd0bb48afa1ebcef247c19"
+    },
+    {
+      "path": "files/docs/registers/source-manifest.csv",
+      "bytes": 185992,
+      "sha256": "94926963f5804d62baf20f176b839aab04ec9ef185dd7799811bf09d8a9dfb89"
+    },
+    {
+      "path": "files/docs/registers/source-sections.csv",
+      "bytes": 283606,
+      "sha256": "02009fddab036fefdfe960158789b6e86f72e28c6295369254254999f0d1f1c4"
+    },
+    {
+      "path": "files/docs/registers/technical-debt.csv",
+      "bytes": 1285,
+      "sha256": "518671b4bf68e7b1e44217389325d8aa4e304b2e3d57c4974574525beeecc577"
+    },
+    {
+      "path": "files/docs/registers/template-pack-inventory.csv",
+      "bytes": 27123,
+      "sha256": "2f7c1ebadd459f37ddcad5c73b334f8f9cfd5f4bcb9806b19ae3c2bf5f5b44b7"
+    },
+    {
+      "path": "files/docs/registers/tests.csv",
+      "bytes": 18920,
+      "sha256": "ce72ddc534e2d96cbe3fa1d1b27bcbbbbbd26dabd001622f9495edead1cc0631"
+    },
+    {
+      "path": "files/docs/registers/traceability.csv",
+      "bytes": 114635,
+      "sha256": "d36c8877912da84395ff1dd5bcd13d3bf29f14f1741abf7181923a35c3fdbc41"
+    },
+    {
+      "path": "files/docs/templates/README.md",
+      "bytes": 1320,
+      "sha256": "982181f30cc35b750cfe2be0072aa8edf195a8e0dac10df653fcf74fbbe01ba5"
+    },
+    {
+      "path": "files/docs/templates/adr.md",
+      "bytes": 1735,
+      "sha256": "3070736d44823205c6863bee848909d7173352991f7879f80225505a919b88ea"
+    },
+    {
+      "path": "files/docs/templates/algorithm.md",
+      "bytes": 2001,
+      "sha256": "1f61e575f5653db2e517a4dae8cb444a1a5f2f3c1bde1fe1fd0d87a56987d4ba"
+    },
+    {
+      "path": "files/docs/templates/data-structure.md",
+      "bytes": 1734,
+      "sha256": "7918ad3743b7d7c527f26ae1ccbcde690e1adb54b061dc6233634c9a34e78c73"
+    },
+    {
+      "path": "files/docs/templates/domain-model.md",
+      "bytes": 1805,
+      "sha256": "ff2438d8a5d079bb394e8d6ea0b98e556eaea5f9f8e4d6839b1c6ccd790f52d9"
+    },
+    {
+      "path": "files/docs/templates/formal-property.md",
+      "bytes": 1707,
+      "sha256": "2e757a01381d9220d15b93491da220d732cd343de58764bfe3e9b3af309405de"
+    },
+    {
+      "path": "files/docs/templates/format.md",
+      "bytes": 1773,
+      "sha256": "b15838cbbb05818e9a92b03f678c5973bd76813d2f3337a1af0ec86eb937ddc3"
+    },
+    {
+      "path": "files/docs/templates/guide.md",
+      "bytes": 1617,
+      "sha256": "3f859423bc38360abfb56ef967c44293ab94ce763ebd0d4bfc886f667cbbe841"
+    },
+    {
+      "path": "files/docs/templates/interface.md",
+      "bytes": 1767,
+      "sha256": "9a2b5825e82892fd1d13d1636d15a105f6dfcd4ca4d4978fb585d99b6c009a52"
+    },
+    {
+      "path": "files/docs/templates/principle.md",
+      "bytes": 1605,
+      "sha256": "091bc5e7a5f187b3e8a15f8c0a97fc79d3eb8f8ca90d14f3e504803bb943b72d"
+    },
+    {
+      "path": "files/docs/templates/proposal.md",
+      "bytes": 1844,
+      "sha256": "c84959bec6044055341b2c0c85a58aabdb628734b1820cc15e275bd057de4752"
+    },
+    {
+      "path": "files/docs/templates/requirement.md",
+      "bytes": 1730,
+      "sha256": "625135405619f32dc2a35ec3819126c708e6df64e34574b3105e6c5057aa9536"
+    },
+    {
+      "path": "files/docs/templates/specification.md",
+      "bytes": 1732,
+      "sha256": "a12fd874679bd8877cb86016600e6271233634029ec9dca888bb06901b18d2e3"
+    },
+    {
+      "path": "files/docs/templates/subsystem.md",
+      "bytes": 1831,
+      "sha256": "9717184d72706e64f3de864181743f6ae51c94610a5e9582092b6b04ba9bb66b"
+    },
+    {
+      "path": "files/docs/templates/test-plan.md",
+      "bytes": 1728,
+      "sha256": "c8ffd924ac9c4f7169fb4d9be03b1d6f38117d208295aeb8444342fdd0d8f2a4"
+    },
+    {
+      "path": "files/legal/ASSETS.md",
+      "bytes": 613,
+      "sha256": "978a83e7d3aecbfb1ed44f1419976bae7fbd0f24a2eea9a84b129d648600693c"
+    },
+    {
+      "path": "files/legal/FRONTEND_DEPENDENCIES.json",
+      "bytes": 19493,
+      "sha256": "978a25303742975dd9c593dfe6ac77577ffb180cff7025c7f6f2b25cae1c64fa"
+    },
+    {
+      "path": "files/legal/RUST_DEPENDENCIES.json",
+      "bytes": 27885,
+      "sha256": "031cd758bfa55c78f92499bef44dd049e650c52ba4a131beb885cdcbad666f10"
+    },
+    {
+      "path": "historical-controls/PUBLICATION_READINESS.md",
+      "bytes": 904,
+      "sha256": "109ae2a1a21064ed810c4abced71bb94307ac9f3b7a935a180dd7d76981c154c"
+    },
+    {
+      "path": "historical-controls/README.md",
+      "bytes": 1470,
+      "sha256": "c581e32a50108e2728b37e3693006f616a8f6dccb2a3ea4af61c2ba67f13b41a"
+    },
+    {
+      "path": "historical-controls/SHA256SUMS",
+      "bytes": 40106,
+      "sha256": "cfc843bb8ead35b1ef8ef06912a224aa746eb3a0ceaa2e9112bb1927ea775fb3"
+    },
+    {
+      "path": "historical-controls/control-checksums.json",
+      "bytes": 723,
+      "sha256": "02fd48716f5e1420bc76ce489a6e68593cb19e00274fa6f05dd148c5dd75c1e1"
+    },
+    {
+      "path": "historical-controls/manifest.json",
+      "bytes": 112785,
+      "sha256": "278568e18b70833d7a8a511cbd0d0780fef1733cb411ee716c7bbe06e356becf"
+    },
+    {
+      "path": "historical-controls/metadata.json",
+      "bytes": 1757,
+      "sha256": "5720bb761243b2ff6e5e2aba69f31ef4b710e59f7be294abf60f95183a85870f"
+    },
+    {
+      "path": "historical-controls/preflight-review.json",
+      "bytes": 476,
+      "sha256": "47a3f037ff5c3131c6347e4791bff60360d10f975b0e53baecd7f1e0e262d91d"
+    },
+    {
+      "path": "historical-controls/source-git-status.txt",
+      "bytes": 2788,
+      "sha256": "53fddfa96687e160c9dc5b7b8e3ef9f751cb3d51b7578c6f9136ced3bb1b5c7b"
+    },
+    {
+      "path": "historical-controls/verification.json",
+      "bytes": 213,
+      "sha256": "ed02052aa7809fe7ad36bcbff7a499fedb3d4bb1d2811578ffe3d1f23b41c642"
+    },
+    {
+      "path": "redactions.json",
+      "bytes": 2273,
+      "sha256": "0f7cc7f3ca2803ad0b30b44de2dd95bccb5264c009fddc2cd131431bbff5c845"
+    }
+  ]
+}

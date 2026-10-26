@@ -1,0 +1,11 @@
+%% HPX-DIAG-P014 — Import, backup and restore subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-014<br/>Import, backup and restore"]
+ P --> C0["HPX-PROC-014.001<br/>Import portable workspace package<br/>F"]
+ P --> C1["HPX-PROC-014.002<br/>Import Word review against exact base<br/>F"]
+ P --> C2["HPX-PROC-014.003<br/>Create consistent encrypted SQLite backup<br/>L"]
+ P --> C3["HPX-PROC-014.004<br/>Create portable encrypted backup<br/>F"]
+ P --> C4["HPX-PROC-014.005<br/>Restore as a new workspace<br/>F"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

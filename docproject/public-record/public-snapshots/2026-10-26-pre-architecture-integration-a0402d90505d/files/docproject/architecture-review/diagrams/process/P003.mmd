@@ -1,0 +1,13 @@
+%% HPX-DIAG-P003 — Durable editing and publication subprocesses
+%% Scope: What are the leaves and their temporal scope?
+%% Mixed scope, explicitly marked per leaf
+flowchart LR
+ P["HPX-PROC-003<br/>Durable editing and publication"]
+ P --> C0["HPX-PROC-003.001<br/>Authorize and freeze command<br/>L"]
+ P --> C1["HPX-PROC-003.002<br/>Acknowledge mutable autosave<br/>L"]
+ P --> C2["HPX-PROC-003.003<br/>Publish explicit Commit<br/>L"]
+ P --> C3["HPX-PROC-003.004<br/>Reconcile uncertain result<br/>L"]
+ P --> C4["HPX-PROC-003.005<br/>Recover acknowledged draft on restart<br/>L"]
+ P --> C5["HPX-PROC-003.006<br/>Audit and rebuild recoverable indexes<br/>F"]
+ P --> C6["HPX-PROC-003.007<br/>Decode and negotiate persistent versions<br/>L"]
+ L["Legend: parent-child responsibility, not flow; L local, G gated, F future, D deferred"]

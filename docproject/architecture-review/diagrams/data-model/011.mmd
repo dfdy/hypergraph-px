@@ -1,0 +1,13 @@
+%% HPX-DIAG-011 — Working branch conceptual extension
+%% Scope: How does pending text obtain exact provenance without becoming a committed revision?
+%% Accepted design / gated code
+flowchart LR
+ CB["Content branch same document/node"] --> DR["Mutable Draft / private working context"]
+ DR -->|"provenance capture only"| CP["Immutable typed CheckpointId"]
+ CP --> WR["Private working reference exact path/range"]
+ CP -->|"latest full-source exact match on Commit"| PR["Promotion fact"]
+ PR --> RV["Committed Revision / Snapshot"]
+ WR -->|"separate bounded post-Commit CAS batch"| RR["Replacement reference"]
+ RR -->|"retains predecessor"| WR
+ CP -->|"retained source"| WF["G: independent WorkingFork derivation"]
+ L["Legend: solid = accepted G design, not integrated delivery; autosave does not create CP; originals remain immutable"]

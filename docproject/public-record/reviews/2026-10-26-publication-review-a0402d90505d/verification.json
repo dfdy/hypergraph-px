@@ -1,0 +1,11 @@
+{
+  "review_date": "2026-10-26",
+  "payload_hashes_matching": 327,
+  "control_hashes_matching": 9,
+  "review_local_links_resolved": 7,
+  "documentation_check": "PASS: python3 scripts/verify_documentation.py --check-local-sources",
+  "whitespace_check": "PASS: git -c core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol diff --check",
+  "application_tests": "not run; documentation review only",
+  "publication": "not authorized or performed",
+  "historical_snapshot": "unchanged"
+}
