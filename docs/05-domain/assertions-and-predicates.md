@@ -103,3 +103,9 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 - `HPX-SRC-0022` — `Specifications/ASSERTIONS_AND_TAGS.md`, lines 3–14; SHA-256 `817001ea4de2c8165bb62bbc9149aeef5ef1fdf3d8762ec1a35f50f07f8dabb6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0022` — `Specifications/ASSERTIONS_AND_TAGS.md`, lines 15–31; SHA-256 `817001ea4de2c8165bb62bbc9149aeef5ef1fdf3d8762ec1a35f50f07f8dabb6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0022` — `Specifications/ASSERTIONS_AND_TAGS.md`, lines 32–34; SHA-256 `817001ea4de2c8165bb62bbc9149aeef5ef1fdf3d8762ec1a35f50f07f8dabb6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Owner-approved logical-equivalence clarification, 2026-10-25
+
+The owner separately approved making **logically equivalent** an explicit searchable label for the existing contextual **is equivalent to** relation. Preserve predicate/choice identity `preview:logical-argumentative:is_equivalent_to` and its symmetric participant meaning; add aliases rather than a duplicate fact type. “Logically equivalent,” “is logically equivalent to” and “logical equivalence” route to that same definition. Equivalence depends on the stated formalisation, interpretation and premises. An asserted equivalence is not automatically a checked proof and does not identify the participating nodes, establish universal synonymy, or validate disputed premises. The existing biconditional connective remains a distinct logical operator.
+
+This clarification is adopted specification; frontend search support alone does not deliver a durable semantic registry or proof conversion. The owner separately deferred the proposed statement/relationship-to-Lean workflow.

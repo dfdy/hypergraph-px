@@ -15,3 +15,9 @@ Level `04-architecture`. This is navigation, not a new requirement. See the [doc
 - [System Architecture](<system-architecture.md>) — `HPX-ARCH-001`; proposed.
 
 Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
+
+- [Accepted keychain unlock/recovery policy](decisions/0014-keychain-unlock-policy.md) — HPX-ADR-014; owner approved 2026-10-25; evidence tracked separately.
+- [Accepted semantic annotation/snapshot scope](decisions/0010-semantic-annotation-snapshots.md) — HPX-ADR-010; owner adopted separate versioned overlays; implementation/evidence tracked separately.
+- [Accepted first Merge workflow](decisions/0015-initial-merge-workflow.md) — HPX-ADR-015; reviewed synthesis accepted; later parent-branch intent planned in stage5.
+
+- [Local development signing identity](decisions/0016-local-development-signing.md) — HPX-ADR-016; identity and exact user code-signing trust approved; continuity test awaits the specific temporary-item native grant.

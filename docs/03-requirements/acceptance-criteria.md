@@ -112,3 +112,15 @@ Use the source-grounded examples/evidence above and [acceptance gates](<acceptan
 - `HPX-SRC-0021` — `Specifications/ARCHITECTURE.md`, lines 61–71; SHA-256 `74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 253–283; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0035` — `Specifications/TRANSPORT_SECURITY.md`, lines 21–31; SHA-256 `96688214826d64bb9d96f01f98c3f717c7327c9e8ec8487eb461bc71098fa0eb`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Owner-directed action-set acceptance, 2026-10-25
+
+The frontend target names **Fork, Link, Embed, Merge and Copy** together, with honest eligibility and implementation status. Verify their distinct effects against the [document-engine definitions](../06-subsystems/document-engine.md#owner-directed-action-set-fork-link-embed-merge-and-copy): Copy preserves exact bytes and publishes no implicit fork/commit; Merge retains all exact inputs and histories, distinguishes same-identity parents from cross-identity provenance, and presents unresolved conflicts before publication. Preview, cancellation and stale responses preserve the originating source/selection/undo and cannot apply to a different context. Required durable behavior needs actual backend/receipt/recovery evidence; current fixture labels do not satisfy it.
+
+## Separately approved equivalence and graph acceptance
+
+For HPX-RQ-028, searching “logically equivalent” resolves to the existing equivalence choice without another predicate identity; participants retain formalisation/premise context, and assertion labels do not claim checked proof or node identity.
+
+For HPX-RQ-029, select arbitrary authorised nodes, including disconnected nodes and equal-labelled distinct identities. Verify labelled circles/connectors, direction, self/parallel relationship handling, n-ary role-preserving connectors, accessible keyboard/text inspection, explicit supported scope and bounded incomplete/unavailable results. Asserted relationships and recorded derivation must not acquire a proved status through display. Opening, changing selection, cancelling and closing preserve source bytes, editor selection and undo. A fixture or derivation-only projection is evidence only for its stated subset, not complete durable semantic graph delivery.
+
+The Lean-conversion proposal remains deferred by the owner's separate review; no acceptance claim or implementation dependency is inferred for it.

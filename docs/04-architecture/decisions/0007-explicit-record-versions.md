@@ -15,7 +15,7 @@
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
 - **Last reviewed:** 2026-10-25
 
-Accepted decision does not mean follow-up code exists.
+Implementation update, 2026-10-25: encrypted records now carry a strict version/kind/payload wrapper; see [exact record representation](../../07-implementation/data-structures/sqlite-records.md). This does not adopt a real-data migration path or complete runtime acceptance.
 
 Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 
@@ -33,7 +33,7 @@ Owner decision: explicit record versions before real-data testing acceptance. Th
 
 ## Chosen decision
 
-Decision accepted by explicit owner answer “Require explicit record versions (Recommended)” on2026-10-25. Persistent records must identify a supported record version before the durable format is accepted for real-data testing. Database schema, crypto envelope, application record and network contract versions remain distinct. Current generic payload serialization lacks those fields; exact discriminant layout, decode/migration policy and golden vectors remain to be implemented/reviewed. No field name, version number or migration algorithm is invented here.
+Decision accepted by explicit owner answer “Require explicit record versions (Recommended)” on2026-10-25. Persistent records must identify a supported record version before the durable format is accepted for real-data testing. Database schema, crypto envelope, application record and network contract versions remain distinct. The resumed implementation selects integer `record_version: 1` and the existing integer `record_kind`, wrapping the typed `payload` at the authenticated cipher boundary. Missing/future versions, unknown/duplicate wrapper fields, malformed payloads and mismatched kinds fail closed. Golden vectors and all-kind persisted-record checks exercise this implementation choice. Unversioned experimental payloads are rejected without conversion; no automatic migration is approved or implemented. Database, envelope and network versions are unchanged.
 
 
 ## Consequences and risks

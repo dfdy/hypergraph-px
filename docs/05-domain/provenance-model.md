@@ -78,3 +78,11 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 
 - `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 28–33; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 188–199; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Owner-directed Merge and Copy action distinction, 2026-10-25
+
+The [five-action document contract](../06-subsystems/document-engine.md#owner-directed-action-set-fork-link-embed-merge-and-copy) includes Merge and Copy by explicit owner request. A same-identity merge appends a revision with exact same-identity parents; combining distinct logical identities records their exact inputs as transformation provenance. Both retain prior histories. Clipboard capture alone is not a derivation or a committed revision; an eventual copy/paste publication records the actual inputs/outputs and does not relabel the copier as original author. Exact output-identity/conflict mechanics and durable command support remain explicit implementation gates.
+
+## Current independent Fork projection
+
+The initial durable Fork records an exact committed input range and the new identity's initial output revision/snapshot in one immutable transformation record. The new node's first revision has no same-node parent. Subsequent edits change its revision history while the derivation stays pinned. The read-only document/Fork graph displays those historical incidences against separately labelled current committed node contexts; it does not claim that the current source/output texts remain equal, that ownership establishes original authorship, or that a recorded derivation is a logical proof. General semantic assertions and their snapshot inclusion policy remain under [accepted HPX-ADR-010](../04-architecture/decisions/0010-semantic-annotation-snapshots.md), with separately versioned retrospective overlays adopted by the owner; durable implementation follows.

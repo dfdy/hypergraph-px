@@ -26,7 +26,7 @@ test('binary logical operators distinguish all ten two-input truth functions fro
 });
 
 test('catalogue search finds ordinary terms, symbols, aliases and custom record identity stays separate',()=>{
- for(const [query,expected] of [['and','conjunction'],['or','inclusive_disjunction'],['xor','exclusive_disjunction'],['iff','biconditional'],['therefore','therefore'],['∴','therefore']]){
+ for(const [query,expected] of [['and','conjunction'],['or','inclusive_disjunction'],['xor','exclusive_disjunction'],['iff','biconditional'],['therefore','therefore'],['∴','therefore'],['logically equivalent','is_equivalent_to']]){
   const matches=searchRelationshipCatalog(query).flatMap(group=>group.types).sort((a,b)=>a.score-b.score);assert.equal(matches[0].type.type,expected);
  }
  assert.equal(searchRelationshipCatalog('zxxy nonexistent label').length,0);

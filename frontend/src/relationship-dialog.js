@@ -7,7 +7,7 @@ const make=(tag,text)=>{const element=document.createElement(tag);if(text!==unde
 export function openRelationshipDialog(api,context,choice){
  const dialog=make('dialog');dialog.className='function-dialog relationship-dialog';
  const heading=make('h2','Add relations');heading.id='relationship-dialog-title';dialog.setAttribute('aria-labelledby',heading.id);
- const intro=make('p',`Connect the first selected ${choice.kind} to the second. This creates a tab-only assertion.`);dialog.append(heading);
+ const intro=make('p',`Connect the first selected ${choice.kind} to the second. ${api.runtime?'This creates a proposed retrospective assertion without changing the text snapshot.':'This creates a tab-only assertion.'}`);dialog.append(heading);
  const form=make('form'),category=make('select'),type=make('select'),search=make('input');search.type='search';search.placeholder='';search.setAttribute('role','combobox');search.setAttribute('aria-autocomplete','list');search.setAttribute('aria-haspopup','listbox');search.autocomplete='off';
  const field=(label,control)=>{const row=make('label',label);control.setAttribute('aria-label',label);row.append(control);form.append(row);};
  const searchRow=make('div');searchRow.className='relationship-search-row';const searchLabel=make('label','Search relationships');search.setAttribute('aria-label','Search relationships');searchLabel.append(search);const useCustom=make('button','Use custom');useCustom.type='button';useCustom.setAttribute('aria-label','Use search as custom term');const searchField=make('div');searchField.className='relationship-search-field';const results=make('div');results.id='relationship-search-results';results.role='listbox';results.setAttribute('aria-label','Relationship search results');results.hidden=true;search.setAttribute('aria-controls',results.id);search.setAttribute('aria-expanded','false');searchField.append(searchLabel,results);searchRow.append(searchField,useCustom);form.append(searchRow);let suggestions=[],activeSuggestion=-1;field('Relationship category',category);field('Relationship type',type);let customChoice=null;
@@ -54,7 +54,7 @@ export function openRelationshipDialog(api,context,choice){
  const participants=make('div');participants.className='relationship-participants';
  const connection=make('div');connection.className='relationship-connector';const connectionName=make('strong'),connectionSymbol=make('span');connectionSymbol.className='relationship-symbol';
  const before=make('span','↓'),after=make('span','↓');before.setAttribute('aria-hidden','true');after.setAttribute('aria-hidden','true');connection.append(before,connectionName,connectionSymbol,after);const propertyPreview=make('p');propertyPreview.className='assertion-property-preview caption';propertyPreview.hidden=true;
- let index=0;for(const [label,unit] of [['Source — first selected unit',choice.pair.left],['Target — second selected unit',choice.pair.right]]){if(index++)participants.append(connection,propertyPreview);const excerpt=make('pre',unit.text.length>180?unit.text.slice(0,180)+'…':unit.text);excerpt.className='source-preview';participants.append(make('span',label),excerpt);}form.append(participants);const details=make('div');details.className='relationship-details';details.append(description,example,inverse,roleDetails,intro);form.append(details);
+ let index=0;for(const [label,unit] of [['Source — first selected unit',choice.pair.left],['Target — second selected unit',choice.pair.right]]){if(index++)participants.append(connection,propertyPreview);const exact=api.participantText?api.participantText(unit):unit.text,scalars=[...exact],excerpt=make('pre',scalars.length>180?scalars.slice(0,180).join('')+'…':exact);excerpt.className='source-preview';participants.append(make('span',label),excerpt);}form.append(participants);const details=make('div');details.className='relationship-details';details.append(description,example,inverse,roleDetails,intro);form.append(details);
  const propertiesPanel=make('details');propertiesPanel.className='assertion-properties';propertiesPanel.append(make('summary','Assertion properties'));
  const negated=make('input');negated.type='checkbox';negated.setAttribute('aria-label','Negate assertion');const polarity=make('label','Negate assertion');polarity.className='assertion-polarity';polarity.append(negated);propertiesPanel.append(polarity);
  const certainty=make('select');certainty.setAttribute('aria-label','Assertion certainty');for(const [value,label] of [['unspecified','Unspecified'],['possible','Possible'],['probable','Probable'],['certain','Certain']]){const option=make('option',label);option.value=value;certainty.append(option);}
@@ -81,12 +81,13 @@ export function openRelationshipDialog(api,context,choice){
  }
  function close(afterRestore){dialog.close();cleanup(true,afterRestore);}
  cancel.onclick=()=>close();dialog.addEventListener('cancel',event=>{event.preventDefault();close();});dialog.addEventListener('close',()=>cleanup(false),{once:true});
- form.onsubmit=event=>{
+ form.onsubmit=async event=>{
   event.preventDefault();
   try{
    if(!api.current(context))throw Error('The selected source changed. Cancel and select the two units again.');
    const definition=relationshipType(type.value);if(!customChoice&&(!definition||!definition.categoryIds.includes(category.value)))throw Error('Choose a relationship from the selected category.');
-   const id=api.create(context,choice,{...(customChoice??{predicateId:definition.id}),properties:assertionProperties({negated:negated.checked,certainty:certainty.value,attribution:attribution.value,scope:scope.value})});close(()=>api.inspect(id));
+   const disabled=[...form.elements].map(control=>[control,control.disabled]);for(const [control] of disabled)control.disabled=true;dialog.oncancel=e=>e.preventDefault();
+   let id;try{id=await api.create(context,choice,{...(customChoice??{predicateId:definition.id}),properties:assertionProperties({negated:negated.checked,certainty:certainty.value,attribution:attribution.value,scope:scope.value})});}finally{for(const [control,value] of disabled)control.disabled=value;dialog.oncancel=null;}close(()=>api.inspect(id));
   }catch(reason){error.textContent=reason.message;error.hidden=false;}
  };
  filter();document.body.append(dialog);dialog.showModal();positionDialog();resize.observe(dialog);resize.observe(editor);search.focus();

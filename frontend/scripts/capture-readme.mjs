@@ -1,10 +1,10 @@
 // Capture only the built synthetic preview, never a user's running browser/session.
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {chromium} from '@playwright/test';
+import {testBrowser} from './browser-session.mjs';
 
 const frontend=fileURLToPath(new URL('../',import.meta.url));
-const output=fileURLToPath(new URL('../../docs/images/Screenshot.png',import.meta.url));
+const output=fileURLToPath(new URL('../../docs/assets/desktop-preview.png',import.meta.url));
 execFileSync(process.execPath,['build.mjs'],{cwd:frontend,stdio:'inherit'});
 const server=spawn(process.execPath,['server.mjs'],{
  cwd:frontend,env:{...process.env,HYPERGRAPH_PREVIEW_PORT:'5193'},stdio:['ignore','pipe','pipe']
@@ -20,8 +20,8 @@ try{
   server.stderr.on('data',chunk=>{diagnostic+=chunk;});
   server.stdout.on('data',chunk=>{if(String(chunk).includes('http://127.0.0.1:5193'))finish();});
  });
- browser=await chromium.launch({headless:true});
- const page=await browser.newPage({viewport:{width:1600,height:1000},deviceScaleFactor:1});
+ browser=await testBrowser();
+ const page=await browser.contexts()[0].newPage();await page.bringToFront();await page.setViewportSize({width:1600,height:1000});
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto('http://127.0.0.1:5193/',{waitUntil:'networkidle'});
  await page.getByRole('textbox',{name:'Markdown document editor'}).waitFor();
@@ -31,5 +31,6 @@ try{
  await page.screenshot({path:output,animations:'disabled'});
  console.log(`Updated ${output} (1600 × 1000, synthetic data).`);
 }finally{
- try{await browser?.close();}finally{server.kill();}
+ await browser?.close();server.kill();
 }
+

@@ -120,6 +120,24 @@
       "repository": "https://github.com/RustCrypto/formats"
     },
     {
+      "name": "core-foundation",
+      "version": "0.10.1",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "b2a6cd9ae233e7f62ba4e9353e81a88df7fc8a5987b8d445b4d90c879bd156f6",
+      "declared_license": "MIT OR Apache-2.0",
+      "selected_license": "MIT",
+      "repository": "https://github.com/servo/core-foundation-rs"
+    },
+    {
+      "name": "core-foundation-sys",
+      "version": "0.8.7",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b",
+      "declared_license": "MIT OR Apache-2.0",
+      "selected_license": "MIT",
+      "repository": "https://github.com/servo/core-foundation-rs"
+    },
+    {
       "name": "cpufeatures",
       "version": "0.3.1",
       "source": "registry+https://github.com/rust-lang/crates.io-index",
@@ -350,7 +368,7 @@
       "source": "registry+https://github.com/rust-lang/crates.io-index",
       "checksum": "a4689e6c2294d81e88dc6261c768b63bc4fcdb852be6d1352498b114f61383b7",
       "declared_license": "Apache-2.0 AND ISC",
-      "selected_license": "Apache-2.0",
+      "selected_license": "Apache-2.0 AND ISC",
       "repository": "https://github.com/briansmith/ring"
     },
     {
@@ -397,6 +415,24 @@
       "declared_license": "ISC",
       "selected_license": "ISC",
       "repository": "https://github.com/rustls/webpki"
+    },
+    {
+      "name": "security-framework",
+      "version": "3.7.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "b7f4bc775c73d9a02cde8bf7b2ec4c9d12743edf609006c7facc23998404cd1d",
+      "declared_license": "MIT OR Apache-2.0",
+      "selected_license": "MIT",
+      "repository": "https://github.com/kornelski/rust-security-framework"
+    },
+    {
+      "name": "security-framework-sys",
+      "version": "2.17.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "6ce2691df843ecc5d231c0b14ece2acc3efb62c0a398c7e1d875f3983ce020e3",
+      "declared_license": "MIT OR Apache-2.0",
+      "selected_license": "MIT",
+      "repository": "https://github.com/kornelski/rust-security-framework"
     },
     {
       "name": "serde",

@@ -1,0 +1,18 @@
+[package]
+name = "hypergraph-keychain"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+zeroize = { version = "=1.9.1", features = ["alloc"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+security-framework = { version = "=3.7.0", default-features = false }
+
+[dev-dependencies]
+getrandom = "=0.4.3"
+
+[lints]
+workspace = true

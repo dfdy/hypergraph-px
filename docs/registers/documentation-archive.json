@@ -922,5 +922,12 @@
     "sha256": "46f980208de3bbd445e33377ff62562c0192bdd8ea2cad39cb94a20fdd2b5618",
     "bytes": 8863,
     "action": "byte-identical execution original retained; active records/checker routed separately"
+  },
+  {
+    "original_path": "frontend/index.html",
+    "archive_path": ".oldspecs/executable-collateral/frontend/index.html",
+    "sha256": "254d88245f6ed5a49a14ed34275679d980d177d0929652beffd55bb527b16b72",
+    "bytes": 8265,
+    "action": "copied byte-for-byte before owner-authorized branding changes; active executable HTML remains in place"
   }
 ]

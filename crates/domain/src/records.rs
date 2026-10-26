@@ -1,11 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 //! Typed identities and exact historical coordinates. No entropy, I/O or authority.
-use serde::{Deserialize, Serialize};
 
 macro_rules! ids {
     ($($name:ident),+ $(,)?) => {$(
-        #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-        #[serde(transparent)]
+        #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
         pub struct $name(pub [u8; 32]);
     )+};
 }
@@ -27,8 +25,7 @@ ids!(
 );
 
 /// Historical anchor; not an automatic promise of relocation after an edit.
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Anchor {
     pub revision: RevisionId,
     pub occurrence_path: Vec<OccurrenceId>,
@@ -76,8 +73,7 @@ pub fn validate_byte_range(text: &str, start: usize, end: usize) -> Result<(), R
     Ok(())
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SnapshotBinding {
     pub path: Vec<OccurrenceId>,
     pub node: NodeId,

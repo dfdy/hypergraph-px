@@ -65,3 +65,25 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 ## Source provenance
 
 - `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 81–92; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Owner-approved selected-node graph view, 2026-10-25
+
+Provide a **read-only graph visualisation of any user-selected authorised nodes**. Draw nodes as labelled circles and their relationships as labelled lines, with explicit direction and participant roles where meaningful. “Any selection” permits arbitrary in-scope node identities, including disconnected nodes; it does not grant access outside the authorised query view. Selection for the graph is separate from document-text selection and must not rewrite editor source, undo or the originating selection.
+
+Binary relationships can use direct labelled connectors. N-ary relationships retain one relationship identity and explicit role-labelled incidences through a relationship connector; they must not be projected into a set of independent binary facts. Keep asserted semantic relationships, recorded derivations and checked formal results visibly distinguishable. A semantic “proves” or “logically equivalent” label alone is not checked evidence. Distinct nodes remain distinct when labels/text are equal; repeated occurrences/versions require context rather than inferred identity merging.
+
+The projection names an authorised consistent view, exact node/reference context, ordering and resource/output bounds. Missing, inaccessible or truncated relationships are reported honestly; an incomplete result must not be described as a complete absence of connections. Read-only inspection publishes no relationship, revision, source promotion or layout-derived semantic claim. Exact durable query/namespace/annotation-snapshot mechanisms retain their existing implementation gates. The owner adopted this product requirement separately from the deferred Lean-conversion request.
+
+## Initial document/Fork graph implementation
+
+The first connected projection reads arbitrary selected document nodes and recorded Fork edges from the encrypted runtime. It preserves distinct logical node IDs and exact historical edge endpoints, including after current source revisions change. Selection is bounded to 16 documents and all query results share one SQLite read transaction. Missing/damaged existing derivation records fail instead of becoming invented disconnections; inputs outside the selection are explicitly counted for selected outputs. No new persistent graph/index object is created. The [runtime contract](interfaces/browser-runtime.md#bounded-documentfork-graph-projection) specifies the exact supported subset and bounds.
+
+This delivers a first read-only document/derivation view toward HPX-RQ-029. It does not enable the deferred Lean-conversion request, persist fixture assertions, query arbitrary semantic nodes or implement n-ary predicate storage. The owner-adopted role-preserving n-ary requirement remains in force for that future projection; binary Fork evidence cannot stand in for its acceptance.
+
+## Selected assertion-node incidence extension
+
+The graph now additionally supports explicitly selected assertion nodes alongside document nodes. Each n-ary claim remains one revisioned content entity, with ordered, role-labelled incidences to the selected historical participant contexts. Duplicate roles/ranges remain explicit occurrences; no pairwise-fact expansion or logical inference is performed. Owner review/qualifiers remain visible and distinct from checked proof. Exact source inspection uses the retained immutable range even when the displayed document node has a newer committed context. The [projection contract](interfaces/browser-runtime.md#selected-retrospective-assertion-incidence-graph) defines bounds, completeness and unsupported families. Concept nodes, assertion-to-assertion participants, general reference queries and shared access remain future scope.
+
+## Reviewed synthesis incidence extension
+
+The explicit transformation graph scope adds recorded Merge groups to document/Fork and assertion incidence. Each Merge retains one transformation identity, ordered pinned inputs and its independent initial output. The canvas uses a labelled connector with separate input incidences and a directed output; it does not turn synthesis into unrelated binary facts or a logical proof. Outside-selection inputs are counted without drawing additional content nodes, and exact original inputs/output remain inspectable. Existing graph scopes retain their formats and exclusions. See the [runtime projection contract](interfaces/browser-runtime.md#selected-transformation-incidence-graph) for authorization, bounds and incomplete-view semantics.

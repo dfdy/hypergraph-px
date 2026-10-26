@@ -1,4 +1,4 @@
-import {test,expect} from '@playwright/test';
+import {test,expect} from './fixtures.js';
 import {readFile} from 'node:fs/promises';
 async function source(page){const ready=page.waitForEvent('download');await page.getByRole('button',{name:'↓ Markdown',exact:true}).click();return readFile(await(await ready).path(),'utf8');}
 async function replaceAndSelect(page,text,from,to,reverse=false){const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+A');await page.keyboard.insertText(text);await page.keyboard.press('ControlOrMeta+Home');for(let i=0;i<(reverse?to:from);i++)await page.keyboard.press('ArrowRight');await page.keyboard.down('Shift');for(let i=from;i<to;i++)await page.keyboard.press(reverse?'ArrowLeft':'ArrowRight');await page.keyboard.up('Shift');}

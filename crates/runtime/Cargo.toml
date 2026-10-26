@@ -11,6 +11,7 @@ name = "hypergraph"
 path = "src/main.rs"
 
 [dependencies]
+hypergraph-keychain = { path = "../keychain" }
 hypergraph-storage = { path = "../storage" }
 hypergraph-domain = { path = "../domain" }
 serde = { version = "=1.0.228", features = ["derive"] }

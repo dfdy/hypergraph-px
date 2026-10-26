@@ -15,7 +15,7 @@
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<OWNER_DECISIONS.md>); source IDs/hashes below
 - **Last reviewed:** 2026-10-25
 
-Published version is 0.7.0. Local storage/runtime work is uncommitted; browser integration is not accepted for real-data testing.
+Current source publication is 1.0.0. The bounded one-owner HTTPS/SQLite workflow and relationship/provenance increments have synthetic integration evidence; real-document acceptance and broader branch/shared/platform scope remain unfinished. See the current development state.
 
 Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 
@@ -64,3 +64,19 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 ## Source provenance
 
 - `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 82–93; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Resumed implementation progress, 2026-10-25
+
+The owner resumed application work after the migration. The initial one-owner create/edit/autosave/restart/recover/commit/reconstruct workflow now passes against the real HTTPS/SQLite runtime in Chromium with explicitly approved user leaf trust. Source mapping, retry/lock behavior, record-version decoding and embedded asset parity have current evidence in [the development state](../09-guides/reference/DEVELOPMENT_STATE.md). Broader startup/unlock support, supported-machine certificate lifecycle and durable graph/annotation services remain bounded by the existing open decisions; this evidence does not adopt unspecified mechanisms or authorize publication.
+
+## Local reviewed synthesis checkpoint, 2026-10-26
+
+The owner adopted HPX-ADR-015's first Merge scope. Local implementation now publishes human-reviewed synthesis into a new independent document, retaining ordered exact inputs and immutable history with original source authorship explicitly unknown. The 27-check actual synthetic HTTPS/SQLite/old-reader workflow passed; no release was published. Source/format acceptance and deferred shared composition, branch merge and provider mechanisms retain their own gates. See [current evidence and handoff](../09-guides/reference/DEVELOPMENT_STATE.md).
+
+## Planned branch-parent Merge workflow — owner clarification, 2026-10-26
+
+The owner clarified that the intended interface **Merge** action is to merge the current document text from its current branch **into a parent branch**. Record this within stage **5 — Branch/compare/selected integration**. This is future planned work, not an immediate implementation priority or an instruction to resume paused application development.
+
+Sequence this work after durable multiple-branch identity/head support, branch-specific recoverable drafts and safe branch selection/viewing. Then add current-versus-parent comparison and a reviewed Merge into the identified parent branch, with explicit conflict handling, atomic target publication and retained source/target histories. Branch viewing/switching can arrive before branch merging; local branching does not depend on federation or multi-user support.
+
+The parent branch is the intended destination, rather than a newly created independent document. The existing reviewed new-document synthesis remains a separately recorded implemented scope and does not fulfil this clarified branch-parent workflow. Preserve its historical approval/evidence in [ADR015](../04-architecture/decisions/0015-initial-merge-workflow.md#later-owner-clarification-parent-branch-merge). Before enabling branch-parent writes, specify parent-branch identification, merge-base/conflict review, handling of uncommitted current text and versioned same-identity ancestry/compatibility. No automatic commit, branch deletion or conflict resolution is implied.

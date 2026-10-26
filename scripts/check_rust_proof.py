@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import re
 import shutil
 import subprocess
 import tarfile
@@ -84,12 +85,37 @@ def main() -> None:
         if digest(path) != expected:
             raise RuntimeError(f"reviewed proof/source hash changed: {path.relative_to(root)}")
 
+    # Resolve only the dependency-free domain. Resolving the application workspace
+    # drags storage/crypto registry metadata into this isolated nightly check.
+    manifest = root / "crates/domain/Cargo.toml"
+    domain = tomllib.loads(manifest.read_text())
+    if any(domain.get(key) for key in ["dependencies", "build-dependencies", "dev-dependencies", "target"]):
+        raise RuntimeError("proof replay requires a dependency-free domain manifest")
+    workspace_text = (root / "Cargo.toml").read_text()
+    isolated = cache / "domain"
+    isolated_crate = isolated / "crates/domain"
+    isolated_crate.mkdir(parents=True, exist_ok=True)
+    if (isolated_crate / "src").exists():
+        shutil.rmtree(isolated_crate / "src")
+    shutil.copytree(root / "crates/domain/src", isolated_crate / "src")
+    for path in (root / "crates/domain/src").rglob("*.rs"):
+        if path.read_bytes() != (isolated_crate / "src" / path.relative_to(root / "crates/domain/src")).read_bytes():
+            raise RuntimeError("isolated domain source copy differs")
+    shutil.copyfile(manifest, isolated_crate / "Cargo.toml")
+    # Retain the original workspace-relative source paths in translator comments,
+    # as well as package metadata, resolver and lint settings.
+    workspace_text, replacements = re.subn(r"(?m)^members\s*=\s*\[[^\]]*\]", 'members = ["crates/domain"]', workspace_text)
+    if replacements != 1:
+        raise RuntimeError("expected exactly one explicit workspace member list")
+    (isolated / "Cargo.toml").write_text(workspace_text)
+    run([rustup, "run", lock["rust_toolchain"], "cargo", "generate-lockfile", "--offline"], isolated, env)
+
     generated = cache / "generated"
     generated.mkdir(exist_ok=True)
     (generated / "Spend.lean").unlink(missing_ok=True)
     llbc = cache / "spend.llbc"
     run([str(tools / "charon"), "cargo", "--preset=aeneas", "--start-from", lock["start_from"],
-         "--dest-file", str(llbc), "--", "--lib", "--locked"], root / "crates/domain", env)
+         "--dest-file", str(llbc), "--", "--lib", "--locked", "--offline"], isolated_crate, env)
     run([str(tools / "aeneas"), "-backend", "lean", "-warnings-as-errors", "-no-progress-bar",
          "-dest", str(generated), str(llbc)], root, env)
     if (generated / "Spend.lean").read_bytes() != (source / "Spend.lean").read_bytes():

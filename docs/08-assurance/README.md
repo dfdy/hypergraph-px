@@ -11,3 +11,5 @@ Level `08-assurance`. This is navigation, not a new requirement. See the [docume
 - [Verification and Testing Strategy](<testing-strategy.md>) — `HPX-ASSUR-001`; proposed.
 
 Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
+
+- [Local browser certificate trust proposal](local-browser-trust-proposal.md) — approved exact-leaf SSL trust installed and tested; see the recorded scope and history.

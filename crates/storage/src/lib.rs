@@ -1,6 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 //! Encrypted SQLite local writer. Unlock grants the sole local workspace owner's
 //! authority, not a network session. No client-held mode or multi-owner edits.
+pub mod anchors;
+pub mod assertions;
+pub mod clipboard;
+pub mod contributors;
+pub mod encoding;
+pub mod forks;
+pub mod graph;
+pub mod history;
+pub mod keychain;
+pub mod merges;
+pub mod overlay_graph;
+pub mod predicates;
+
 use hypergraph_crypto::{Context, Purpose, SecretKey};
 use hypergraph_domain::records::*;
 use rusqlite::{Connection, OpenFlags, OptionalExtension, TransactionBehavior, params};
@@ -35,6 +48,9 @@ pub enum Error {
     Conflict,
     Limit,
     Invalid,
+    Keychain(hypergraph_keychain::Error),
+    CleanupPending,
+    Backup,
 }
 pub type Result<T> = std::result::Result<T, Error>;
 impl From<rusqlite::Error> for Error {
@@ -68,58 +84,84 @@ pub fn new_id() -> Result<[u8; 32]> {
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Catalog {
+    #[serde(with = "encoding::identity")]
     owner: PrincipalId,
+    #[serde(with = "encoding::identity")]
     device: DeviceId,
     owner_label: String,
+    #[serde(with = "encoding::identities")]
     documents: Vec<DocumentId>,
 }
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Document {
+    #[serde(with = "encoding::identity")]
     id: DocumentId,
+    #[serde(with = "encoding::identity")]
     node: NodeId,
+    #[serde(with = "encoding::identity")]
     branch: BranchId,
+    #[serde(with = "encoding::identity")]
     manifest: ManifestId,
+    #[serde(with = "encoding::identity")]
     occurrence: OccurrenceId,
+    #[serde(with = "encoding::identity")]
     draft: DraftId,
     title: String,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Manifest {
+    #[serde(with = "encoding::identity")]
     document: DocumentId,
+    #[serde(with = "encoding::identity")]
     occurrence: OccurrenceId,
+    #[serde(with = "encoding::identity")]
     node: NodeId,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Revision {
+    #[serde(with = "encoding::identity")]
     node: NodeId,
+    #[serde(with = "encoding::optional_identity")]
     parent: Option<RevisionId>,
     text: String,
+    #[serde(with = "encoding::identity")]
     operation: OperationId,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Snapshot {
+    #[serde(with = "encoding::identity")]
     document: DocumentId,
+    #[serde(with = "encoding::identity")]
     manifest: ManifestId,
+    #[serde(with = "encoding::bindings")]
     bindings: Vec<SnapshotBinding>,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Head {
+    #[serde(with = "encoding::identity")]
     document: DocumentId,
+    #[serde(with = "encoding::identity")]
     revision: RevisionId,
+    #[serde(with = "encoding::identity")]
     snapshot: SnapshotId,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Draft {
+    #[serde(with = "encoding::identity")]
     document: DocumentId,
+    #[serde(with = "encoding::identity")]
     branch: BranchId,
+    #[serde(with = "encoding::identity")]
     base: RevisionId,
+    #[serde(with = "encoding::identity")]
     actor: PrincipalId,
+    #[serde(with = "encoding::identity")]
     device: DeviceId,
     sequence: u64,
     text: String,
@@ -127,33 +169,56 @@ struct Draft {
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Event {
+    #[serde(with = "encoding::identity")]
     operation: OperationId,
+    #[serde(with = "encoding::identity")]
     actor: PrincipalId,
+    #[serde(with = "encoding::identity")]
     device: DeviceId,
+    #[serde(with = "encoding::identity")]
     document: DocumentId,
+    #[serde(with = "encoding::optional_identity")]
     parent: Option<RevisionId>,
+    #[serde(with = "encoding::identity")]
     revision: RevisionId,
+    #[serde(with = "encoding::identity")]
     snapshot: SnapshotId,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "command", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Command {
+    Assertion {
+        mutation: assertions::Mutation,
+    },
+    Fork {
+        plan: forks::Request,
+    },
+    Merge {
+        plan: merges::Request,
+    },
+    Clipboard {
+        mutation: clipboard::Mutation,
+    },
     Create {
         title: String,
         text: String,
     },
     Save {
+        #[serde(with = "encoding::identity")]
         document: DocumentId,
         generation: u64,
+        #[serde(with = "encoding::identity")]
         base: RevisionId,
         previous_sequence: u64,
         sequence: u64,
         text: String,
     },
     Commit {
+        #[serde(with = "encoding::identity")]
         document: DocumentId,
         generation: u64,
+        #[serde(with = "encoding::identity")]
         base: RevisionId,
         sequence: u64,
     },
@@ -161,25 +226,57 @@ pub enum Command {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "result", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Outcome {
+    Assertion {
+        state: assertions::Change,
+    },
+    Forked {
+        #[serde(with = "encoding::identity")]
+        document: DocumentId,
+        #[serde(with = "encoding::identity")]
+        transformation: TransformationId,
+        #[serde(with = "encoding::identity")]
+        revision: RevisionId,
+        #[serde(with = "encoding::identity")]
+        snapshot: SnapshotId,
+    },
+    Merged {
+        #[serde(with = "encoding::identity")]
+        document: DocumentId,
+        #[serde(with = "encoding::identity")]
+        transformation: TransformationId,
+        #[serde(with = "encoding::identity")]
+        revision: RevisionId,
+        #[serde(with = "encoding::identity")]
+        snapshot: SnapshotId,
+    },
+    Clipboard {
+        state: clipboard::Change,
+    },
     Created {
+        #[serde(with = "encoding::identity")]
         document: DocumentId,
     },
     Saved {
+        #[serde(with = "encoding::identity")]
         document: DocumentId,
         generation: u64,
         sequence: u64,
     },
     Committed {
+        #[serde(with = "encoding::identity")]
         document: DocumentId,
         generation: u64,
         sequence: u64,
+        #[serde(with = "encoding::identity")]
         revision: RevisionId,
+        #[serde(with = "encoding::identity")]
         snapshot: SnapshotId,
     },
 }
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Receipt {
+    #[serde(with = "encoding::identity")]
     pub operation: OperationId,
     pub outcome: Outcome,
 }
@@ -192,22 +289,31 @@ struct StoredReceipt {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct DocumentSummary {
+    #[serde(with = "encoding::identity")]
     pub document: DocumentId,
     pub title: String,
 }
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct EditorState {
+    #[serde(with = "encoding::identity")]
     pub document: DocumentId,
+    #[serde(with = "encoding::identity")]
     pub node: NodeId,
+    #[serde(with = "encoding::identity")]
     pub branch: BranchId,
+    #[serde(with = "encoding::identity")]
     pub manifest: ManifestId,
+    #[serde(with = "encoding::identity")]
     pub occurrence: OccurrenceId,
+    #[serde(with = "encoding::identity")]
     pub draft: DraftId,
     pub title: String,
     pub generation: u64,
     pub acknowledged_sequence: u64,
+    #[serde(with = "encoding::identity")]
     pub base: RevisionId,
+    #[serde(with = "encoding::identity")]
     pub snapshot: SnapshotId,
     pub text: String,
 }
@@ -244,7 +350,7 @@ impl Cipher<'_> {
         generation: u64,
         value: &T,
     ) -> Result<Vec<u8>> {
-        let bytes = Zeroizing::new(serde_json::to_vec(value).map_err(|_| Error::Format)?);
+        let bytes = Zeroizing::new(encoding::encode_record(kind, value)?);
         Ok(self.key.seal(self.context(kind, id, generation), &bytes)?)
     }
     fn open<T: DeserializeOwned>(
@@ -257,7 +363,7 @@ impl Cipher<'_> {
         let bytes = self
             .key
             .open(self.context(kind, id, generation), envelope)?;
-        serde_json::from_slice(&bytes).map_err(|_| Error::Integrity)
+        encoding::decode_record(kind, &bytes)
     }
     fn object<T: DeserializeOwned>(&self, db: &Connection, kind: i32, id: [u8; 32]) -> Result<T> {
         let bytes: Vec<u8> = db
@@ -345,6 +451,8 @@ pub struct Workspace {
     workspace: [u8; 16],
     owner: PrincipalId,
     device: DeviceId,
+    path: std::path::PathBuf,
+    keychain_cleanup: Option<hypergraph_keychain::DeviceSecret>,
 }
 impl Workspace {
     /// Create only; never overwrite an existing file. Initial keys are passphrase-held.
@@ -409,27 +517,23 @@ impl Workspace {
             workspace,
             owner,
             device,
+            path: path.to_path_buf(),
+            keychain_cleanup: None,
         })
     }
     /// Open existing workspace only. No migration/downgrade or implicit creation.
     pub fn open(path: &Path, passphrase: &[u8]) -> Result<Self> {
-        // Read version before changing journal configuration or schema.
-        let mut db = open_existing(path)?;
-        if db.query_row("PRAGMA application_id", [], |r| r.get::<_, i32>(0))? != APPLICATION_ID
-            || db.query_row("PRAGMA user_version", [], |r| r.get::<_, i32>(0))? != SCHEMA_VERSION
-        {
-            return Err(Error::Format);
-        }
-        let (workspace, epoch, wrapper): (Vec<u8>, i64, Vec<u8>) = db.query_row(
-            "SELECT workspace,epoch,wrapper FROM bootstrap WHERE singleton=1",
-            [],
-            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
-        )?;
-        let workspace: [u8; 16] = workspace.try_into().map_err(|_| Error::Integrity)?;
-        if epoch != 1 {
-            return Err(Error::Format);
-        }
-        let key = SecretKey::unlock(passphrase, workspace, 1, &wrapper)?;
+        let db = open_existing(path)?;
+        let info = keychain::bootstrap(&db)?;
+        let key = SecretKey::unlock(passphrase, info.workspace, 1, &info.passphrase)?;
+        Self::from_key(path, db, key, info.workspace)
+    }
+    fn from_key(
+        path: &Path,
+        mut db: Connection,
+        key: SecretKey,
+        workspace: [u8; 16],
+    ) -> Result<Self> {
         configure(&db)?;
         let tx = db.transaction()?;
         let (_, catalog): (_, Catalog) = Cipher {
@@ -444,6 +548,8 @@ impl Workspace {
             workspace,
             owner: catalog.owner,
             device: catalog.device,
+            path: path.to_path_buf(),
+            keychain_cleanup: None,
         })
     }
     pub fn list_documents(&mut self) -> Result<Vec<DocumentSummary>> {
@@ -547,6 +653,10 @@ impl Workspace {
         let tx = self
             .db
             .transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let (_, authority): (_, Catalog) = cipher.slot(&tx, CATALOG, ROOT)?;
+        if authority.owner != self.owner || authority.device != self.device {
+            return Err(Error::Integrity);
+        }
         match cipher.object::<StoredReceipt>(&tx, RECEIPT, operation.0) {
             Ok(stored) => {
                 if stored.digest != digest || stored.receipt.operation != operation {
@@ -558,73 +668,55 @@ impl Workspace {
             Err(error) => return Err(error),
         }
         let outcome = match command {
-            Command::Create { title, text } => {
-                let (generation, mut catalog): (_, Catalog) = cipher.slot(&tx, CATALOG, ROOT)?;
-                if catalog.owner != self.owner || catalog.device != self.device {
-                    return Err(Error::Integrity);
-                }
-                let doc = Document {
-                    id: DocumentId(new_id()?),
-                    node: NodeId(new_id()?),
-                    branch: BranchId(new_id()?),
-                    manifest: ManifestId(new_id()?),
-                    occurrence: OccurrenceId(new_id()?),
-                    draft: DraftId(new_id()?),
-                    title,
-                };
-                let revision = RevisionId(new_id()?);
-                let snapshot = SnapshotId(new_id()?);
-                cipher.insert(&tx, DOCUMENT, doc.id.0, &doc)?;
-                cipher.insert(
-                    &tx,
-                    MANIFEST,
-                    doc.manifest.0,
-                    &Manifest {
-                        document: doc.id,
-                        occurrence: doc.occurrence,
-                        node: doc.node,
-                    },
-                )?;
-                publish_revision(
+            Command::Assertion { mutation } => Outcome::Assertion {
+                state: assertions::apply(
                     &cipher,
                     &tx,
-                    &doc,
+                    self.owner,
+                    self.device,
+                    operation,
+                    mutation,
+                    &mut checkpoint,
+                )?,
+            },
+            Command::Merge { plan } => merges::apply(
+                &cipher,
+                &tx,
+                operation,
+                self.owner,
+                self.device,
+                plan,
+                &mut checkpoint,
+            )?,
+            Command::Fork { plan } => forks::apply(
+                &cipher,
+                &tx,
+                operation,
+                self.owner,
+                self.device,
+                plan,
+                &mut checkpoint,
+            )?,
+            Command::Clipboard { mutation } => {
+                let state = clipboard::apply(&cipher, &tx, self.owner, self.device, mutation)?;
+                checkpoint("objects")?;
+                Outcome::Clipboard { state }
+            }
+            Command::Create { title, text } => {
+                let created = create_document(
+                    &cipher,
+                    &tx,
                     operation,
                     self.owner,
                     self.device,
-                    None,
-                    revision,
-                    snapshot,
-                    text.clone(),
+                    NodeId(new_id()?),
+                    title,
+                    text,
+                    &mut checkpoint,
                 )?;
-                checkpoint("objects")?;
-                cipher.new_slot(
-                    &tx,
-                    HEAD,
-                    doc.branch.0,
-                    &Head {
-                        document: doc.id,
-                        revision,
-                        snapshot,
-                    },
-                )?;
-                cipher.new_slot(
-                    &tx,
-                    DRAFT,
-                    doc.draft.0,
-                    &Draft {
-                        document: doc.id,
-                        branch: doc.branch,
-                        base: revision,
-                        actor: self.owner,
-                        device: self.device,
-                        sequence: 0,
-                        text,
-                    },
-                )?;
-                catalog.documents.push(doc.id);
-                cipher.update(&tx, CATALOG, ROOT, generation, &catalog)?;
-                Outcome::Created { document: doc.id }
+                Outcome::Created {
+                    document: created.document.id,
+                }
             }
             Command::Save {
                 document,
@@ -634,6 +726,9 @@ impl Workspace {
                 sequence,
                 text,
             } => {
+                if !authority.documents.contains(&document) {
+                    return Err(Error::NotFound);
+                }
                 let doc: Document = cipher.object(&tx, DOCUMENT, document.0)?;
                 let (_, head): (_, Head) = cipher.slot(&tx, HEAD, doc.branch.0)?;
                 let (actual, mut draft): (_, Draft) = cipher.slot(&tx, DRAFT, doc.draft.0)?;
@@ -661,6 +756,9 @@ impl Workspace {
                 base,
                 sequence,
             } => {
+                if !authority.documents.contains(&document) {
+                    return Err(Error::NotFound);
+                }
                 let doc: Document = cipher.object(&tx, DOCUMENT, document.0)?;
                 let (head_generation, head): (_, Head) = cipher.slot(&tx, HEAD, doc.branch.0)?;
                 let (actual, mut draft): (_, Draft) = cipher.slot(&tx, DRAFT, doc.draft.0)?;
@@ -722,6 +820,95 @@ impl Workspace {
         Ok(receipt)
     }
 }
+struct CreatedDocument {
+    document: Document,
+    revision: RevisionId,
+    snapshot: SnapshotId,
+}
+#[allow(clippy::too_many_arguments)]
+fn create_document(
+    cipher: &Cipher<'_>,
+    db: &Connection,
+    operation: OperationId,
+    owner: PrincipalId,
+    device: DeviceId,
+    node: NodeId,
+    title: String,
+    text: String,
+    checkpoint: &mut impl FnMut(&str) -> Result<()>,
+) -> Result<CreatedDocument> {
+    let (generation, mut catalog): (_, Catalog) = cipher.slot(db, CATALOG, ROOT)?;
+    if catalog.owner != owner || catalog.device != device {
+        return Err(Error::Integrity);
+    }
+    let doc = Document {
+        id: DocumentId(new_id()?),
+        node,
+        branch: BranchId(new_id()?),
+        manifest: ManifestId(new_id()?),
+        occurrence: OccurrenceId(new_id()?),
+        draft: DraftId(new_id()?),
+        title,
+    };
+    let revision = RevisionId(new_id()?);
+    let snapshot = SnapshotId(new_id()?);
+    cipher.insert(db, DOCUMENT, doc.id.0, &doc)?;
+    cipher.insert(
+        db,
+        MANIFEST,
+        doc.manifest.0,
+        &Manifest {
+            document: doc.id,
+            occurrence: doc.occurrence,
+            node: doc.node,
+        },
+    )?;
+    publish_revision(
+        cipher,
+        db,
+        &doc,
+        operation,
+        owner,
+        device,
+        None,
+        revision,
+        snapshot,
+        text.clone(),
+    )?;
+    checkpoint("objects")?;
+    cipher.new_slot(
+        db,
+        HEAD,
+        doc.branch.0,
+        &Head {
+            document: doc.id,
+            revision,
+            snapshot,
+        },
+    )?;
+    cipher.new_slot(
+        db,
+        DRAFT,
+        doc.draft.0,
+        &Draft {
+            document: doc.id,
+            branch: doc.branch,
+            base: revision,
+            actor: owner,
+            device,
+            sequence: 0,
+            text,
+        },
+    )?;
+    catalog.documents.push(doc.id);
+    cipher.update(db, CATALOG, ROOT, generation, &catalog)?;
+    Ok(CreatedDocument {
+        document: doc,
+        revision,
+        snapshot,
+    })
+}
+
 fn check_draft(
     doc: &Document,
     head: &Head,
@@ -805,6 +992,19 @@ fn reconstruct(
     doc: &Document,
     id: SnapshotId,
 ) -> Result<String> {
+    let revision_id = snapshot_revision(cipher, db, doc, id)?;
+    let revision: Revision = cipher.object(db, REVISION, revision_id.0)?;
+    if revision.node != doc.node {
+        return Err(Error::Integrity);
+    }
+    Ok(revision.text)
+}
+fn snapshot_revision(
+    cipher: &Cipher<'_>,
+    db: &Connection,
+    doc: &Document,
+    id: SnapshotId,
+) -> Result<RevisionId> {
     let snapshot: Snapshot = cipher.object(db, SNAPSHOT, id.0)?;
     let manifest: Manifest = cipher.object(db, MANIFEST, snapshot.manifest.0)?;
     if snapshot.document != doc.id
@@ -820,14 +1020,14 @@ fn reconstruct(
     if binding.path != [doc.occurrence] || binding.node != doc.node {
         return Err(Error::Integrity);
     }
-    let revision: Revision = cipher.object(db, REVISION, binding.revision.0)?;
-    if revision.node != doc.node {
-        return Err(Error::Integrity);
-    }
-    Ok(revision.text)
+    Ok(binding.revision)
 }
 fn validate_command(command: &Command) -> Result<()> {
     match command {
+        Command::Assertion { mutation } => assertions::validate(mutation)?,
+        Command::Fork { plan } => forks::validate(plan)?,
+        Command::Merge { plan } => merges::validate(plan)?,
+        Command::Clipboard { mutation } => clipboard::validate(mutation)?,
         Command::Create { title, text } => {
             if title.trim().is_empty() || title.len() > 512 {
                 return Err(Error::Invalid);
@@ -910,9 +1110,9 @@ fn configure(db: &Connection) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    struct Temp(std::path::PathBuf);
+    pub(super) struct Temp(std::path::PathBuf);
     impl Temp {
-        fn new() -> Self {
+        pub(super) fn new() -> Self {
             let path = std::env::temp_dir().join(format!(
                 "hpx-storage-{:x}",
                 u128::from_be_bytes(new_id().unwrap()[..16].try_into().unwrap())
@@ -920,7 +1120,7 @@ mod tests {
             std::fs::create_dir(&path).unwrap();
             Self(path)
         }
-        fn db(&self) -> std::path::PathBuf {
+        pub(super) fn db(&self) -> std::path::PathBuf {
             self.0.join("test.hpx")
         }
     }
@@ -929,11 +1129,11 @@ mod tests {
             let _ = std::fs::remove_dir_all(&self.0);
         }
     }
-    const PASS: &[u8] = b"synthetic-test-passphrase";
-    fn op(byte: u8) -> OperationId {
+    pub(super) const PASS: &[u8] = b"synthetic-test-passphrase";
+    pub(super) fn op(byte: u8) -> OperationId {
         OperationId([byte; 32])
     }
-    fn create(ws: &mut Workspace) -> DocumentId {
+    pub(super) fn create(ws: &mut Workspace) -> DocumentId {
         match ws
             .execute(
                 op(1),
@@ -949,7 +1149,7 @@ mod tests {
             _ => panic!(),
         }
     }
-    fn save(state: &EditorState, text: &str) -> Command {
+    pub(super) fn save(state: &EditorState, text: &str) -> Command {
         Command::Save {
             document: state.document,
             generation: state.generation,
@@ -959,12 +1159,127 @@ mod tests {
             text: text.into(),
         }
     }
-    fn commit(state: &EditorState) -> Command {
+    pub(super) fn commit(state: &EditorState) -> Command {
         Command::Commit {
             document: state.document,
             generation: state.generation,
             base: state.base,
             sequence: state.acknowledged_sequence,
+        }
+    }
+
+    #[test]
+    fn every_persisted_record_kind_carries_an_authenticated_version() {
+        let temp = Temp::new();
+        let mut ws = Workspace::create(&temp.db(), PASS, "Human").unwrap();
+        let id = create(&mut ws);
+        let state = ws.open_document(id).unwrap();
+        ws.execute(op(2), save(&state, "Exact 😀e\u{301}\r\n中"))
+            .unwrap();
+        let state = ws.open_document(id).unwrap();
+        ws.execute(op(3), commit(&state)).unwrap();
+        let state = ws.open_document(id).unwrap();
+        ws.execute(op(4), clipboard::tests::capture(&state, 0))
+            .unwrap();
+        ws.execute(
+            op(5),
+            Command::Fork {
+                plan: forks::tests::request(&state),
+            },
+        )
+        .unwrap();
+        ws.execute(
+            op(6),
+            Command::Assertion {
+                mutation: assertions::tests::create(&state),
+            },
+        )
+        .unwrap();
+        ws.execute(
+            op(7),
+            Command::Merge {
+                plan: merges::tests::request(&state),
+            },
+        )
+        .unwrap();
+        let cipher = Cipher {
+            key: &ws.key,
+            workspace: ws.workspace,
+        };
+        let mut query = ws.db.prepare(
+            "SELECT kind,id,0,envelope FROM objects UNION ALL SELECT kind,id,generation,envelope FROM slots",
+        ).unwrap();
+        let mut rows = query.query([]).unwrap();
+        let mut kinds = std::collections::BTreeSet::new();
+        while let Some(row) = rows.next().unwrap() {
+            let kind: i32 = row.get(0).unwrap();
+            let id: Vec<u8> = row.get(1).unwrap();
+            let generation = u64::try_from(row.get::<_, i64>(2).unwrap()).unwrap();
+            let envelope: Vec<u8> = row.get(3).unwrap();
+            let bytes = ws
+                .key
+                .open(
+                    cipher.context(kind, id.try_into().unwrap(), generation),
+                    &envelope,
+                )
+                .unwrap();
+            let record: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+            assert_eq!(record["record_version"], 1);
+            assert_eq!(record["record_kind"], kind);
+            assert_eq!(record.as_object().unwrap().len(), 3);
+            assert!(record["payload"].is_object());
+            kinds.insert(kind);
+        }
+        assert_eq!(
+            kinds.into_iter().collect::<Vec<_>>(),
+            (CATALOG..=merges::KIND).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn legacy_and_future_catalog_payloads_are_rejected_without_rewriting_records() {
+        let temp = Temp::new();
+        let ws = Workspace::create(&temp.db(), PASS, "Human").unwrap();
+        let cipher = Cipher {
+            key: &ws.key,
+            workspace: ws.workspace,
+        };
+        let (_, catalog): (_, Catalog) = cipher.slot(&ws.db, CATALOG, ROOT).unwrap();
+        let payload = serde_json::to_value(&catalog).unwrap();
+        for record in [
+            payload.clone(),
+            serde_json::json!({
+                "record_version": 2, "record_kind": CATALOG, "payload": payload,
+            }),
+        ] {
+            let bytes = Zeroizing::new(serde_json::to_vec(&record).unwrap());
+            let envelope = ws
+                .key
+                .seal(cipher.context(CATALOG, ROOT, 0), &bytes)
+                .unwrap();
+            ws.db
+                .execute(
+                    "UPDATE slots SET envelope=?1 WHERE kind=?2",
+                    params![envelope, CATALOG],
+                )
+                .unwrap();
+            assert!(matches!(
+                Workspace::open(&temp.db(), PASS),
+                Err(Error::Format)
+            ));
+            let retained: Vec<u8> = ws
+                .db
+                .query_row("SELECT envelope FROM slots WHERE kind=?1", [CATALOG], |r| {
+                    r.get(0)
+                })
+                .unwrap();
+            assert_eq!(retained, envelope);
+            assert_eq!(
+                ws.db
+                    .query_row("SELECT count(*) FROM objects", [], |r| r.get::<_, i64>(0))
+                    .unwrap(),
+                0
+            );
         }
     }
 

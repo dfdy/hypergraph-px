@@ -1,4 +1,4 @@
-import {test,expect} from '@playwright/test';
+import {test,expect} from './fixtures.js';
 import {readFile} from 'node:fs/promises';
 async function source(page){const event=page.waitForEvent('download');await page.getByRole('button',{name:'↓ Markdown',exact:true}).click();const download=await event;return readFile(await download.path(),'utf8');}
 const pageErrors=new WeakMap();

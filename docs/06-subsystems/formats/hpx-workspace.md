@@ -72,3 +72,13 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../../03
 
 - `HPX-SRC-0034` — `Specifications/SQLITE_PERSISTENCE.md`, lines 1–4; SHA-256 `a5f2ddf4a59c93589326af673ca8dd14254291167ed3504262c68afe4c6cb5df`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0034` — `Specifications/SQLITE_PERSISTENCE.md`, lines 5–16; SHA-256 `a5f2ddf4a59c93589326af673ca8dd14254291167ed3504262c68afe4c6cb5df`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+
+## Resumed record implementation, 2026-10-25
+
+The supported encrypted payload now uses `record_version: 1`, an existing integer `record_kind`, and strict typed `payload`; see [exact fields and compatibility](../../07-implementation/data-structures/sqlite-records.md). Database/envelope/network versions are unchanged. Unversioned experimental payloads and unknown/future record versions are rejected without automatic migration or record rewriting. Browser trust and complete real-data acceptance remain separate gates.
+
+## Explicit keychain upgrade, 2026-10-25
+
+[Owner-approved ADR014](../../04-architecture/decisions/0014-keychain-unlock-policy.md) adds supported database schema 2. New workspaces still start at schema 1; ordinary open, passphrase unlock and status queries never upgrade them. Explicit enrollment while unlocked creates and verifies a consistent encrypted schema-1 backup before a writer transaction adds the optional `keychain_unlock` row and atomically sets `user_version=2`. All existing encrypted objects/slots and the passphrase wrapper remain byte-identical. Intervening source changes abort before provider creation. Failure rolls back the format change and attempts scoped provider cleanup.
+
+Schema 2 has a separate 106-byte device-secret wrapper around the same workspace key, using existing HGWK version 1 and KDF parameters. It stores no native credential, raw key or passphrase. Readers explicitly accept schemas 1 and 2 and reject unknown/future schemas. Removing enrollment leaves schema 2 with no device-wrapper row, without downgrade. Passphrase recovery remains available. Old schema-1 binaries reject upgraded files; the pre-upgrade backup remains readable with the passphrase by a binary supporting its encrypted record wrapper. This bounded local backup is distinct from deferred portable/remote restore. See [exact schema](../../07-implementation/data-structures/sqlite-records.md) and [test evidence](../../registers/tests.csv).

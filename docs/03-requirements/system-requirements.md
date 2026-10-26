@@ -128,3 +128,14 @@ Use the source-grounded examples/evidence above and [acceptance gates](<acceptan
 - `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 30–43; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 44–59; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 60–71; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Owner addition: five distinct content actions, 2026-10-25
+
+Expose **Fork, Link, Embed, Merge and Copy** as distinct action names. The owner explicitly added Merge and Copy alongside Fork/Link/Embed. Their authoritative behavior is defined by the [document-engine action set](../06-subsystems/document-engine.md#owner-directed-action-set-fork-link-embed-merge-and-copy), with presentation in the [frontend contract](../06-subsystems/frontend-interaction.md). Merge preserves exact input histories and transformation evidence; Copy distinguishes clipboard capture from subsequent publication. Neither action silently changes identity, grants authority, commits a draft or erases retained history. Required names and target behavior do not imply that the durable operations are already implemented.
+
+## Separately reviewed owner additions, 2026-10-25
+
+- **HPX-RQ-028:** Make “logically equivalent” explicitly discoverable as the existing contextual equivalence relation, preserving identity and the distinction between an assertion, a checked proof and node identity. See [domain definition](../05-domain/assertions-and-predicates.md#owner-approved-logical-equivalence-clarification-2026-10-25).
+- **HPX-RQ-029:** Provide a read-only graph of any selected authorised nodes as labelled circles and their relationships as labelled connectors, preserving direction, n-ary roles, context, completeness and evidence status. See [graph view contract](../06-subsystems/graph-engine.md#owner-approved-selected-node-graph-view-2026-10-25).
+
+The owner explicitly deferred the separately proposed statement/relationship-to-Lean conversion workflow. It is not an adopted requirement or an enabled feature by this review.

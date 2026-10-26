@@ -11,7 +11,7 @@ Underlying the project is a commitment to **intellectual autonomy, transparency,
 
 ![Current synthetic desktop frontend preview](docs/assets/desktop-preview.png)
 
-*Current local frontend preview, captured on 2026-10-26 with synthetic content. Frontend changes shown here remain unpublished; this image is not evidence of live Rust integration.*
+*Current local frontend preview, captured on 2026-10-26 with synthetic content. This synthetic preview image is not evidence of live Rust integration.*
 
 ### How it's being built
 
@@ -41,7 +41,7 @@ For more, see the [project purpose](docs/01-purpose/project-purpose.md), [docume
 
 ## Current status
 
-Source version **0.8.0** includes the nine-level documentation migration, encrypted SQLite storage, and an HTTPS runtime scaffold. The image above shows the current local synthetic frontend preview; its capture does not publish the unfinished application changes. The initial one-owner HTTPS/SQLite browser workflow now passes synthetic integration checks; real-document acceptance and broader feature coverage remain pending. Application implementation resumed on 2026-10-25. Local changes remove domain serialization, version encrypted records, harden retry/source-preservation behavior, and implement the approved opt-in macOS keychain policy with retained passphrase recovery; see the [implementation handoff](docs/09-guides/reference/DEVELOPMENT_STATE.md).
+Source version **1.0.0** includes the integrated one-owner HTTPS/SQLite workflow, exact source and immutable history, opt-in macOS Keychain unlock with retained passphrase recovery, protected provenance captures, independent Fork and reviewed synthesis, retrospective assertions and selected-node graphs. Publication contributors are an explicitly incomplete evidence view. Synthetic integration checks pass; real-document acceptance and broader feature/platform coverage remain pending. The major version records incompatible domain API and experimental-record decoding changes, not completion of the product. See the [implementation handoff](docs/09-guides/reference/DEVELOPMENT_STATE.md) and [publication record](docs/09-guides/reference/source-publication-1.0.0.md).
 
 For the synthetic browser preview, run `npm --prefix frontend run dev` and open [http://127.0.0.1:5173/](http://127.0.0.1:5173/). Its content is tab-local and resets on reload. See the [developer guide](docs/09-guides/developers/getting-started.md) for build/check boundaries. The unfinished integrated runtime is not yet accepted for real documents.
 

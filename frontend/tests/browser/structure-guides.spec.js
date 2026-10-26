@@ -1,4 +1,4 @@
-import {test,expect} from '@playwright/test';
+import {test,expect} from './fixtures.js';
 import {readFile} from 'node:fs/promises';
 async function source(page){const ready=page.waitForEvent('download');await page.getByRole('button',{name:'↓ Markdown',exact:true}).click();return readFile(await(await ready).path(),'utf8');}
 test('editor structure guides share a fixed gutter, follow hierarchy/wrapping and never indent or alter source',async({page})=>{

@@ -1,6 +1,8 @@
 import {build} from 'esbuild';
 import {mkdir,copyFile,cp,readFile,writeFile,readdir} from 'node:fs/promises';
 await mkdir('dist/vendor/katex',{recursive:true});
+await mkdir('dist/assets',{recursive:true});
+await copyFile('../docs/assets/logo.png','dist/assets/logo.png');
 await build({entryPoints:['src/app.js'],bundle:true,format:'esm',minify:true,outfile:'dist/app.js',legalComments:'linked'});
 for(const file of ['index.html','styles.css'])await copyFile(file,`dist/${file}`);
 await copyFile('node_modules/katex/dist/katex.min.css','dist/vendor/katex/katex.min.css');

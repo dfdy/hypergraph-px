@@ -37,6 +37,20 @@ export function installFunctionsBar(api) {
   }
   for(const button of [fork,link,embed])button.onmousedown=event=>event.preventDefault();
   fork.onclick=()=>{
+    if(api.runtime){
+      const context=frozen();if(context.from===context.to)return;
+      const {dialog,body,actions,close}=modal('Fork selected content','Create an independent document from this committed selection. Its history will retain the exact source. You can edit either document independently.',context);
+      const title=field(body,'Fork name',make('input'));title.value=`Fork of ${context.title}`;title.maxLength=512;
+      preview(body,api.exactSelection(context));const message=make('p');message.setAttribute('role','status');body.append(message);
+      const create=make('button','Create fork');create.className='primary-action';
+      create.onclick=async()=>{
+        if(!current(context)){message.textContent='Source changed. Reopen Fork against the current selection.';return;}
+        if(!title.value.trim()){title.focus();return;}
+        create.disabled=title.disabled=actions.firstElementChild.disabled=true;dialog.oncancel=e=>e.preventDefault();
+        try{await api.createRuntimeFork(context,title.value.trim());close();}catch(error){message.textContent=error.message;}
+        finally{title.disabled=actions.firstElementChild.disabled=false;dialog.oncancel=null;}
+      };actions.append(create);title.focus();title.select();return;
+    }
     const context=frozen(),kind=selectionKind(api.getDocument(context.document).source,context.from,context.to);
     if(!kind){api.notify('Select a whole sentence, paragraph or section to fork.');return;}
     const {dialog,body,actions,close}=modal('Fork selected content','Create an independent test document in this tab. The source stays unchanged. This preview does not save version history.',context);
@@ -84,9 +98,9 @@ export function installFunctionsBar(api) {
   };
   return {update(context){
     const source=api.getDocument(context.document).source;
-    fork.disabled=!!api.runtime||!selectionKind(source,context.from,context.to);
+    fork.disabled=api.runtime?(!api.forkSupported||!api.canFork()||context.from===context.to):!selectionKind(source,context.from,context.to);
     embed.disabled=!!api.runtime;
-    fork.title=fork.disabled?'Select a whole sentence, paragraph or section':'Create an independent tab-only demo fork';
+    fork.title=api.runtime?'Create an independent document from committed source':fork.disabled?'Select a whole sentence, paragraph or section':'Create an independent tab-only demo fork';
     link.disabled=!documentHeadings(source).length||context.from!==context.to&&!selectedWords(source,context.from,context.to);
     link.title=link.disabled?'Use a caret or whole-word selection in a document with headings':'Insert a plain Markdown heading link';
     embed.title='Choose and preview shared source content';

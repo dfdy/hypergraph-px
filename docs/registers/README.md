@@ -14,3 +14,5 @@ New requirement/claim decomposition retains complete source context. Claim-unit 
 `original_path` records where a source came from; `current_path` records its current filesystem location. ZIP sources additionally specify `archive_member`. Coverage/mapping/requirement/conflict/trace registers carry corresponding current-location fields; old paths remain provenance, never an assertion that moved files still exist there.
 
 Input `authority` and `apparent_status` fields record source classifications at inventory time. They do not make an archived source the active navigation/instruction file; `effective_migration_role`, current owner decisions and the document register govern current routing.
+
+[Current implementation test evidence](tests.csv) records executed checks and limits separately from accepted requirements and inherited historical source evidence.

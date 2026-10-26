@@ -105,3 +105,9 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 - `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 7–12; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 68–93; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 38–47; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Owned editor source implementation evidence, 2026-10-25
+
+The runtime frontend retains exact source separately from the CodeMirror LF display projection in [owned-source.js](../../frontend/src/owned-source.js). It maps UTF-16 display changes against the exact owned text, rejects stale mappings and split scalar boundaries, and preserves unchanged mixed line endings and combining scalars. Exact paste and undo/redo effects retain raw source; copy and download use owned text. This is implementation/test evidence for the existing UTF-8/source-preservation requirement, not acceptance of generic multi-owner editing. See [test coverage](../registers/tests.csv).
+
+The local read-only runtime now resolves the existing `Anchor` against an exact historical snapshot, including revision/occurrence binding and scalar-safe UTF-8 byte bounds. This adds no persisted anchor encoding, relocation, source promotion or current-draft publication mechanism; see [actual navigation queries](../06-subsystems/interfaces/domain-navigation.md) and [test evidence](../registers/tests.csv).
