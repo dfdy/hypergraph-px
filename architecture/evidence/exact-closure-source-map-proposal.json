@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-30",
+  "scope": "Owner-requested design proposal preparation only;no recommendation adopted",
+  "proposal": "architecture/proposals/exact-closure-source-map.md",
+  "gap": "HPX-GAP-004 remains open",
+  "recommendation": "Flat root-relative immutable closure with derived ordered source maps;first pinned/read-only composite slice",
+  "reviewChoices": [
+    "logical representation",
+    "initial capability scope",
+    "expansion-cycle projection",
+    "followed-head conflict policy",
+    "separate persistence/version/compatibility rollout"
+  ],
+  "proposalLocalLinkOccurrencesResolved": 13,
+  "ownershipScopesUnchanged": 24,
+  "documentStatusCountsUnchanged": {
+    "fully": 1,
+    "partially": 24,
+    "notMigrated": 46
+  },
+  "sourceSnapshotFiles": 2702,
+  "protectedFilesByteIdentical": 2697,
+  "allModelSourceAndSnapshotFilesByteIdentical": 58,
+  "validationCadence": "Documentation-only:link/inventory/preservation checks;no LikeC4 validation or layout recalculation because all model sources/snapshots unchanged. Prior milestone retains its as-run scope.",
+  "plannedTestsExecuted": false,
+  "limits": [
+    "No new owner-decision/ADR/canonical scope or design adoption.",
+    "No app tests/build/runtime,formats/versions,provider/trust or publication change.",
+    "Private archives excluded from preservation snapshot."
+  ],
+  "changedExistingFiles": [
+    "architecture/audits/dom001-current-coverage.md",
+    "architecture/audits/specification-migration-status.md",
+    "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+    "docs/registers/open-questions.csv",
+    "docs/registers/tests.csv"
+  ],
+  "newFiles": [
+    "architecture/proposals/exact-closure-source-map.md",
+    "architecture/evidence/exact-closure-source-map-proposal.json"
+  ],
+  "documentation": {
+    "exitCode": 0,
+    "output": "CHECK Metadata/status/ID registry checked: 71 materialized contracts; 27 reserved\nCHECK Source/map IDs and current-location register consistency checked\nCHECK Coverage: 116 canonical sections; 169 retained canonical/policy/evidence sections; 138 sources; 509 claim units; 38 requirement seeds\nCHECK Current Markdown local file links checked; original archive links not rewritten\nSKIP: local archive bytes/source spans; use --check-local-sources when local originals are available\nPASS: documentation mechanical checks; semantic adoption remains reviewable"
+  },
+  "whitespace": "passed;CRLF preserved",
+  "finalScope": "passed:5 existing documentation/register files and2 new proposal/evidence files;all other snapshot-covered files unchanged"
+}

@@ -13,18 +13,12 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 Formal meanings do not imply every type or operation is implemented. See implementation discrepancies and requirement evidence separately.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Vocabulary and mathematical notation
-
-Exact UTF8 text, UTF16 browser coordinates, historical anchors and ownership boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Entities and identities
-
 
 
 ### Text encoding contract
@@ -71,34 +65,10 @@ An anchor identifies an exact owner revision and range, including occurrence pat
 
 Promote a fragment only when an operation needs persistent identity. Preserve bytes, formatting and reading order; do not allocate a node for every word. Overlapping ranges remain anchored references or ordered selection components, never overlapping children in a composition tree. Multi-node selections preserve ordered parts, individual owners/revisions and boundaries. Historical snapshots remain immutable.
 
-**Copying is not implicit permission to commit an unsaved buffer.** An existing committed source range can be captured read-only. If copying requires source promotion or the selection includes uncommitted text, the UI must disclose the publication needed and obtain explicit confirmation before the promotion command. An unconfirmed selection remains a temporary tab item, not a durable canonical clipboard reference. This is the exception to ordinary read-only copy/navigation: promotion is an explicit authorized history operation; simply opening a menu or preview publishes nothing.
+**Copying does not Commit an unsaved buffer.** Under [ADR019](../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md), committed selections retain exact historical bindings and uncommitted provenance-bearing selections use private working checkpoints. Checkpoint capture is durable private workflow state, not canonical node publication, structural promotion or derivation. Later Commit and reference replacement remain distinct operations with their own exact-state and authority checks. Opening a menu or preview publishes nothing.
 
 Before enabling durable promotion, specify its exact affected heads, whether it creates only a derived fragment or also restructures current source composition, attribution, undo and atomic receipt in an ADR. No source restructuring or unrelated draft commit may be hidden in Copy. Copy never creates destination forks in advance.
 
-
-## Relationships and permitted states
-
-Exact UTF8 text, UTF16 browser coordinates, historical anchors and ownership boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Operations and transitions
-
-Exact UTF8 text, UTF16 browser coordinates, historical anchors and ownership boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Invariants
-
-Exact UTF8 text, UTF16 browser coordinates, historical anchors and ownership boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Unresolved semantics
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Verification/proofs
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

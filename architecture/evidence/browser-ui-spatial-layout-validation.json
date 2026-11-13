@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-30",
+  "authority": "HPX-OWNER-025:spatial UI drawing organisation only",
+  "checks": {
+    "view_ids_unchanged": true,
+    "existing_model_elements_unchanged": true,
+    "existing_model_relationships_unchanged": true,
+    "one_source_backed_bottom_region_and_two_exchanges_added": true,
+    "36_unrelated_views_content_and_navigation_unchanged": true,
+    "22_unrelated_saved_geometries_unchanged": true,
+    "exactly_five_spatial_subgroups": true,
+    "editor_and_minimap_in_centre": true,
+    "right_column_has_collaborators_and_relations": true,
+    "existing_panels_mapped_to_right_subgroups": true,
+    "toolbar_regions_mapped": true,
+    "left_centre_right_order": true,
+    "toolbars_above_and_below_columns": true,
+    "collaborators_above_relations": true,
+    "all_nested_boxes_contained_external_io_outside_and_15_cubic_links_checked": true,
+    "all_13_existing_ui_flows_retained": true,
+    "all_37_views_reachable": true,
+    "local_source_links_resolve": true,
+    "retained_frontend_contract_tail_byte_identical": true,
+    "protected_application_files_unchanged": true,
+    "likec4_model_and_saved_layouts_validate": true
+  },
+  "counts": {
+    "views": 37,
+    "source_files": 18,
+    "internal_ui_regions": 7,
+    "top_level_subgroups": 5,
+    "nested_right_subgroups": 2,
+    "connections": 15,
+    "single_cubic_sample_points_per_connection": 321,
+    "unrelated_saved_geometries_preserved": 22,
+    "local_source_links": 805,
+    "protected_files": 429
+  },
+  "likec4_validation": {
+    "valid": true,
+    "errors": [],
+    "stats": {
+      "totalFiles": 18,
+      "totalErrors": 0,
+      "filteredFiles": 18,
+      "filteredErrors": 0
+    }
+  },
+  "source_hash": "175a94c4e430406a96df66e351066a727d6cbd55ea9a2662874f0396517959cd",
+  "limits": [
+    "Static model/source/geometry checks and native preview;not actual VS Code renderer acceptance.",
+    "Diagram groups do not rename application controls or introduce modules;Functions(right) differs from shared Interface functions.",
+    "No application code/tests/build/launch,browser,generation,proof,trust/provider/workspace,commit or publication."
+  ],
+  "documentation_verification": {
+    "command": "python3 scripts/verify_documentation.py",
+    "exit_code": 0,
+    "archive_bytes": "skipped as reported"
+  },
+  "native_static_preview": "inspected without browser;group labels use saved label boxes;not actual VS Code acceptance",
+  "commands_executed": [
+    "LikeC4 1.60.0 export json",
+    "LikeC4 1.60.0 validate --json architecture",
+    "Python nested-group/spatial-order/navigation/source/321-point curve/byte-preservation checks",
+    "Swift/AppKit native static preview inspected",
+    "python3 scripts/verify_documentation.py"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-29",
+  "result": "passed",
+  "scope": "C3 specification-to-model audit, proposed interpretation only",
+  "overview_components": 18,
+  "integration_responsibilities": 6,
+  "component_status_counts": {
+    "implemented": 5,
+    "partial": 12,
+    "planned": 7
+  },
+  "source_linked_logical_flows": 49,
+  "existing_flows": 36,
+  "planned_flows": 13,
+  "focused_c3_views": 5,
+  "registered_requirement_seeds": 31,
+  "pre_report_materialized_contracts": 62,
+  "protected_application_proof_inputs_unchanged": 216,
+  "checks": [
+    "LikeC4 1.60.0 syntax/semantics and saved-layout validation: zero diagnostics",
+    "All eight views layout",
+    "All 24 component statuses and source paths checked",
+    "All 49 declared flows have source evidence and appear in computed views",
+    "Pure-domain component has no outgoing adapter dependency; Cargo remains dependency-free",
+    "All 31 compound requirement seeds mapped or explicitly excluded",
+    "All six C3 views have nonoverlapping leaf boxes and valid containment",
+    "All navigation destinations resolve; C2 opens expanded C3",
+    "C1 and C2 computed view hashes unchanged; saved C2 layout unchanged",
+    "New C3 snapshot hash matches expanded source; previous snapshot/source preserved",
+    "Architecture source and audit links resolve",
+    "Captured application/proof inputs unchanged",
+    "Native drawing preview inspected for overview geometry; not an actual VS Code rendering test",
+    "Documentation metadata/source/coverage/local-link mechanical checks passed; local archive-byte check not rerun"
+  ],
+  "limits": [
+    "No browser opened or actual VS Code webview automated",
+    "No application build/regression, runtime deployment or new proof",
+    "No provider/trust/credential/publication action",
+    "General composition, rights, production parent-Merge, repair/portable restore, client-held mode, exact integration protocols and converter packaging remain gated"
+  ],
+  "model_sha256": {
+    "architecture/context.c4": "8d3c3885870b9fc83edf144bcb6d64cfba319546965a8ddf5f5f2b217f6f6cea",
+    "architecture/executable.c4": "3995d205a93d6ee8356d1e12a9c6c72d222dd578d983c64718dfcc419cae323a",
+    "architecture/containers.c4": "95479c715ba57932179cb6a46f7880783046469df510fb5e91eab77d32941172"
+  },
+  "c3_snapshot_sha256": "5fddc9126392f78c268545ba0cdfc59bfe342da549c7fb919b51d2318c87cbaa",
+  "c2_snapshot_sha256": "62aa447cb4a8dd101fc809d204c741685c5daefab6bf915859663941c54fd4da",
+  "audit_report_sha256": "05e86d0b5698663af4937d637e06ac2fcdea00bd1b545c6d611269a5b51e6867"
+}

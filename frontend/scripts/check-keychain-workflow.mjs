@@ -1,3 +1,4 @@
+import {typedBindings,assertBoundPayload} from './assert-api-schema.mjs';
 import {binaryFingerprint,refreshManualRuntime} from './manual-runtime-update.mjs';
 // SPDX-License-Identifier: AGPL-3.0-only
 // Synthetic storage/history integration over verified HTTPS. Native keychain is opt-in; no browser.
@@ -54,6 +55,8 @@ async function api(path,body){
     cookie=headers.match(/Set-Cookie: (__Host-hpx=[^;]+)/i)?.[1]??cookie;
     const result=JSON.parse(data.subarray(boundary+4).toString());
     if(status!==200){const error=Error(result.error??'Synthetic request rejected');error.status=status;throw error;}
+    const method=body===undefined?'GET':'POST',route='/api/v1/'+path,binding=typedBindings.find(b=>b.path===route&&b.method===method);
+    if(binding){if(binding.request)assertBoundPayload(route,method,'request',body);assertBoundPayload(route,method,'response',result);}
     yes(result);
    }catch(error){no(error);}
   });

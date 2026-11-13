@@ -13,22 +13,22 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+Storage is below shared API/application authorisation; browser and AI tools receive no alternate direct SQLite access. Persist user-attributed results/drafts/receipts under common publication semantics. One SQLite writer does not imply one user. Existing one-owner checks remain incomplete; no new permission record or migration is adopted. See the [accepted shared API scope](interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Fixture controls and future contracts are not durable service implementations. Capabilities must report unavailable honestly.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Responsibilities and boundaries
-
-Encrypted SQLite create/open/draft/commit transactions and restart recovery. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Inputs and outputs
-
-Encrypted SQLite create/open/draft/commit transactions and restart recovery. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## State and operations
-
 
 
 ### Commands and acknowledgements
@@ -43,22 +43,6 @@ Commit supplies exact draft generation/base/acknowledged sequence and operation 
 
 Open validates bootstrap/schema and unlocks with passphrase; keys never enter browser storage or SQL. Wrong passphrase/tag fails safely. Reads authenticate selected records and verify ownership/closure. Reconstruct snapshot uses its exact pinned revision regardless of current head. Draft recovery returns exact text, base, generation and acknowledged sequence without committing it.
 
-
-## Invariants and error behavior
-
-Encrypted SQLite create/open/draft/commit transactions and restart recovery. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Dependencies and interfaces
-
-Encrypted SQLite create/open/draft/commit transactions and restart recovery. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Security and privacy
-
-Encrypted SQLite create/open/draft/commit transactions and restart recovery. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

@@ -13,56 +13,19 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
-Rustls runtime and encrypted SQLite exist locally; trusted-browser startup/parity and adapter reliability remain unverified.
+## Canonical architecture
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
+Deployment and container structure is defined in [C1 / System context](../../architecture/context.c4) and [C2 / HPX containers](../../architecture/C2/containers.c4), HPX-CAN-001/002. Responsibility decomposition continues in [C3 / HPX Rust executable](../../architecture/C3/executable.c4). These definitions are not repeated here.
 
-## Context and problem
+## Retained contracts
 
-Single-executable deployment and high-level responsibility boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+- [Workspace users, chat and MCP](../06-subsystems/ai-collaboration.md) and the [shared API](../06-subsystems/interfaces/browser-runtime.md) retain detailed identity, permissions and interaction obligations.
+- [Security](../06-subsystems/security-cryptography.md), [ADR004](decisions/0004-local-https-bootstrap.md) and [workspace format](../06-subsystems/formats/hpx-workspace.md) retain transport, custody, storage and compatibility rules.
+- [Development state](../09-guides/reference/DEVELOPMENT_STATE.md#current-execution-status) records current evidence/limits. [Release qualification](../08-assurance/build-and-release.md) remains a separate contract.
 
-## Scope and exclusions
-
-Single-executable deployment and high-level responsibility boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Normative content
-
-
-
-### Software architecture
-
-Source `HPX-SRC-0021`, original lines 1–4. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
-
-Status: current architecture, 2026-10-24. Requirements are defined by [SPECIFICATION.md](<../03-requirements/system-requirements.md>). Implemented components are identified below; planned directories are responsibility boundaries, not existing services.
-
-### Deployment and development
-
-Source `HPX-SRC-0021`, original lines 5–12. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
-
-The initial application runs locally for one human. Model users, devices, groups, policy authority and causal operations so later live collaboration, explicit branches and federated instances do not depend on process-local identities or wall-clock ordering. Remote operation remains unavailable until its acceptance gates pass.
-
-Develop the browser frontend independently from Rust data and application processes. Development may use a frontend development server with a defined API/proxy contract. Production builds embed the compiled HTML/CSS/JavaScript in one Rust executable that owns startup, storage, application services, transport and asset delivery. Node, Lean and a separate database/frontend server are not runtime requirements. Describe platform libraries accurately for each release target.
-
-Medium-term integration gate: the browser/runtime boundary uses authenticated encrypted transport, including loopback. The Rust executable owns secure asset/API delivery; certificate trust/bootstrap and development parity require an ADR before implementation. See [transport security](<../06-subsystems/security-cryptography.md>). This is independent of content-key custody and remains unimplemented.
-
-
-## Examples and counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Dependencies and consequences
-
-Single-executable deployment and high-level responsibility boundaries. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Open questions and conflicts
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
+See [ownership and editing rules](../../architecture/SPECIFICATION.md). Other proposed designs remain proposed.
 
 ## Source provenance
 

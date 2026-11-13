@@ -1,0 +1,210 @@
+// Source-fragment mapping only; code remains in its existing files.
+specification { relationship navigation_call { line solid; color slate } relationship navigation_data { line dotted; color slate } }
+model {
+ extend hpx.browser.ui.contents {
+  markup = code "index.html • Explorer controls" {
+   #implemented
+   description "Existing #navigation, lens tabs, Follow editor and Open/Close all controls. This is markup/DOM context, not a navigation service."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/index.html"] symbols ["navigation", "followTree", "toggleAllTree"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/index.html
+  }
+ }
+ extend hpx.browser.ui.contents {
+  render = code "app.js • renderNavigation / document rows" {
+   #partial
+   description "Workspace/Document rows from current client catalog; chapter disclosure is separate from opening. Runtime Graph delegates behind capability flags; History lens remains a placeholder even when other runtime history UI exists."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "partial" paths ["frontend/src/app.js"] symbols ["renderNavigation", "appendDocumentRow", "syncRuntimeDocuments"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/app.js
+  }
+ }
+ extend hpx.browser.ui.contents {
+  headings = code "documentHeadings / editorProjection" {
+   #partial
+   description "Parse ATX headings outside the implemented fence filter; derive duplicate-suffixed slugs and section bounds from the LF editor projection. Positions are JavaScript UTF16 hints, not canonical graph IDs or durable anchors."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "partial" paths ["frontend/src/context-actions.js", "frontend/src/owned-source.js"] symbols ["documentHeadings", "editorProjection"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/context-actions.js
+   link ../../frontend/src/owned-source.js
+  }
+ }
+ extend hpx.browser.ui.contents {
+  tree = code "outline-tree.js • hierarchy and disclosure state" {
+   #implemented
+   description "headingTree/headingAt and createOutlineTree render textContent labels, independent subsection collapse, current-location marking and reveal/setAll helpers. Keys use document plus derived heading slug."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/outline-tree.js"] symbols ["headingTree", "headingAt", "createOutlineTree", "render", "mark", "setCurrent", "expandPath", "setAll"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/outline-tree.js
+  }
+ }
+ extend hpx.browser.ui.contents {
+  bindings = code "app.js • navigation callbacks / outline" {
+   #implemented
+   description "Existing callback fragments bind lenses, chapter/heading actions, Follow and Open/Close all. outline passes projected headings into the tree. These fragments share renderNavigation/appendDocumentRow and are not new functions."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/app.js"] symbols ["outline", "createOutlineTree callbacks", "data-lens onclick", "followTree.onchange", "toggleAllTree.onclick", "previous.onclick", "next.onclick"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/app.js
+  }
+ }
+ extend hpx.browser.ui.contents {
+  activation = code "app.js • openDocument / jump" {
+   #implemented
+   description "Same-document no-op and busy-switch guard; save cached EditorState/scroll. Unlocked runtime departure awaits adapter.depart; refusal/unknown outcome retains active node. Successful switches restore context; heading jumps only move selection/viewport."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/app.js"] symbols ["openDocument", "jump", "editorKey", "states", "branchSwitching"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/app.js
+  }
+ }
+ extend hpx.browser.ui.contents {
+  follow = code "app.js • scheduleTreeFollow / controls" {
+   #implemented
+   description "Coalesced requestAnimationFrame; follow toggle and Workspace/Document lens guards. Uses caret or visible-editor position, reveals ancestor path/current row and scrolls the outline. No source edit or publication."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/app.js"] symbols ["scheduleTreeFollow", "updateTreeControls", "treeNavigationMode", "treeForce", "lastFollowTarget"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/app.js
+  }
+ }
+ extend hpx.browser.editor {
+  navigation_view = code "CodeMirror EditorView integration" {
+   #implemented
+   description "Existing app.js EditorView update/listener/state integration: source projection, selection, scroll DOM and cached editor states; no new editor module."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/app.js"] symbols ["EditorView", "makeState", "update", "view.dispatch", "view.setState", "view.scrollDOM"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/app.js
+  }
+ }
+ extend hpx.browser.shell {
+  navigation_preferences = code "savePreferences / loadPreferences" {
+   #implemented
+   description "Optional localStorage hypergraph-display-v1 display settings, including validated followTree and column widths. Not manuscript persistence or retained pinned identities."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/app.js"] symbols ["savePreferences", "loadPreferences"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/app.js
+  }
+ }
+ extend hpx.browser.shell {
+  navigation_widths = code "installColumnWidths • shared layout helper" {
+   #implemented
+   description "Actual shared outline/sidebar resizing and validated sizes. app.js onLayout callback requests editor measure/minimap refresh; onSave persists display settings."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/column-widths.js", "frontend/src/app.js", "frontend/styles.css"] symbols ["installColumnWidths", "restore", "onLayout", "onSave"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/column-widths.js
+   link ../../frontend/src/app.js
+   link ../../frontend/styles.css
+  }
+ }
+ extend hpx.browser.history {
+  navigation_graph = code "openRuntimeGraph • delegated inspection" {
+   #implemented
+   description "Existing separately scoped graph dialog consumes RuntimeAdapter. Invocation is capability-gated; stale replies/locked lifecycle are rejected by dialog checks. General graph scope is not implied."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/runtime-graph.js"] symbols ["openRuntimeGraph"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/runtime-graph.js
+  }
+ }
+ extend hpx.browser.shell {
+  navigation_feedback = code "notify / refreshAll • shared UI feedback" {
+   #implemented
+   description "Actual app.js toast/status and coordinated UI refresh, including navigation and other panels. A UI refresh does not publish a revision."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/app.js"] symbols ["notify", "refreshAll"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/app.js
+  }
+ }
+ extend hpx.browser.ui.contents {
+  fixture_context = code "FixtureAdapter / fixture documents" {
+   #implemented
+   description "Synthetic preview alternative and tab-local documents. No fallback after a failed live connection, authoritative graph or durable publication."
+   metadata { authority "proposed source-linked code projection;not new modules or adopted V3 semantics" execution "browser" implementation "implemented" paths ["frontend/src/adapter.js", "frontend/src/fixtures.js", "frontend/src/app.js"] symbols ["FixtureAdapter", "fixtureDocuments", "localForks"] spec_refs "HPX-SUB-009 contents-tree controls/hierarchical contents;HPX-OWNER-010 node departure" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/adapter.js
+   link ../../frontend/src/fixtures.js
+   link ../../frontend/src/app.js
+  }
+ }
+ user -[navigation_data]-> hpx.browser.ui.contents.bindings "Navigation actions / keyboard / disclosure" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.bindings -[navigation_call]-> hpx.browser.ui.contents.markup "Bind controls / selected lens state" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.render -[navigation_data]-> hpx.browser.ui.contents.markup "Rendered rows / current-location DOM" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.bindings -[navigation_call]-> hpx.browser.ui.contents.render "Re-render lens / disclosure" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.render -[navigation_call]-> hpx.browser.ui.contents.bindings "Chapter callbacks / outline invocation" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.bindings -[navigation_call]-> hpx.browser.ui.contents.headings "Parse projected source / section bounds" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.bindings -[navigation_call]-> hpx.browser.ui.contents.tree "Render outline / setAll / collapse callbacks" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.render -[navigation_call]-> hpx.browser.ui.contents.tree "Mark current location" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.headings -[navigation_data]-> hpx.browser.ui.contents.tree "Heading records / section bounds" { link ../../frontend/src/outline-tree.js }
+ hpx.browser.ui.contents.bindings -[navigation_call]<-> hpx.browser.ui.contents.activation "Open / jump; switched or blocked" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.activation -[navigation_call]<-> hpx.browser.c4_protocol "get / contextKey / depart; original outcome" { link ../../frontend/src/app.js }
+ hpx.browser.c4_protocol -[navigation_data]-> hpx.browser.ui.contents.render "Client documents / exact buffer / capabilities" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.fixture_context -[navigation_data]-> hpx.browser.ui.contents.render "Preview catalog / tab-local data only" { link ../../frontend/src/adapter.js }
+ hpx.browser.ui.contents.activation -[navigation_data]<-> hpx.browser.editor.navigation_view "Cache / restore EditorState and scroll; jump" { link ../../frontend/src/app.js }
+ hpx.browser.editor.navigation_view -[navigation_data]-> hpx.browser.ui.contents.follow "Selection / edited projection / scroll events" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.follow -[navigation_call]-> hpx.browser.ui.contents.headings "Read current heading positions" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.follow -[navigation_call]-> hpx.browser.ui.contents.tree "headingAt / setCurrent / expandPath / mark" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.follow -[navigation_data]-> hpx.browser.ui.contents.markup "Reveal current outline row" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.activation -[navigation_call]-> hpx.browser.ui.contents.follow "rAF after restored scroll" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.bindings -[navigation_call]-> hpx.browser.shell.navigation_preferences "Persist Follow editor preference" { link ../../frontend/src/app.js }
+ hpx.browser.shell.navigation_preferences -[navigation_data]-> hpx.browser.ui.contents.follow "Validated followTree checkbox" { link ../../frontend/src/app.js }
+ hpx.browser.shell.navigation_widths -[navigation_data]-> hpx.browser.ui.contents.markup "Outline column geometry" { link ../../frontend/src/column-widths.js }
+ hpx.browser.shell.navigation_widths -[navigation_call]-> hpx.browser.editor.navigation_view "onLayout: requestMeasure" { link ../../frontend/src/app.js }
+ hpx.browser.shell.navigation_widths -[navigation_call]-> hpx.browser.ui.navigator "onLayout: scheduleMap" { link ../../frontend/src/app.js }
+ hpx.browser.shell.navigation_preferences -[navigation_call]<-> hpx.browser.shell.navigation_widths "Restore widths / onSave display settings" { link ../../frontend/src/app.js }
+ hpx.browser.ui.navigator -[navigation_call]-> hpx.browser.editor.navigation_view "Scroll shared editor viewport" { link ../../frontend/src/minimap.js }
+ hpx.browser.ui.contents.activation -[navigation_call]-> hpx.browser.ui.navigator "scheduleMap after switch" { link ../../frontend/src/app.js }
+ hpx.browser.ui.contents.render -[navigation_call]-> hpx.browser.history.navigation_graph "Capability-gated graph dialog callback" { link ../../frontend/src/app.js }
+ hpx.browser.history.navigation_graph -[navigation_call]<-> hpx.browser.c4_protocol "Scoped graph / source requests and replies" { link ../../frontend/src/runtime-graph.js }
+ hpx.browser.ui.contents.activation -[navigation_call]-> hpx.browser.shell.navigation_feedback "refreshAll / failure toast" { link ../../frontend/src/app.js }
+ hpx.browser.shell.navigation_feedback -[navigation_call]-> hpx.browser.ui.contents.render "Refresh navigation with other UI" { link ../../frontend/src/app.js }
+ hpx.browser.history.navigation_graph -[navigation_call]-> hpx.browser.shell.navigation_feedback "notify callback / graph failure" { link ../../frontend/src/runtime-graph.js }
+ hpx.browser.ui.contents.tree -[navigation_call]-> hpx.browser.ui.contents.bindings "onNavigate / onToggle callbacks" { link ../../frontend/src/outline-tree.js }
+}
+views {
+ view c4_workspace_navigation of hpx.browser.ui.contents {
+  title "C4 / Workspace and contents navigation — Implementation"
+  description "Parent: Workspace and contents navigation. Actual markup/modules and source fragments; callbacks share app.js. Solid arrows are calls/control with labelled returns; dotted arrows are input/output data. External providers/callers/consumers remain outside. RuntimeAdapter owns captured requests/reconciliation; Rust owns authority/durability. No general workspace resolver or live History lens is invented."
+  link ../audits/workspace-navigation-c4-audit.md
+  include user
+  include hpx.browser.c4_protocol with { description "Existing RuntimeAdapter/initializeRuntime context: live catalog, exact client buffers, capabilities and guarded depart. API/recovery detail stays in linked views." navigateTo c4_api_routes }
+  include hpx.browser.ui.contents.fixture_context
+  include hpx.browser.editor.navigation_view with { navigateTo c3_browser_ui }
+  include hpx.browser.shell.navigation_preferences
+  include hpx.browser.shell.navigation_widths
+  include hpx.browser.history.navigation_graph with { title "Current graph dialog • openRuntimeGraph" description "Existing capability-gated dialog implementation. Retained as current code evidence; the selected-node editor Graph tab is planned." navigateTo c3_browser_functions }
+  include hpx.browser.ui.graph_tab with { navigateTo c3_browser_ui }
+  include hpx.browser.shell.navigation_feedback
+  include hpx.browser.ui.navigator with { navigateTo c3_browser_ui }
+  group "Workspace and contents navigation" {
+   group "Controls and outline rendering" {
+    include hpx.browser.ui.contents.markup
+    include hpx.browser.ui.contents.render
+    include hpx.browser.ui.contents.headings
+    include hpx.browser.ui.contents.tree
+   }
+   group "Navigation and editor following" {
+    include hpx.browser.ui.contents.bindings
+    include hpx.browser.ui.contents.activation
+    include hpx.browser.ui.contents.follow
+   }
+  }
+  style * { color primary }
+  style element.tag = #planned { color muted; border dashed }
+  exclude * -> *
+  include * -> * where kind is navigation_call
+  include * -> * where kind is navigation_data
+  include hpx.browser.ui.contents.render -> hpx.browser.history.navigation_graph where kind is navigation_call with { title "Current: capability-gated graph dialog" }
+  include hpx.browser.ui.contents.render -> hpx.browser.ui.graph_tab where kind is graph_tab_design
+  autoLayout LeftRight 120 100 spline
+ }
+}

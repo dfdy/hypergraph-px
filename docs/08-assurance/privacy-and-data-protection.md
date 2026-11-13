@@ -13,19 +13,20 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+The shared user API applies user–workspace permissions to content, history, chat and captured context. Retained nodes do not imply universal disclosure; key availability, user selection and provider/model identity are not access grants. Existing confidentiality, disclosure and retained-history rules continue to apply. See the [accepted shared API scope](../06-subsystems/interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Recorded checks retain original source/toolchain/time scope. No new software validation claim follows from documentation assembly.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Context and problem
-
-Confidentiality, egress, disclosure and retained-history privacy limits. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Scope and exclusions
-
-Confidentiality, egress, disclosure and retained-history privacy limits. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Normative content
 
@@ -37,7 +38,7 @@ Source `HPX-SRC-0024`, original lines 15–30. Preserved contract/evidence wordi
 
 Status: required future functionality, unimplemented. When client-held/local encryption with a non-trusted server is selected, the core must deny application-controlled plaintext disclosure paths. **GitHub publication/pushing and document export are disabled**, including local Markdown/HTML/PDF/LaTeX/Word downloads and direct browser Blob/download shortcuts. Possession of client keys, read access, an integration credential or a confirmation dialog cannot override this mode policy.
 
-Use one authoritative policy/command boundary across browser, native/trusted client, REST, MCP, plugins and background workers. UI capability flags and disabled buttons reflect the decision; every direct command, retry and sink must independently enforce it. The future trusted client must route file/download, OS clipboard, printing, integrations and provider network calls through its core execution boundary. An authorized plaintext-capable client is not an automatic export exception.
+Use one authoritative policy/command boundary across browser, native/trusted client, REST, MCP, plugins and background workers. UI capability flags and disabled buttons reflect the decision; every direct command, retry and sink must independently enforce it. The future trusted client must route file/download, OS clipboard, printing, integrations and machine-user chat/MCP data disclosures through its core execution boundary. An authorized plaintext-capable client is not an automatic export exception.
 
 Audit and block additional application disclosure sinks: external model/agent/provider requests carrying protected content; citation or integration queries derived from protected text; plaintext OS clipboard/share sheets; printing; public previews/share links; file/temporary/export artifacts; plaintext caches, indexes, service-worker storage, logs, errors, traces, crash reports and telemetry. Internal encrypted workspace drafts, protected application clipboard references and authorized local viewing/editing require their own permitted flows. Keep protected plaintext from the hosting server and third-party assets.
 
@@ -49,22 +50,6 @@ Acceptance requires negative tests through all transports and clients, UI bypass
 
 The threat model must distinguish application-controlled egress from a reader copying a screen, OS screenshots, compromised endpoints and side channels. Protection against a malicious host replacing browser code still requires independently trusted client/update delivery. Do not claim that an ordinary browser can prevent a malicious host or privileged user from extracting plaintext already available to it. These limits must not weaken enforcement of the application's supported disclosure paths.
 
-
-## Examples and counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Dependencies and consequences
-
-Confidentiality, egress, disclosure and retained-history privacy limits. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Open questions and conflicts
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

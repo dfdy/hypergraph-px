@@ -1,0 +1,970 @@
+{
+  "date": "2026-10-30",
+  "authority": "source-derived descriptive sequences;not executed app workflows",
+  "views": {
+    "seq_frontend_build": {
+      "title": "Sequence / Build and embed frontend",
+      "flow": [
+        "step-01",
+        {
+          "flow": [
+            {
+              "flow": [
+                "step-02:alt.01:when.01"
+              ],
+              "_type": "alt-when",
+              "id": "step-02:alt.01:when",
+              "title": "Source identity and output digest validate"
+            },
+            {
+              "flow": [
+                "step-02:alt.02:else.01",
+                "step-02:alt.02:else.02",
+                {
+                  "flow": [
+                    {
+                      "flow": [
+                        "step-02:alt.02:else.03:alt.01:when.01",
+                        "step-02:alt.02:else.03:alt.01:when.02",
+                        "step-02:alt.02:else.03:alt.01:when.03"
+                      ],
+                      "_type": "alt-when",
+                      "id": "step-02:alt.02:else.03:alt.01:when",
+                      "title": "Callback succeeds and input identity unchanged"
+                    },
+                    {
+                      "flow": [
+                        {
+                          "flow": [
+                            "step-02:alt.02:else.03:alt.02:else.01:break.01",
+                            "step-02:alt.02:else.03:alt.02:else.01:break.02"
+                          ],
+                          "_type": "break",
+                          "id": "step-02:alt.02:else.03:alt.02:else.01:break",
+                          "title": "Build call fails"
+                        }
+                      ],
+                      "_type": "alt-else",
+                      "id": "step-02:alt.02:else.03:alt.02:else",
+                      "title": "Build error or changed inputs"
+                    }
+                  ],
+                  "_type": "alt",
+                  "id": "step-02:alt.02:else.03:alt",
+                  "title": "Build and input recheck"
+                }
+              ],
+              "_type": "alt-else",
+              "id": "step-02:alt.02:else",
+              "title": "Cache missing or invalid"
+            }
+          ],
+          "_type": "alt",
+          "id": "step-02:alt",
+          "title": "Snapshot cache"
+        },
+        {
+          "flow": [
+            "step-03:opt.01",
+            {
+              "flow": [
+                {
+                  "flow": [
+                    "step-03:opt.02:alt.01:when.01"
+                  ],
+                  "_type": "alt-when",
+                  "id": "step-03:opt.02:alt.01:when",
+                  "title": "Already matches"
+                },
+                {
+                  "flow": [
+                    "step-03:opt.02:alt.02:else.01",
+                    {
+                      "flow": [
+                        {
+                          "flow": [
+                            "step-03:opt.02:alt.02:else.02:alt.01:when.01"
+                          ],
+                          "_type": "alt-when",
+                          "id": "step-03:opt.02:alt.02:else.02:alt.01:when",
+                          "title": "Digest matches"
+                        },
+                        {
+                          "flow": [
+                            {
+                              "flow": [
+                                "step-03:opt.02:alt.02:else.02:alt.02:else.01:break.01"
+                              ],
+                              "_type": "break",
+                              "id": "step-03:opt.02:alt.02:else.02:alt.02:else.01:break",
+                              "title": "Build call fails; no atomic dist guarantee"
+                            }
+                          ],
+                          "_type": "alt-else",
+                          "id": "step-03:opt.02:alt.02:else.02:alt.02:else",
+                          "title": "Lock/copy/verification error"
+                        }
+                      ],
+                      "_type": "alt",
+                      "id": "step-03:opt.02:alt.02:else.02:alt",
+                      "title": "Installation result"
+                    }
+                  ],
+                  "_type": "alt-else",
+                  "id": "step-03:opt.02:alt.02:else",
+                  "title": "Replacement required"
+                }
+              ],
+              "_type": "alt",
+              "id": "step-03:opt.02:alt",
+              "title": "Current dist digest"
+            }
+          ],
+          "_type": "opt",
+          "id": "step-03:opt",
+          "title": "Default snapshotOnly=false"
+        },
+        {
+          "flow": [
+            "step-04:opt.01",
+            {
+              "flow": [
+                {
+                  "flow": [
+                    "step-04:opt.02:alt.01:when.01",
+                    {
+                      "flow": [
+                        {
+                          "flow": [
+                            "step-04:opt.02:alt.01:when.02:alt.01:when.01",
+                            "step-04:opt.02:alt.01:when.02:alt.01:when.02"
+                          ],
+                          "_type": "alt-when",
+                          "id": "step-04:opt.02:alt.01:when.02:alt.01:when",
+                          "title": "Inputs accepted by existing build script"
+                        },
+                        {
+                          "flow": [
+                            "step-04:opt.02:alt.01:when.02:alt.02:else.01"
+                          ],
+                          "_type": "alt-else",
+                          "id": "step-04:opt.02:alt.01:when.02:alt.02:else",
+                          "title": "Missing index, symlink or IO/compiler failure"
+                        }
+                      ],
+                      "_type": "alt",
+                      "id": "step-04:opt.02:alt.01:when.02:alt",
+                      "title": "Prepared tree / IO validity"
+                    }
+                  ],
+                  "_type": "alt-when",
+                  "id": "step-04:opt.02:alt.01:when",
+                  "title": "Counter and version generation succeed"
+                },
+                {
+                  "flow": [
+                    "step-04:opt.02:alt.02:else.01"
+                  ],
+                  "_type": "alt-else",
+                  "id": "step-04:opt.02:alt.02:else",
+                  "title": "Counter/version IO failure"
+                }
+              ],
+              "_type": "alt",
+              "id": "step-04:opt.02:alt",
+              "title": "Build identity IO"
+            }
+          ],
+          "_type": "opt",
+          "id": "step-04:opt",
+          "title": "A separate explicit Rust build is invoked"
+        }
+      ],
+      "messages": [
+        {
+          "id": "step-01",
+          "source": "frontend_builder.bundle_code",
+          "target": "frontend_builder.cache_code",
+          "label": "cachedBuild: identify source, installed \ninputs and Node/platform/arch"
+        },
+        {
+          "id": "step-02:alt.01:when.01",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_builder.bundle_code",
+          "label": "Reuse verified snapshot directory"
+        },
+        {
+          "id": "step-02:alt.02:else.01",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_builder.bundle_code",
+          "label": "Invoke build callback into temporary \nassets directory"
+        },
+        {
+          "id": "step-02:alt.02:else.02",
+          "source": "frontend_builder.bundle_code",
+          "target": "frontend_builder.bundle_code",
+          "label": "esbuild ESM; copy HTML/CSS/logo/fonts; \nnotices/LICENSE; preview version"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.01:when.01",
+          "source": "frontend_builder.bundle_code",
+          "target": "frontend_builder.cache_code",
+          "label": "Candidate static output"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.01:when.02",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_builder.cache_code",
+          "label": "Hash output; write manifest; rename \nsnapshot; validate competing entry"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.01:when.03",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_builder.bundle_code",
+          "label": "Verified snapshot result"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.02:else.01:break.01",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_builder.cache_code",
+          "label": "Remove temporary tree; no valid snapshot \npublished"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.02:else.01:break.02",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_builder.bundle_code",
+          "label": "Error; do not claim prepared output"
+        },
+        {
+          "id": "step-03:opt.01",
+          "source": "frontend_builder.bundle_code",
+          "target": "frontend_builder.cache_code",
+          "label": "installDist(snapshot)"
+        },
+        {
+          "id": "step-03:opt.02:alt.01:when.01",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_builder.bundle_code",
+          "label": "Skip rewrite"
+        },
+        {
+          "id": "step-03:opt.02:alt.02:else.01",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_dist",
+          "label": "Acquire dist lock; remove/copy tree; \nverify output digest"
+        },
+        {
+          "id": "step-03:opt.02:alt.02:else.02:alt.01:when.01",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_builder.bundle_code",
+          "label": "Prepared dist; release lock"
+        },
+        {
+          "id": "step-03:opt.02:alt.02:else.02:alt.02:else.01:break.01",
+          "source": "frontend_builder.cache_code",
+          "target": "frontend_builder.bundle_code",
+          "label": "Report failure; partial dist may remain"
+        },
+        {
+          "id": "step-04:opt.01",
+          "source": "hpx.native.frontend_assets.embedding.build_code",
+          "target": "hpx.native.frontend_assets.embedding.build_code",
+          "label": "Attempt counter lock/append and OUT_DIR \ncompiled-version generation"
+        },
+        {
+          "id": "step-04:opt.02:alt.01:when.01",
+          "source": "hpx.native.frontend_assets.embedding.build_code",
+          "target": "frontend_dist",
+          "label": "Require index.html; sorted walk; reject \nsymlinks"
+        },
+        {
+          "id": "step-04:opt.02:alt.01:when.02:alt.01:when.01",
+          "source": "hpx.native.frontend_assets.embedding.build_code",
+          "target": "hpx.native.frontend_assets.embedding.build_code",
+          "label": "Emit include_bytes entries; skip dist \nversion and append compiled-version \nroute"
+        },
+        {
+          "id": "step-04:opt.02:alt.01:when.02:alt.01:when.02",
+          "source": "hpx.native.frontend_assets.embedding.build_code",
+          "target": "hpx.native.frontend_assets.resources.map_code",
+          "label": "Write assets.rs; main.rs include! \ncompiles byte references"
+        },
+        {
+          "id": "step-04:opt.02:alt.01:when.02:alt.02:else.01",
+          "source": "hpx.native.frontend_assets.embedding.build_code",
+          "target": "hpx.native.frontend_assets.embedding.build_code",
+          "label": "Build fails; may consume counter value; \nno new valid executable claim"
+        },
+        {
+          "id": "step-04:opt.02:alt.02:else.01",
+          "source": "hpx.native.frontend_assets.embedding.build_code",
+          "target": "hpx.native.frontend_assets.embedding.build_code",
+          "label": "Abort before asset-map generation; \ncounter may already be consumed"
+        }
+      ],
+      "paths": [
+        {
+          "url": "../frontend/build.mjs",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/frontend/build.mjs"
+        },
+        {
+          "url": "../frontend/scripts/build-cache.mjs",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/frontend/scripts/build-cache.mjs"
+        },
+        {
+          "url": "../crates/runtime/build.rs",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/crates/runtime/build.rs"
+        }
+      ]
+    },
+    "seq_frontend_load": {
+      "title": "Sequence / Load browser interface",
+      "flow": [
+        "step-01",
+        {
+          "flow": [
+            {
+              "flow": [
+                "step-02:alt.01:when.01"
+              ],
+              "_type": "alt-when",
+              "id": "step-02:alt.01:when",
+              "title": "Certificate/hostname/trust fails"
+            },
+            {
+              "flow": [
+                "step-02:alt.02:when.01",
+                "step-02:alt.02:when.02"
+              ],
+              "_type": "alt-when",
+              "id": "step-02:alt.02:when",
+              "title": "TLS valid but HTTP framing invalid"
+            },
+            {
+              "flow": [
+                "step-02:alt.03:when.01",
+                "step-02:alt.03:when.02"
+              ],
+              "_type": "alt-when",
+              "id": "step-02:alt.03:when",
+              "title": "TLS/framing valid; state mutex poisoned or deadline elapsed after lock"
+            },
+            {
+              "flow": [
+                "step-02:alt.04:else.01",
+                {
+                  "flow": [
+                    {
+                      "flow": [
+                        "step-02:alt.04:else.02:alt.01:when.01",
+                        "step-02:alt.04:else.02:alt.01:when.02",
+                        "step-02:alt.04:else.02:alt.01:when.03"
+                      ],
+                      "_type": "alt-when",
+                      "id": "step-02:alt.04:else.02:alt.01:when",
+                      "title": "Rejected"
+                    },
+                    {
+                      "flow": [
+                        "step-02:alt.04:else.02:alt.02:else.01",
+                        "step-02:alt.04:else.02:alt.02:else.02",
+                        {
+                          "flow": [
+                            {
+                              "flow": [
+                                "step-02:alt.04:else.02:alt.02:else.03:alt.01:when.01",
+                                "step-02:alt.04:else.02:alt.02:else.03:alt.01:when.02",
+                                "step-02:alt.04:else.02:alt.02:else.03:alt.01:when.03"
+                              ],
+                              "_type": "alt-when",
+                              "id": "step-02:alt.04:else.02:alt.02:else.03:alt.01:when",
+                              "title": "Key exists"
+                            },
+                            {
+                              "flow": [
+                                "step-02:alt.04:else.02:alt.02:else.03:alt.02:else.01"
+                              ],
+                              "_type": "alt-else",
+                              "id": "step-02:alt.04:else.02:alt.02:else.03:alt.02:else",
+                              "title": "Unknown key"
+                            }
+                          ],
+                          "_type": "alt",
+                          "id": "step-02:alt.04:else.02:alt.02:else.03:alt",
+                          "title": "Map lookup"
+                        },
+                        "step-02:alt.04:else.02:alt.02:else.04",
+                        "step-02:alt.04:else.02:alt.02:else.05",
+                        {
+                          "flow": [
+                            {
+                              "flow": [
+                                "step-02:alt.04:else.02:alt.02:else.06:alt.01:when.01",
+                                "step-02:alt.04:else.02:alt.02:else.06:alt.01:when.02"
+                              ],
+                              "_type": "alt-when",
+                              "id": "step-02:alt.04:else.02:alt.02:else.06:alt.01:when",
+                              "title": "Writes and flush succeed locally"
+                            },
+                            {
+                              "flow": [
+                                "step-02:alt.04:else.02:alt.02:else.06:alt.02:else.01",
+                                "step-02:alt.04:else.02:alt.02:else.06:alt.02:else.02"
+                              ],
+                              "_type": "alt-else",
+                              "id": "step-02:alt.04:else.02:alt.02:else.06:alt.02:else",
+                              "title": "Write or flush IO failure"
+                            }
+                          ],
+                          "_type": "alt",
+                          "id": "step-02:alt.04:else.02:alt.02:else.06:alt",
+                          "title": "Writer result (ignored by serve_socket)"
+                        },
+                        {
+                          "flow": [
+                            "step-02:alt.04:else.02:alt.02:else.07:opt.01",
+                            "step-02:alt.04:else.02:alt.02:else.07:opt.02"
+                          ],
+                          "_type": "opt",
+                          "id": "step-02:alt.04:else.02:alt.02:else.07:opt",
+                          "title": "Required resources successfully loaded"
+                        }
+                      ],
+                      "_type": "alt-else",
+                      "id": "step-02:alt.04:else.02:alt.02:else",
+                      "title": "Allowed static request"
+                    }
+                  ],
+                  "_type": "alt",
+                  "id": "step-02:alt.04:else.02:alt",
+                  "title": "Host and cross-site checks"
+                }
+              ],
+              "_type": "alt-else",
+              "id": "step-02:alt.04:else",
+              "title": "TLS/framing, state lock and deadline allow routing"
+            }
+          ],
+          "_type": "alt",
+          "id": "step-02:alt",
+          "title": "TLS and request framing"
+        }
+      ],
+      "messages": [
+        {
+          "id": "step-01",
+          "source": "hpx.browser",
+          "target": "hpx.native.transport.https",
+          "label": "Request initial page / static resources \nover trusted loopback TLS"
+        },
+        {
+          "id": "step-02:alt.01:when.01",
+          "source": "hpx.browser",
+          "target": "hpx.browser",
+          "label": "Stop connection; no warning bypass or \nplaintext fallback"
+        },
+        {
+          "id": "step-02:alt.02:when.01",
+          "source": "hpx.native.transport.https",
+          "target": "hpx.native.transport.responses.delivery_writer",
+          "label": "Write bounded invalid-HTTP response"
+        },
+        {
+          "id": "step-02:alt.02:when.02",
+          "source": "hpx.native.transport.https",
+          "target": "hpx.browser",
+          "label": "Attempt safe error; IO failure may \nprevent delivery; no resource selected"
+        },
+        {
+          "id": "step-02:alt.03:when.01",
+          "source": "hpx.native.transport.https",
+          "target": "hpx.native.transport.responses.delivery_writer",
+          "label": "Attempt 503 unavailable or 408 request \ntimeout; route not invoked"
+        },
+        {
+          "id": "step-02:alt.03:when.02",
+          "source": "hpx.native.transport.https",
+          "target": "hpx.browser",
+          "label": "Safe error only if TLS writing/delivery \ncompletes"
+        },
+        {
+          "id": "step-02:alt.04:else.01",
+          "source": "hpx.native.transport.https",
+          "target": "hpx.native.transport.security.c4_gates",
+          "label": "Parsed non-API GET"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.01:when.01",
+          "source": "hpx.native.transport.security.c4_gates",
+          "target": "hpx.native.transport.https",
+          "label": "Safe rejection"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.01:when.02",
+          "source": "hpx.native.transport.https",
+          "target": "hpx.native.transport.responses.delivery_writer",
+          "label": "Write shared security headers/error"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.01:when.03",
+          "source": "hpx.native.transport.https",
+          "target": "hpx.browser",
+          "label": "Attempt rejection response; IO failure \nmay prevent delivery"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.01",
+          "source": "hpx.native.transport.security.c4_gates",
+          "target": "hpx.native.transport.assets.delivery_lookup",
+          "label": "Branch before session/bootstrap/unlock \nguards"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.02",
+          "source": "hpx.native.transport.assets.delivery_lookup",
+          "target": "hpx.native.transport.assets.delivery_lookup",
+          "label": "Root aliases index.html; otherwise exact \nembedded key"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.03:alt.01:when.01",
+          "source": "hpx.native.transport.assets.delivery_lookup",
+          "target": "hpx.native.frontend_assets.resources.map_code",
+          "label": "Read compiled ASSETS bytes"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.03:alt.01:when.02",
+          "source": "hpx.native.frontend_assets.resources.map_code",
+          "target": "hpx.native.transport.assets.delivery_lookup",
+          "label": "Bytes already inside executable"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.03:alt.01:when.03",
+          "source": "hpx.native.transport.assets.delivery_lookup",
+          "target": "hpx.native.transport.security.c4_gates",
+          "label": "MIME/body descriptor; no cookie"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.03:alt.02:else.01",
+          "source": "hpx.native.transport.assets.delivery_lookup",
+          "target": "hpx.native.transport.security.c4_gates",
+          "label": "404; never filesystem fallback"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.04",
+          "source": "hpx.native.transport.security.c4_gates",
+          "target": "hpx.native.transport.https",
+          "label": "Static Response"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.05",
+          "source": "hpx.native.transport.https",
+          "target": "hpx.native.transport.responses.delivery_writer",
+          "label": "Length, no-store/CSP/nosniff/referrer \npolicy, body and close"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.06:alt.01:when.01",
+          "source": "hpx.native.transport.responses.delivery_writer",
+          "target": "hpx.native.transport.https",
+          "label": "Ok: local stream accepted writes; no \nbrowser receipt"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.06:alt.01:when.02",
+          "source": "hpx.native.transport.https",
+          "target": "hpx.browser",
+          "label": "Asset bytes or safe error if network \ndelivery completes"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.06:alt.02:else.01",
+          "source": "hpx.native.transport.responses.delivery_writer",
+          "target": "hpx.native.transport.https",
+          "label": "Err: caller ignores result; no server \nretry"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.06:alt.02:else.02",
+          "source": "hpx.browser",
+          "target": "hpx.browser",
+          "label": "Resource may be absent or partial; \nloading not guaranteed"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.07:opt.01",
+          "source": "hpx.browser",
+          "target": "hpx.browser",
+          "label": "Evaluate app module and bundled \ndependencies in browser"
+        },
+        {
+          "id": "step-02:alt.04:else.02:alt.02:else.07:opt.02",
+          "source": "hpx.browser",
+          "target": "hpx.browser",
+          "label": "Start best-effort version display; await \ninitializeRuntime"
+        }
+      ],
+      "paths": [
+        {
+          "url": "../docs/04-architecture/decisions/0004-local-https-bootstrap.md",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+        },
+        {
+          "url": "../crates/runtime/src/main.rs",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/crates/runtime/src/main.rs"
+        },
+        {
+          "url": "../frontend/index.html",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/frontend/index.html"
+        },
+        {
+          "url": "../frontend/src/app.js",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/frontend/src/app.js"
+        }
+      ]
+    },
+    "seq_frontend_session": {
+      "title": "Sequence / Establish browser launch session",
+      "flow": [
+        "step-01",
+        {
+          "flow": [
+            {
+              "flow": [
+                "step-02:alt.01:when.01"
+              ],
+              "_type": "alt-when",
+              "id": "step-02:alt.01:when",
+              "title": "Non-HTTPS synthetic preview"
+            },
+            {
+              "flow": [
+                {
+                  "flow": [
+                    "step-02:alt.02:else.01:opt.01",
+                    "step-02:alt.02:else.01:opt.02",
+                    {
+                      "flow": [
+                        {
+                          "flow": [
+                            "step-02:alt.02:else.01:opt.03:alt.01:when.01",
+                            "step-02:alt.02:else.01:opt.03:alt.01:when.02",
+                            {
+                              "flow": [
+                                {
+                                  "flow": [
+                                    "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.01:when.01",
+                                    "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.01:when.02"
+                                  ],
+                                  "_type": "alt-when",
+                                  "id": "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.01:when",
+                                  "title": "Match"
+                                },
+                                {
+                                  "flow": [
+                                    {
+                                      "flow": [
+                                        "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.02:else.01:break.01",
+                                        "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.02:else.01:break.02"
+                                      ],
+                                      "_type": "break",
+                                      "id": "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.02:else.01:break",
+                                      "title": "Initialization rejects; no fallback"
+                                    }
+                                  ],
+                                  "_type": "alt-else",
+                                  "id": "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.02:else",
+                                  "title": "Mismatch"
+                                }
+                              ],
+                              "_type": "alt",
+                              "id": "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt",
+                              "title": "Capability"
+                            }
+                          ],
+                          "_type": "alt-when",
+                          "id": "step-02:alt.02:else.01:opt.03:alt.01:when",
+                          "title": "Request/reply completes"
+                        },
+                        {
+                          "flow": [
+                            {
+                              "flow": [
+                                "step-02:alt.02:else.01:opt.03:alt.02:else.01:break.01",
+                                "step-02:alt.02:else.01:opt.03:alt.02:else.01:break.02"
+                              ],
+                              "_type": "break",
+                              "id": "step-02:alt.02:else.01:opt.03:alt.02:else.01:break",
+                              "title": "HTTPS startup rejects"
+                            }
+                          ],
+                          "_type": "alt-else",
+                          "id": "step-02:alt.02:else.01:opt.03:alt.02:else",
+                          "title": "Fetch or reply-processing failure; server outcome may be unknown"
+                        }
+                      ],
+                      "_type": "alt",
+                      "id": "step-02:alt.02:else.01:opt.03:alt",
+                      "title": "Bootstrap exchange observation"
+                    }
+                  ],
+                  "_type": "opt",
+                  "id": "step-02:alt.02:else.01:opt",
+                  "title": "Launch fragment present"
+                },
+                "step-02:alt.02:else.02",
+                {
+                  "flow": [
+                    {
+                      "flow": [
+                        "step-02:alt.02:else.03:alt.01:when.01"
+                      ],
+                      "_type": "alt-when",
+                      "id": "step-02:alt.02:else.03:alt.01:when",
+                      "title": "Fetch or reply-processing failure"
+                    },
+                    {
+                      "flow": [
+                        "step-02:alt.02:else.03:alt.02:when.01",
+                        "step-02:alt.02:else.03:alt.02:when.02"
+                      ],
+                      "_type": "alt-when",
+                      "id": "step-02:alt.02:else.03:alt.02:when",
+                      "title": "Missing or invalid cookie"
+                    },
+                    {
+                      "flow": [
+                        "step-02:alt.02:else.03:alt.03:else.01",
+                        "step-02:alt.02:else.03:alt.03:else.02",
+                        "step-02:alt.02:else.03:alt.03:else.03",
+                        {
+                          "flow": [
+                            {
+                              "flow": [
+                                "step-02:alt.02:else.03:alt.03:else.04:alt.01:when.01"
+                              ],
+                              "_type": "alt-when",
+                              "id": "step-02:alt.02:else.03:alt.03:else.04:alt.01:when",
+                              "title": "Unsupported contract, mode or ownership"
+                            },
+                            {
+                              "flow": [
+                                {
+                                  "flow": [
+                                    {
+                                      "flow": [
+                                        "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.01:alt.01:when.01"
+                                      ],
+                                      "_type": "alt-when",
+                                      "id": "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.01:alt.01:when",
+                                      "title": "Locked"
+                                    },
+                                    {
+                                      "flow": [
+                                        "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.01:alt.02:else.01"
+                                      ],
+                                      "_type": "alt-else",
+                                      "id": "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.01:alt.02:else",
+                                      "title": "Already unlocked"
+                                    }
+                                  ],
+                                  "_type": "alt",
+                                  "id": "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.01:alt",
+                                  "title": "Workspace state"
+                                },
+                                {
+                                  "flow": [
+                                    "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.02:opt.01"
+                                  ],
+                                  "_type": "opt",
+                                  "id": "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.02:opt",
+                                  "title": "Authorized document/editor initialization completes"
+                                }
+                              ],
+                              "_type": "alt-else",
+                              "id": "step-02:alt.02:else.03:alt.03:else.04:alt.02:else",
+                              "title": "Supported API1 / trusted_server / whole_document"
+                            }
+                          ],
+                          "_type": "alt",
+                          "id": "step-02:alt.02:else.03:alt.03:else.04:alt",
+                          "title": "Browser runtime compatibility"
+                        }
+                      ],
+                      "_type": "alt-else",
+                      "id": "step-02:alt.02:else.03:alt.03:else",
+                      "title": "Valid session"
+                    }
+                  ],
+                  "_type": "alt",
+                  "id": "step-02:alt.02:else.03:alt",
+                  "title": "Runtime metadata observation"
+                }
+              ],
+              "_type": "alt-else",
+              "id": "step-02:alt.02:else",
+              "title": "HTTPS runtime path"
+            }
+          ],
+          "_type": "alt",
+          "id": "step-02:alt",
+          "title": "Delivery mode"
+        }
+      ],
+      "messages": [
+        {
+          "id": "step-01",
+          "source": "hpx.browser.delivery_entry",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Await initializeRuntime"
+        },
+        {
+          "id": "step-02:alt.01:when.01",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.delivery_entry",
+          "label": "Return null for explicit fixture mode; \nnot a release transport fallback"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.01",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Read launch capability; \nhistory.replaceState removes fragment \nbefore POST"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.02",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.native.transport.security.c4_gates",
+          "label": "Same-origin JSON bootstrap request"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.03:alt.01:when.01",
+          "source": "hpx.native.transport.security.c4_gates",
+          "target": "hpx.native.transport.security.c4_bootstrap",
+          "label": "Bootstrap exception: no session cookie \nprerequisite"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.03:alt.01:when.02",
+          "source": "hpx.native.transport.security.c4_bootstrap",
+          "target": "hpx.native.transport.security.c4_compare",
+          "label": "secure_equal launch capability"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.01:when.01",
+          "source": "hpx.native.transport.security.c4_compare",
+          "target": "hpx.native.transport.security.c4_bootstrap",
+          "label": "Valid launch capability"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.01:when.02",
+          "source": "hpx.native.transport.security.c4_bootstrap",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Set distinct process-lifetime \nSecure/HttpOnly/SameSite host cookie"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.02:else.01:break.01",
+          "source": "hpx.native.transport.security.c4_bootstrap",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Unauthorized"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.03:alt.01:when.03:alt.02:else.01:break.02",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.delivery_entry",
+          "label": "Reject initialization; leave unavailable \noverlay"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.03:alt.02:else.01:break.01",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Fragment removed; no automatic bootstrap \nretry; prompt reopen private launch URL"
+        },
+        {
+          "id": "step-02:alt.02:else.01:opt.03:alt.02:else.01:break.02",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.delivery_entry",
+          "label": "Throw; show unavailable overlay; no \nfixture fallback"
+        },
+        {
+          "id": "step-02:alt.02:else.02",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.native.transport.security.c4_gates",
+          "label": "Request runtime metadata with current \ncookie"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.01:when.01",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.delivery_entry",
+          "label": "Throw; show unavailable overlay; no live \nor fixture startup"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.02:when.01",
+          "source": "hpx.native.transport.security.c4_gates",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Unauthorized"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.02:when.02",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.delivery_entry",
+          "label": "Throw; do not select fixture documents \nafter HTTPS failure"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.03:else.01",
+          "source": "hpx.native.transport.security.c4_gates",
+          "target": "hpx.native.transport.lifecycle.c4_lifecycle",
+          "label": "Construct runtime metadata; may remain \nlocked"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.03:else.02",
+          "source": "hpx.native.transport.lifecycle.c4_lifecycle",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Contract/mode/ownership + capabilities + \nlocked/create/platform status; no keys"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.03:else.03",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Check contract/mode/ownership after \nreceiving metadata"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.03:else.04:alt.01:when.01",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.delivery_entry",
+          "label": "Reject initialization; show unavailable \noverlay; no fixture fallback"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.01:alt.01:when.01",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Prompt explicit create/passphrase or \nenrolled keychain choice; wait for \nsuccessful unlock"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.01:alt.02:else.01",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.c4_protocol",
+          "label": "Proceed to server-authorized \ndocument/editor initialization"
+        },
+        {
+          "id": "step-02:alt.02:else.03:alt.03:else.04:alt.02:else.02:opt.01",
+          "source": "hpx.browser.c4_protocol",
+          "target": "hpx.browser.delivery_entry",
+          "label": "Install live adapter/documents; keys \nremain Rust-only"
+        }
+      ],
+      "paths": [
+        {
+          "url": "../frontend/src/app.js",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/frontend/src/app.js"
+        },
+        {
+          "url": "../frontend/src/runtime-adapter.js",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/frontend/src/runtime-adapter.js"
+        },
+        {
+          "url": "../frontend/src/api-client.ts",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/frontend/src/api-client.ts"
+        },
+        {
+          "url": "../crates/runtime/src/main.rs",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/crates/runtime/src/main.rs"
+        },
+        {
+          "url": "../docs/04-architecture/decisions/0004-local-https-bootstrap.md",
+          "relative": "file:///Users/diaan/Documents/Work/Sites/Hypergraph%20PX%20MU-F/docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+        }
+      ]
+    }
+  }
+}

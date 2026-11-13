@@ -13,19 +13,14 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-11-01
 
-Four model theorems and one extracted spend-helper theorem are recorded in preserved evidence; full validator, storage, crypto and app are not formally proved.
+Four historical DAG model theorems and one separately retained extracted spend-helper theorem are joined by31 checked finite-cycle and19 bounded source-emission model theorems; full-validator,authenticated source/parser,operational-resource,storage,crypto and app correspondence remain unproved.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## State-space and notation
-
-Formal obligations and exact assurance limits for Lean models and selected extracted Rust. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Formal property
 
-The unchanged [human-readable validation digest](../08-assurance/formal-validation-digest.md) is preserved in the local source archive and linked by source ID; its proof sources remain active in [proofs](../../proofs/lean/Hypergraph/Expansion.lean).
+The [human-readable validation digest](../08-assurance/formal-validation-digest.md) retains historical archive/source-ID evidence and the current cycle-aware model results;its proof sources remain active in [proofs](../../proofs/lean/Hypergraph/Expansion.lean).
 
 | Property identity | Checked declaration | Existing recorded assurance |
 |---|---|---|
@@ -36,6 +31,20 @@ The unchanged [human-readable validation digest](../08-assurance/formal-validati
 | HPX-PROP-005 | spend_spec in proofs/rust/SpendProof.lean | Selected actual Rust helper extracted via Charon/Aeneas; accounting/exhaustion and overflow guarantees within extraction assumptions |
 
 The four model theorems do not prove Rust Kahn execution. Full-validator extraction encountered nested-loop return and Iterator::filter_map model limits. No storage/encryption/authorization or compiled-application proof follows. Maintain exact source/toolchain hashes, theorem dependencies and replay evidence; do not duplicate an unverified proof claim into a success table.
+
+### Required cycle-aware expansion proofs — HPX-OWNER-041
+
+The owner requires the following Lean work for the [accepted cycle-aware inclusion policy](../05-domain/hypergraph-mathematics.md#accepted-cycle-aware-inclusion-policy--hpx-owner-041). These accepted obligations now have [checked finite supplied-state model results](../08-assurance/formal-validation-digest.md#finite-cycle-state-model--2026-10-31); precise scope and remaining emitter/resource/implementation bridges are retained below. No cycle-aware extracted implementation correspondence exists.
+
+| Property identity | Required guarantee | Status |
+| --- | --- | --- |
+| HPX-PROP-006 | For a finite authenticated selected dependency graph and explicit budgets, automatic expansion terminates with a correct finite result or explicit failure; cycle-closing dependencies stop at the defined boundary. Distinguish active recursion from repeated siblings and finite historical inclusion; prove the chosen exact-state equivalence and traversal invariant rather than assuming them. | Checked finite typed-table stopping/recurrence model; operational resource and implementation correspondence remain open. |
+| HPX-PROP-007 | A successful result covers every required expanded use and exact cycle boundary under the frozen rule, with no silently omitted, duplicated, substituted or wrongly cut contribution; reconstruction is deterministic from exact closure/policy/profile inputs. Missing/unauthorised data and budget exhaustion cannot produce a falsely complete result. | Checked ordered exact-use coverage/state determinism plus OWNER047 bounded emission/byte-map witnesses under supplied frozen source-faithful partitions (TEST155); authenticated source/parser and implementation correspondence remain open. |
+| HPX-PROP-008 | In a formal navigation/presentation state machine, each detected cycle boundary has a warning state and an explicit authorised navigation action; absent a new user action, it cannot automatically reopen recursively. Each click is bounded, may revisit valid cyclic content, and retains the correct target/context and warning state. | Checked warning/action/no-click/denial/conflict-review model; actual UI/access/event correspondence remains open. |
+
+Prove model results first and record exact definitions, assumptions, source/toolchain hashes and axiom reports in the [full digest](../08-assurance/formal-validation-digest.md). Establish correspondence for the actual selected Rust traversal/navigation logic where supported; explicitly document remaining bridges. Lean state-machine proofs alone cannot prove that browser pixels, keyboard/screen-reader behaviour, transport permission checks or UI event handlers match the model: require targeted implementation, accessibility and recovery tests as separate evidence. The four existing DAG model proofs and extracted `spend_spec` retain their original scope and cannot be relabelled as these proofs.
+
+The [finite-state candidate](../../architecture/proposals/finite-cycle-closure-state.md) and [Lean proof plan](../../architecture/proposals/finite-cycle-lean-plan.md) now propose definitions, key-soundness/coverage invariants and proof dependencies for these identities. OWNER045 adopts the finite-state/structural-key/boundary semantic basis; 31 named finite-state model theorems/33 guards are checked under HPX-TEST-153; OWNER047 adds19 source-emission theorems/18 guards under HPX-TEST-155 with explicit input premises in the digest. [Exact definitions,axioms and remaining proof limits](../08-assurance/formal-validation-digest.md#finite-cycle-state-model--2026-10-31) prevent treating those results as complete emitted-source,Rust/UI or operational-resource proofs.
 
 ### 6. Formal validation
 
@@ -64,26 +73,6 @@ Candidate initial properties:
 
 For each theorem record its definitions, preconditions, trusted assumptions, Lean file/symbol, corresponding Rust function and actual checked evidence. Model-only proof, differential tests and Rust extraction proof are separate columns. The first rank/path model proofs are now checked under Lean 4.35.0; see [formal assurance](<formal-invariants.md>) and the [validation digest](<formal-invariants.md>). The unchanged Rust budget helper now has a checked Aeneas-extracted theorem; full graph validation remains unproved. Cryptographic primitives, randomness, host/client integrity and filesystem durability require explicit assumptions and additional validation.
 
-
-## Assumptions and scope
-
-Formal obligations and exact assurance limits for Lean models and selected extracted Rust. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Safety/liveness classification
-
-Formal obligations and exact assurance limits for Lean models and selected extracted Rust. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Proof or model-check plan
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Counterexample model
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Related tests
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

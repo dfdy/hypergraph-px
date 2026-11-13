@@ -1,0 +1,339 @@
+{
+  "seq_domain_expansion": {
+    "title": "Sequence / Supplied expansion validation",
+    "scope": "Actual unit-test calls to the pure validator; no production caller or application acceptance is implied. Vertices/edges are an explicitly supplied expansion projection. Hyperlink cycles, placement ownership, closure completeness and reading order are outside its guarantee. No tests run here.",
+    "sources": [
+      "crates/domain/src/expansion.rs",
+      "docs/07-implementation/algorithms/expansion-validation.md",
+      "docs/08-assurance/formal-validation-digest.md"
+    ],
+    "messages": [
+      {
+        "source": "hpx.native.domain.test_calls",
+        "target": "hpx.native.domain.expansion_rules.validate",
+        "text": "Call validate with finite supplied vertices, edges and explicit budgets",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.expansion_rules.validate",
+        "target": "hpx.native.domain.expansion_rules.validate",
+        "text": "Check declared vertex/edge counts before building graph",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.expansion_rules.validate",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Error::Budget; supplied input unchanged",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.expansion_rules.validate",
+        "target": "hpx.native.domain.expansion_rules.validate",
+        "text": "Register vertices and edges; charge each step; stop immediately on invalid catalogue/endpoint or work limit",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.expansion_rules.validate",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Explicit error; no partial validated view",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.expansion_rules.validate",
+        "target": "hpx.native.domain.expansion_rules.validate",
+        "text": "Seed ordered zero-indegree queue; remove vertices/parallel edges, charging work",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.expansion_rules.validate",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Error::Budget; no partial success",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.expansion_rules.validate",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Error::Cycle; reference projection is not being validated",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.expansion_rules.validate",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Validated counts; successful work = 2V + 2E; no returned document order",
+        "return": true,
+        "navigateTo": null
+      }
+    ]
+  },
+  "seq_domain_fork": {
+    "title": "Sequence / Pure Fork plan and publication boundary",
+    "scope": "Entry after existing HTTPS/session/unlock gates. The ordinary committed-source Fork path authenticates source in adapters, calls a pure planner, then atomically publishes independent history/derivation/receipt. Draft acknowledgement/checkpoint capture is not this Commit-like publication. Source review only.",
+    "sources": [
+      "crates/runtime/src/main.rs",
+      "crates/storage/src/lib.rs",
+      "crates/storage/src/forks.rs",
+      "crates/storage/src/clipboard.rs",
+      "crates/domain/src/fork.rs",
+      "crates/domain/src/records.rs"
+    ],
+    "messages": [
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "execute(operation, frozen Fork command)",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Validate command; begin IMMEDIATE transaction; current authority before protected receipt lookup",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Error; no new durable publication",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Return original receipt without replanning mutable source",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.domain_forks",
+        "text": "forks::apply inside the writer transaction",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.domain_forks",
+        "target": "hpx.native.storage.domain_forks",
+        "text": "Verify catalog and pinned source via capture_source; allocate output node outside domain",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.domain_forks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Error; transaction rolls back",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "No new result/receipt",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.domain_forks",
+        "target": "hpx.native.domain.source_plans.fork",
+        "text": "plan(source node, revision, occurrence path, exact text, anchor, output node)",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.source_plans.fork",
+        "target": "hpx.native.domain.source_plans.fork",
+        "text": "Reject same identity or mismatched revision/occurrence before slicing",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.source_plans.fork",
+        "target": "hpx.native.storage.domain_forks",
+        "text": "Explicit pure planning error",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.domain_forks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Error; rollback",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.source_plans.fork",
+        "target": "hpx.native.domain.exact.records",
+        "text": "validate_byte_range against supplied exact text",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.exact.records",
+        "target": "hpx.native.domain.source_plans.fork",
+        "text": "Range validity or scalar/bounds error",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.source_plans.fork",
+        "target": "hpx.native.storage.domain_forks",
+        "text": "Error; no fragment plan",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.domain_forks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Error; rollback",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.source_plans.fork",
+        "target": "hpx.native.storage.domain_forks",
+        "text": "Borrowed exact slice and source/output identities; no authority or IO",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.domain_forks",
+        "target": "hpx.native.storage.domain_forks",
+        "text": "create_document: new node first revision has no same-node parent; persist pinned derivation",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.domain_forks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Error; unwind writer transaction",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Error; no partial publication claimed",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.domain_forks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Forked outcome",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Persist original result/receipt; attempt SQL COMMIT",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Error; no partial-success claim; reconcile uncertain outcome through existing receipt workflow",
+        "return": true,
+        "navigateTo": "seq_uncertain"
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Receipt; cross-identity derivation is distinct from new node ancestry",
+        "return": true,
+        "navigateTo": null
+      }
+    ]
+  },
+  "seq_domain_parent_plan": {
+    "title": "Sequence / Supplied parent-Merge selection",
+    "scope": "Actual pure selector tests supply Base/Side/edit/origin data. No production selector caller or authenticated ancestry/trace/origin-to-selector pipeline is modelled. Same-node planning is distinct from cross-identity synthesis. A returned Plan is in-memory only; no clocks, heads or records move.",
+    "sources": [
+      "crates/domain/src/parent_merge.rs",
+      "crates/domain/src/records.rs",
+      "docs/07-implementation/algorithms/parent-merge.md"
+    ],
+    "messages": [
+      {
+        "source": "hpx.native.domain.test_calls",
+        "target": "hpx.native.domain.history_plans.selector",
+        "text": "Supply exact Base, source/target Side maps, origin claims and Limits",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.history_plans.selector",
+        "target": "hpx.native.domain.history_plans.selector",
+        "text": "Require same node and initial byte/work limits",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.history_plans.selector",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Error; no plan",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.history_plans.selector",
+        "target": "hpx.native.domain.history_plans.selector",
+        "text": "validate_side checks scalar-safe ranges, ordered nonoverlap, quotes, origins and exact reconstruction; stops at first error",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.history_plans.selector",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Explicit error; no partial result",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.history_plans.selector",
+        "target": "hpx.native.domain.history_plans.selector",
+        "text": "Combine disjoint changes; identical replacements preserve both origins; compare known orders only for exact confident competition",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.history_plans.selector",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Outcome::Unresolved with region/reason; no merged text returned",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.history_plans.selector",
+        "target": "hpx.native.domain.history_plans.selector",
+        "text": "Charge output size/work; construct exact bytes with retained input identities",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.history_plans.selector",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Error::Limit; no partial merged plan",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.domain.history_plans.selector",
+        "target": "hpx.native.domain.test_calls",
+        "text": "Outcome::Merged(Plan); no authorization or durable publication",
+        "return": true,
+        "navigateTo": null
+      }
+    ]
+  }
+}

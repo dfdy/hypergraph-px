@@ -2,6 +2,7 @@
 
 Level `07-implementation`. This is navigation, not a new requirement. See the [documentation constitution](../README.md) for status and authority.
 
+- [Per-node temporal parent-Merge planning](algorithms/parent-merge.md) — `HPX-ALGO-002`; supplied-map domain selector and remaining exact mapping/format work.
 - [Bounded expansion DAG validation](<algorithms/expansion-validation.md>) — `HPX-ALGO-001`; proposed.
 - [Encrypted SQLite records and slot schema](<data-structures/sqlite-records.md>) — `HPX-DATA-001`; proposed.
 - [Formal Invariants and Proof Obligations](<formal-invariants.md>) — `HPX-ALG-001`; proposed.

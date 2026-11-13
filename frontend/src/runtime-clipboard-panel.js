@@ -32,7 +32,7 @@ export function renderPrivateClipboard(list,adapter,{busy,change,notify,fork}){
   remove.onclick=()=>change(()=>adapter.changeClipboard({action:'remove',generation:adapter.privateClipboard.generation,entry:entry.id}));
   chip.append(show,remove);list.append(chip);
  }
- if(!adapter.privateClipboard.total)list.append(node('span','Select committed text to capture its exact source reference.'));
+ if(!adapter.privateClipboard.total&&!adapter.workingClipboard?.total)list.append(node('span',adapter.features?.workingCopy?'Select text to capture its exact source reference.':'Select committed text to capture its exact source reference.'));
  if(adapter.privateClipboard.next!==null){const more=node('button','More captured sources');more.disabled=busy;more.onclick=()=>change(()=>adapter.loadClipboard(true));list.append(more);}
  if(adapter.privateClipboard.pending){const retry=node('button','Retry clipboard operation');retry.disabled=busy;retry.onclick=()=>change(()=>adapter.retryClipboard());list.append(retry);}
 }

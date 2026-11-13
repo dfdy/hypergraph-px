@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-30",
+  "authority": "HPX-OWNER-039",
+  "scope": "Browser presentation and interface functions",
+  "canonical": "HPX-CAN-014",
+  "test": "HPX-TEST-129",
+  "modelAndLayout": {
+    "tool": "LikeC41.60.0;19 files",
+    "syntaxErrors": [],
+    "elements": 168,
+    "relations": 362,
+    "views": 38,
+    "otherViewsIdentical": 35,
+    "navigationLinks": 216,
+    "reachable": 38,
+    "layouts": {
+      "c3_browser": {
+        "before": "manual;zero drift",
+        "after": "served manual;zero drift",
+        "boxes": 8,
+        "paths": 7,
+        "newNotes": 2,
+        "allBoundsGeometryLabelsPathsPreserved": true
+      },
+      "c3_browser_ui": {
+        "before": "manual;zero drift",
+        "after": "served manual;zero drift",
+        "boxes": 19,
+        "paths": 19,
+        "newNotes": 5,
+        "allBoundsGeometryLabelsPathsPreserved": true
+      },
+      "c3_browser_functions": {
+        "before": "manual;zero drift",
+        "after": "served manual;zero drift",
+        "boxes": 11,
+        "paths": 14,
+        "newNotes": 6,
+        "allBoundsGeometryLabelsPathsPreserved": true
+      }
+    },
+    "globalModelUnchanged": true,
+    "snapshotChangesOnlyNotesViewDescriptionLinksHash": true
+  },
+  "sourceSnapshotFiles": 2673,
+  "protectedFilesUnchanged": 2660,
+  "otherSavedLayoutsUnchanged": 22,
+  "sourceModelLinksResolved": 953,
+  "ownershipRowsValidated": 14,
+  "fiveGapDispositions": [
+    "Core identities/closure: presentation/request contexts allocated;general cardinalities,lifecycle and exact nested occurrence closure remain conceptual/domain contracts.",
+    "Relationships/events/interactions: UI and request responsibilities allocated;panels/planned graph tab do not define or deliver general hyperedge/chat/provenance records.",
+    "Identity/permission/epochs/addressing: browser admission/unlock/authority distinctions retained;no client key-custody,actor,ACL or wire mechanism invented.",
+    "Conceptual versus architectural: derived views and interface responsibilities are not conceptual identity/relationship models;separate conceptual work remains.",
+    "Historical wording: current whole-buffer/one-owner browser evidence stays scoped;ADR019 and adopted navigation policy remain distinct from unimplemented general collaboration."
+  ],
+  "preciseDefinitionsRemoved": 0,
+  "limits": [
+    "No actual rendered inspection/browser;layout verification uses actually served manual diagram data.",
+    "No application tests/build/runtime,format/version/provider/trust action,C4/sequence/conceptual addition,commit/push/publication.",
+    "Private archives excluded from hash snapshot;source/provenance/requirement/proof registers unchanged."
+  ],
+  "changedExistingFiles": [
+    "architecture/.likec4/c3_browser.likec4.snap",
+    "architecture/.likec4/c3_browser_functions.likec4.snap",
+    "architecture/.likec4/c3_browser_ui.likec4.snap",
+    "architecture/C3/browser-interface.c4",
+    "architecture/C3/browser-organisation.c4",
+    "architecture/SPECIFICATION.md",
+    "architecture/audits/dom001-c2-migration.md",
+    "architecture/audits/specification-migration-status.md",
+    "architecture/specification-ownership.csv",
+    "docs/02-governance/OWNER_DECISIONS.md",
+    "docs/05-domain/core-object-model.md",
+    "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+    "docs/registers/tests.csv"
+  ],
+  "newFiles": [
+    "architecture/evidence/dom001-allocation-browser.json"
+  ],
+  "next": "Cryptographic adapter supporting allocation",
+  "documentation": {
+    "exitCode": 0,
+    "output": "CHECK Metadata/status/ID registry checked: 71 materialized contracts; 27 reserved\nCHECK Source/map IDs and current-location register consistency checked\nCHECK Coverage: 116 canonical sections; 169 retained canonical/policy/evidence sections; 138 sources; 509 claim units; 38 requirement seeds\nCHECK Current Markdown local file links checked; original archive links not rewritten\nSKIP: local archive bytes/source spans; use --check-local-sources when local originals are available\nPASS: documentation mechanical checks; semantic adoption remains reviewable"
+  },
+  "whitespace": "passed;CRLF retained",
+  "actualChangedExistingFiles": [
+    "architecture/.likec4/c3_browser.likec4.snap",
+    "architecture/.likec4/c3_browser_functions.likec4.snap",
+    "architecture/.likec4/c3_browser_ui.likec4.snap",
+    "architecture/C3/browser-interface.c4",
+    "architecture/C3/browser-organisation.c4",
+    "architecture/SPECIFICATION.md",
+    "architecture/audits/dom001-c2-migration.md",
+    "architecture/audits/specification-migration-status.md",
+    "architecture/specification-ownership.csv",
+    "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+    "docs/registers/tests.csv"
+  ],
+  "finalScope": "passed;all snapshot files outside declared scope unchanged"
+}

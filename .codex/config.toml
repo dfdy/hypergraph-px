@@ -1,0 +1,7 @@
+# Project-scoped LikeC4 model access. Launch Codex from this repository.
+# Local stdio only; the shell resolves the Git root even from a subdirectory.
+[mcp_servers.hpx_likec4]
+command = "/bin/sh"
+args = ["-c", 'root=$(git rev-parse --show-toplevel) && exec "$root/architecture/node_modules/.bin/likec4" mcp --stdio "$root/architecture"']
+startup_timeout_sec = 60
+tool_timeout_sec = 60

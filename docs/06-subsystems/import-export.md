@@ -13,7 +13,17 @@
 - **Downstream dependencies:** [component boundaries](../04-architecture/component-architecture.md), [data architecture](../04-architecture/data-architecture.md), future export adapter/profile/artifact contracts
 - **Verification:** future format/citation/permission/reconstruction checks below; documentation inclusion is not implementation evidence
 - **Decision/history:** materializes reserved HPX-SUB-008 for the bounded export topic confirmed by the owner on 2026-10-26; inherited import obligations remain in the [external integration contract](external-integrations.md)
-- **Last reviewed:** 2026-10-26
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+User-initiated import/export/backup operations use the shared user API and current per-user-per-workspace permissions, alongside existing confidentiality/egress gates. Export policy and rights-conflict reporting retain their separate scopes; an API or MCP route cannot bypass an applicable denial. See the [accepted shared API scope](interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 ## Authority and delivery status
 
@@ -63,3 +73,7 @@ This reporting policy does not override access restrictions, protected-source re
 Schedule this after the exact authorized export model, branch/closure selection and citation capture interfaces can support it. Begin with bounded adapter/profile and packaging feasibility, license/provenance review and deterministic fixtures before enabling a user-facing converter. Branch extras depend on actual branch support; annotation/provenance exports bind their own exact overlay/event contexts. This does not make those foundations immediate priorities.
 
 For each target, test citations/bibliography, Unicode/newlines, mathematics, repeated occurrences, alternate branches, n-ary role/direction preservation, competing/retrospective annotations, readable fallback/loss diagnostics and the appended rights report. Verify current permission/egress denial, stale plans, hostile markup/filter/resource inputs, missing assets/citations, bounded work, cancellation, private temporary cleanup and reproducibility against pinned resources. Round-trip claims apply only to explicitly designed profiles; a readable conventional document is not automatically an exact restorable workspace.
+
+### Main designation and exact construction — OWNER049/050 clarification
+
+[M1](../../architecture/Conceptual/identity-closure.c4) and [branch reconciliation](../../architecture/proposals/branch-selection-reconciliation.md) distinguish the explicitly designated main identity already required above from a general construction algorithm. Neither a name/current UI selection nor choosing latest versions of every constituent defines main. Reconstruct the chosen exact branch/snapshot or explicitly captured working composition through its retained selections and source inputs; a future cache is derived performance data and grants no identity, selection or disclosure authority. General main designation/reassignment, reconstruction/caching and working-composition formats are not selected. Default reopening from last acknowledged autosave does not change the explicitly reviewed export-source choice or silently turn a private composition into published/exported content.

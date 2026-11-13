@@ -5,6 +5,9 @@ edition.workspace = true
 license.workspace = true
 publish.workspace = true
 
+[features]
+api-schema = ["dep:utoipa"]
+
 [dependencies]
 hypergraph-keychain = { path = "../keychain" }
 hypergraph-domain = { path = "../domain" }
@@ -15,6 +18,8 @@ serde_json = "=1.0.154"
 getrandom = "=0.4.3"
 sha2 = "=0.11.1"
 zeroize = { version = "=1.9.1", features = ["alloc"] }
+
+utoipa = { version = "=6.0.0", default-features = false, features = ["macros"], optional = true }
 
 [lints]
 workspace = true

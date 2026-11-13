@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-30",
+  "authority": "HPX-OWNER-037;C3 executable overview only;stop for owner review",
+  "modelAndLayout": {
+    "tool": "LikeC4 1.60.0;19 source files",
+    "syntaxErrors": [],
+    "elements": 168,
+    "relations": 362,
+    "views": 38,
+    "unchangedOtherViews": 37,
+    "navigationLinks": 216,
+    "reachable": 38,
+    "before": {
+      "servedLayout": "manual",
+      "drifts": 0,
+      "boxes": 22,
+      "paths": 25
+    },
+    "after": {
+      "servedLayout": "manual",
+      "drifts": 0,
+      "boxes": 22,
+      "paths": 25,
+      "notes": 8
+    },
+    "savedAndServedAllGeometryBoundsPathsLabelsPreserved": true,
+    "snapshotChangesOnlyNotesViewDescriptionHash": true,
+    "modes": {
+      "manual": {
+        "drifts": 0
+      },
+      "auto": {
+        "drifts": 0
+      }
+    }
+  },
+  "scope": {
+    "snapshotFiles": 2668,
+    "protectedFilesUnchanged": 2658,
+    "otherSavedLayoutsByteIdentical": 24,
+    "C1_C2_andFocusedC3_C4_sequenceSourcesUnchanged": true,
+    "localModelLinkOccurrencesResolved": 917,
+    "ownershipRowsValidated": 9,
+    "newOwnership": "HPX-CAN-009:complete responsibility allocation only;no conceptual/invariant transfer",
+    "sourceClaimRequirementProofRegistersUnchanged": true,
+    "fiveGaps": "all five explicitly dispositioned in existing staged migration record;none claimed conceptually complete"
+  },
+  "documentation": {
+    "command": "python3 scripts/verify_documentation.py",
+    "exitCode": 0,
+    "materialized": 71,
+    "reserved": 27,
+    "requirementSeeds": 38,
+    "archiveSourceSpanChecks": "explicitly skipped"
+  },
+  "changedExistingFiles": [
+    "architecture/.likec4/c3_executable.likec4.snap",
+    "architecture/C3/executable.c4",
+    "architecture/SPECIFICATION.md",
+    "architecture/audits/dom001-c2-migration.md",
+    "architecture/audits/specification-migration-status.md",
+    "architecture/specification-ownership.csv",
+    "docs/02-governance/OWNER_DECISIONS.md",
+    "docs/05-domain/core-object-model.md",
+    "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+    "docs/registers/tests.csv"
+  ],
+  "newFiles": [
+    "architecture/evidence/dom001-c3-overview.json"
+  ],
+  "limits": [
+    "No actual rendered inspection or browser used;layout assertions use served LikeC4 diagram data.",
+    "No focused expansion,C4,sequence,conceptual view,new block/relationship/view,application test/build/runtime change,format/version/provider/trust action,commit/push/publication.",
+    "Private source archive bytes/spans not rechecked;existing source/provenance registers remain unchanged."
+  ],
+  "attemptNotes": [
+    "Pre-edit baseline captured before interrupted turn;continued without restarting.",
+    "Snapshot synchronization initially expected JavaScript formatting, detected JSON and made no write;existing JSON formatting preserved on successful synchronization."
+  ],
+  "nextProposedExpansion": "c3_pure_domain;requires owner review and new bounded authorisation",
+  "whitespace": {
+    "command": "git -c core.whitespace=cr-at-eol diff --check -- affected tracked documents",
+    "exitCode": 0
+  },
+  "finalScopeCheck": "passed:10 scoped existing model/snapshot/documentation files and1 new evidence file;all other snapshot-covered files unchanged"
+}

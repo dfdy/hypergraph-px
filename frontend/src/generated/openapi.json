@@ -1,0 +1,2194 @@
+{
+  "components": {
+    "schemas": {
+      "AuditFinding": {
+        "properties": {
+          "problem": {
+            "$ref": "#/components/schemas/AuditProblem"
+          },
+          "record": {
+            "$ref": "#/components/schemas/AuditRecordRole"
+          }
+        },
+        "required": [
+          "record",
+          "problem"
+        ],
+        "type": "object"
+      },
+      "AuditProblem": {
+        "enum": [
+          "missing",
+          "unreadable_encrypted_record",
+          "unsupported_or_malformed",
+          "inconsistent",
+          "budget"
+        ],
+        "type": "string"
+      },
+      "AuditRecordRole": {
+        "enum": [
+          "catalog",
+          "document",
+          "head",
+          "draft",
+          "manifest",
+          "snapshot",
+          "revision",
+          "publication"
+        ],
+        "type": "string"
+      },
+      "AuditRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "max_bytes": {
+            "maximum": 16777216,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "document",
+          "max_bytes"
+        ],
+        "type": "object"
+      },
+      "BootstrapRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "token": {
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "type": "object"
+      },
+      "BootstrapResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "authenticated": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "authenticated"
+        ],
+        "type": "object"
+      },
+      "BranchRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "branch": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "document": {
+            "$ref": "#/components/schemas/Id"
+          }
+        },
+        "required": [
+          "document",
+          "branch"
+        ],
+        "type": "object"
+      },
+      "DocumentAuditReport": {
+        "description": "Contains no source, title, annotation body, credentials or unrequested identifiers.",
+        "properties": {
+          "authenticated_records": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "document": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "encrypted_bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "finding": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AuditFinding",
+                "description": "None means this bounded slice completed, not that the entire workspace is sound."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scope": {
+            "enum": [
+              "original_branch_immediate_editor_and_publication_records"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "document",
+          "scope",
+          "authenticated_records",
+          "encrypted_bytes"
+        ],
+        "type": "object"
+      },
+      "DocumentRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/Id"
+          }
+        },
+        "required": [
+          "document"
+        ],
+        "type": "object"
+      },
+      "DocumentSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "document",
+          "title"
+        ],
+        "type": "object"
+      },
+      "DocumentsResponse": {
+        "items": {
+          "$ref": "#/components/schemas/DocumentSummary"
+        },
+        "type": "array"
+      },
+      "DraftContext": {
+        "additionalProperties": false,
+        "properties": {
+          "generation": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "sequence": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "generation",
+          "sequence"
+        ],
+        "type": "object"
+      },
+      "EditorState": {
+        "additionalProperties": false,
+        "properties": {
+          "acknowledged_sequence": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "base": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "branch": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "document": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "draft": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "generation": {
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "manifest": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "node": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "occurrence": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "text": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "document",
+          "node",
+          "branch",
+          "manifest",
+          "occurrence",
+          "draft",
+          "title",
+          "generation",
+          "acknowledged_sequence",
+          "base",
+          "snapshot",
+          "text"
+        ],
+        "type": "object"
+      },
+      "EmptyRequest": {
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "type": "object"
+          },
+          {
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 0,
+            "minItems": 0,
+            "type": "array"
+          }
+        ]
+      },
+      "ForkCommand": {
+        "additionalProperties": false,
+        "properties": {
+          "command": {
+            "$ref": "#/components/schemas/ForkTag"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/ForkPlan"
+          }
+        },
+        "required": [
+          "command",
+          "plan"
+        ],
+        "type": "object"
+      },
+      "ForkExecute": {
+        "additionalProperties": false,
+        "properties": {
+          "operation": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ForkCommand"
+          }
+        },
+        "required": [
+          "operation",
+          "request"
+        ],
+        "type": "object"
+      },
+      "ForkOutcome": {
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "result": {
+            "$ref": "#/components/schemas/ForkResult"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "transformation": {
+            "$ref": "#/components/schemas/Id"
+          }
+        },
+        "required": [
+          "result",
+          "document",
+          "transformation",
+          "revision",
+          "snapshot"
+        ],
+        "type": "object"
+      },
+      "ForkPlan": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_draft": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DraftContext"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "quote": {
+            "type": "string"
+          },
+          "source": {
+            "$ref": "#/components/schemas/Source"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "source",
+          "quote"
+        ],
+        "type": "object"
+      },
+      "ForkReceipt": {
+        "additionalProperties": false,
+        "properties": {
+          "operation": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "outcome": {
+            "$ref": "#/components/schemas/ForkOutcome"
+          }
+        },
+        "required": [
+          "operation",
+          "outcome"
+        ],
+        "type": "object"
+      },
+      "ForkResult": {
+        "enum": [
+          "forked"
+        ],
+        "type": "string"
+      },
+      "ForkTag": {
+        "enum": [
+          "fork"
+        ],
+        "type": "string"
+      },
+      "Id": {
+        "items": {
+          "maximum": 255,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "maxItems": 32,
+        "minItems": 32,
+        "type": "array"
+      },
+      "KeychainEnrollmentResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "backup_created": {
+            "type": "boolean"
+          },
+          "enrolled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "backup_created",
+          "enrolled"
+        ],
+        "type": "object"
+      },
+      "KeychainRemovalResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "cleanup_pending": {
+            "type": "boolean"
+          },
+          "enrolled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "cleanup_pending",
+          "enrolled"
+        ],
+        "type": "object"
+      },
+      "KeychainStatusResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "cleanup_pending": {
+            "type": "boolean"
+          },
+          "enrolled": {
+            "type": "boolean"
+          },
+          "schema": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "supported": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "cleanup_pending",
+          "enrolled",
+          "schema",
+          "supported"
+        ],
+        "type": "object"
+      },
+      "LegacyError": {
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "LockStateResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "locked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "locked"
+        ],
+        "type": "object"
+      },
+      "Problem": {
+        "additionalProperties": false,
+        "properties": {
+          "error": {
+            "description": "HPX's existing stable error code, retained as a problem-details extension.",
+            "type": "string"
+          },
+          "status": {
+            "format": "int32",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "error"
+        ],
+        "type": "object"
+      },
+      "RuntimeMode": {
+        "enum": [
+          "trusted_server"
+        ],
+        "type": "string"
+      },
+      "RuntimeOwnership": {
+        "enum": [
+          "whole_document"
+        ],
+        "type": "string"
+      },
+      "RuntimeResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "capabilities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "contract": {
+            "format": "int32",
+            "maximum": 1,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "create": {
+            "type": "boolean"
+          },
+          "keychain_supported": {
+            "type": "boolean"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "max_text_bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/RuntimeMode"
+          },
+          "ownership": {
+            "$ref": "#/components/schemas/RuntimeOwnership"
+          },
+          "unavailable": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "capabilities",
+          "contract",
+          "create",
+          "keychain_supported",
+          "locked",
+          "max_text_bytes",
+          "mode",
+          "ownership",
+          "unavailable",
+          "version"
+        ],
+        "type": "object"
+      },
+      "SnapshotRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/Id"
+          }
+        },
+        "required": [
+          "document",
+          "snapshot"
+        ],
+        "type": "object"
+      },
+      "SnapshotResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "type": "object"
+      },
+      "Source": {
+        "additionalProperties": false,
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "end_byte": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "node": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "occurrence_path": {
+            "items": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "maxItems": 1,
+            "minItems": 1,
+            "type": "array"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "snapshot": {
+            "$ref": "#/components/schemas/Id"
+          },
+          "start_byte": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "document",
+          "node",
+          "snapshot",
+          "revision",
+          "occurrence_path",
+          "start_byte",
+          "end_byte"
+        ],
+        "type": "object"
+      },
+      "UnlockRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "passphrase": {
+            "type": "string",
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "passphrase"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "session": {
+        "description": "Current session plus existing Host/Origin/lock/current-authority checks. Bootstrap/unlock retain their existing gates.",
+        "in": "cookie",
+        "name": "__Host-hpx",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "API1; typed committed Fork, progressive legacy route coverage. Schema does not establish domain validity, authority or transaction guarantees.",
+    "title": "Hypergraph PX transport contract",
+    "version": "1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/anchor/resolve": {
+      "post": {
+        "operationId": "anchor_resolve",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/assertion/revision": {
+      "post": {
+        "operationId": "assertion_revision",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/assertions": {
+      "post": {
+        "operationId": "assertions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/audit/document": {
+      "post": {
+        "operationId": "audit_document",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentAuditReport"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/bootstrap": {
+      "post": {
+        "operationId": "bootstrap",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BootstrapRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BootstrapResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "security": [],
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/branches": {
+      "post": {
+        "operationId": "branches",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/branches/comparison": {
+      "post": {
+        "operationId": "branches_comparison",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/branches/editor": {
+      "post": {
+        "operationId": "branches_editor",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BranchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditorState"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/branches/history": {
+      "post": {
+        "operationId": "branches_history",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/branches/history/page": {
+      "post": {
+        "operationId": "branches_history_page",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/branches/merge-base": {
+      "post": {
+        "operationId": "branches_merge-base",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/clipboard": {
+      "post": {
+        "operationId": "clipboard",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/commands": {
+      "post": {
+        "operationId": "commands",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/ForkExecute"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "properties": {
+                      "operation": {
+                        "$ref": "#/components/schemas/Id"
+                      },
+                      "request": {
+                        "properties": {
+                          "command": {
+                            "not": {
+                              "const": "fork"
+                            },
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "command"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "operation",
+                      "request"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ForkReceipt"
+                    },
+                    {
+                      "properties": {
+                        "operation": {
+                          "$ref": "#/components/schemas/Id"
+                        },
+                        "outcome": {
+                          "properties": {
+                            "result": {
+                              "not": {
+                                "const": "forked"
+                              },
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "result"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "operation",
+                        "outcome"
+                      ],
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed committed Fork; other commands remain legacy"
+      }
+    },
+    "/api/v1/comments": {
+      "post": {
+        "operationId": "comments",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/contributors/publications": {
+      "post": {
+        "operationId": "contributors_publications",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/derivation": {
+      "post": {
+        "operationId": "derivation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/documents": {
+      "post": {
+        "operationId": "documents",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentsResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-request-body": "ignored",
+        "x-hpx-schema-coverage": "typed-response"
+      }
+    },
+    "/api/v1/editor": {
+      "post": {
+        "operationId": "editor",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditorState"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/graph": {
+      "post": {
+        "operationId": "graph",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/graph/overlay": {
+      "post": {
+        "operationId": "graph_overlay",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/graph/transformations": {
+      "post": {
+        "operationId": "graph_transformations",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/history": {
+      "post": {
+        "operationId": "history",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/keychain/enroll": {
+      "post": {
+        "operationId": "keychain_enroll",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmptyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeychainEnrollmentResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/keychain/remove": {
+      "post": {
+        "operationId": "keychain_remove",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmptyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeychainRemovalResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/keychain/status": {
+      "post": {
+        "operationId": "keychain_status",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmptyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeychainStatusResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/lock": {
+      "post": {
+        "operationId": "lock",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LockStateResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-request-body": "ignored",
+        "x-hpx-schema-coverage": "typed-response"
+      }
+    },
+    "/api/v1/merge": {
+      "post": {
+        "operationId": "merge",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/receipt": {
+      "post": {
+        "operationId": "receipt",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/runtime": {
+      "get": {
+        "operationId": "runtime",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuntimeResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/snapshot": {
+      "post": {
+        "operationId": "snapshot",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SnapshotRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/unlock": {
+      "post": {
+        "operationId": "unlock",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnlockRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LockStateResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/unlock/keychain": {
+      "post": {
+        "operationId": "unlock_keychain",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmptyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LockStateResponse"
+                }
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "typed"
+      }
+    },
+    "/api/v1/working/clipboard": {
+      "post": {
+        "operationId": "working_clipboard",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/working/derivation": {
+      "post": {
+        "operationId": "working_derivation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/working/reference": {
+      "post": {
+        "operationId": "working_reference",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    },
+    "/api/v1/working/source": {
+      "post": {
+        "operationId": "working_source",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Existing API1 result; type migration pending"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LegacyError"
+                }
+              },
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Stable HPX error; problem details are opt-in through Accept"
+          }
+        },
+        "x-hpx-schema-coverage": "route-only"
+      }
+    }
+  },
+  "security": [
+    {
+      "session": []
+    }
+  ]
+}

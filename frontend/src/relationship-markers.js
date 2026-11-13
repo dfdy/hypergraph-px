@@ -1,16 +1,17 @@
-import {assertionPropertyLabels} from './assertion-properties.js';
-import {relationshipCategory,relationshipType,relationshipTags} from './relationship-catalog.js';
 import {Decoration,ViewPlugin,WidgetType} from '@codemirror/view';
 import {relationshipField,relationshipBoundaries} from './relationships.js';
+import {assertionProperties} from './assertion-properties.js';
 let inspect=()=>{};
 export function onInspectRelationship(handler){inspect=handler;}
+export function relationshipControlWord(record){
+ const properties=assertionProperties(record.properties??{});
+ return (properties.certainty==='unspecified'?'':properties.certainty+': ')+(properties.negated?'not ':'')+record.name;
+}
 export function createRelationshipMarker(group,onClick){
  const span=document.createElement('span');span.className=`relationship-boundary relationship-${group.kind}${group.ownLine?' relationship-own-line':''}`;span.contentEditable='false';span.setAttribute('role','group');span.setAttribute('aria-label',`Relationships between adjacent ${group.kind+'s'}`);
  for(const record of group.records){
-  const button=document.createElement('button');button.type='button';button.className='relationship-arrow';button.dataset.relationshipId=record.id;button.setAttribute('aria-label',record.name);const definition=relationshipType(record.predicateId),tags=definition?relationshipTags(definition).map(tag=>tag.label):record.categoryId?[relationshipCategory(record.categoryId).label]:[];button.dataset.tooltip=[record.name,...assertionPropertyLabels(record.properties),...tags].join(' · ');
-  // Double-ended connection glyphs do not imply a symmetric semantic predicate.
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');
-  const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',group.kind==='sentence'?'M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4':'M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4');svg.append(path);button.append(svg);
+  const word=relationshipControlWord(record),button=document.createElement('button');button.type='button';button.className='relationship-arrow relationship-label';button.dataset.relationshipId=record.id;button.setAttribute('aria-label',record.runtime?`${word} · ${record.status} relation`:word);button.textContent='{'+word+'}';
+  if(record.runtime){button.dataset.status=record.status;button.dataset.runtimeRelation='true';}
   button.addEventListener('click',()=>onClick?.(record.id));span.append(button);
  }
  return span;

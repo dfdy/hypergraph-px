@@ -1,0 +1,175 @@
+{
+  "date": "2026-10-30",
+  "authority": "Proposed source/specification audit;not V3 adoption or production acceptance",
+  "view": "c3_frontend_delivery",
+  "checklist": [
+    {
+      "category": "Frontend input",
+      "obligation_or_evidence": "Source/HTML/CSS/logo, installed dependencies, build scripts, notices/LICENSE",
+      "element_or_linked_view": "frontend_inputs",
+      "sources": [
+        "frontend/build.mjs",
+        "frontend/scripts/build-cache.mjs"
+      ],
+      "disposition": "Expanded trace metadata and C3 input caption"
+    },
+    {
+      "category": "Build context",
+      "obligation_or_evidence": "Node version/platform/architecture identity and content-keyed snapshot/dist preparation",
+      "element_or_linked_view": "frontend_builder",
+      "sources": [
+        "frontend/scripts/build-cache.mjs"
+      ],
+      "disposition": "Already represented;not a runtime Node service"
+    },
+    {
+      "category": "Rust input",
+      "obligation_or_evidence": "Cargo package version and local compile counter",
+      "element_or_linked_view": "runtime_build_identity_inputs",
+      "sources": [
+        "crates/runtime/build.rs",
+        "Cargo.toml",
+        "docs/02-governance/OWNER_DECISIONS.md"
+      ],
+      "disposition": "Added explicit build-time artifact/input dependency"
+    },
+    {
+      "category": "Prepared output",
+      "obligation_or_evidence": "Bundle, HTML/CSS/logo/fonts/notices and preview version",
+      "element_or_linked_view": "frontend_dist",
+      "sources": [
+        "frontend/build.mjs"
+      ],
+      "disposition": "Clarified artifact classes;no source freshness acceptance"
+    },
+    {
+      "category": "Internal transform",
+      "obligation_or_evidence": "Require index; sorted symlink-rejecting asset walk; generated map and compiled-version override",
+      "element_or_linked_view": "hpx.native.frontend_assets.embedding",
+      "sources": [
+        "crates/runtime/build.rs"
+      ],
+      "disposition": "Already represented;partial packaging-assurance scope retained"
+    },
+    {
+      "category": "Embedded output",
+      "obligation_or_evidence": "Compiled ASSETS bytes and compiled build identity inside one native executable",
+      "element_or_linked_view": "hpx.native.frontend_assets.resources",
+      "sources": [
+        "crates/runtime/build.rs",
+        "crates/runtime/src/main.rs"
+      ],
+      "disposition": "Clarified public output classes"
+    },
+    {
+      "category": "Runtime input",
+      "obligation_or_evidence": "Static asset GET through trusted TLS and bounded framing",
+      "element_or_linked_view": "hpx.native.transport.https",
+      "sources": [
+        "crates/runtime/src/main.rs",
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ],
+      "disposition": "Removed bootstrap from this asset-only request label"
+    },
+    {
+      "category": "Internal guard",
+      "obligation_or_evidence": "Host/cross-site checks before static lookup; no session/unlock prerequisite",
+      "element_or_linked_view": "hpx.native.transport.security",
+      "sources": [
+        "crates/runtime/src/main.rs"
+      ],
+      "disposition": "C3 contextual title now Asset request checks"
+    },
+    {
+      "category": "Routing",
+      "obligation_or_evidence": "Root alias, exact ASSETS lookup, MIME choice and 404",
+      "element_or_linked_view": "hpx.native.transport.assets",
+      "sources": [
+        "crates/runtime/src/main.rs"
+      ],
+      "disposition": "Already represented;no disk fallback or historical-data access"
+    },
+    {
+      "category": "Rejected output",
+      "obligation_or_evidence": "Bad Host/cross-site responses use existing error/response responsibility",
+      "element_or_linked_view": "hpx.native.transport.responses",
+      "sources": [
+        "crates/runtime/src/main.rs"
+      ],
+      "disposition": "Added explicit dependency for early rejected requests"
+    },
+    {
+      "category": "Successful/error output",
+      "obligation_or_evidence": "MIME/length/security headers and asset/error body on existing TLS stream",
+      "element_or_linked_view": "hpx.native.transport.responses",
+      "sources": [
+        "crates/runtime/src/main.rs"
+      ],
+      "disposition": "Clarified response caption/relationship;no new network path"
+    },
+    {
+      "category": "Browser boundary",
+      "obligation_or_evidence": "Load/evaluate assets; version fetch and later initializeRuntime",
+      "element_or_linked_view": "hpx.browser",
+      "sources": [
+        "frontend/index.html",
+        "frontend/src/app.js",
+        "frontend/src/build-version.js",
+        "frontend/src/runtime-adapter.js"
+      ],
+      "disposition": "Browser execution remains outside Rust;session/unlock linked separately"
+    },
+    {
+      "category": "Referenced prerequisite",
+      "obligation_or_evidence": "TLS certificate/key configuration, trust and launch capability",
+      "element_or_linked_view": "c3_runtime_api",
+      "sources": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md",
+        "crates/runtime/src/main.rs"
+      ],
+      "disposition": "Owned by linked Runtime C3;not moved into Frontend delivery"
+    },
+    {
+      "category": "Linked failure workflow",
+      "obligation_or_evidence": "Build/cache/install errors and compiled-version generation failures",
+      "element_or_linked_view": "seq_frontend_build",
+      "sources": [
+        "frontend/scripts/build-cache.mjs",
+        "crates/runtime/build.rs"
+      ],
+      "disposition": "Existing sequence/report carries failure details;no extra logging service"
+    }
+  ],
+  "changes": [
+    "One actual build-input artifact and two source-backed dependencies added",
+    "Shared frontend-input paths now include build scripts/cache script/logo",
+    "C3 asset-only requests and explicit safe-error/HTTPS output clarified",
+    "No new application service,pipeline,protocol,C4 view or packaging policy"
+  ],
+  "unresolved": [
+    "Rust prepared-tree freshness/allowlist/transitive closure not independently checked",
+    "Dist installation removes/copies/verifies;not atomic",
+    "Public build-version.json uses text/plain fallback",
+    "Retained ADR004 same-origin styles wording does not explicitly settle implemented unsafe-inline allowance;policy clarification required",
+    "No compiled executable,actual browser/UML rendering,asset generation or application tests inspected/executed"
+  ],
+  "source_identities": {
+    "Cargo.toml": "62cf28c86b1a4f570565d6f7c65c8e2f1f76af255f258b9ec85ee72a1c36ab5c",
+    "crates/runtime/build.rs": "75bffb614b007fc9c9bac5960bd4040ce3afa92f3876c292d5f9f9a9ba9acc5f",
+    "crates/runtime/src/main.rs": "5450313edbcc2c8d6619818b4cab931e873e9b14a12f354eaf769d2c7faa2e14",
+    "docs/02-governance/OWNER_DECISIONS.md": "81fe833d85761540af35c62fae231fe3daff6335b2bb4ea5d8dcca93defdb950",
+    "docs/04-architecture/decisions/0004-local-https-bootstrap.md": "bcc8c8062f3eed34faeeeb535b3a5cce2f7f4877e42a38d4167abeaad94d9518",
+    "docs/04-architecture/system-architecture.md": "59faead4ef78bae55b3e488fc75e248fd9abf9e7cfc66e1b33680be285a4ba2c",
+    "docs/06-subsystems/interfaces/browser-runtime.md": "9a76f131f407e6a0217e0b69fdbb2012e903b86edc014f7cb4829e1379408505",
+    "frontend/build.mjs": "6862c3f42ba1bd9d50bb5f4e24edbd057f70cfc3595cc3b0ae02280befc388c0",
+    "frontend/index.html": "24eaa56e2117c7e1703bfe725989b7ae00fa58dd943dca15221ae7facf4aee9d",
+    "frontend/scripts/build-cache.mjs": "0b7e759e39c05090e4287628911014505828cfd51685e0be662c6e24697ad00b",
+    "frontend/scripts/check-runtime-security.mjs": "e3b9057abf780a3afd7ab020363d9857aab9fa38c0273af462181f0c1548fc72",
+    "frontend/scripts/check-runtime-tls.mjs": "54cdd3ae1d363d572f22dec875313405170c5a7baddf95fb38d5e5d03315a9e4",
+    "frontend/scripts/check-runtime-workflow.mjs": "2d02865f0d1d8c6d4f865f2915ff8e64242325e2f81f75e36bdd974139a092bf",
+    "frontend/src/app.js": "cec39294a350d4582a80c958d46b9db6ba490d0f180ce90fccb7f2772e89ff1f",
+    "frontend/src/build-version.js": "aeb8babe547a73468b0934f35a12a2ce3b5334726a9c24f4be5bdedbb9275783",
+    "frontend/src/runtime-adapter.js": "8ee28708e372aa40822fb18b0539143617da7a4c8ff09d9c09603143bac8ea25"
+  },
+  "dist_inventory_scope": "Prior68-file inventory remains historical;this audit checks declared build outputs/references,not fresh-build or executable completeness"
+}

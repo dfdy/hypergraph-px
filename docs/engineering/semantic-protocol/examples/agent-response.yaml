@@ -1,0 +1,12 @@
+scp: HPX-SCP
+version: 0.6.0
+kind: response
+id: m-example-response
+sender: implementer
+recipient: architect
+conversation: example
+reply_to: m-example-request
+body:
+  status: partial
+  completed: [schema_design]
+  unresolved: [requires_owner_approval]

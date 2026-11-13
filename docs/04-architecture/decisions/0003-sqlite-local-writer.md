@@ -13,11 +13,15 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 The underlying decision retains its recorded acceptance. This new editorial wrapper does not expand that decision or imply implemented services.
 
 Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
+
+## Owner baseline reconciliation, 2026-10-30
+
+HPX-OWNER-027 makes multi-user and multi-agent support mandatory in the product. A single SQLite publication writer serializes transactions, not user identities. Current one-owner authority/storage describes the prototype; per-user isolation, grants and conflict mechanisms remain required design work. No schema/version/locking migration is adopted by this note.
 
 ## Status and decision date
 
@@ -85,3 +89,11 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../../03
 - `HPX-SRC-0043` — `docs/adr/0003-sqlite-local-writer.md`, lines 5–10; SHA-256 `40bab3126a8d1dea3f1d6ca0f2f457edf4d0a61ce4dbf774eedcf206a3cc2c7f`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0043` — `docs/adr/0003-sqlite-local-writer.md`, lines 11–14; SHA-256 `40bab3126a8d1dea3f1d6ca0f2f457edf4d0a61ce4dbf774eedcf206a3cc2c7f`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0043` — `docs/adr/0003-sqlite-local-writer.md`, lines 15–22; SHA-256 `40bab3126a8d1dea3f1d6ca0f2f457edf4d0a61ce4dbf774eedcf206a3cc2c7f`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+
+## Workspace-only witness design scope, 2026-10-27
+
+HPX-OWNER-008 subsequently selects workspace-file restoration with a trusted local witness surviving outside the workspace. This selects the next design boundary; it does not retroactively give the current SQLite writer freshness detection or adopt a rollback exception. The [concrete recovery proposal](../../08-assurance/recovery.md#workspace-only-local-witness-proposal) retains one atomic SQLite mutation transaction but proposes a separately persisted witness and acknowledgement gate. Its backed-up minimum-reader upgrade and cross-store crash/unknown/recovery handling need mechanism approval before witness writes. Current schemas1/2 and earlier local compatibility evidence remain unchanged. Whole-host/witness restoration is outside the selected design scope.
+
+## Portable workspace owner direction, 2026-10-27
+
+HPX-OWNER-009 withdraws the external witness/registration proposal and requires workspace-contained portable application/recovery evidence. The earlier proposed external-store minimum-reader upgrade is not to be implemented. This explicitly bounds whole-workspace freshness: a complete authentic rollback with all internal evidence cannot be detected in this self-contained design. SQLite/WAL recovery and authenticated retained records retain their narrower meanings; no new schema, restore mechanism or real-data acceptance is inferred.

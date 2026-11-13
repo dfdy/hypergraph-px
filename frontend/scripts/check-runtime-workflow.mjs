@@ -1,3 +1,12 @@
+import {assertComponent,typedBindings,assertBoundPayload} from './assert-api-schema.mjs';
+import {exerciseTextRelations} from './text-relations-workflow.mjs';
+import {exerciseHeadingLink} from './heading-link-workflow.mjs';
+import {exerciseDeparture} from './departure-workflow.mjs';
+import {exerciseHistoryIsolation} from './history-isolation-workflow.mjs';
+import {exerciseWorkingBranches} from './working-branches-workflow.mjs';
+import {measureRuntimeWorkload} from './measure-runtime-workload.mjs';
+import {exerciseDocumentAudit} from './audit-workflow.mjs';
+import {exerciseComments} from './comments-workflow.mjs';
 import {exerciseContributors} from './contributors-workflow.mjs';
 import {exerciseMergeGraph} from './merge-graph-workflow.mjs';
 import {exerciseReviewedMerge} from './merge-workflow.mjs';
@@ -16,11 +25,15 @@ const compatAt=process.argv.indexOf('--compat-reader'),compatReader=compatAt<0?n
 const engine=process.argv[2]??'chromium';if(!['chromium','webkit'].includes(engine))throw Error('Expected browser: chromium or webkit');
 const root=resolve(import.meta.dirname,'../..'),approved='05865badace97aad0cb8abf4460e12f6a1574b812759780052e8ffb486bf8428';
 const passphrase='SYNTHETIC-ONLY-runtime-validation-2026',checks=[];
-let directory,runtime,browser,page,nativeEnrollmentAttempted=false,keepDirectory=false,passed=false;
+let directory,runtime,browser,page,nativeEnrollmentAttempted=false,keepDirectory=false,passed=false,validateCurrentContract=true;
 const testedSha=await binaryFingerprint();
 const check=(condition,message)=>{if(!condition)throw Error(message);};
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
+const testedSpecSha=digest(await readFile(resolve(root,'frontend/src/generated/openapi.json')));
 async function start(create,executable=resolve(root,'target/debug/hypergraph')){
+ // The retained older executable has its own historical DTO contract. Its
+ // compatibility checks remain active, but it must not claim current-schema conformance.
+ validateCurrentContract=resolve(executable)===resolve(root,'target/debug/hypergraph');
  const probe=createServer();await new Promise((yes,no)=>{probe.once('error',no);probe.listen(0,'127.0.0.1',yes);});const port=probe.address().port;await new Promise((yes,no)=>probe.close(error=>error?no(error):yes()));
  runtime=spawn(executable,['--workspace',join(directory,'synthetic.hpx'),...(create?['--create']:[]),'--cert',resolve(root,'artifacts/local-tls/localhost.pem'),'--key',resolve(root,'artifacts/local-tls/localhost-key.pem'),'--port',String(port)],{stdio:['ignore','pipe','pipe']});
  return new Promise((yes,no)=>{let output='';const timer=setTimeout(()=>no(Error('Runtime startup timed out')),10000);runtime.once('error',()=>{clearTimeout(timer);no(Error('Runtime could not start'));});runtime.once('exit',()=>{clearTimeout(timer);no(Error('Runtime exited during startup'));});runtime.stdout.on('data',bytes=>{output+=bytes.toString();const match=output.match(/https:\/\/127\.0\.0\.1:\d+\/#launch=[a-f0-9]+/);if(match){clearTimeout(timer);yes(match[0]);}});});
@@ -34,35 +47,85 @@ async function open(url){
 async function api(path,body){
  return page.evaluate(async({path,body})=>{const response=await fetch('/api/v1/'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',headers:body===undefined?{}:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'});return {status:response.status,body:await response.json()};},{path,body});
 }
-async function ok(path,body){const result=await api(path,body);check(result.status===200,'Unexpected API status for '+path+': '+result.status);return result.body;}
+async function ok(path,body){const result=await api(path,body);check(result.status===200,'Unexpected API status for '+path+': '+result.status+' '+(result.body?.error??'')+' '+(body?.request?.command??'')+' '+(body?.request?.mutation?.action??''));return result.body;}
 async function unlock(create=false){
  await page.getByLabel('Workspace passphrase',{exact:true}).fill(passphrase);await page.getByRole('button',{name:create?'Create workspace':'Unlock workspace',exact:true}).click();
 }
 async function paste(source){
+ await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toHaveAttribute('contenteditable','true');
  const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+A');
  await editor.evaluate((element,text)=>{const data=new DataTransfer();data.setData('text/plain',text);element.dispatchEvent(new ClipboardEvent('paste',{bubbles:true,cancelable:true,clipboardData:data}));},source);
 }
 async function dropReplies(command,count){
- await page.evaluate(({command,count})=>{const actual=window.fetch.bind(window);window.__acceptanceRestoreFetch=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const response=await actual(...args);if(String(args[0]).endsWith('/api/v1/commands')&&JSON.parse(args[1].body).request.command===command&&count-->0)throw new TypeError('Synthetic lost acknowledgement');return response;};},{command,count});
+ await page.evaluate(({command,count})=>{const actual=window.fetch.bind(window);window.__acceptanceRestoreFetch=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const inputUrl=args[0] instanceof Request?args[0].url:String(args[0]);const inputBody=args[0] instanceof Request?await args[0].clone().text():args[1]?.body;const response=await actual(...args);if(inputUrl.endsWith('/api/v1/commands')&&JSON.parse(inputBody).request.command===command&&count-->0)throw new TypeError('Synthetic lost acknowledgement');return response;};},{command,count});
 }
 async function restoreReplies(){await page.evaluate(()=>{window.__acceptanceRestoreFetch?.();delete window.__acceptanceRestoreFetch;});}
 async function run(){
  const der=execFileSync('/usr/bin/openssl',['x509','-in',resolve(root,'artifacts/local-tls/localhost.pem'),'-outform','DER']);check(digest(der)===approved,'Certificate differs from approved fingerprint; runtime not started');
  await mkdir(resolve(root,'artifacts'),{recursive:true});directory=await mkdtemp(resolve(root,'artifacts/runtime-workflow-'));
  const launch=await start(true);browser=engine==='chromium'?await testBrowser():await webkit.launch({headless:true});const context=browser.contexts()[0]??await browser.newContext();page=context.pages()[0]??await context.newPage();await page.bringToFront();await page.setViewportSize({width:1600,height:1000});page.on('dialog',dialog=>dialog.accept());
- const commands=[];page.on('request',request=>{if(request.url().endsWith('/api/v1/commands'))commands.push(request.postDataJSON());});
+ const commands=[];
+ await page.exposeFunction('__observeAcceptanceCommand',command=>commands.push(command));
+ await page.exposeFunction('__checkTypedPayload',({path,method,direction,value})=>{if(validateCurrentContract)assertBoundPayload(path,method,direction,value);});
+ // Chromium's network event can omit a streamed Request body. Observe the exact
+ // Request passed to native fetch instead; do not change its bytes or retry path.
+ await page.addInitScript(bindings=>{const actual=window.fetch.bind(window);window.fetch=(...args)=>{
+  const url=args[0] instanceof Request?args[0].url:String(args[0]);
+  const path=new URL(url,location.origin).pathname,method=args[0] instanceof Request?args[0].method:args[1]?.method??'GET';
+  const binding=bindings.find(b=>b.path===path&&b.method===method),command=path==='/api/v1/commands';
+  if(!binding&&!command)return actual(...args);
+  const body=binding?.request||command?(args[0] instanceof Request?args[0].clone().text():Promise.resolve(args[1]?.body)):Promise.resolve(null);
+  const observed=body.then(async body=>{if(command)await window.__observeAcceptanceCommand(JSON.parse(body));return body;});
+  // Observe without delaying native dispatch or changing bytes. Validate successful
+  // pairs only, so intentional malformed requests still reach backend rejection.
+  // Credentials/source are transient; only synthetic commands support retry checks.
+  return Promise.all([actual(...args),observed]).then(async([response,body])=>{
+   if(binding&&response.ok){
+    if(binding.request)await window.__checkTypedPayload({path,method,direction:'request',value:JSON.parse(body)});
+    await window.__checkTypedPayload({path,method,direction:'response',value:await response.clone().json()});
+   }
+   return response;
+  });
+ };},typedBindings);
  await open(launch);await expect(page.getByRole('button',{name:'Create workspace',exact:true})).toBeVisible();check(!new URL(page.url()).hash,'Launch capability retained in URL');
  const cookie=(await context.cookies()).find(cookie=>cookie.name==='__Host-hpx');check(cookie?.secure&&cookie.httpOnly&&cookie.sameSite==='Strict','Session cookie restrictions missing');checks.push('verified TLS, bootstrap fragment removal and restricted session cookie');
+ const builtVersion=await page.evaluate(async()=>{const response=await fetch('/build-version.json',{cache:'no-store'});if(!response.ok)throw Error('Build version unavailable');return (await response.json()).version;});check(/^\d+\.\d+\.\d+\.[1-9]\d*$/.test(builtVersion),'Compiled build version must have four numeric parts');await expect(page.locator('#buildVersion')).toHaveText('v'+builtVersion);await expect(page.locator('#buildVersion')).toBeVisible();const versionBox=await page.locator('#buildVersion').boundingBox();check(versionBox&&versionBox.x<=20&&versionBox.y+versionBox.height>=980,'Build version is not at the bottom left');checks.push('executable embeds four-part test build version and footer shows it at bottom left while locked');
+ const lockedMetadata=await ok('runtime');check(lockedMetadata.locked&&lockedMetadata.create&&lockedMetadata.contract===1&&lockedMetadata.mode==='trusted_server'&&lockedMetadata.ownership==='whole_document','Locked metadata changed API1 semantics');checks.push('generated runtime metadata schema matches the authenticated locked/create response without unlocking the workspace');
+ const canonicalStatus=await ok('keychain/status',{}),legacyStatus=await ok('keychain/status',[]);check(JSON.stringify(canonicalStatus)===JSON.stringify(legacyStatus),'Legacy empty-sequence request changed status');check((await api('keychain/status',{unexpected:true})).status===400,'Keychain status accepted unknown fields');checks.push('typed keychain status preserves canonical and legacy empty bodies; unknown fields reject while the workspace stays locked');
  await unlock(true);await page.getByLabel('Document name',{exact:true}).fill('First synthetic document');await page.getByRole('button',{name:'Create document',exact:true}).click();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();
  const summaries=await ok('documents',{}),first=summaries[0].document,initial=await ok('editor',{document:first});check(initial.text==='','Unexpected initial source');
+ for(const problem of [false,true]){
+  const response=await page.evaluate(async problem=>{const response=await fetch('/api/v1/commands',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json',Accept:problem?'application/problem+json':'application/json'},body:'{"operation":[],"request":{"command":"fork"}}'});return {status:response.status,type:response.headers.get('content-type'),bytes:await response.text()};},problem);
+  check(response.status===400,'Malformed Fork accepted');assertComponent(problem?'Problem':'LegacyError',JSON.parse(response.bytes));check(response.type===(problem?'application/problem+json':'application/json; charset=utf-8'),'Error negotiation changed legacy MIME');
+  if(problem)check(JSON.parse(response.bytes).status===response.status,'Problem status differs from HTTP');else check(Object.keys(JSON.parse(response.bytes)).join(',')==='error','Legacy error fields changed');
+ }
+ check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(initial),'Malformed Fork changed source');
+ checks.push('generated Fork error schemas match actual HTTPS responses; strict malformed input preserves source and legacy JSON negotiation');
+
+ if(process.argv.includes('--audit-only')){
+  const source='# Audit contract\r\n\r\n| Claim | Value |\r\n| --- | --- |\r\n| 😀 | é |\r\n\r\n$$\r\nE=mc^2\r\n$$\r\n\r\n## Below audit widgets\r\n\r\nExact 中\rfinal';
+  await paste(source);const commit=page.getByRole('button',{name:'Commit',exact:true});await commit.click();await expect(commit).toBeEnabled();
+  const stored=await ok('editor',{document:first});check((await ok('snapshot',{document:first,snapshot:stored.snapshot})).text===source,'Audit setup changed exact source');
+  await page.locator('#runtimeBranches').click();const branches=page.getByRole('dialog',{name:'Document branches'});await branches.getByLabel('New branch name').fill('Audit child');await branches.getByRole('button',{name:'Create child branch',exact:true}).click();await expect(branches).toHaveCount(0);
+  await page.getByLabel('Maths display',{exact:true}).selectOption('rendered');await page.getByRole('button',{name:'Below audit widgets',exact:true}).click();
+  await exerciseDocumentAudit({page,ok,api,root,checks,database:join(directory,'synthetic.hpx'),unlock});
+  await writeFile(resolve(root,'artifacts/runtime-audit-workflow.json'),JSON.stringify({checks,synthetic:true,binary_sha256:testedSha,version:builtVersion,openapi_sha256:testedSpecSha},null,2));passed=true;console.log('PASS: isolated audit workflow ('+checks.length+' checks); cleaning test resources');return;
+ }
+ if(process.argv.includes('--working-branches-only')){
+ await exerciseHeadingLink({page,root,ok,paste,checks,document:first});
+ await exerciseTextRelations({page,root,ok,api,checks,database:join(directory,'synthetic.hpx'),restart:async()=>{await stop('SIGKILL');await open(await start(false));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
+ await exerciseDeparture({page,root,ok,paste,checks,dropReplies,restoreReplies,commands,restart:async()=>{await stop('SIGKILL');await open(await start(false));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
+  await exerciseWorkingBranches({page,root,checks,ok,api,paste,dropReplies,restoreReplies,compatReader,database:join(directory,'synthetic.hpx'),restart:async executable=>{await stop('SIGKILL');await open(await start(false,executable));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
+  await writeFile(resolve(root,'artifacts/runtime-working-workflow.json'),JSON.stringify({checks,synthetic:true,advertisedCapabilities:true,binary_sha256:testedSha,version:builtVersion,openapi_sha256:testedSpecSha},null,2));passed=true;console.log('PASS: isolated working-branch workflow ('+checks.length+' checks); cleaning test resources');return;
+ }
  const original='SYNTHETIC-CUSTODY-SENTINEL 😀e\u0301\r\nSecond line\nThird\rFourth';await paste(original);
  await expect.poll(async()=>(await ok('editor',{document:first})).text,{timeout:15000}).toBe(original);let state=await ok('editor',{document:first});check(JSON.stringify(state.snapshot)===JSON.stringify(initial.snapshot),'Autosave published immutable history');checks.push('five-second autosave preserves mixed newline/Unicode bytes without committing');
  const offset=commands.length,lost='Lost-save 😀\r\nAcknowledgement',latest='Later typing e\u0301\r\nExact source\n';
  await dropReplies('save',2);await paste(lost);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect(page.locator('#draftStatus')).toContainText('Save needs attention');check((await ok('editor',{document:first})).text===lost,'Dropped acknowledgement did not reach durable storage');
  await restoreReplies();await paste(latest);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(latest);
- const retries=commands.slice(offset);check(retries.length>=4,'Missing retry observations');check(JSON.stringify(retries[0])===JSON.stringify(retries[1])&&JSON.stringify(retries[0])===JSON.stringify(retries[2]),'Unknown save changed operation identity or request');checks.push('lost save replies retry exact operation before queued newer source');
- await dropReplies('commit',2);await page.getByRole('button',{name:'Commit',exact:true}).click();await expect(page.locator('#draftStatus')).toContainText('Save needs attention');const committed=await ok('editor',{document:first}),commitRequest=commands.at(-1);await restoreReplies();await page.getByRole('button',{name:'Commit',exact:true}).click();
- await expect(page.locator('#draftStatus')).not.toContainText('Save needs attention');state=await ok('editor',{document:first});check(JSON.stringify(state.snapshot)===JSON.stringify(committed.snapshot),'Uncertain commit retry created another snapshot');check(JSON.stringify(commands.at(-1))===JSON.stringify(commitRequest),'Commit retry changed operation identity');check((await ok('snapshot',{document:first,snapshot:committed.snapshot})).text===latest,'Committed snapshot differs from exact source');checks.push('unknown commit reconciles one immutable revision/snapshot');
+ const retries=commands.slice(offset);await writeFile(resolve(root,'artifacts/runtime-save-retry-observation.json'),JSON.stringify(retries,null,2));check(retries.length>=4,'Missing retry observations');check(JSON.stringify(retries[0])===JSON.stringify(retries[1])&&JSON.stringify(retries[0])===JSON.stringify(retries[2]),'Unknown save changed operation identity or request');checks.push('lost save replies retry exact operation before queued newer source');
+ await dropReplies('commit',2);await page.getByRole('button',{name:'Commit',exact:true}).click();await expect(page.locator('#draftStatus')).toContainText('Save needs attention');const committed=await ok('editor',{document:first}),commitRequest=commands.filter(c=>c.request.command==='commit').at(-1);await restoreReplies();await page.getByRole('button',{name:'Commit',exact:true}).click();
+ await expect(page.locator('#draftStatus')).not.toContainText('Save needs attention');state=await ok('editor',{document:first});check(JSON.stringify(state.snapshot)===JSON.stringify(committed.snapshot),'Uncertain commit retry created another snapshot');check(JSON.stringify(commands.filter(c=>c.request.command==='commit').at(-1))===JSON.stringify(commitRequest),'Commit retry changed operation identity');check((await ok('snapshot',{document:first,snapshot:committed.snapshot})).text===latest,'Committed snapshot differs from exact source');checks.push('unknown commit reconciles one immutable revision/snapshot');
  const creationOffset=commands.length;await page.evaluate(()=>{window.__creationWindowSentinel=true;});await dropReplies('create',2);
  page.removeAllListeners('dialog');page.once('dialog',dialog=>dialog.accept('Second synthetic document'));await page.getByRole('button',{name:'New document',exact:true}).click();await expect(page.getByRole('button',{name:'Retry new document',exact:true})).toBeVisible();page.on('dialog',dialog=>dialog.accept());
  for(const theme of ['dark','light']){if(theme==='light')await page.evaluate(()=>document.body.classList.toggle('light'));for(const width of [1280,2000]){await page.setViewportSize({width,height:1000});await page.screenshot({path:resolve(root,`artifacts/runtime-create-retry-${theme}-${width}.png`),animations:'disabled'});}}await page.evaluate(()=>document.body.classList.toggle('light'));await page.setViewportSize({width:1600,height:1000});
@@ -80,13 +143,13 @@ async function run(){
  const beforeHistory=await ok('editor',{document:first});
  await page.locator('[data-investigation="History"]').click();await expect(page.locator('#investigationBody')).toContainText('History page 1');
  check(await page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true}).count()===12,'History did not bound its first page');
- let observedHistory=0;const observe=request=>{if(request.url().endsWith('/api/v1/history'))observedHistory++;};page.on('request',observe);
+ let observedHistory=0;const observe=request=>{if((request.url().endsWith('/api/v1/history')||request.url().endsWith('/api/v1/branches/history/page')))observedHistory++;};page.on('request',observe);
  await page.getByRole('textbox',{name:'Markdown document editor'}).click();await page.keyboard.press('ArrowRight');await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));check(observedHistory===0,'Selection changes refetched retained history');page.off('request',observe);
- await page.evaluate(()=>{const actual=window.fetch.bind(window);let delay=true;let started;window.__historyStarted=new Promise(resolve=>{started=resolve;});window.__restoreHistoryFetch=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const response=await actual(...args);if(String(args[0]).endsWith('/api/v1/history')&&delay){delay=false;started();await new Promise(resolve=>{window.__releaseHistory=resolve;});}return response;};});
+ await page.evaluate(()=>{const actual=window.fetch.bind(window);let delay=true;let started;window.__historyStarted=new Promise(resolve=>{started=resolve;});window.__restoreHistoryFetch=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const inputUrl=args[0] instanceof Request?args[0].url:String(args[0]);const inputBody=args[0] instanceof Request?await args[0].clone().text():args[1]?.body;const response=await actual(...args);if((inputUrl.endsWith('/api/v1/history')||inputUrl.endsWith('/api/v1/branches/history/page'))&&delay){delay=false;started();await new Promise(resolve=>{window.__releaseHistory=resolve;});}return response;};});
  try{
-  await page.getByRole('button',{name:'Refresh',exact:true}).click();await page.evaluate(()=>window.__historyStarted);
-  await page.getByRole('button',{name:'Second synthetic document',exact:true}).click();await expect(page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true})).toHaveCount(1);
-  await page.evaluate(()=>window.__releaseHistory());await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));await expect(page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true})).toHaveCount(1);
+  await page.getByRole('button',{name:'Refresh',exact:true}).click();await page.evaluate(()=>Promise.race([window.__historyStarted,new Promise((_,reject)=>setTimeout(()=>reject(Error('History refresh interception timed out')),10000))]));
+  await page.getByRole('button',{name:'Second synthetic document',exact:true}).click();await expect(page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true})).toHaveCount(2);
+  await page.evaluate(()=>window.__releaseHistory());await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));await expect(page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true})).toHaveCount(2);
  }finally{await page.evaluate(()=>{window.__releaseHistory?.();window.__restoreHistoryFetch?.();delete window.__releaseHistory;delete window.__restoreHistoryFetch;delete window.__historyStarted;});}
  await page.getByRole('button',{name:'First synthetic document',exact:true}).click();await expect(page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true})).toHaveCount(12);
  checks.push('selection changes do not refetch history; stale replies cannot replace another document history');
@@ -104,6 +167,7 @@ async function run(){
  checks.push('read-only exact historical/current committed snapshot comparison excludes draft edits');
  check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeHistory),'History browsing changed the current editor state');
  await page.getByRole('button',{name:'Newer',exact:true}).click();await expect(page.locator('#investigationBody')).toContainText('History page 1');checks.push('bounded two-page history UI and exact historical download leave current state unchanged');
+ await exerciseHistoryIsolation({page,root,checks});check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeHistory),'History inspection isolation changed editor state');
 
  const clipboardRequest={generation:null,offset:0,limit:16};check((await ok('clipboard',clipboardRequest)).total===0,'Fresh private clipboard is not empty');
  const copyOffset=commands.length;await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');
@@ -114,7 +178,7 @@ async function run(){
  check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeHistory),'Clipboard capture modified source state or history');
  await page.locator('.clipboard .clip-chip > button').first().click();check(await page.getByRole('dialog').locator('pre').textContent()===recovery,'Captured source preview changed exact bytes');await page.getByRole('button',{name:'Close',exact:true}).click();
  await paste('Uncommitted clipboard source 😀\r\n');await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe('Uncommitted clipboard source 😀\r\n');
- await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');await page.getByRole('button',{name:'Copy source reference',exact:true}).click();await expect(page.locator('#toast')).toContainText('Commit this source');check((await ok('clipboard',clipboardRequest)).generation===1,'Uncommitted copy changed private state');
+ await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');await page.getByRole('button',{name:'Copy source reference',exact:true}).click();await expect(page.locator('.working-references .clip-chip')).toHaveCount(1);check((await ok('clipboard',clipboardRequest)).generation===1,'Working copy changed committed private state');await page.getByRole('button',{name:'Clear working references',exact:true}).click();await expect(page.locator('.working-references .clip-chip')).toHaveCount(0);
  await paste(recovery);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(recovery);
  await stop();await open(await start(false));await expect(page.getByRole('button',{name:'Unlock workspace',exact:true})).toBeVisible();check((await api('clipboard',clipboardRequest)).status===423,'Locked runtime exposes private clipboard');await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
  const restartedClipboard=await ok('clipboard',clipboardRequest);check(JSON.stringify(restartedClipboard.entries[0].id)===JSON.stringify(captured.entries[0].id),'Restart replaced captured reference identity');
@@ -122,7 +186,7 @@ async function run(){
  await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');await page.getByRole('button',{name:'Copy source reference',exact:true}).click();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
  await page.locator('.clipboard').getByRole('button',{name:'Clear all',exact:true}).click();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(0);
  await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');await page.getByRole('button',{name:'Copy source reference',exact:true}).click();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
- checks.push('private clipboard exact capture/retry, uncommitted rejection, locked restart recovery, removal and clear retain source history');
+ checks.push('private clipboard exact capture/retry, separate working-source capture, locked restart recovery, removal and clear retain source history');
  const forkSource=await ok('editor',{document:first}),forkOffset=commands.length;
  await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');
  await page.locator('#forkSelection').click();await page.getByLabel('Fork name',{exact:true}).fill('Durable synthetic fork');
@@ -133,7 +197,9 @@ async function run(){
  await page.getByRole('button',{name:'Cancel',exact:true}).click();await expect(page.getByRole('button',{name:'Retry fork',exact:true})).toBeVisible();
  const createdForks=(await ok('documents',{})).filter(d=>d.title==='Durable synthetic fork');check(createdForks.length===1,'Unknown fork reply duplicated output');const forkDocument=createdForks[0].document;
  await restoreReplies();await page.getByRole('button',{name:'Retry fork',exact:true}).click();await expect(page.locator('#documentTitle')).toHaveText('Durable synthetic fork');
- const forkCommands=commands.slice(forkOffset).filter(c=>c.request.command==='fork');check(forkCommands.length===3&&forkCommands.every(c=>JSON.stringify(c)===JSON.stringify(forkCommands[0])),'Fork retry changed frozen intent');
+ const forkCommands=commands.slice(forkOffset).filter(c=>c.request.command==='fork');for(const command of forkCommands)assertComponent('ForkExecute',command);
+ const forkReceipt=await ok('commands',forkCommands[0]);assertComponent('ForkReceipt',forkReceipt);check(JSON.stringify(forkReceipt.operation)===JSON.stringify(forkCommands[0].operation),'Fork receipt operation changed');
+ check(forkCommands.length===3&&forkCommands.every(c=>JSON.stringify(c)===JSON.stringify(forkCommands[0])),'Fork retry changed frozen intent');
  const initialFork=await ok('editor',{document:forkDocument}),derivation=await ok('derivation',{document:forkDocument});
  check(initialFork.text===recovery&&JSON.stringify(initialFork.node)!==JSON.stringify(forkSource.node),'Fork lost independent identity or exact source');
  check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(forkSource),'Fork mutated source draft/history');
@@ -147,6 +213,7 @@ async function run(){
  checks.push('durable independent fork with frozen lost-reply recovery, exact provenance inspection, separate edits/history and locked restart recovery');
  const assertionBaseline=await exerciseAssertionOverlay({page,ok,first,recovery,paste,dropReplies,restoreReplies,commands,check,root,checks});
  const mergeBaseline=await exerciseReviewedMerge({page,ok,api,first,forkDocument,recovery,root,commands,dropReplies,restoreReplies,start,stop,open,unlock,check,checks});
+ const commentBaseline=await exerciseComments({page,ok,api,first,second,recovery,commands,dropReplies,restoreReplies,root,check,checks});
  const capability=await ok('runtime');
  if(capability.keychain_supported){
   await page.getByRole('button',{name:'Keychain',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('Keep your passphrase for recovery');
@@ -183,6 +250,7 @@ async function run(){
   check(JSON.stringify(await ok('derivation',{document:forkDocument}))===JSON.stringify(derivation),'Old reader changed pinned derivation');
   check(JSON.stringify(await ok('assertions',assertionBaseline.input))===JSON.stringify(assertionBaseline.view),'Old reader changed versioned assertion overlay');
   check(JSON.stringify(await ok('merge',{document:mergeBaseline.document}))===JSON.stringify(mergeBaseline.event),'Old reader changed reviewed synthesis evidence');
+  check(JSON.stringify(await ok('comments',commentBaseline.input))===JSON.stringify(commentBaseline.view),'Old reader changed immutable retrospective comments');
   checks.push('pre-clipboard/fork/assertion reader opens/saves/commits both documents while preserving optional ciphertext and exact overlays byte-for-byte');
  }
  await page.locator('[data-investigation="History"]').click();await expect(page.locator('#investigationBody')).toContainText('History page 1');
@@ -191,6 +259,7 @@ async function run(){
  const capturedBeforeFork=await ok('clipboard',clipboardRequest),newerSource='Newer uncommitted source 😀\r\n';
  await paste(newerSource);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(newerSource);
  const newerEditor=await ok('editor',{document:first});
+ await page.locator('[data-interaction="Comments"]').click();await expect(page.locator('.comment-card')).toHaveCount(8);await page.locator('#interactionBody').getByRole('button',{name:'Inspect comment passage',exact:true}).first().click();check(await page.getByRole('dialog',{name:'Comment passage · read only'}).locator('pre').textContent()===recovery,'Retained comment followed changed draft text');await page.keyboard.press('Escape');check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(newerEditor),'Comment inspection changed newer draft');checks.push('retained comments inspect exact earlier passages after newer source edits without relocating anchors');
  await page.locator('[data-investigation="History"]').click();await page.locator('#investigationBody').getByRole('button',{name:'Compare with latest committed',exact:true}).first().click();await expect(page.getByRole('dialog')).toContainText('These snapshots contain exactly the same bytes.');check(await page.getByRole('dialog').getByLabel('Latest committed snapshot',{exact:true}).textContent()===recovery,'Comparison included newer uncommitted draft');check((await ok('editor',{document:first})).text===newerSource,'Read-only comparison changed draft');await page.getByRole('dialog').getByRole('button',{name:'Close',exact:true}).click();
 
  await page.locator('.clipboard .clip-chip > button').first().click();check(await page.getByRole('dialog').locator('pre').textContent()===recovery,'Captured fork review followed newer source');await page.getByLabel('Fork name',{exact:true}).fill('Captured historic fork');
@@ -198,12 +267,12 @@ async function run(){
  await page.getByRole('button',{name:'Fork captured source',exact:true}).click();await expect(page.locator('#documentTitle')).toHaveText('Captured historic fork');
  const historicFork=(await ok('documents',{})).find(d=>d.title==='Captured historic fork').document;
  check((await ok('editor',{document:historicFork})).text===recovery,'Captured-reference fork changed exact historical bytes');
- check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(newerEditor),'Captured-reference fork saved or committed newer source');
+ const departedSource=await ok('editor',{document:first});check(departedSource.text===newerEditor.text,'Captured-reference Fork departure changed newer source bytes');check((await ok('snapshot',{document:first,snapshot:departedSource.snapshot})).text===newerSource,'Leaving source for captured-reference Fork did not publish current text');check((await ok('snapshot',{document:first,snapshot:newerEditor.snapshot})).text===recovery,'Departure changed the earlier source snapshot');
  check(JSON.stringify(await ok('clipboard',clipboardRequest))===JSON.stringify(capturedBeforeFork),'Fork consumed or changed protected reference');
  const historicDerivation=await ok('derivation',{document:historicFork});check(JSON.stringify(historicDerivation.inputs[0])===JSON.stringify(capturedBeforeFork.entries[0].source),'Captured-reference fork changed pinned binding');
  await stop();await open(await start(false));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();check(JSON.stringify(await ok('derivation',{document:historicFork}))===JSON.stringify(historicDerivation),'Restart changed captured-reference derivation');
  await paste(recovery);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(recovery);
- checks.push('reviewed historical clipboard Fork preserves newer uncommitted source, pinned input and private reference across restart');
+ checks.push('reviewed historical clipboard Fork retains pinned input/private reference across restart while departure publishes newer source without changing its bytes');
 
  const widgetSource='# Widget capture\r\n\r\nBefore the table.\r\n\r\n| Term | Value |\r\n| --- | --- |\r\n| Exact 😀 | e\u0301 |\r\n\r\n$$\r\nE=mc^2\r\n$$\r\n\r\n## After widgets\r\n\r\nExact text below table and maths.\r\n';
  await page.getByRole('button',{name:'Second synthetic document',exact:true}).click();await paste(widgetSource);await page.getByRole('button',{name:'Commit',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:second})).text).toBe(widgetSource);
@@ -218,7 +287,7 @@ async function run(){
  const graphIds=(await ok('documents',{})).map(d=>d.document),graphProjection=await ok('graph',{documents:graphIds});check(graphProjection.nodes.length===5&&graphProjection.edges.length===2,'Graph query lost selected document/fork scope');
  await graphDialog.locator('.graph-edge').first().focus();await page.keyboard.press('Enter');await expect(graphDialog.locator('.graph-inspection')).toContainText('Recorded Fork');await graphDialog.getByRole('button',{name:'Inspect exact fork source',exact:true}).click();check(await page.getByRole('dialog').filter({hasText:'Graph fork source · read only'}).locator('pre').textContent()===recovery,'Graph replaced pinned source with current document');await page.getByRole('button',{name:'Close source',exact:true}).click();
  for(const theme of ['dark','light']){if(theme==='light')await page.evaluate(()=>document.body.classList.toggle('light'));for(const width of [1280,1600,2000]){await page.setViewportSize({width,height:1000});await page.screenshot({path:resolve(root,`artifacts/runtime-graph-${theme}-${width}.png`),animations:'disabled'});check(await graphDialog.evaluate(d=>{const r=d.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight;}),'Graph dialog exceeds desktop bounds');}}await page.evaluate(()=>document.body.classList.toggle('light'));await page.setViewportSize({width:1600,height:1000});
- await page.evaluate(()=>{const actual=window.fetch.bind(window);window.__restoreGraphFetch=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const response=await actual(...args);if(String(args[0]).endsWith('/api/v1/graph')){window.__graphStarted=true;await new Promise(resolve=>{window.__releaseGraph=resolve;});}return response;};});
+ await page.evaluate(()=>{const actual=window.fetch.bind(window);window.__restoreGraphFetch=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const inputUrl=args[0] instanceof Request?args[0].url:String(args[0]);const inputBody=args[0] instanceof Request?await args[0].clone().text():args[1]?.body;const response=await actual(...args);if(inputUrl.endsWith('/api/v1/graph')){window.__graphStarted=true;await new Promise(resolve=>{window.__releaseGraph=resolve;});}return response;};});
  try{
   await graphDialog.getByRole('button',{name:'Show graph',exact:true}).click();await expect.poll(()=>page.evaluate(()=>!!window.__graphStarted)).toBe(true);
   const firstBox=graphDialog.getByRole('checkbox').first();await firstBox.uncheck();await expect(graphDialog.locator('.graph-node')).toHaveCount(0);await page.evaluate(()=>window.__releaseGraph());await expect(graphDialog.getByRole('status')).toContainText('Selection changed');await firstBox.check();
@@ -234,7 +303,7 @@ async function run(){
  await semanticGraphDialog.locator('.graph-edge[data-kind="participant"]').first().focus();await page.keyboard.press('Enter');await semanticGraphDialog.getByRole('button',{name:'Inspect exact participant source',exact:true}).click();check(await page.getByRole('dialog').filter({hasText:'Graph assertion participant · read only'}).locator('pre').textContent()===assertionBaseline.narySource,'Graph incidence substituted current source text');await page.getByRole('button',{name:'Close source',exact:true}).click();
  await semanticGraphDialog.locator('.graph-node[data-kind="assertion"]').focus();await page.keyboard.press('Enter');await expect(semanticGraphDialog.locator('.graph-inspection')).toContainText('not a checked proof');
  for(const theme of ['dark','light']){if(theme==='light')await page.evaluate(()=>document.body.classList.toggle('light'));for(const width of [1280,1600,2000]){await page.setViewportSize({width,height:1000});await page.screenshot({path:resolve(root,`artifacts/runtime-overlay-graph-${theme}-${width}.png`),animations:'disabled'});}}await page.evaluate(()=>document.body.classList.toggle('light'));await page.setViewportSize({width:1600,height:1000});
- await page.evaluate(()=>{const actual=window.fetch.bind(window);window.__restoreOverlayGraph=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const response=await actual(...args);if(String(args[0]).endsWith('/api/v1/graph/overlay')){window.__overlayGraphStarted=true;await new Promise(resolve=>{window.__releaseOverlayGraph=resolve;});}return response;};});
+ await page.evaluate(()=>{const actual=window.fetch.bind(window);window.__restoreOverlayGraph=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const inputUrl=args[0] instanceof Request?args[0].url:String(args[0]);const inputBody=args[0] instanceof Request?await args[0].clone().text():args[1]?.body;const response=await actual(...args);if(inputUrl.endsWith('/api/v1/graph/overlay')){window.__overlayGraphStarted=true;await new Promise(resolve=>{window.__releaseOverlayGraph=resolve;});}return response;};});
  try{await semanticGraphDialog.getByRole('button',{name:'Show graph',exact:true}).click();await expect.poll(()=>page.evaluate(()=>!!window.__overlayGraphStarted)).toBe(true);await semanticGraphDialog.getByRole('checkbox',{name:/Grouped claims/}).uncheck();await page.evaluate(()=>window.__releaseOverlayGraph());await expect(semanticGraphDialog.locator('.graph-node')).toHaveCount(0);await expect(semanticGraphDialog.getByRole('status')).toContainText('Selection changed');}
  finally{await page.evaluate(()=>{window.__releaseOverlayGraph?.();window.__restoreOverlayGraph?.();delete window.__releaseOverlayGraph;delete window.__restoreOverlayGraph;delete window.__overlayGraphStarted;});}
  await semanticGraphDialog.getByRole('button',{name:'Close',exact:true}).click();await page.locator('[data-lens="Workspace"]').click();check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeGraph),'Semantic graph mutated source/head/history');
@@ -267,10 +336,14 @@ async function run(){
   }
  }
  checks.push('live runtime labels, private clipboard and layout at 1280/1600/2000 in both themes, including below table/math replacements');
- for(const name of await readdir(directory)){const file=join(directory,name);if(!(await stat(file)).isFile())continue;const bytes=await readFile(file);for(const needle of ['SYNTHETIC-REVIEWED-MERGE','SYNTHETIC-CUSTODY-SENTINEL',passphrase,'First synthetic document'])check(!bytes.includes(Buffer.from(needle)),'Plaintext sentinel present in encrypted workspace files');}checks.push('workspace/database sidecars contain no tested plaintext sentinels');
- await writeFile(resolve(root,'artifacts/runtime-workflow-'+engine+'.json'),JSON.stringify({browser:engine,checks,synthetic:true,trust:'approved user leaf SSL across localhost/127.0.0.1 SANs; validation enabled'},null,2));passed=true;console.log('PASS: '+engine+' real HTTPS/SQLite workflow ('+checks.length+' checks, synthetic documents only); validation complete, cleaning isolated test resources');
+ if(process.argv.includes('--working-branches'))await exerciseWorkingBranches({page,root,checks,ok,api,paste,dropReplies,restoreReplies,compatReader,database:join(directory,'synthetic.hpx'),restart:async executable=>{await stop('SIGKILL');await open(await start(false,executable));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
+ await exerciseDocumentAudit({page,ok,api,root,checks,database:join(directory,'synthetic.hpx'),unlock});
+ await exerciseDeparture({page,root,ok,paste,checks,dropReplies,restoreReplies,commands,restart:async()=>{await stop('SIGKILL');await open(await start(false));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
+ if(process.argv.includes('--measure-workload'))await measureRuntimeWorkload({ok,page,database:join(directory,'synthetic.hpx'),root,checks});
+ for(const name of await readdir(directory)){const file=join(directory,name);if(!(await stat(file)).isFile())continue;const bytes=await readFile(file);for(const needle of ['SYNTHETIC-COMMENT','SYNTHETIC-REVIEWED-MERGE','SYNTHETIC-CUSTODY-SENTINEL',passphrase,'First synthetic document'])check(!bytes.includes(Buffer.from(needle)),'Plaintext sentinel present in encrypted workspace files');}checks.push('workspace/database sidecars contain no tested plaintext sentinels');
+ await writeFile(resolve(root,'artifacts/runtime-workflow-'+engine+'.json'),JSON.stringify({browser:engine,checks,synthetic:true,binary_sha256:testedSha,version:builtVersion,openapi_sha256:testedSpecSha,trust:'approved user leaf SSL across localhost/127.0.0.1 SANs; validation enabled'},null,2));passed=true;console.log('PASS: '+engine+' real HTTPS/SQLite workflow ('+checks.length+' checks, synthetic documents only); validation complete, cleaning isolated test resources');
 }
-try{await run();}catch(error){console.error('FAIL: '+String(error.message).replace(/#launch=[a-f0-9]+/g,'#launch=[redacted]'));process.exitCode=1;}finally{
+try{await run();}catch(error){await writeFile(resolve(root,'artifacts/runtime-api-failure.json'),JSON.stringify({checks,error:error.stack},null,2));await page?.screenshot({path:resolve(root,'artifacts/runtime-workflow-failure.png'),animations:'disabled'}).catch(()=>{});console.error('FAIL after '+checks.length+' completed checks: '+String(error.message).replace(/#launch=[a-f0-9]+/g,'#launch=[redacted]'));process.exitCode=1;}finally{
  if(nativeEnrollmentAttempted){
   try{const status=await ok('keychain/status',{});if(!status.enrolled&&!status.cleanup_pending)throw Error('Unconfirmed native outcome');if((await ok('runtime')).locked)await ok('unlock',{passphrase});await ok('keychain/remove',{});nativeEnrollmentAttempted=false;}
   catch{keepDirectory=true;process.exitCode=1;console.error('Synthetic native cleanup needs attention; retained isolated artifacts/runtime-workflow-* workspace for scoped recovery.');}
@@ -278,4 +351,4 @@ try{await run();}catch(error){console.error('FAIL: '+String(error.message).repla
  await browser?.close();await stop();if(directory&&!keepDirectory)await rm(directory,{recursive:true,force:true});
 }
 
-if(passed&&!process.exitCode)await refreshManualRuntime(testedSha,'check-runtime-workflow.mjs');
+if(passed&&!process.exitCode){check(testedSpecSha===digest(await readFile(resolve(root,'frontend/src/generated/openapi.json'))),'Generated schema changed during integration');await refreshManualRuntime(testedSha,'check-runtime-workflow.mjs');}

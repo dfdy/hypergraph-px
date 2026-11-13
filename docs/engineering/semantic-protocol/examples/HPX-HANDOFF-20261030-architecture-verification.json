@@ -1,0 +1,41 @@
+{
+  "protocol_version": "0.1.0",
+  "record_version": 1,
+  "id": "HPX-HANDOFF-20261030-architecture-verification",
+  "kind": "handoff",
+  "subject": "ClosedComposition",
+  "summary": "Transfer the proposed closure formalisation to a verification-focused agent.",
+  "status": "open",
+  "authority": {
+    "basis": "agent_report"
+  },
+  "source_refs": [],
+  "relations": [
+    {
+      "type": "hands_off",
+      "target": "HPX-PROP-20261030-closed-composition"
+    },
+    {
+      "type": "hands_off",
+      "target": "HPX-ISSUE-20261030-closure-semantics"
+    }
+  ],
+  "actor": "agent:architecture",
+  "created_on": "2026-10-30",
+  "content": {
+    "from_agent": "architecture",
+    "to_agent": "verification",
+    "objective": "Review proposed invariants and design tests; do not infer approval.",
+    "confirmed": [
+      "The proposal and issue records exist as draft communication artefacts."
+    ],
+    "next_actions": [
+      "Review the linked proposal and unresolved issue.",
+      "Draft testable closure and reconstruction invariants.",
+      "Return uncertain assumptions for owner review."
+    ],
+    "open_questions": [
+      "Which reconstruction equivalence criteria should be tested?"
+    ]
+  }
+}

@@ -24,6 +24,8 @@
 
 # Isolated proof translators, nightly/cache files and extraction output.
 /.verification/
+/scripts/__pycache__/
+/tests/__pycache__/
 
 # Local source/reference material excluded from publication.
 /SPECS/

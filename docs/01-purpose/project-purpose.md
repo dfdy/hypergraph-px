@@ -13,22 +13,12 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 This is owner purpose and intent; present-tense philosophical descriptions are not implemented-feature claims.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Context and problem
-
-Why HPX supports dissertation writing, reflection and accountable collaboration. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Scope and exclusions
-
-Why HPX supports dissertation writing, reflection and accountable collaboration. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Normative content
-
 
 
 ### The Purpose of Hypergraph PX
@@ -105,22 +95,6 @@ HPX should make these questions answerable without requiring the user to abandon
 
 **Its defining practical capability is to allow people to write in a conventional, readable form while working with the richer relational, historical, and collaborative structure of the thinking that produces that writing.**
 
-
-## Examples and counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Dependencies and consequences
-
-Why HPX supports dissertation writing, reflection and accountable collaboration. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Open questions and conflicts
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

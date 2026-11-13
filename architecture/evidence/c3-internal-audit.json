@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-29",
+  "result": "passed",
+  "scope": "Engine C3 internal responsibility/connection audit against relevant specifications, scoped decisions and existing implementation evidence",
+  "specification_identities": {
+    "docs/04-architecture/component-architecture.md": "a37fdeeb8eb94bb0a6c618865047a69593f75c3f02183ae6828cbd26d4629f86",
+    "docs/04-architecture/system-architecture.md": "59faead4ef78bae55b3e488fc75e248fd9abf9e7cfc66e1b33680be285a4ba2c",
+    "docs/04-architecture/decisions/0014-keychain-unlock-policy.md": "96fe7cb10d659731ffc878bc488cadfad1ce87564584373b6b62c9ddfd7c7fea",
+    "docs/06-subsystems/interfaces/browser-runtime.md": "9a76f131f407e6a0217e0b69fdbb2012e903b86edc014f7cb4829e1379408505",
+    "docs/06-subsystems/interfaces/domain-navigation.md": "4405aec67eb3c41a1170c38b1f83971a84ff08d4b0c702baf5cda471749098a0",
+    "docs/06-subsystems/interfaces/crypto-adapter.md": "e97aac28342dbf2c3cc16c38b1a5df5d69c8096aa394a3d5bfb571ccdab2f03f",
+    "docs/06-subsystems/workspace-storage.md": "886d604e19925d38a56408cbf2f06f88b15e024b630ce056f9bf2864ed60f915",
+    "docs/06-subsystems/security-cryptography.md": "d337e609b9fefe3d3eb49c25482cc7a39ff6970466cf7393e7993a4db4dc024d",
+    "docs/06-subsystems/document-engine.md": "8b696369b61edf791573f0e74310da3de97ad4bd4bd9cd58c100a8f9f566cb82",
+    "docs/06-subsystems/graph-engine.md": "27d7f5d0668b53d0481193e3b55c42810f698858a106065deb2892f9ef45fda9",
+    "docs/06-subsystems/external-integrations.md": "29c0ef69b62c5ac47511fb65af5ddbb881ca7567aedaa13610fd187f4aa723e4",
+    "docs/06-subsystems/import-export.md": "ca54b22998770ff393e0202f21bf1be9b5937d753b7cedf660fd4e61987ded47",
+    "docs/07-implementation/protocols/draft-publication.md": "6d4f38c95ef1165bc6078ba659746ecbe1ec157b9f0b9df89fa10993e09df182",
+    "docs/02-governance/OWNER_DECISIONS.md": "81fe833d85761540af35c62fae231fe3daff6335b2bb4ea5d8dcca93defdb950"
+  },
+  "changes": [
+    "Restore runtime-to-frontend and explicit keychain lifecycle paths",
+    "Expose existing crypto adapter; show storage/keychain dependencies",
+    "Show authenticated explicit default passphrase create/unlock path",
+    "Aggregate existing protected read handlers alongside frozen commands at the logical application area; not a new facade or Workspace::execute read path",
+    "Label authority-before-replay, expected-state publication, draft ACK versus Commit and planned integration execution gates",
+    "Keep domain free of I/O/authorization/serialization and crypto free of policy/I/O",
+    "Use one smooth cubic Bezier per connector without elbow waypoints"
+  ],
+  "visible_native_details": 8,
+  "internal_connections": 11,
+  "preserved_boundary_connections": 14,
+  "total_connections": 25,
+  "retained_responsibility_elements": 24,
+  "native_catalogue_relationships": 56,
+  "new_model_relationships": [
+    "Protected read services (area summary)",
+    "Explicit passphrase create / unlock"
+  ],
+  "checks": [
+    "All existing model identities/status/relationships retained",
+    "All 56 source-linked catalogue flows resolve",
+    "All 14 Rust/C2 boundary relationships retain exact endpoints/directions/styles",
+    "Eleven internal connection pairs match reviewed obligations",
+    "Pure-domain and crypto elements have no outgoing model dependencies",
+    "All25 connectors are single cubic Beziers;301-point samples avoid unrelated boxes and remain bounded",
+    "Boxes/labels do not overlap; children contained; navigation valid",
+    "C1/C2 computed hashes, source bytes and saved C2 layout unchanged",
+    "All captured application/proof input bytes unchanged"
+  ],
+  "protected_files": 289,
+  "source_sha256": "21882b130a3688c4c79d644dd8395fde77b318757a4dbe4a8dea0b2753d98ba3",
+  "snapshot_sha256": "dcaa5d21582aabd32232ef2686965813167e964ad3b22ca26dbac24267eed52f",
+  "limits": [
+    "Focused audit of internal boundary/control-flow obligations, not a new whole-product acceptance or proof",
+    "Logical responsibility arrows do not assert new crates/functions/processes or a universal execution pipeline",
+    "Individual feature handlers and planned adapter-specific policy/storage wiring remain in the detailed model",
+    "Native AppKit geometry preview is not actual VS Code webview acceptance",
+    "No browser/application changes/build/regression/runtime handoff, proof, trust/provider action or publication"
+  ],
+  "likec4_validation": {
+    "valid": true,
+    "files": 3,
+    "errors": 0
+  },
+  "documentation_verification": {
+    "result": "passed",
+    "local_archive_replay": "not executed"
+  },
+  "visual_inspection": "Final native AppKit geometry approximation inspected; captions readable at zoom, simple curves and separate planned context; actual VS Code webview not inspected"
+}

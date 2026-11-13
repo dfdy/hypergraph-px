@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-29",
+  "result": "passed",
+  "authority": "proposed modelling/source-review checks only;not V3 adoption or runtime acceptance",
+  "views": 14,
+  "source_files": 8,
+  "new_elements": 12,
+  "new_relations": 18,
+  "new_static_views": {
+    "c3_frontend_delivery": {
+      "nodes": 12,
+      "edges": 11
+    },
+    "c4_frontend_delivery": {
+      "nodes": 14,
+      "edges": 11
+    }
+  },
+  "sequences": {
+    "seq_frontend_build": 19,
+    "seq_frontend_load": 20,
+    "seq_frontend_session": 20
+  },
+  "as_read_dist_files": 68,
+  "html_reference_count": 5,
+  "css_reference_count": 60,
+  "protected_files": 429,
+  "checks": [
+    "All prior model elements/status/relationships and nine view hashes/endpoint/style sets retained",
+    "All12 new source/spec/symbol mappings and18 source-backed relations resolve and are visible at the intended level",
+    "Fourteen computed layouts and navigation targets resolve;engine/runtime drill-downs,three new sequences and reused Unlock navigation checked",
+    "Sequence flow trees match the inventoried guarded messages;browser compatibility validation follows received metadata",
+    "Source order of static/session/unlock guards,fragment removal,build input recheck,version override and counter/index check cross-checked",
+    "68 existing dist files byte-inventoried;direct HTML and local CSS resource references resolve;no generation or full closure claim",
+    "All saved existing owner geometry/curves/labels/styles preserved;only frontend navigation updated",
+    "22 new static connectors use single cubics;301-point obstacle/bounds samples,box/label overlap and containment checks pass",
+    "C2 block palette and semantic status badges retained",
+    "429 protected application/generated/dist/API/proof/config/manifest/lockfile/counter files byte-identical"
+  ],
+  "source_sha256": {
+    "architecture/frontend-delivery.c4": "515ff87ef9c30de01f8d7b9f0ae95160e173373552b2f6257e6734cc68cdc82d",
+    "architecture/frontend-delivery-workflows.c4": "aca3f0cb6597b01378a9928b3a7fb5483450c7d26bfb4e827a83e069f9cdca72"
+  },
+  "visual_inspection": "Native AppKit approximations of two static views inspected;not actual VS Code/webview or UML visual acceptance",
+  "limits": [
+    "Current dist inventory is not source freshness or compiled-binary completeness/provenance evidence",
+    "Application test sources reviewed,not executed;historical evidence not renewed",
+    "No browser/frontend build/Rust compile/app launch/asset or contract generation/trust/provider/workspace/commit/publication action",
+    "No new runtime service,packaging admission policy,security boundary or compatibility decision adopted"
+  ],
+  "likec4_validation": {
+    "valid": true,
+    "errors": [],
+    "stats": {
+      "totalFiles": 8,
+      "totalErrors": 0,
+      "filteredFiles": 8,
+      "filteredErrors": 0
+    }
+  },
+  "documentation_validation": {
+    "result": "passed",
+    "materialized_contracts": 66,
+    "canonical_sections": 116,
+    "claim_units": 509,
+    "requirement_seeds": 31,
+    "archive_bytes_and_spans": "skipped by documentation checker"
+  },
+  "commands_executed": [
+    "architecture/node_modules/.bin/likec4 export json -o /private/tmp/hpx-delivery-final.json architecture",
+    "architecture/node_modules/.bin/likec4 validate --json architecture",
+    "python3 /private/tmp/hpx-verify-delivery.py",
+    "python3 scripts/verify_documentation.py"
+  ]
+}

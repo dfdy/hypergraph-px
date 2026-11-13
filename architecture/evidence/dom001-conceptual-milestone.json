@@ -1,0 +1,245 @@
+{
+  "sourceFiles": 26,
+  "syntaxErrors": [],
+  "elements": 204,
+  "relations": 408,
+  "views": 45,
+  "newConceptualViews": 4,
+  "newEffectSequences": 3,
+  "flatConcepts": 36,
+  "existingArchitectureNavigationLinksUnchanged": 216,
+  "originalElementsRelationsPreserved": true,
+  "allOtherOriginalComputedViewsIdentical": true,
+  "originalOwnerGeometryBoundsLabelsPathsPreserved": 25,
+  "servedManualZeroDrift": 32,
+  "allComputedLayouts": 45,
+  "servedManualViews": [
+    {
+      "id": "c2_containers",
+      "boxes": 17,
+      "paths": 17,
+      "drifts": 0
+    },
+    {
+      "id": "c3_application",
+      "boxes": 18,
+      "paths": 21,
+      "drifts": 0
+    },
+    {
+      "id": "c3_browser",
+      "boxes": 8,
+      "paths": 7,
+      "drifts": 0
+    },
+    {
+      "id": "c3_browser_functions",
+      "boxes": 11,
+      "paths": 14,
+      "drifts": 0
+    },
+    {
+      "id": "c3_browser_ui",
+      "boxes": 19,
+      "paths": 19,
+      "drifts": 0
+    },
+    {
+      "id": "c3_crypto",
+      "boxes": 9,
+      "paths": 7,
+      "drifts": 0
+    },
+    {
+      "id": "c3_executable",
+      "boxes": 22,
+      "paths": 25,
+      "drifts": 0
+    },
+    {
+      "id": "c3_frontend_delivery",
+      "boxes": 14,
+      "paths": 13,
+      "drifts": 0
+    },
+    {
+      "id": "c3_integrations",
+      "boxes": 20,
+      "paths": 20,
+      "drifts": 0
+    },
+    {
+      "id": "c3_keychain",
+      "boxes": 12,
+      "paths": 13,
+      "drifts": 0
+    },
+    {
+      "id": "c3_pure_domain",
+      "boxes": 9,
+      "paths": 7,
+      "drifts": 0
+    },
+    {
+      "id": "c3_runtime_api",
+      "boxes": 18,
+      "paths": 17,
+      "drifts": 0
+    },
+    {
+      "id": "c3_workspace_persistence",
+      "boxes": 13,
+      "paths": 13,
+      "drifts": 0
+    },
+    {
+      "id": "c4_api_routes",
+      "boxes": 24,
+      "paths": 27,
+      "drifts": 0
+    },
+    {
+      "id": "c4_application_features",
+      "boxes": 18,
+      "paths": 16,
+      "drifts": 0
+    },
+    {
+      "id": "c4_application_reads",
+      "boxes": 10,
+      "paths": 19,
+      "drifts": 0
+    },
+    {
+      "id": "c4_application_transaction",
+      "boxes": 8,
+      "paths": 7,
+      "drifts": 0
+    },
+    {
+      "id": "c4_domain_history",
+      "boxes": 14,
+      "paths": 16,
+      "drifts": 0
+    },
+    {
+      "id": "c4_domain_sources",
+      "boxes": 16,
+      "paths": 18,
+      "drifts": 0
+    },
+    {
+      "id": "c4_frontend_build",
+      "boxes": 6,
+      "paths": 4,
+      "drifts": 0
+    },
+    {
+      "id": "c4_frontend_delivery",
+      "boxes": 14,
+      "paths": 11,
+      "drifts": 0
+    },
+    {
+      "id": "c4_frontend_embedding",
+      "boxes": 8,
+      "paths": 4,
+      "drifts": 0
+    },
+    {
+      "id": "c4_frontend_routing",
+      "boxes": 10,
+      "paths": 10,
+      "drifts": 0
+    },
+    {
+      "id": "c4_workspace_navigation",
+      "boxes": 20,
+      "paths": 34,
+      "drifts": 0
+    },
+    {
+      "id": "concept_authority_distinctions",
+      "boxes": 14,
+      "paths": 12,
+      "drifts": 0
+    },
+    {
+      "id": "concept_identity_closure",
+      "boxes": 8,
+      "paths": 8,
+      "drifts": 0
+    },
+    {
+      "id": "concept_provenance_working",
+      "boxes": 18,
+      "paths": 16,
+      "drifts": 0
+    },
+    {
+      "id": "concept_relationships",
+      "boxes": 11,
+      "paths": 10,
+      "drifts": 0
+    },
+    {
+      "id": "index",
+      "boxes": 8,
+      "paths": 7,
+      "drifts": 0
+    },
+    {
+      "id": "seq_concept_evidence",
+      "boxes": 10,
+      "paths": 11,
+      "drifts": 0
+    },
+    {
+      "id": "seq_concept_placement",
+      "boxes": 7,
+      "paths": 8,
+      "drifts": 0
+    },
+    {
+      "id": "seq_concept_publication",
+      "boxes": 6,
+      "paths": 11,
+      "drifts": 0
+    }
+  ],
+  "protectedApplicationLegalFilesUnchanged": 404,
+  "fullSweepReason": "coherent source-backed conceptual/effect milestone;one serialized final sweep under AGENTS26",
+  "limits": [
+    "Data-based layout validation only;no rendered inspection.",
+    "No application test/build/runtime,provider/trust,format or publication change.",
+    "Private archives excluded;no new proof or full mechanism adoption."
+  ],
+  "date": "2026-10-30",
+  "authority": "HPX-OWNER-040;source-backed one-level conceptual/effect milestone",
+  "stageEvidence": [
+    "architecture/evidence/dom001-concept-m1.json",
+    "architecture/evidence/dom001-concept-m2.json",
+    "architecture/evidence/dom001-concept-m3.json",
+    "architecture/evidence/dom001-concept-m4.json",
+    "architecture/evidence/dom001-concept-o1.json",
+    "architecture/evidence/dom001-concept-o2.json",
+    "architecture/evidence/dom001-concept-o3.json"
+  ],
+  "coverageReport": "architecture/audits/dom001-current-coverage.md",
+  "canonicalScopes": 24,
+  "documentClassifications": {
+    "fully": 1,
+    "partially": 24,
+    "notMigrated": 46
+  },
+  "additionalProseTransfer": "Two short Node/Revision definition sentences delegate to M1;all exact invariants and composite definitions retained.",
+  "C4Correspondence": "Assessment of existing source-linked model mappings only;no C4 edits,app execution or fresh proof.",
+  "decisionBoundary": "Separate exact-closure/source-map mechanism design proposal or defer mechanism design;no mechanism adopted.",
+  "documentation": {
+    "exitCode": 0,
+    "output": "CHECK Metadata/status/ID registry checked: 71 materialized contracts; 27 reserved\nCHECK Source/map IDs and current-location register consistency checked\nCHECK Coverage: 116 canonical sections; 169 retained canonical/policy/evidence sections; 138 sources; 509 claim units; 38 requirement seeds\nCHECK Current Markdown local file links checked; original archive links not rewritten\nSKIP: local archive bytes/source spans; use --check-local-sources when local originals are available\nPASS: documentation mechanical checks; semantic adoption remains reviewable"
+  },
+  "whitespace": "passed;CRLF retained",
+  "originalC4AndSequenceSourceFilesByteIdentical": 10,
+  "finalModelSourceUnchangedAfterFullRegression": true
+}

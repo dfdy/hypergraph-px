@@ -1,0 +1,1245 @@
+{
+  "date": "2026-10-29",
+  "authority": "proposed source-backed delivery interpretation;not runtime/build acceptance",
+  "components": {
+    "frontend_inputs": {
+      "kind": "artifact",
+      "title": "Frontend source and locked dependencies",
+      "status": "implemented",
+      "phase": "build inputs",
+      "paths": [
+        "frontend/src",
+        "frontend/index.html",
+        "frontend/styles.css",
+        "frontend/package.json",
+        "frontend/package-lock.json",
+        "legal/upstream-notices",
+        "LICENSE"
+      ],
+      "symbols": [],
+      "description": "Actual build inputs: frontend source including generated API client files, HTML/CSS/logo, installed dependency bytes and reviewed source/license material. Input identity also covers Node version/platform/architecture. Lockfile alone is not a build identity. No dependency installation or build is executed by this modelling task.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "frontend_builder": {
+      "kind": "component",
+      "title": "Frontend build tooling (development)",
+      "status": "implemented",
+      "phase": "build-time",
+      "paths": [
+        "frontend/build.mjs",
+        "frontend/scripts/build-cache.mjs",
+        "frontend/package.json"
+      ],
+      "symbols": [
+        "buildFrontend",
+        "cachedBuild",
+        "installDist"
+      ],
+      "description": "Existing Node/esbuild build tooling bundles browser code, copies HTML/CSS/logo/KaTeX fonts and notices, and verifies content-keyed snapshots/dist. Node is a development/build dependency, not a release server. Build output content checks are not test or release acceptance.",
+      "specs": [
+        "docs/04-architecture/system-architecture.md",
+        "docs/09-guides/reference/development-evidence.md"
+      ]
+    },
+    "frontend_dist": {
+      "kind": "artifact",
+      "title": "Prepared frontend/dist",
+      "status": "implemented",
+      "phase": "build output",
+      "paths": [
+        "frontend/build.mjs",
+        "frontend/scripts/build-cache.mjs"
+      ],
+      "symbols": [],
+      "description": "Existing prepared static tree consumed by Rust build.rs. Current as-read file hashes are an inventory, not proof of freshness or current executable contents. Build writes preview version ending .0; the runtime build overrides its version route. No live directory serving in the released executable.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "hpx.native.frontend_assets.embedding": {
+      "kind": "component",
+      "title": "Rust asset embedding",
+      "status": "partial",
+      "phase": "build-time",
+      "paths": [
+        "crates/runtime/build.rs"
+      ],
+      "symbols": [
+        "main",
+        "walk"
+      ],
+      "description": "Existing Rust build script requires index.html, sorts traversal, rejects symlinks and generates include_bytes entries. It replaces preview build-version.json with a separately generated four-part build identity and emits assets.rs into OUT_DIR. It does not independently verify frontend input freshness, an asset allowlist or transitive completeness. Existing functionality is bounded; stronger packaging acceptance remains open.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "hpx.native.frontend_assets.resources": {
+      "kind": "component",
+      "title": "Compiled frontend resources",
+      "status": "implemented",
+      "phase": "release-runtime immutable data",
+      "paths": [
+        "crates/runtime/src/main.rs",
+        "crates/runtime/build.rs"
+      ],
+      "symbols": [
+        "ASSETS"
+      ],
+      "description": "main.rs includes build-produced assets.rs and resolves an embedded ASSETS map. Runtime serves these compiled bytes, not current frontend/dist or arbitrary filesystem paths. This source model does not inspect/rebuild the executable or attest its actual asset set.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "frontend_builder.bundle_code": {
+      "kind": "code",
+      "title": "buildFrontend \u2022 bundle and copy",
+      "status": "implemented",
+      "phase": "build-time",
+      "paths": [
+        "frontend/build.mjs"
+      ],
+      "symbols": [
+        "buildFrontend"
+      ],
+      "description": "Actual esbuild invocation plus explicit copy/write steps for HTML, styles, logo, fonts, legal comments/notices/LICENSE and preview build version. This task does not execute them.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "frontend_builder.cache_code": {
+      "kind": "code",
+      "title": "Input identity / snapshot / dist helpers",
+      "status": "implemented",
+      "phase": "build-time",
+      "paths": [
+        "frontend/scripts/build-cache.mjs"
+      ],
+      "symbols": [
+        "inputIdentity",
+        "cachedBuild",
+        "validEntry",
+        "assetDigest",
+        "installDist"
+      ],
+      "description": "Actual hashing/cache helpers: verify source and output digests, build into temporary storage, recheck inputs, rename snapshot entry and conditionally replace dist under a lock. Dist installation is remove/copy/verify, not atomic transactional replacement or authenticated release provenance.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "hpx.native.frontend_assets.embedding.build_code": {
+      "kind": "code",
+      "title": "build.rs \u2022 main / walk",
+      "status": "implemented",
+      "phase": "build-time",
+      "paths": [
+        "crates/runtime/build.rs"
+      ],
+      "symbols": [
+        "main",
+        "walk"
+      ],
+      "description": "Actual build counter lock/append and version generation precede index existence check and sorted walk. Non-directory non-symlink entries are emitted as include_bytes routes; preview build-version is skipped and replaced. Missing index/symlink/IO failures abort the build; a failed build may consume a build number.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "hpx.native.frontend_assets.resources.map_code": {
+      "kind": "code",
+      "title": "include! / ASSETS",
+      "status": "implemented",
+      "phase": "release-runtime immutable data",
+      "paths": [
+        "crates/runtime/src/main.rs",
+        "crates/runtime/build.rs"
+      ],
+      "symbols": [
+        "ASSETS"
+      ],
+      "description": "Actual include!(OUT_DIR/assets.rs) and ASSETS lookup dependency. Generated paths are build outputs rather than new checked-in modules. Exact current binary bytes are outside this read-only modelling check.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "hpx.native.transport.assets.delivery_lookup": {
+      "kind": "code",
+      "title": "route_inner \u2022 static GET",
+      "status": "implemented",
+      "phase": "release-runtime",
+      "paths": [
+        "crates/runtime/src/main.rs"
+      ],
+      "symbols": [
+        "route_inner",
+        "ASSETS"
+      ],
+      "description": "Actual non-API GET branch after Host/cross-site validation and before bootstrap/session checks. Root aliases index.html; exact embedded keys only, explicit suffix MIME table and text/plain fallback. Unknown key returns404. Static code/version/license assets require no session or workspace unlock.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "hpx.native.transport.responses.delivery_writer": {
+      "kind": "code",
+      "title": "write_response \u2022 headers and body",
+      "status": "implemented",
+      "phase": "release-runtime",
+      "paths": [
+        "crates/runtime/src/main.rs"
+      ],
+      "symbols": [
+        "write_response"
+      ],
+      "description": "Actual length, connection close, no-store, nosniff, no-referrer and same-origin CSP headers for shared response path. Static Response has no cookie; bootstrap sets the cookie separately. Policy details remain linked to source, not duplicated as new requirements.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    },
+    "hpx.browser.delivery_entry": {
+      "kind": "code",
+      "title": "app.js entry / showBuildVersion",
+      "status": "implemented",
+      "phase": "browser",
+      "paths": [
+        "frontend/src/app.js",
+        "frontend/src/build-version.js",
+        "frontend/index.html"
+      ],
+      "symbols": [
+        "initializeRuntime",
+        "showBuildVersion"
+      ],
+      "description": "Browser ES module starts a nonblocking no-store version fetch and awaits initializeRuntime before choosing live/fixture document state. Non-HTTPS initialization returns fixture mode; HTTPS initialization errors rethrow rather than silently falling back. Editor/navigation execute in the browser and are outside delivery decomposition.",
+      "specs": [
+        "docs/04-architecture/decisions/0004-local-https-bootstrap.md"
+      ]
+    }
+  },
+  "flows": [
+    {
+      "source": "frontend_inputs",
+      "target": "frontend_builder",
+      "title": "Source / dependency inputs",
+      "evidence": "frontend/scripts/build-cache.mjs",
+      "kind": "delivery_build"
+    },
+    {
+      "source": "frontend_builder",
+      "target": "frontend_dist",
+      "title": "Bundle / verify prepared output",
+      "evidence": "frontend/build.mjs",
+      "kind": "delivery_build"
+    },
+    {
+      "source": "frontend_dist",
+      "target": "hpx.native.frontend_assets.embedding",
+      "title": "Prepared tree consumed at build",
+      "evidence": "crates/runtime/build.rs",
+      "kind": "delivery_build"
+    },
+    {
+      "source": "hpx.native.frontend_assets.embedding",
+      "target": "hpx.native.frontend_assets.resources",
+      "title": "Generate map / include bytes",
+      "evidence": "crates/runtime/build.rs",
+      "kind": "delivery_build"
+    },
+    {
+      "source": "hpx.native.transport.assets",
+      "target": "hpx.native.frontend_assets.resources",
+      "title": "Lookup compiled bytes",
+      "evidence": "crates/runtime/src/main.rs",
+      "kind": "delivery_call"
+    },
+    {
+      "source": "hpx.native.transport.assets",
+      "target": "hpx.native.transport.responses",
+      "title": "Construct static response",
+      "evidence": "crates/runtime/src/main.rs",
+      "kind": "delivery_call"
+    },
+    {
+      "source": "frontend_inputs",
+      "target": "frontend_builder.cache_code",
+      "title": "Input identity",
+      "evidence": "frontend/scripts/build-cache.mjs",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "frontend_builder.bundle_code",
+      "target": "frontend_builder.cache_code",
+      "title": "cachedBuild / installDist",
+      "evidence": "frontend/build.mjs",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "frontend_builder.cache_code",
+      "target": "frontend_builder.bundle_code",
+      "title": "Build callback only on cache miss",
+      "evidence": "frontend/scripts/build-cache.mjs",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "frontend_builder.bundle_code",
+      "target": "frontend_dist",
+      "title": "Static bundle / explicit copies",
+      "evidence": "frontend/build.mjs",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "frontend_dist",
+      "target": "hpx.native.frontend_assets.embedding.build_code",
+      "title": "Require index / sorted walk",
+      "evidence": "crates/runtime/build.rs",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "hpx.native.frontend_assets.embedding.build_code",
+      "target": "hpx.native.frontend_assets.resources.map_code",
+      "title": "Generated assets.rs / include_bytes",
+      "evidence": "crates/runtime/build.rs",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "hpx.native.transport.security.c4_gates",
+      "target": "hpx.native.transport.assets.delivery_lookup",
+      "title": "Static Host/site checks; no cookie",
+      "evidence": "crates/runtime/src/main.rs",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "hpx.native.transport.assets.delivery_lookup",
+      "target": "hpx.native.frontend_assets.resources.map_code",
+      "title": "Exact ASSETS lookup",
+      "evidence": "crates/runtime/src/main.rs",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "hpx.native.transport.assets.delivery_lookup",
+      "target": "hpx.native.transport.responses.delivery_writer",
+      "title": "Response descriptor / bytes",
+      "evidence": "crates/runtime/src/main.rs",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "hpx.browser.delivery_entry",
+      "target": "hpx.browser.c4_protocol",
+      "title": "Await initializeRuntime",
+      "evidence": "frontend/src/app.js",
+      "kind": "delivery_code"
+    },
+    {
+      "source": "hpx.native.transport.responses",
+      "target": "hpx.browser",
+      "title": "HTTPS static responses",
+      "evidence": "crates/runtime/src/main.rs",
+      "kind": "delivery_call"
+    },
+    {
+      "source": "hpx.native.transport.responses.delivery_writer",
+      "target": "hpx.browser.delivery_entry",
+      "title": "HTML/module bytes over HTTPS",
+      "evidence": "crates/runtime/src/main.rs",
+      "kind": "delivery_code"
+    }
+  ],
+  "dist_files": [
+    {
+      "path": "frontend/dist/LICENSE",
+      "route": "/LICENSE",
+      "size": 34523,
+      "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+      "mime": "text/plain; charset=utf-8",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/THIRD_PARTY_NOTICES.txt",
+      "route": "/THIRD_PARTY_NOTICES.txt",
+      "size": 120498,
+      "sha256": "ba7282c582682da8b6064ad2652d5fc79fe591f6d09147094b13cf2110958798",
+      "mime": "text/plain; charset=utf-8",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/app.js",
+      "route": "/app.js",
+      "size": 1215990,
+      "sha256": "5df02e1632fd1a934ab8f193b91c34ee1c12437d6fe46f2014b6196acc102df8",
+      "mime": "text/javascript; charset=utf-8",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/assets/logo.png",
+      "route": "/assets/logo.png",
+      "size": 741473,
+      "sha256": "35137d064146164b7a7a227e3c9a82e31b0ec2e8634d6869e02ba16858c9b9ae",
+      "mime": "image/png",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/build-version.json",
+      "route": "/build-version.json",
+      "size": 22,
+      "sha256": "14e0f53814fdc419f691fad1393c0795248fbe947fcb141371d9ff5883cb7ebb",
+      "mime": "text/plain; charset=utf-8",
+      "rust_action": "replaced by generated compiled version;content not asserted"
+    },
+    {
+      "path": "frontend/dist/index.html",
+      "route": "/index.html",
+      "size": 8611,
+      "sha256": "7ad25c5c09358f1277ac37fa3bf6735e57a351a345a265c884ccc57895c7201e",
+      "mime": "text/html; charset=utf-8",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/styles.css",
+      "route": "/styles.css",
+      "size": 34142,
+      "sha256": "7d3e8a52179ce2398f7050489c4eb7c82c641e10ed9241d4ddedb44f2cb743bf",
+      "mime": "text/css; charset=utf-8",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_AMS-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_AMS-Regular.ttf",
+      "size": 63632,
+      "sha256": "68534840bcfdd2bffb6f0e8deb48684dd01e7f04ea2813267577afb906de1d13",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_AMS-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_AMS-Regular.woff",
+      "size": 33516,
+      "sha256": "30da91e84c893f875e252689faebdc590b2871145e8adc7f9a9d4dbd8ce0b251",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_AMS-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_AMS-Regular.woff2",
+      "size": 28076,
+      "sha256": "0cdd387c9590a1a9f9794560022dbb59654a7d86f187aa0c81495ad42d3a7308",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Bold.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Caligraphic-Bold.ttf",
+      "size": 12368,
+      "sha256": "07d8e303ce4fc12b4bb54f1004170dd190a1f3db45d400fe68060df3e0897268",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff",
+      "size": 7716,
+      "sha256": "1ae6bd7475590e97e7f145a89e09ccde322f7a6bc0b91607b1c8b8ee28290fed",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff2",
+      "size": 6912,
+      "sha256": "de7701e42cf1f4cf0b766c03fb27977207eee2f4fd5d76fa82188406da43ea4c",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Caligraphic-Regular.ttf",
+      "size": 12344,
+      "sha256": "ed0b74372feefcbb9c0666b2e210da37b7e49fa7fbbf3eeb11db5f693dacfbb7",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff",
+      "size": 7656,
+      "sha256": "3398dd02302557a793f2863f88e02d96ce10df2abffa07c8e9fa90775116e65c",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff2",
+      "size": 6908,
+      "sha256": "5d53e70ad607c2352162dec9e0923fb54ecdafaccbf604cd8dcf7d00facb989b",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Bold.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Fraktur-Bold.ttf",
+      "size": 19584,
+      "sha256": "9163df9c7122432e6495b4229fa9071cf9ae86a758ae5efc4924ec2e1a6dbce1",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Bold.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Fraktur-Bold.woff",
+      "size": 13296,
+      "sha256": "9be7ceb88004ab8ad124082246fbfcca4091e36385d4ec6ed1df67375dad50fb",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Bold.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Fraktur-Bold.woff2",
+      "size": 11348,
+      "sha256": "74444efd593c005e3f4573b44524704c0af0a937fe911cca9e94068d0d140d3f",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Fraktur-Regular.ttf",
+      "size": 19572,
+      "sha256": "1e6f9579e90e2cac37f8f60a597c436e075c114385652b7cbeb0dec0421291b3",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Fraktur-Regular.woff",
+      "size": 13208,
+      "sha256": "5e28753be717dac97f559f49bc10be9cf3c124ddcabda6659d11cb68febc6463",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Fraktur-Regular.woff2",
+      "size": 11316,
+      "sha256": "51814d270d06ff0255dba0799994fa4d8c84d11f09951d47595f4abb1f3602dc",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Bold.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Main-Bold.ttf",
+      "size": 51336,
+      "sha256": "138ac28d1663b3037e9c5f52371fa5c63d8324f4a38d22cd573e6ea3a3fd0cf8",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Bold.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Main-Bold.woff",
+      "size": 29912,
+      "sha256": "c76c5d696297d51b9cb1639c7da4334f0e7dec81b42b11213b5e25ef671bb822",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Bold.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Main-Bold.woff2",
+      "size": 25324,
+      "sha256": "0f60d1b897938ec918c8ce073092411baf9438f6739465693ff18b0f9d20b021",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-BoldItalic.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Main-BoldItalic.ttf",
+      "size": 32968,
+      "sha256": "70ee1f64a20f2048c21940ef46d0144fd215baa953ca69afd1e31e98544f708f",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-BoldItalic.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Main-BoldItalic.woff",
+      "size": 19412,
+      "sha256": "a6f7ec0d846ac7ad975adb8959c37ed49b94acbc4ae436db9ce9e20287e4a64c",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-BoldItalic.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Main-BoldItalic.woff2",
+      "size": 16780,
+      "sha256": "99cd42a3c072d918f2f44984a807cf7aa16e13545fd0875fc07c6c65f99e715b",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Italic.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Main-Italic.ttf",
+      "size": 33580,
+      "sha256": "0d85ae7cc30f23790a7f1a58c4a112fdca8aae769b6ba11429af1d98b1b6cb3a",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Italic.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Main-Italic.woff",
+      "size": 19676,
+      "sha256": "f1d6ef86f3b11a528bd5185199bd2443ecb2b0dead96d88674b5a2c12be24bdf",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Italic.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Main-Italic.woff2",
+      "size": 16988,
+      "sha256": "97479ca6cce906abc961ecac96faa5f9ca2e61b8e7670d475826bcdee9a7c267",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Main-Regular.ttf",
+      "size": 53580,
+      "sha256": "d0332f52868370fd83ae7fa46470f90c8f2eab2fcf12bc4f88080b340c95a830",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Main-Regular.woff",
+      "size": 30772,
+      "sha256": "c6368d87e8a1a3a5d337623d83d8dc4b868f242a9ad476237d6f8d1e0f168cdc",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Main-Regular.woff2",
+      "size": 26272,
+      "sha256": "c2342cd8b869e01752a9321dc17213fc40d4d04c79688c1d43f2cf316abd7866",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Math-BoldItalic.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Math-BoldItalic.ttf",
+      "size": 31196,
+      "sha256": "f9377ab0271cda59af24bcffbd46a4d0c8a3572ffafdbb38de2ad5ea7b0d5ee5",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Math-BoldItalic.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Math-BoldItalic.woff",
+      "size": 18668,
+      "sha256": "850c0af5c2238497febaf5e461d880bf458c341f42f4f330f1b1ab5698b1998e",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Math-BoldItalic.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Math-BoldItalic.woff2",
+      "size": 16400,
+      "sha256": "dc47344dbb6cb5b655c8460d561f4df5f501b90c804ad3c6cec65fe322351ab1",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Math-Italic.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Math-Italic.ttf",
+      "size": 31308,
+      "sha256": "08ce98e51b04d58945a301e639e02b6998af29fdfd61a7b8afdd07bbfc479d4a",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Math-Italic.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Math-Italic.woff",
+      "size": 18748,
+      "sha256": "8a8d244581371912b8f3f5a23e2437cb2a59cd9bcaebb0346e722c05737a2571",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Math-Italic.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Math-Italic.woff2",
+      "size": 16440,
+      "sha256": "7af58c5ec8f132a2ddde9027c6d7814decce4d3b822a11192a42a20e2e973264",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Bold.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_SansSerif-Bold.ttf",
+      "size": 24504,
+      "sha256": "1ece03f79f95277d57dc7f6b435a74e1379b0d46104a8530286b60ff49369ea0",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Bold.woff",
+      "route": "/vendor/katex/fonts/KaTeX_SansSerif-Bold.woff",
+      "size": 14408,
+      "sha256": "ece03cfd83e22c212cdef66feb8442d25a083beb988db3f1883f3f9738d750ba",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Bold.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_SansSerif-Bold.woff2",
+      "size": 12216,
+      "sha256": "e99ae51144bf1232efcc1bfe5add36262c6866b0faab24fa75740e1b98577a62",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Italic.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_SansSerif-Italic.ttf",
+      "size": 22364,
+      "sha256": "3931dd81faed86ba021bb2bbdc36f5bed9a38d6b4f4077aca59b265aa1b02083",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Italic.woff",
+      "route": "/vendor/katex/fonts/KaTeX_SansSerif-Italic.woff",
+      "size": 14112,
+      "sha256": "91ee67500cc0129aa0ace3ac5c61ff1692102f0f31d02b69347fba35dcb75bf2",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Italic.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_SansSerif-Italic.woff2",
+      "size": 12028,
+      "sha256": "00b26ac825e2095056396e0553b8ac26d3f8ad158c3826e28b4c45b385c4714a",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_SansSerif-Regular.ttf",
+      "size": 19436,
+      "sha256": "f36ea897e19f4a2e571d1e900e4e3710e438deb05a842486045ba0a3e616a4ad",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_SansSerif-Regular.woff",
+      "size": 12316,
+      "sha256": "11e4dc8a6471ff6d6ee561d53d10fde8f7489e798257ff449c5d37c197435605",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_SansSerif-Regular.woff2",
+      "size": 10344,
+      "sha256": "68e8c73ef42afd3ccec58bf0fba302cce448938e7fc020a5e31f8a952eee1342",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Script-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Script-Regular.ttf",
+      "size": 16648,
+      "sha256": "1c67f068fea8bb09bf099c088b1cf64bd27516a6e07f4684344873564bb66a67",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Script-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Script-Regular.woff",
+      "size": 10588,
+      "sha256": "d96cdf2b3bdd4d64a8fd5f74a4c467f123a8a73931cd435889f08ffaf9bf947a",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Script-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Script-Regular.woff2",
+      "size": 9644,
+      "sha256": "036d4e95149b69ff9bcc0cd55771efeb25ffa3947293e69acd78d5ac328c684b",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size1-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Size1-Regular.ttf",
+      "size": 12228,
+      "sha256": "95b6d2f1a50173bfedb8c63e1d1c99b10427d0a4df4201cb44513b226951a22b",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size1-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Size1-Regular.woff",
+      "size": 6496,
+      "sha256": "c943cc986384f59e86bea5fd7dc50a9c4dfe567a7c05eb40d6790720dead97c9",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size1-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Size1-Regular.woff2",
+      "size": 5468,
+      "sha256": "6b47c40166b6dbe21a5dfca7718413f2147fd2399be1ba605d8ad39cedf25dfe",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size2-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Size2-Regular.ttf",
+      "size": 11508,
+      "sha256": "a6b2099fb555c60e3a0db3a08842ebf1d732c6eb4e4bf44913613bed4fc4e39b",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size2-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Size2-Regular.woff",
+      "size": 6188,
+      "sha256": "2014c523c3210bcc166648c4d4cc57f05b747df07a24277bf71c51e67dc79e3d",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size2-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Size2-Regular.woff2",
+      "size": 5208,
+      "sha256": "d04c54219f9eaec6d4d4fd42dfb28785975a4794d6b2fc71e566b9cd6db842dd",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size3-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Size3-Regular.ttf",
+      "size": 7588,
+      "sha256": "500e04d54f0d51666332c9d2089aa803be22aa878eca539e59fa53c6e522b082",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size3-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Size3-Regular.woff",
+      "size": 4420,
+      "sha256": "6ab6b62e9b62dae2c00dd90f791bd10950be0ecc3490d7d6045f51c2e8fe0949",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size3-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Size3-Regular.woff2",
+      "size": 3624,
+      "sha256": "73d591271b1604960cb10bb90fee021670af7297017e0e98480b332d11f51995",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size4-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Size4-Regular.ttf",
+      "size": 10364,
+      "sha256": "c647367d1dd4e162468717d020e1fc0f1dc5c26ebfdffbe55261713bf88c5877",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size4-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Size4-Regular.woff",
+      "size": 5980,
+      "sha256": "99f9c6750b489c9462bf04900bd3f939df9b829339daaaaa99ef5495cdddea58",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Size4-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Size4-Regular.woff2",
+      "size": 4928,
+      "sha256": "a4af7d414440a1c1790825cfb700cf9cf43b0f2c4b04f0ebc523011ad9853ec0",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Typewriter-Regular.ttf",
+      "route": "/vendor/katex/fonts/KaTeX_Typewriter-Regular.ttf",
+      "size": 27556,
+      "sha256": "f01f3e87d9c6a61c0c081ceb577abd864eb00a612f7ac1620dd6915fad2ef5aa",
+      "mime": "font/ttf",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff",
+      "route": "/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff",
+      "size": 16028,
+      "sha256": "e14fed02b1aba7ce9f5afd5844b5d0321b22351febc720e0de8b8723527609f7",
+      "mime": "font/woff",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2",
+      "route": "/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2",
+      "size": 13568,
+      "sha256": "71d517d67827787cfabdf186914cc3358eda539e37931941f2b2fd4a21f68c0b",
+      "mime": "font/woff2",
+      "rust_action": "prospective include_bytes entry"
+    },
+    {
+      "path": "frontend/dist/vendor/katex/katex.min.css",
+      "route": "/vendor/katex/katex.min.css",
+      "size": 24793,
+      "sha256": "00e0b094171b07f58422075f469b4feac2b2f7bce1aeec943c08da4d697f4dcf",
+      "mime": "text/css; charset=utf-8",
+      "rust_action": "prospective include_bytes entry"
+    }
+  ],
+  "mime_mapping": {
+    ".html": "text/html; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".png": "image/png",
+    ".woff2": "font/woff2",
+    ".woff": "font/woff",
+    ".ttf": "font/ttf"
+  },
+  "mime_fallback": "text/plain; charset=utf-8",
+  "dist_html_local_references": [
+    "/",
+    "app.js",
+    "assets/logo.png",
+    "styles.css",
+    "vendor/katex/katex.min.css"
+  ],
+  "missing_dist_html_references": [],
+  "compiled_version_override": "dist preview version skipped;OUT_DIR version generated by build.rs;not read from a current executable",
+  "artifact_scope": "As-read prepared files only;no bundling/embedding/compilation or current-binary correspondence claim",
+  "source_identities": {
+    "frontend/build.mjs": "6862c3f42ba1bd9d50bb5f4e24edbd057f70cfc3595cc3b0ae02280befc388c0",
+    "frontend/scripts/build-cache.mjs": "0b7e759e39c05090e4287628911014505828cfd51685e0be662c6e24697ad00b",
+    "frontend/package.json": "5b595b557ff34b75b15d77d24a49021098da99ae21a0fe155bdf2ea75d75e29e",
+    "frontend/package-lock.json": "97afd05aeb17c88ababea32cd7b79f1e99c8074e55ab2135a03e7c3e6ee92e57",
+    "frontend/index.html": "24eaa56e2117c7e1703bfe725989b7ae00fa58dd943dca15221ae7facf4aee9d",
+    "frontend/styles.css": "7d3e8a52179ce2398f7050489c4eb7c82c641e10ed9241d4ddedb44f2cb743bf",
+    "frontend/src/app.js": "cec39294a350d4582a80c958d46b9db6ba490d0f180ce90fccb7f2772e89ff1f",
+    "frontend/src/runtime-adapter.js": "8ee28708e372aa40822fb18b0539143617da7a4c8ff09d9c09603143bac8ea25",
+    "frontend/src/build-version.js": "aeb8babe547a73468b0934f35a12a2ce3b5334726a9c24f4be5bdedbb9275783",
+    "frontend/src/api-client.ts": "bf354d1dbf59c175fbc3f595d8c7f4094a53607c405718667083baee9d16a76a",
+    "frontend/server.mjs": "73e00c459eb104f842ac605583997f5d05c5b164af42ce757213a0ed106b4d99",
+    "frontend/scripts/run-ui.mjs": "9068216463942d77e4b15feb906ebcb8aafcbe6254324011d088327f4fad289e",
+    "crates/runtime/build.rs": "75bffb614b007fc9c9bac5960bd4040ce3afa92f3876c292d5f9f9a9ba9acc5f",
+    "crates/runtime/src/main.rs": "5450313edbcc2c8d6619818b4cab931e873e9b14a12f354eaf769d2c7faa2e14",
+    "docs/04-architecture/system-architecture.md": "59faead4ef78bae55b3e488fc75e248fd9abf9e7cfc66e1b33680be285a4ba2c",
+    "docs/04-architecture/decisions/0004-local-https-bootstrap.md": "bcc8c8062f3eed34faeeeb535b3a5cce2f7f4877e42a38d4167abeaad94d9518",
+    "docs/06-subsystems/frontend-interaction.md": "7910b7cdc8dd06431c0222de30d0cc9ecdb1c87a7fb2d65de8116445dd50fc1c",
+    "docs/06-subsystems/security-cryptography.md": "d337e609b9fefe3d3eb49c25482cc7a39ff6970466cf7393e7993a4db4dc024d",
+    "docs/09-guides/reference/development-evidence.md": "4be12f34c77438ef0355d7b511092ae0d1dd6ea2ec12a015a69990118b263787",
+    "frontend/scripts/check-runtime-workflow.mjs": "2d02865f0d1d8c6d4f865f2915ff8e64242325e2f81f75e36bdd974139a092bf",
+    "frontend/scripts/check-runtime-tls.mjs": "54cdd3ae1d363d572f22dec875313405170c5a7baddf95fb38d5e5d03315a9e4",
+    "frontend/tests/api-contract.test.js": "4979e5ad2c4fa6219ee8c5d9e738a0cd04713a54f723ec2f4e60581d835b5c51"
+  },
+  "tests_reviewed_not_run": [
+    "frontend/scripts/check-runtime-workflow.mjs",
+    "frontend/scripts/check-runtime-tls.mjs",
+    "frontend/tests/api-contract.test.js",
+    "Historical HPX-TEST-072 content-cache/source-preservation evidence retains its executed scope"
+  ],
+  "dist_css_local_references": [
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_AMS-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_AMS-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_AMS-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_AMS-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_AMS-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_AMS-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Caligraphic-Bold.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Caligraphic-Bold.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Bold.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Caligraphic-Bold.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Bold.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Caligraphic-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Caligraphic-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Caligraphic-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Caligraphic-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Fraktur-Bold.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Bold.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Fraktur-Bold.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Bold.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Fraktur-Bold.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Bold.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Fraktur-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Fraktur-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Fraktur-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Fraktur-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-Bold.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Bold.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-Bold.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Bold.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-Bold.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Bold.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-BoldItalic.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-BoldItalic.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-BoldItalic.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-BoldItalic.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-BoldItalic.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-BoldItalic.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-Italic.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Italic.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-Italic.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Italic.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-Italic.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Italic.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Main-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Main-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Math-BoldItalic.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Math-BoldItalic.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Math-BoldItalic.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Math-BoldItalic.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Math-BoldItalic.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Math-BoldItalic.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Math-Italic.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Math-Italic.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Math-Italic.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Math-Italic.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Math-Italic.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Math-Italic.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_SansSerif-Bold.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Bold.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_SansSerif-Bold.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Bold.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_SansSerif-Bold.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Bold.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_SansSerif-Italic.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Italic.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_SansSerif-Italic.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Italic.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_SansSerif-Italic.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Italic.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_SansSerif-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_SansSerif-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_SansSerif-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_SansSerif-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Script-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Script-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Script-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Script-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Script-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Script-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size1-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size1-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size1-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size1-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size1-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size1-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size2-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size2-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size2-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size2-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size2-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size2-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size3-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size3-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size3-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size3-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size3-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size3-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size4-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size4-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size4-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size4-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Size4-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Size4-Regular.ttf"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Typewriter-Regular.woff2",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff2"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Typewriter-Regular.woff",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Typewriter-Regular.woff"
+    },
+    {
+      "source": "frontend/dist/vendor/katex/katex.min.css",
+      "url": "fonts/KaTeX_Typewriter-Regular.ttf",
+      "target": "frontend/dist/vendor/katex/fonts/KaTeX_Typewriter-Regular.ttf"
+    }
+  ],
+  "missing_dist_css_references": []
+}

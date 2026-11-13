@@ -13,22 +13,10 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
-
-
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Provider and consumers
-
-Actual cryptographic adapter methods, errors, costs and caller responsibilities. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Version and compatibility
-
-Actual cryptographic adapter methods, errors, costs and caller responsibilities. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Messages and type schemas
-
 
 
 ### 10. Implemented encryption adapter boundary
@@ -83,22 +71,6 @@ Wrapping the same key with a new passphrase leaves existing encrypted objects de
 
 Three integration tests cover independent same-content encryption, every object-byte mutation, context-field/wrong-key rejection, truncation/extension, resource/empty-input boundaries, salt/nonce/tag tampering, unsupported KDF/framing and passphrase rewrap with prior object access. Existing domain/proof tests are independent. No crypto function is Lean verified.
 
-
-## Preconditions, postconditions and errors
-
-Actual cryptographic adapter methods, errors, costs and caller responsibilities. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Ordering, retry and idempotency
-
-Actual cryptographic adapter methods, errors, costs and caller responsibilities. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Authentication and authorisation
-
-Actual cryptographic adapter methods, errors, costs and caller responsibilities. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Examples and conformance tests
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

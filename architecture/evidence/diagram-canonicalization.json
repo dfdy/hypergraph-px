@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-30",
+  "authority": "HPX-OWNER-032;canonical location only;existing design/implementation status retained",
+  "checks": {
+    "canonical_scopes": 6,
+    "unique_view_source_element_supplement_links": "all resolve",
+    "model_elements_unchanged_except_hpx_ownership_description": 169,
+    "relationships_unchanged": 363,
+    "views_reachable": 38,
+    "saved_layouts": 25,
+    "retained_box_geometries": 349,
+    "retained_edge_geometries": 368,
+    "model_file_links": 1120,
+    "pre_migration_snapshot_payload_hashes": 245,
+    "protected_application_public_archive_manifest_hashes": 772,
+    "exact_boilerplate_sections_removed": 139,
+    "critical_supplement_paragraphs": "preserved outside delegated actor summary/duplicate placeholders"
+  },
+  "likec4": {
+    "valid": true,
+    "errors": [],
+    "stats": {
+      "totalFiles": 19,
+      "totalErrors": 0,
+      "filteredFiles": 19,
+      "filteredErrors": 0
+    }
+  },
+  "volume": {
+    "scope": "UTF8 .md/.c4/.csv/.json under docs/architecture;excludes installed/generated site and saved-layout payloads;includes new ownership/audit/evidence files",
+    "before_bytes": 4544750,
+    "after_bytes": 4503938,
+    "net_reduction_bytes": 40812,
+    "existing_docs_markdown_before_bytes": 1374567,
+    "existing_docs_markdown_after_bytes": 1319242,
+    "existing_docs_markdown_reduction_bytes": 55325
+  },
+  "limits": [
+    "Initial bounded migration;not all diagrams or target designs adopted.",
+    "No application/security/proof or rendered acceptance executed.",
+    "Historical source-body retention checks not rerun;source original hashes unchanged."
+  ],
+  "documentation_verification": {
+    "command": "python3 scripts/verify_documentation.py",
+    "exit_code": 0,
+    "materialized_contracts": 71,
+    "reserved_ids": 27,
+    "requirement_seeds": 38,
+    "archive_source_span_verification": "not executed;owner-authorised current prose deduplicated;original source hashes/locations retained"
+  }
+}

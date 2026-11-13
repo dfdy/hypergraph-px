@@ -3,16 +3,31 @@
 //! authority, not a network session. No client-held mode or multi-owner edits.
 pub mod anchors;
 pub mod assertions;
+pub mod audit;
+mod authority;
+pub mod branches;
 pub mod clipboard;
+pub mod comments;
 pub mod contributors;
 pub mod encoding;
 pub mod forks;
 pub mod graph;
 pub mod history;
 pub mod keychain;
+pub mod lineage_record;
 pub mod merges;
+pub mod node_clock;
+pub mod origin_history;
+pub mod origin_record;
 pub mod overlay_graph;
 pub mod predicates;
+mod temporal_commit;
+pub mod temporal_commit_record;
+mod temporal_references;
+pub mod temporal_save;
+pub mod working;
+pub mod working_clipboard;
+pub mod working_forks;
 
 use hypergraph_crypto::{Context, Purpose, SecretKey};
 use hypergraph_domain::records::*;
@@ -188,6 +203,25 @@ struct Event {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "command", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Command {
+    WorkingFork {
+        plan: working_forks::Request,
+    },
+    WorkingCopy {
+        plan: working::Request,
+        generation: u64,
+    },
+    WorkingClipboard {
+        mutation: working_clipboard::Mutation,
+    },
+    Checkpoint {
+        plan: working::Request,
+    },
+    Branch {
+        mutation: branches::Mutation,
+    },
+    Comment {
+        plan: comments::Request,
+    },
     Assertion {
         mutation: assertions::Mutation,
     },
@@ -226,6 +260,24 @@ pub enum Command {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "result", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Outcome {
+    WorkingForked {
+        state: working_forks::Change,
+    },
+    WorkingCopied {
+        state: Box<working_clipboard::Copied>,
+    },
+    WorkingClipboard {
+        state: working_clipboard::Change,
+    },
+    Checkpointed {
+        state: working::Change,
+    },
+    Branch {
+        state: branches::Change,
+    },
+    Commented {
+        state: comments::Change,
+    },
     Assertion {
         state: assertions::Change,
     },
@@ -286,34 +338,45 @@ struct StoredReceipt {
     digest: [u8; 32],
     receipt: Receipt,
 }
+#[cfg_attr(feature = "api-schema", derive(utoipa::ToSchema))]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct DocumentSummary {
     #[serde(with = "encoding::identity")]
+    #[cfg_attr(feature="api-schema", schema(value_type=encoding::Id))]
     pub document: DocumentId,
     pub title: String,
 }
+#[cfg_attr(feature = "api-schema", derive(utoipa::ToSchema))]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct EditorState {
     #[serde(with = "encoding::identity")]
+    #[cfg_attr(feature="api-schema", schema(value_type=encoding::Id))]
     pub document: DocumentId,
     #[serde(with = "encoding::identity")]
+    #[cfg_attr(feature="api-schema", schema(value_type=encoding::Id))]
     pub node: NodeId,
     #[serde(with = "encoding::identity")]
+    #[cfg_attr(feature="api-schema", schema(value_type=encoding::Id))]
     pub branch: BranchId,
     #[serde(with = "encoding::identity")]
+    #[cfg_attr(feature="api-schema", schema(value_type=encoding::Id))]
     pub manifest: ManifestId,
     #[serde(with = "encoding::identity")]
+    #[cfg_attr(feature="api-schema", schema(value_type=encoding::Id))]
     pub occurrence: OccurrenceId,
     #[serde(with = "encoding::identity")]
+    #[cfg_attr(feature="api-schema", schema(value_type=encoding::Id))]
     pub draft: DraftId,
     pub title: String,
     pub generation: u64,
     pub acknowledged_sequence: u64,
     #[serde(with = "encoding::identity")]
+    #[cfg_attr(feature="api-schema", schema(value_type=encoding::Id))]
     pub base: RevisionId,
     #[serde(with = "encoding::identity")]
+    #[cfg_attr(feature="api-schema", schema(value_type=encoding::Id))]
     pub snapshot: SnapshotId,
     pub text: String,
 }
@@ -558,7 +621,7 @@ impl Workspace {
             workspace: self.workspace,
         };
         let tx = self.db.transaction()?;
-        let (_, catalog): (_, Catalog) = cipher.slot(&tx, CATALOG, ROOT)?;
+        let catalog = authority::catalog(&cipher, &tx, self.owner, self.device)?;
         let mut result = Vec::new();
         for id in catalog.documents {
             let doc: Document = cipher.object(&tx, DOCUMENT, id.0)?;
@@ -579,30 +642,13 @@ impl Workspace {
             workspace: self.workspace,
         };
         let tx = self.db.transaction()?;
+        let catalog = authority::catalog(&cipher, &tx, self.owner, self.device)?;
+        authority::document(&catalog, id)?;
         let doc: Document = cipher.object(&tx, DOCUMENT, id.0)?;
-        let (_, head): (_, Head) = cipher.slot(&tx, HEAD, doc.branch.0)?;
-        let (generation, draft): (_, Draft) = cipher.slot(&tx, DRAFT, doc.draft.0)?;
-        check_draft(&doc, &head, &draft, self.owner, self.device)?;
-        let revision: Revision = cipher.object(&tx, REVISION, head.revision.0)?;
-        if revision.node != doc.node
-            || reconstruct(&cipher, &tx, &doc, head.snapshot)? != revision.text
-        {
+        if doc.id != id {
             return Err(Error::Integrity);
         }
-        let result = EditorState {
-            document: id,
-            node: doc.node,
-            branch: doc.branch,
-            manifest: doc.manifest,
-            occurrence: doc.occurrence,
-            draft: doc.draft,
-            title: doc.title,
-            generation,
-            acknowledged_sequence: draft.sequence,
-            base: draft.base,
-            snapshot: head.snapshot,
-            text: draft.text,
-        };
+        let result = editor_state(&cipher, &tx, &doc, self.owner, self.device)?;
         tx.commit()?;
         Ok(result)
     }
@@ -616,7 +662,12 @@ impl Workspace {
             workspace: self.workspace,
         };
         let tx = self.db.transaction()?;
+        let catalog = authority::catalog(&cipher, &tx, self.owner, self.device)?;
+        authority::document(&catalog, document)?;
         let doc: Document = cipher.object(&tx, DOCUMENT, document.0)?;
+        if doc.id != document {
+            return Err(Error::Integrity);
+        }
         let text = reconstruct(&cipher, &tx, &doc, snapshot)?;
         tx.commit()?;
         Ok(text)
@@ -627,10 +678,14 @@ impl Workspace {
             key: &self.key,
             workspace: self.workspace,
         };
-        let stored: StoredReceipt = cipher.object(&self.db, RECEIPT, id.0)?;
+        let tx = self.db.unchecked_transaction()?;
+        let catalog = authority::catalog(&cipher, &tx, self.owner, self.device)?;
+        let stored: StoredReceipt = cipher.object(&tx, RECEIPT, id.0)?;
         if stored.receipt.operation != id {
             return Err(Error::Integrity);
         }
+        authority::outcome(&cipher, &tx, &catalog, &stored.receipt.outcome)?;
+        tx.commit()?;
         Ok(stored.receipt)
     }
     pub fn execute(&mut self, operation: OperationId, command: Command) -> Result<Receipt> {
@@ -653,21 +708,101 @@ impl Workspace {
         let tx = self
             .db
             .transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let schema: i32 = tx.query_row("PRAGMA user_version", [], |row| row.get(0))?;
+        if ![SCHEMA_VERSION, keychain::KEYCHAIN_SCHEMA_VERSION].contains(&schema) {
+            return Err(Error::Format);
+        }
         let (_, authority): (_, Catalog) = cipher.slot(&tx, CATALOG, ROOT)?;
         if authority.owner != self.owner || authority.device != self.device {
             return Err(Error::Integrity);
+        }
+        authority::command(&cipher, &tx, &authority, &command)?;
+        if let Command::WorkingFork { plan } = &command {
+            working::source_view(&cipher, &tx, &authority, plan.source.clone())?;
+        }
+        if let Command::WorkingClipboard { mutation } = &command {
+            working_clipboard::authorize(&cipher, &tx, &authority, mutation)?;
+        }
+        if let Command::Checkpoint { plan } | Command::WorkingCopy { plan, .. } = &command {
+            working::authorize(&cipher, &tx, &authority, plan)?;
+        }
+        if let Command::Branch { mutation } = &command {
+            branches::authorize(&cipher, &tx, &authority, mutation)?;
         }
         match cipher.object::<StoredReceipt>(&tx, RECEIPT, operation.0) {
             Ok(stored) => {
                 if stored.digest != digest || stored.receipt.operation != operation {
                     return Err(Error::Conflict);
                 }
+                authority::outcome(&cipher, &tx, &authority, &stored.receipt.outcome)?;
                 return Ok(stored.receipt);
             }
             Err(Error::NotFound) => {}
             Err(error) => return Err(error),
         }
         let outcome = match command {
+            Command::WorkingFork { plan } => Outcome::WorkingForked {
+                state: working_forks::apply(
+                    &cipher,
+                    &tx,
+                    &authority,
+                    operation,
+                    plan,
+                    &mut checkpoint,
+                )?,
+            },
+            Command::WorkingCopy { plan, generation } => {
+                let doc = branches::document(&cipher, &tx, &authority, plan.document, plan.branch)?;
+                let start = plan.start_byte;
+                let end = plan.end_byte;
+                let quote = plan.quote.clone();
+                let checkpoint_state =
+                    working::apply(&cipher, &tx, &authority, operation, plan, &mut checkpoint)?;
+                Outcome::WorkingCopied {
+                    state: Box::new(working_clipboard::capture(
+                        &cipher,
+                        &tx,
+                        &authority,
+                        operation,
+                        generation,
+                        checkpoint_state,
+                        doc.occurrence,
+                        start,
+                        end,
+                        &quote,
+                    )?),
+                }
+            }
+            Command::WorkingClipboard { mutation } => {
+                let state = working_clipboard::apply(&cipher, &tx, &authority, mutation)?;
+                checkpoint("objects")?;
+                Outcome::WorkingClipboard { state }
+            }
+
+            Command::Checkpoint { plan } => Outcome::Checkpointed {
+                state: working::apply(&cipher, &tx, &authority, operation, plan, &mut checkpoint)?,
+            },
+            Command::Branch { mutation } => Outcome::Branch {
+                state: branches::apply(
+                    &cipher,
+                    &tx,
+                    &authority,
+                    operation,
+                    mutation,
+                    &mut checkpoint,
+                )?,
+            },
+            Command::Comment { plan } => Outcome::Commented {
+                state: comments::apply(
+                    &cipher,
+                    &tx,
+                    self.owner,
+                    self.device,
+                    operation,
+                    plan,
+                    &mut checkpoint,
+                )?,
+            },
             Command::Assertion { mutation } => Outcome::Assertion {
                 state: assertions::apply(
                     &cipher,
@@ -718,89 +853,25 @@ impl Workspace {
                     document: created.document.id,
                 }
             }
-            Command::Save {
-                document,
-                generation,
-                base,
-                previous_sequence,
-                sequence,
-                text,
-            } => {
+            command @ (Command::Save { .. } | Command::Commit { .. }) => {
+                let document = match &command {
+                    Command::Save { document, .. } | Command::Commit { document, .. } => *document,
+                    _ => unreachable!(),
+                };
                 if !authority.documents.contains(&document) {
                     return Err(Error::NotFound);
                 }
                 let doc: Document = cipher.object(&tx, DOCUMENT, document.0)?;
-                let (_, head): (_, Head) = cipher.slot(&tx, HEAD, doc.branch.0)?;
-                let (actual, mut draft): (_, Draft) = cipher.slot(&tx, DRAFT, doc.draft.0)?;
-                check_draft(&doc, &head, &draft, self.owner, self.device)?;
-                if actual != generation
-                    || draft.base != base
-                    || draft.sequence != previous_sequence
-                    || sequence <= previous_sequence
-                {
-                    return Err(Error::Conflict);
-                }
-                draft.sequence = sequence;
-                draft.text = text;
-                let generation = cipher.update(&tx, DRAFT, doc.draft.0, generation, &draft)?;
-                checkpoint("objects")?;
-                Outcome::Saved {
-                    document,
-                    generation,
-                    sequence,
-                }
-            }
-            Command::Commit {
-                document,
-                generation,
-                base,
-                sequence,
-            } => {
-                if !authority.documents.contains(&document) {
-                    return Err(Error::NotFound);
-                }
-                let doc: Document = cipher.object(&tx, DOCUMENT, document.0)?;
-                let (head_generation, head): (_, Head) = cipher.slot(&tx, HEAD, doc.branch.0)?;
-                let (actual, mut draft): (_, Draft) = cipher.slot(&tx, DRAFT, doc.draft.0)?;
-                check_draft(&doc, &head, &draft, self.owner, self.device)?;
-                if actual != generation || draft.base != base || draft.sequence != sequence {
-                    return Err(Error::Conflict);
-                }
-                let revision = RevisionId(new_id()?);
-                let snapshot = SnapshotId(new_id()?);
-                publish_revision(
+                write_draft(
                     &cipher,
                     &tx,
                     &doc,
-                    operation,
                     self.owner,
                     self.device,
-                    Some(base),
-                    revision,
-                    snapshot,
-                    draft.text.clone(),
-                )?;
-                checkpoint("objects")?;
-                cipher.update(
-                    &tx,
-                    HEAD,
-                    doc.branch.0,
-                    head_generation,
-                    &Head {
-                        document,
-                        revision,
-                        snapshot,
-                    },
-                )?;
-                draft.base = revision;
-                let generation = cipher.update(&tx, DRAFT, doc.draft.0, generation, &draft)?;
-                Outcome::Committed {
-                    document,
-                    generation,
-                    sequence,
-                    revision,
-                    snapshot,
-                }
+                    operation,
+                    command,
+                    &mut checkpoint,
+                )?
             }
         };
         checkpoint("heads")?;
@@ -820,6 +891,138 @@ impl Workspace {
         Ok(receipt)
     }
 }
+fn editor_state(
+    cipher: &Cipher<'_>,
+    db: &Connection,
+    doc: &Document,
+    owner: PrincipalId,
+    device: DeviceId,
+) -> Result<EditorState> {
+    let (_, head): (_, Head) = cipher.slot(db, HEAD, doc.branch.0)?;
+    let (generation, draft): (_, Draft) = cipher.slot(db, DRAFT, doc.draft.0)?;
+    check_draft(doc, &head, &draft, owner, device)?;
+    let revision: Revision = cipher.object(db, REVISION, head.revision.0)?;
+    if revision.node != doc.node || reconstruct(cipher, db, doc, head.snapshot)? != revision.text {
+        return Err(Error::Integrity);
+    }
+    let result = EditorState {
+        document: doc.id,
+        node: doc.node,
+        branch: doc.branch,
+        manifest: doc.manifest,
+        occurrence: doc.occurrence,
+        draft: doc.draft,
+        title: doc.title.clone(),
+        generation,
+        acknowledged_sequence: draft.sequence,
+        base: draft.base,
+        snapshot: head.snapshot,
+        text: draft.text,
+    };
+    Ok(result)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn write_draft(
+    cipher: &Cipher<'_>,
+    db: &Connection,
+    doc: &Document,
+    owner: PrincipalId,
+    device: DeviceId,
+    operation: OperationId,
+    command: Command,
+    checkpoint: &mut impl FnMut(&str) -> Result<()>,
+) -> Result<Outcome> {
+    Ok(match command {
+        Command::Save {
+            document,
+            generation,
+            base,
+            previous_sequence,
+            sequence,
+            text,
+        } => {
+            if doc.id != document {
+                return Err(Error::Integrity);
+            }
+            let (_, head): (_, Head) = cipher.slot(db, HEAD, doc.branch.0)?;
+            let (actual, mut draft): (_, Draft) = cipher.slot(db, DRAFT, doc.draft.0)?;
+            check_draft(doc, &head, &draft, owner, device)?;
+            if actual != generation
+                || draft.base != base
+                || draft.sequence != previous_sequence
+                || sequence <= previous_sequence
+            {
+                return Err(Error::Conflict);
+            }
+            draft.sequence = sequence;
+            draft.text = text;
+            let generation = cipher.update(db, DRAFT, doc.draft.0, generation, &draft)?;
+            checkpoint("objects")?;
+            Outcome::Saved {
+                document,
+                generation,
+                sequence,
+            }
+        }
+        Command::Commit {
+            document,
+            generation,
+            base,
+            sequence,
+        } => {
+            if doc.id != document {
+                return Err(Error::Integrity);
+            }
+            let (head_generation, head): (_, Head) = cipher.slot(db, HEAD, doc.branch.0)?;
+            let (actual, mut draft): (_, Draft) = cipher.slot(db, DRAFT, doc.draft.0)?;
+            check_draft(doc, &head, &draft, owner, device)?;
+            if actual != generation || draft.base != base || draft.sequence != sequence {
+                return Err(Error::Conflict);
+            }
+            let revision = RevisionId(new_id()?);
+            let snapshot = SnapshotId(new_id()?);
+            publish_revision(
+                cipher,
+                db,
+                doc,
+                operation,
+                owner,
+                device,
+                Some(base),
+                revision,
+                snapshot,
+                draft.text.clone(),
+            )?;
+            working::promote(
+                cipher, db, doc, owner, device, operation, revision, snapshot, &draft,
+            )?;
+            checkpoint("objects")?;
+            cipher.update(
+                db,
+                HEAD,
+                doc.branch.0,
+                head_generation,
+                &Head {
+                    document,
+                    revision,
+                    snapshot,
+                },
+            )?;
+            draft.base = revision;
+            let generation = cipher.update(db, DRAFT, doc.draft.0, generation, &draft)?;
+            Outcome::Committed {
+                document,
+                generation,
+                sequence,
+                revision,
+                snapshot,
+            }
+        }
+        _ => return Err(Error::Invalid),
+    })
+}
+
 struct CreatedDocument {
     document: Document,
     revision: RevisionId,
@@ -1024,6 +1227,15 @@ fn snapshot_revision(
 }
 fn validate_command(command: &Command) -> Result<()> {
     match command {
+        Command::WorkingFork { plan } => working_forks::validate(plan)?,
+        Command::Checkpoint { plan } => working::validate(plan)?,
+        Command::WorkingCopy { plan, generation } => {
+            working::validate(plan)?;
+            working_clipboard::validate_generation(*generation)?;
+        }
+        Command::WorkingClipboard { mutation } => working_clipboard::validate(mutation)?,
+        Command::Branch { mutation } => branches::validate(mutation)?,
+        Command::Comment { plan } => comments::validate(plan)?,
         Command::Assertion { mutation } => assertions::validate(mutation)?,
         Command::Fork { plan } => forks::validate(plan)?,
         Command::Merge { plan } => merges::validate(plan)?,
@@ -1202,6 +1414,49 @@ mod tests {
             },
         )
         .unwrap();
+        ws.execute(
+            op(8),
+            Command::Comment {
+                plan: comments::tests::request(&state),
+            },
+        )
+        .unwrap();
+        ws.execute(op(9), branches::tests::creation(&state))
+            .unwrap();
+        ws.execute(
+            op(10),
+            Command::Checkpoint {
+                plan: working::tests::request(&state),
+            },
+        )
+        .unwrap();
+        ws.execute(op(11), commit(&state)).unwrap();
+        let copy_state = ws.open_document(id).unwrap();
+        let copied = ws
+            .execute(
+                op(12),
+                Command::WorkingCopy {
+                    plan: working::tests::request(&copy_state),
+                    generation: 0,
+                },
+            )
+            .unwrap();
+        let source = match copied.outcome {
+            Outcome::WorkingCopied { state } => state.source,
+            _ => panic!(),
+        };
+        ws.execute(op(13), commit(&copy_state)).unwrap();
+        ws.execute(
+            op(14),
+            Command::WorkingFork {
+                plan: working_forks::Request {
+                    title: "Working fork".into(),
+                    source,
+                    quote: copy_state.text.clone(),
+                },
+            },
+        )
+        .unwrap();
         let cipher = Cipher {
             key: &ws.key,
             workspace: ws.workspace,
@@ -1232,7 +1487,7 @@ mod tests {
         }
         assert_eq!(
             kinds.into_iter().collect::<Vec<_>>(),
-            (CATALOG..=merges::KIND).collect::<Vec<_>>()
+            (CATALOG..=working_forks::KIND).collect::<Vec<_>>()
         );
     }
 

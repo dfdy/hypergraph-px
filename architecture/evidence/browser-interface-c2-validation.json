@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-30",
+  "scope": "Focused browser C2 container context using existing model;no C3/C4 decomposition added",
+  "checks": {
+    "one_c2_view_added": true,
+    "model_components_and_relationships_unchanged": true,
+    "old_relationships_unchanged": true,
+    "all_35_prior_view_contents_preserved_except_c2_browser_navigation": true,
+    "all_21_prior_saved_geometries_preserved": true,
+    "browser_boundary_and_five_external_context_nodes": true,
+    "new_boundary_containment_and_single_cubic_321_sample_geometry": true,
+    "all_36_views_reachable": true,
+    "local_source_links_resolve": true,
+    "browser_context_has_all_evidenced_exchange_families": true,
+    "primary_browser_navigation": true,
+    "no_direct_browser_workspace_connection": true,
+    "container_context_graph_connected": true,
+    "protected_application_files_unchanged": true,
+    "likec4_syntax_and_saved_layouts_validate": true
+  },
+  "counts": {
+    "total_views": 36,
+    "new_components": 0,
+    "new_relationships": 0,
+    "view_connections": 8,
+    "source_files": 18,
+    "local_source_links": 748,
+    "prior_saved_geometries_preserved": 21,
+    "protected_files": 429
+  },
+  "likec4_validation": {
+    "valid": true,
+    "errors": [],
+    "stats": {
+      "totalFiles": 18,
+      "totalErrors": 0,
+      "filteredFiles": 18,
+      "filteredErrors": 0
+    }
+  },
+  "native_static_preview": "inspected;not actual VS Code acceptance",
+  "source_hashes": {
+    "architecture/C2/browser-interface.c4": "e6e3f30627c481a3259c7d614ce9f9df61997e58ea77672e68062153c8744aec",
+    "architecture/C2/containers.c4": "97de691e2e268846ac2e07a0552176b7260f7a82c7ce63188ff0bfaf99552b66",
+    "architecture/C3/executable.c4": "ebf0accb151459252d18d5cee7c91e82a6077dbc0fc9d321cd62d2d03d6226e0",
+    "architecture/context.c4": "d51ccf5b62d89f7082c6d041ca5c79b3ec15a666cbc1a676dd9de3db57f2aa3a"
+  },
+  "limits": [
+    "Focused container-context review;no application/security assurance claim.",
+    "No application tests,build,launch,browser,regeneration,proof,trust,provider,workspace,commit or publication."
+  ],
+  "documentation_verification": {
+    "command": "python3 scripts/verify_documentation.py",
+    "exit_code": 0,
+    "archive_bytes": "skipped as reported"
+  },
+  "navigation": "C1 \u2192 C2 / HPX containers \u2192 C2 / Browser interface \u2192 C3 / Browser interface",
+  "commands_executed": [
+    "LikeC4 1.60.0 export json",
+    "LikeC4 1.60.0 validate --json architecture",
+    "Python model/navigation/coverage/source/321-point geometry/protected-hash verification",
+    "Swift/AppKit native static preview inspected (no browser)",
+    "python3 scripts/verify_documentation.py"
+  ]
+}

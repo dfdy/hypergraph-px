@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-30",
+  "authority": "HPX-OWNER-029;HPX-RQ-037;HPX-RQ-038",
+  "checks": {
+    "likec4": {
+      "valid": true,
+      "errors": [],
+      "stats": {
+        "totalFiles": 19,
+        "totalErrors": 0,
+        "filteredFiles": 19,
+        "filteredErrors": 0
+      }
+    },
+    "reachable_views": 38,
+    "saved_layouts": 25,
+    "unchanged_box_geometries": 349,
+    "unchanged_edge_geometries": 368,
+    "local_model_links_resolved": 1120,
+    "protected_file_hashes_unchanged": 425,
+    "specification_files_with_owner_scope": 26,
+    "new_requirements_registered": 2,
+    "documentation_verification": {
+      "command": "python3 scripts/verify_documentation.py",
+      "exit_code": 0,
+      "materialized_contracts": 70,
+      "reserved_ids": 27,
+      "requirement_seeds": 38,
+      "archive_byte_verification": "skipped as reported"
+    }
+  },
+  "limits": [
+    "Documentation/model checks only;application and multi-user security acceptance not executed.",
+    "No rendered visual acceptance;existing geometry retained.",
+    "Permission mechanisms and protocol/format changes unadopted."
+  ]
+}

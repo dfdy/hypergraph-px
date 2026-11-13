@@ -101,6 +101,48 @@ impl Workspace {
     }
 }
 
+/// Authenticate one immutable publication under an already validated document/manifest.
+/// This does not infer membership in a requested branch; callers traverse pinned heads.
+pub(super) fn read_entry(
+    cipher: &Cipher<'_>,
+    db: &Connection,
+    doc: &Document,
+    id: RevisionId,
+    remaining: &mut usize,
+) -> Result<Entry> {
+    let revision: Revision = object(cipher, db, REVISION, id.0, remaining)?;
+    let event: Event = object(cipher, db, EVENT, revision.operation.0, remaining)?;
+    let snapshot: Snapshot = object(cipher, db, SNAPSHOT, event.snapshot.0, remaining)?;
+    if revision.text.len() > MAX_TEXT_BYTES {
+        return Err(Error::Limit);
+    }
+    if revision.node != doc.node
+        || revision.parent == Some(id)
+        || event.document != doc.id
+        || event.operation != revision.operation
+        || event.revision != id
+        || event.parent != revision.parent
+        || snapshot.document != doc.id
+        || snapshot.manifest != doc.manifest
+        || snapshot.bindings.len() != 1
+    {
+        return Err(Error::Integrity);
+    }
+    let binding = &snapshot.bindings[0];
+    if binding.path != [doc.occurrence] || binding.node != doc.node || binding.revision != id {
+        return Err(Error::Integrity);
+    }
+    Ok(Entry {
+        revision: id,
+        parent: revision.parent,
+        snapshot: event.snapshot,
+        operation: event.operation,
+        actor: event.actor,
+        device: event.device,
+        text_bytes: revision.text.len(),
+    })
+}
+
 /// Read a bounded immutable ancestry page inside the caller's authorized transaction.
 pub(super) fn read_page(
     cipher: &Cipher<'_>,
@@ -121,6 +163,21 @@ pub(super) fn read_page(
     if doc.id != document {
         return Err(Error::Integrity);
     }
+    read_document_page(cipher, db, &doc, next, limit, remaining)
+}
+
+pub(super) fn read_document_page(
+    cipher: &Cipher<'_>,
+    db: &Connection,
+    doc: &Document,
+    next: Option<RevisionId>,
+    limit: usize,
+    remaining: &mut usize,
+) -> Result<Page> {
+    if !(1..=MAX_PAGE).contains(&limit) {
+        return Err(Error::Invalid);
+    }
+    let document = doc.id;
     let (_, head): (_, Head) = cipher.slot(db, HEAD, doc.branch.0)?;
     if head.document != document {
         return Err(Error::Integrity);
@@ -142,45 +199,12 @@ pub(super) fn read_page(
         if seen.contains(&id.0) {
             return Err(Error::Integrity);
         }
-        let entry = (|| {
-            let revision: Revision = object(cipher, db, REVISION, id.0, remaining)?;
-            let event: Event = object(cipher, db, EVENT, revision.operation.0, remaining)?;
-            let snapshot: Snapshot = object(cipher, db, SNAPSHOT, event.snapshot.0, remaining)?;
-            if revision.text.len() > MAX_TEXT_BYTES {
-                return Err(Error::Limit);
-            }
-            if revision.node != doc.node
-                || revision.parent == Some(id)
-                || event.document != document
-                || event.operation != revision.operation
-                || event.revision != id
-                || event.parent != revision.parent
-                || snapshot.document != document
-                || snapshot.manifest != doc.manifest
-                || snapshot.bindings.len() != 1
-            {
+        let entry = read_entry(cipher, db, doc, id, remaining).and_then(|entry| {
+            if next.is_none() && entries.is_empty() && entry.snapshot != head.snapshot {
                 return Err(Error::Integrity);
             }
-            let binding = &snapshot.bindings[0];
-            if binding.path != [doc.occurrence]
-                || binding.node != doc.node
-                || binding.revision != id
-            {
-                return Err(Error::Integrity);
-            }
-            if next.is_none() && entries.is_empty() && event.snapshot != head.snapshot {
-                return Err(Error::Integrity);
-            }
-            Ok(Entry {
-                revision: id,
-                parent: revision.parent,
-                snapshot: event.snapshot,
-                operation: event.operation,
-                actor: event.actor,
-                device: event.device,
-                text_bytes: revision.text.len(),
-            })
-        })();
+            Ok(entry)
+        });
         match entry {
             Ok(entry) => {
                 seen.insert(id.0);

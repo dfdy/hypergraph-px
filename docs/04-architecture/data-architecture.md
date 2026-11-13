@@ -13,25 +13,16 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-26
+- **Last reviewed:** 2026-10-30
 
 SQLite is selected. Encryption metadata leakage and whole-database rollback limitations remain explicit; database choice does not implement policy/federation.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Context and problem
-
-SQLite authority, encrypted records, mutable drafts and atomic publication. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Scope and exclusions
-
-SQLite authority, encrypted records, mutable drafts and atomic publication. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Normative content
 
 One SQLite database coordinates encrypted immutable objects, mutable head/draft slots and encrypted operation receipts. WAL/FULL is durability machinery, not application history. Ciphertext metadata leaks opaque identifiers, types, generations, lengths/counts and access patterns; no whole-database rollback witness exists. The implementation does not rewrite every retained revision on each draft save. See [record representation](../07-implementation/data-structures/sqlite-records.md) and [publication protocol](../07-implementation/protocols/draft-publication.md).
 
-The source-era flow below retains its original implementation-status wording. The bounded one-owner writer now exists; [current evidence](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) distinguishes its integrated scope from gated branch work. [Recovery responsibilities](../08-assurance/recovery.md#authoritative-state-and-repair-boundary) distinguish authoritative mutable state from genuinely reconstructible indexes; a table named “index” is not permission to discard it. The freshness acceptance conflict remains explicit in the [threat model](../08-assurance/security-threat-model.md#unresolved-freshness-acceptance-scope--architecture-review).
+The former source-era flow is delegated to the canonical sequence below. The bounded one-owner writer now exists; [current evidence](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) distinguishes its integrated scope from gated branch work. [Recovery responsibilities](../08-assurance/recovery.md#authoritative-state-and-repair-boundary) distinguish authoritative mutable state from genuinely reconstructible indexes; a table named “index” is not permission to discard it. The freshness acceptance conflict remains explicit in the [threat model](../08-assurance/security-threat-model.md#unresolved-freshness-acceptance-scope--architecture-review).
 
 ### Data and command flow
 
@@ -39,34 +30,10 @@ Source `HPX-SRC-0021`, original lines 28–43. Preserved contract/evidence wordi
 
 The accepted [core object model](<../05-domain/core-object-model.md>) and [SQLite persistence design](<../06-subsystems/formats/hpx-workspace.md>) define the initial local writer. Canonical immutable records support typed projections: occurrence structure, revision ancestry, transformation provenance, references, expansion dependencies and snapshot closure. Derive indexes rather than creating competing authoritative stores. Logical identity is independent of physical encrypted addresses. See the [mathematical model](<../05-domain/hypergraph-mathematics.md>) and [data reference](<../06-subsystems/interfaces/domain-navigation.md>).
 
-```text
-frozen request + trusted actor/device + exact base/policy
-    -> authorize source/target operations
-    -> pure validation and complete result planning
-    -> recheck affected heads/policy and idempotency
-    -> durably publish one complete atomic result
-    -> update recoverable read models
-    -> return original action/commit receipt
-```
+The bounded current command flow is canonical in [Sequence / Application coordination — Authorize, reconcile and publish](../../architecture/Sequence/application-workflows.c4), with uncertain-outcome recovery in the linked sequence (HPX-CAN-006). This implementation description is not a requirement to reproduce sole-owner authority. Exact future semantics remain in the [publication contract](../07-implementation/protocols/draft-publication.md).
 
-This is the required application flow, not an implemented transaction system. Preview/navigation must not publish history. Changed request reuse under the same idempotency key conflicts; uncertain acknowledgements reconcile the original action. Autosave persists mutable drafts separately from immutable commits. Delayed replies must preserve newer typing, selection and undo state.
+This is the required application flow. The bounded one-owner transaction/receipt implementation exists; complete multi-user workspace permissions and broader target operations remain incomplete. Preview/navigation must not publish history. Changed request reuse under the same idempotency key conflicts; uncertain acknowledgements reconcile the original action. Autosave persists mutable drafts separately from immutable commits. Delayed replies must preserve newer typing, selection and undo state.
 
-
-## Examples and counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Dependencies and consequences
-
-SQLite authority, encrypted records, mutable drafts and atomic publication. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Open questions and conflicts
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

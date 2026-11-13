@@ -1,0 +1,401 @@
+{
+  "id": "HPX-TEST-100",
+  "date": "2026-10-30",
+  "authority": "proposed source-backed diagram reconciliation;no new API/architecture decision",
+  "checks": {
+    "views": 34,
+    "dsl_files": 14,
+    "new_views": 0,
+    "changed_views": [
+      "c3_application",
+      "c3_executable",
+      "c3_runtime_api",
+      "c4_application_features",
+      "c4_application_reads",
+      "c4_application_transaction",
+      "seq_application_checkpoint",
+      "seq_application_transaction"
+    ],
+    "unrelated_view_hashes_preserved": 26,
+    "saved_layouts_preserved": 20,
+    "new_single_cubic_return_curves": 2,
+    "curve_samples_each": 301,
+    "new_aggregation_relations": 2,
+    "checkpoint_sequence_messages": 24,
+    "other_unrelated_sequences_unchanged": true,
+    "read_family_input_output_pairs": 6,
+    "source_links_and_navigation": "passed",
+    "prior_audited_source_identities": "unchanged",
+    "protected_file_hashes_unchanged": 429,
+    "recovery_actor": "existing browser adapter retains/retries frozen intent;no API-side automatic retry is implied"
+  },
+  "interface_mapping": [
+    {
+      "flow": "commands",
+      "input": "frozen Command + operation;trusted Workspace identity",
+      "views": [
+        "c3_executable",
+        "c3_runtime_api",
+        "c3_application",
+        "c4_application_transaction",
+        "seq_application_transaction",
+        "seq_save",
+        "seq_commit"
+      ],
+      "output": "original authorized receipt or error to Runtime/API"
+    },
+    {
+      "flow": "queries",
+      "input": "protected IDs/cursor/budgets;original operation for receipt-only read",
+      "views": [
+        "c3_executable",
+        "c3_runtime_api",
+        "c3_application",
+        "c4_application_reads",
+        "seq_application_read",
+        "seq_uncertain"
+      ],
+      "output": "typed authorized result/receipt or error to Runtime/API"
+    },
+    {
+      "flow": "feature coordination",
+      "input": "new authorized Command and borrowed writer context",
+      "views": [
+        "c3_application",
+        "c4_application_features",
+        "seq_application_checkpoint"
+      ],
+      "output": "staged Outcome/helper error;outer coordinator owns publication"
+    },
+    {
+      "flow": "separate private-list promotion",
+      "input": "separately frozen operation after prior text Commit",
+      "views": [
+        "seq_application_checkpoint",
+        "seq_application_transaction",
+        "seq_uncertain"
+      ],
+      "output": "separate receipt/error;prior text Commit retained"
+    },
+    {
+      "flow": "planned integrations",
+      "input": "reviewed proposals in engine/integration views",
+      "views": [
+        "c3_executable",
+        "c3_integrations"
+      ],
+      "output": "unresolved application entry;not an implemented runtime caller"
+    }
+  ],
+  "sequence": {
+    "id": "seq_application_checkpoint",
+    "flow": [
+      "step-01",
+      "step-02",
+      "step-03",
+      "step-04",
+      "step-05",
+      {
+        "flow": [
+          {
+            "flow": [
+              "step-06:alt.01:when.01"
+            ],
+            "_type": "alt-when",
+            "id": "step-06:alt.01:when",
+            "title": "Stale/invalid/limit/integrity failure"
+          },
+          {
+            "flow": [
+              "step-06:alt.02:else.01",
+              "step-06:alt.02:else.02",
+              "step-06:alt.02:else.03",
+              {
+                "flow": [
+                  {
+                    "flow": [
+                      "step-06:alt.02:else.04:alt.01:when.01"
+                    ],
+                    "_type": "alt-when",
+                    "id": "step-06:alt.02:else.04:alt.01:when",
+                    "title": "Stale list/full/error"
+                  },
+                  {
+                    "flow": [
+                      "step-06:alt.02:else.04:alt.02:else.01",
+                      "step-06:alt.02:else.04:alt.02:else.02",
+                      "step-06:alt.02:else.04:alt.02:else.03",
+                      "step-06:alt.02:else.04:alt.02:else.04",
+                      {
+                        "flow": [
+                          "step-06:alt.02:else.04:alt.02:else.05:opt.01",
+                          "step-06:alt.02:else.04:alt.02:else.05:opt.02",
+                          "step-06:alt.02:else.04:alt.02:else.05:opt.03",
+                          "step-06:alt.02:else.04:alt.02:else.05:opt.04",
+                          {
+                            "flow": [
+                              {
+                                "flow": [
+                                  "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.01:when.01",
+                                  "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.01:when.02"
+                                ],
+                                "_type": "alt-when",
+                                "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.01:when",
+                                "title": "Helper rejects stale state or other pre-COMMIT failure"
+                              },
+                              {
+                                "flow": [
+                                  "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else.01",
+                                  "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else.02",
+                                  "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else.03",
+                                  {
+                                    "flow": [
+                                      "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else.04:opt.01"
+                                    ],
+                                    "_type": "opt",
+                                    "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else.04:opt",
+                                    "title": "Acknowledgement is lost"
+                                  }
+                                ],
+                                "_type": "alt-else",
+                                "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else",
+                                "title": "Private-list state staged"
+                              }
+                            ],
+                            "_type": "alt",
+                            "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt",
+                            "title": "Separate private-list operation"
+                          }
+                        ],
+                        "_type": "opt",
+                        "id": "step-06:alt.02:else.04:alt.02:else.05:opt",
+                        "title": "Later Commit exactly matches checkpoint text and base"
+                      }
+                    ],
+                    "_type": "alt-else",
+                    "id": "step-06:alt.02:else.04:alt.02:else",
+                    "title": "Reference staged"
+                  }
+                ],
+                "_type": "alt",
+                "id": "step-06:alt.02:else.04:alt",
+                "title": "Private reference state"
+              }
+            ],
+            "_type": "alt-else",
+            "id": "step-06:alt.02:else",
+            "title": "Exact source accepted"
+          }
+        ],
+        "_type": "alt",
+        "id": "step-06:alt",
+        "title": "Capture preconditions"
+      }
+    ],
+    "messages": [
+      {
+        "id": "step-01",
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "label": "Frozen WorkingCopy; exact \ndocument/branch/base/draft \ngeneration/sequence and byte quote"
+      },
+      {
+        "id": "step-02",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "label": "Shared validation/current scope/replay; \nonly a new operation proceeds",
+        "navigateTo": "seq_application_transaction"
+      },
+      {
+        "id": "step-03",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.domain_working",
+        "label": "working::apply in the shared writer \ntransaction"
+      },
+      {
+        "id": "step-04",
+        "source": "hpx.native.storage.domain_working",
+        "target": "hpx.native.storage.coordination_records",
+        "label": "Read current head/draft and retained \nworking state"
+      },
+      {
+        "id": "step-05",
+        "source": "hpx.native.storage.domain_working",
+        "target": "hpx.native.storage.domain_working",
+        "label": "Check exact generation/base/sequence; \npure working::capture checks byte \nrange/quote/owned text"
+      },
+      {
+        "id": "step-06:alt.01:when.01",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "label": "Conflict/error; no checkpoint/reference \npublication"
+      },
+      {
+        "id": "step-06:alt.02:else.01",
+        "source": "hpx.native.storage.domain_working",
+        "target": "hpx.native.storage.coordination_records",
+        "label": "Stage immutable private checkpoint and \nworking-state slot"
+      },
+      {
+        "id": "step-06:alt.02:else.02",
+        "source": "hpx.native.storage.domain_working",
+        "target": "hpx.native.storage.c4_publication",
+        "label": "Checkpoint Change,still unpublished text \nhistory"
+      },
+      {
+        "id": "step-06:alt.02:else.03",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.coordination_private_refs",
+        "label": "working_clipboard::capture with expected \nprivate-list generation"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.01:when.01",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "label": "Abort whole writer transaction including \ncheckpoint; preserve source"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.01",
+        "source": "hpx.native.storage.coordination_private_refs",
+        "target": "hpx.native.storage.coordination_records",
+        "label": "Stage retained reference plus encrypted \nprivate index"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.02",
+        "source": "hpx.native.storage.coordination_private_refs",
+        "target": "hpx.native.storage.c4_publication",
+        "label": "WorkingCopied outcome with exact \ncheckpoint/source identity"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.03",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "label": "Stage original receipt and COMMIT both \neffects",
+        "navigateTo": "seq_application_transaction"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.04",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "label": "Original receipt or uncertain \nacknowledgement; no source revision \nimplied"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.01",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.domain_working",
+        "label": "working::promote inside text Commit \ntransaction",
+        "navigateTo": "seq_commit"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.02",
+        "source": "hpx.native.storage.domain_working",
+        "target": "hpx.native.storage.coordination_records",
+        "label": "Retain checkpoint; bind promotion to \nexact revision/snapshot; no rewrite of \norigin"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.03",
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "label": "Later separate WorkingClipboard \npromotion command; own frozen operation \nand admission",
+        "navigateTo": "seq_application_transaction"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.04",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.coordination_private_refs",
+        "label": "After its own admission/replay: \nprivate-list promotion,not a second text \nCommit"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.01:when.01",
+        "source": "hpx.native.storage.coordination_private_refs",
+        "target": "hpx.native.storage.c4_publication",
+        "label": "Error; abort this private-list \ntransaction"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.01:when.02",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "label": "Report reference replacement needs \nattention; earlier text Commit remains"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else.01",
+        "source": "hpx.native.storage.coordination_private_refs",
+        "target": "hpx.native.storage.c4_publication",
+        "label": "Updated private-list Outcome"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else.02",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "label": "Publish separate Outcome and original \nreceipt atomically",
+        "navigateTo": "seq_application_transaction"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else.03",
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "label": "Original private-list receipt; no new \ntext Commit"
+      },
+      {
+        "id": "step-06:alt.02:else.04:alt.02:else.05:opt.05:alt.02:else.04:opt.01",
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "label": "Recover the separate original operation; \nretain earlier text Commit",
+        "navigateTo": "seq_uncertain"
+      }
+    ]
+  },
+  "not_executed": [
+    "application tests",
+    "browser/actual VS Code or UML visual acceptance",
+    "frontend/app build or launch",
+    "assets/contracts generation",
+    "proofs",
+    "trust/provider/workspace actions",
+    "commit/publication"
+  ],
+  "executed_tools": {
+    "likec4": "1.60.0",
+    "export": "architecture/node_modules/.bin/likec4 export json -o /private/tmp/hpx-application-io-final.json architecture",
+    "validate": {
+      "command": "architecture/node_modules/.bin/likec4 validate --json architecture",
+      "exit_code": 0,
+      "valid": true,
+      "errors": [],
+      "files": 14
+    },
+    "source_io_geometry_hash_checks": {
+      "command": "python3 /private/tmp/hpx-check-application-io.py",
+      "exit_code": 0
+    },
+    "documentation": {
+      "command": "python3 scripts/verify_documentation.py",
+      "exit_code": 0,
+      "materialized_contracts": 69,
+      "archive_byte_replay": "skipped"
+    },
+    "native_previews": "Engine/Runtime C3 and feature C4 approximations inspected;not actual VS Code/UML acceptance"
+  },
+  "additional_source_review": {
+    "frontend/src/runtime-working-clipboard.js": "9ab5ecb9db9af9660648eae05def92cfc1aa940c35e8b0a24992f77ae1b88713",
+    "frontend/src/runtime-adapter.js": "8ee28708e372aa40822fb18b0539143617da7a4c8ff09d9c09603143bac8ea25",
+    "crates/storage/src/lib.rs": "f2e443c7f734097db3ee79619dd716f5bc2e1b87284bd97fea0f976ec824b194",
+    "crates/runtime/src/main.rs": "5450313edbcc2c8d6619818b4cab931e873e9b14a12f354eaf769d2c7faa2e14"
+  },
+  "dsl_hashes": {
+    "architecture/context.c4": "6ff8970869991bd970f820e3dee14dc4ee9243320f5a6cc44e71bab8679965a5",
+    "architecture/runtime-api.c4": "70200958387b5553e154c3bf79425ef9156dc0f9ca80f8c658478bfdffc07b1f",
+    "architecture/pure-domain-workflows.c4": "9c39c985df6a302f4fb368f790aa3e50195779e00f967525312710e52c5e9cc3",
+    "architecture/api-implementation.c4": "1d40a2efc0571bd48419e3f7ad5468a5018f22a20be2b333520441bcd182e373",
+    "architecture/frontend-delivery-implementation.c4": "3ec518d2f2b8b1798ed42f89a6b2007065310bf2ae9e8783d4fc977dab1e30b8",
+    "architecture/application-workflows.c4": "d97024434ed87dba9b9a243cc4b4196ebc708bc0be5bf70f0ae47317303865ff",
+    "architecture/executable.c4": "dda961fc770e547f53c945efa51728092b5b0f472d6eed95543a6bdd987e5ee2",
+    "architecture/api-workflows.c4": "ca89efa5fd126b3c1a92bd7fb20f15abfc530c909ee5914ca99ea7293089a719",
+    "architecture/application-coordination.c4": "0286b7451a2d964c37a097fd004372e6618e751a1a2486205b49dd18aa180f54",
+    "architecture/containers.c4": "c1e7a19505cc5ee09261e527e8ef5b605c0b99530b432b867a4d56535ff20979",
+    "architecture/frontend-delivery-workflows.c4": "bddb7d44693fe8c2b3bcbc3ea5bd7c2ba2e04f56a2162b9eb8debf16876d76f5",
+    "architecture/pure-domain.c4": "f2d23b401b8c7916d4363c483399268ebb9444bd8386385ca36282473b320853",
+    "architecture/frontend-delivery.c4": "4411056cb297dede33df0f993885cbb295a6bc0c837eda965901f4f8116bcca4",
+    "architecture/remaining-c3.c4": "5525d62506934833c096853ae2ddd06a025dcfe35a23d235c242180f035049a9"
+  }
+}

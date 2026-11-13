@@ -8,12 +8,13 @@ const deferred=()=>{let resolve,reject;const promise=new Promise((yes,no)=>{reso
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 function server(states=[state(1),state(2)]){
  const documents=new Map(states.map(s=>[key(s.document),structuredClone(s)])),receipts=new Map(),snapshots=new Map();let next=100,locked=false;
+ const initialSnapshots=new Map(states.map(s=>[key(s.snapshot),s.text]));
  const calls=[];
  const request=async(path,body)=>{
   calls.push({path,body:structuredClone(body)});
   if(path==='lock'){locked=true;return {locked:true};}
   if(locked)throw Object.assign(Error('locked'),{status:423});
-  if(path==='snapshot')return {text:snapshots.get(key(body.snapshot))};
+  if(path==='snapshot')return {text:snapshots.get(key(body.snapshot))??initialSnapshots.get(key(body.snapshot))};
   assert.equal(path,'commands');
   const prior=receipts.get(key(body.operation));
   if(prior){assert.deepEqual(prior.request,body.request);return structuredClone(prior.receipt);}
@@ -232,4 +233,20 @@ test('copy requires acknowledged committed source and never saves or commits imp
  const size=new TextEncoder().encode(input.text).length;
  await assert.rejects(a.captureSource(first,0,size,input.text),/Commit this source/);assert.deepEqual(calls,['snapshot']);
  a.edit(first,'Unacknowledged');assert.throws(()=>a.captureSource(first,0,2,'Un'),/Save and commit/);assert.deepEqual(calls,['snapshot']);assert.equal(a.get(first).source,'Unacknowledged');
+});
+
+test('logical departure publishes changed acknowledged drafts exactly once and skips unchanged revisits',async()=>{
+ const initial={...state(1),text:'Recovered draft 😀\r\n',acknowledged_sequence:4};const s=server([initial]);s.snapshots.set(key(initial.snapshot),'Earlier committed');
+ const {a,first}=adapter(s.request,[initial]);await a.depart(first);
+ assert.equal(s.calls.filter(c=>c.body?.request?.command==='commit').length,1);assert.equal(s.calls.filter(c=>c.body?.request?.command==='save').length,0);
+ const head=a.get(first).runtime.snapshot;assert.equal(s.snapshots.get(key(head)),initial.text);await a.depart(first);assert.equal(s.receipts.size,1);
+ a.edit(first,'Later 😀\r\n中\r');await a.depart(first);assert.equal(s.snapshots.get(key(a.get(first).runtime.snapshot)),'Later 😀\r\n中\r');
+});
+test('logical departure retains unknown publication and retries its frozen operation before later typing',async()=>{
+ const s=server();let drop=true;const {a,first}=adapter(async(path,body)=>{const result=await s.request(path,body);if(drop&&body?.request?.command==='commit')throw Error('lost departure Commit');return result;});
+ a.edit(first,'Outgoing first');await assert.rejects(a.depart(first),/lost departure/);const frozen=a.get(first).pending;assert.equal(s.snapshots.size,1);drop=false;
+ await a.depart(first);assert.equal(s.snapshots.size,1);assert.equal(a.get(first).pending,null);assert.ok(s.calls.filter(c=>key(c.body?.operation)===key(frozen.operation)).length===3);
+ const gate=deferred(),started=deferred();let hold=true;const original=s.request;a.request=async(path,body)=>{const result=await original(path,body);if(hold&&body?.request?.command==='save'){hold=false;started.resolve();await gate.promise;}return result;};
+ a.edit(first,'Captured next');const leaving=a.depart(first);await started.promise;a.edit(first,'Still newer typing');gate.resolve();await leaving;
+ assert.equal(s.snapshots.get(key(a.get(first).runtime.snapshot)),'Captured next');assert.equal(a.get(first).source,'Still newer typing');assert.equal(a.get(first).sequence,a.get(first).acknowledged+1);
 });

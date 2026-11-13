@@ -13,19 +13,20 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-26
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+Threat analysis must cover adapter switching (browser/MCP/chat), confused-deputy and forged actor/target context, unauthorised permission administration, cross-user drafts/receipts, protected-history or graph disclosure and rights changes during queued/replayed operations. Shared backend user API policy, not frontend controls or workspace unlock, is the required enforcement boundary. No completed security assurance is claimed. See the [accepted shared API scope](../06-subsystems/interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Recorded checks retain original source/toolchain/time scope. No new software validation claim follows from documentation assembly.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Context and problem
-
-Trust boundaries, protected assets and residual security risks. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Scope and exclusions
-
-Trust boundaries, protected assets and residual security risks. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Normative content
 
@@ -70,24 +71,24 @@ The owner requested simpler wording and then asked whether detection is possible
 Method references: [RFC5116 §1.2](https://datatracker.ietf.org/doc/html/rfc5116#section-1.2) separates authenticated encryption from replay protection; the [TPM2 counter interface](https://tpm2-tools.readthedocs.io/en/latest/man/tpm2_nvincrement.1/) demonstrates that protected counter mechanisms exist in some environments. Neither source specifies an HPX witness or guarantees resistance to compromise/restoration of its entire trusted environment.
 
 
-## Examples and counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Dependencies and consequences
-
-Trust boundaries, protected assets and residual security risks. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Open questions and conflicts
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
 ## Source provenance
 
 - `HPX-SRC-0021` — `Specifications/ARCHITECTURE.md`, lines 44–49; SHA-256 `74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 92–99; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 60–67; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Pending restoration-scope design input, 2026-10-27
+
+After the bounded audit integration, the owner was asked which restoration scope the next witness design should cover: workspace files only while separately retained local state survives; or the host and ordinary local witness together, requiring trustworthy latest-state evidence beyond that restored state; or defer witness design while retaining the acceptance gate. The owner requested an explanation, **not a selection or approval**. The explanation distinguishes authentic older workspace replacement from restoring both copies of the evidence, intentional restore/recovery and missing-evidence unknown status. Separately protected hardware state would require its own explicitly verified survival/trust assumptions; no available-platform facility is presumed.
+
+The current recommendation remains to retain the stronger accepted gate while designing a sufficiently independent witness. No specific device/service, weaker initial exception, connection/enrollment, witness format or crash/restore protocol has been selected. HPX-GAP-023 stays open. This scope question is a prerequisite design input, not the final acceptance-scope question: trusted state, update order, missing/offline behaviour and intentional restore/device transfer still need a concrete reviewable design before final acceptance.
+
+## Selected workspace-only restoration scope, 2026-10-27
+
+The owner subsequently answered **“Workspace only.”** HPX-OWNER-008 selects the next design's restoration boundary: an attacker may replace/restore workspace files while trusted local registration/witness state elsewhere on the same machine remains intact. Whole-host restoration that also rolls that witness back is outside this selected scope. Earlier unanswered/clarification-only paragraphs are historical; this is an actual scope choice, not approval of the candidate mechanism or real-data acceptance.
+
+The [local witness proposal](recovery.md#workspace-only-local-witness-proposal) makes surviving trusted state, committed encrypted state, cross-store acknowledgement order, missing/uncertain evidence, intentional restore and proposed backed-up minimum-reader enrollment concrete for owner review. It preserves the accepted freshness gate within the chosen threat boundary; it does not select ADR003's no-detection exception. Default passphrase recovery and separately opted-in keychain custody remain unchanged. No external witness service is required by this local design. HPX-GAP-023 is scope-selected but remains open for mechanism/upgrade and acceptance, alongside HPX-GAP-024's restore/recovery decisions.
+
+## Portable workspace supersedes external witness direction, 2026-10-27
+
+HPX-OWNER-009 requires self-contained portable application/recovery evidence and withdraws the proposed surviving external witness/registration and its upgrade. Historical workspace-only witness sections above are superseded in this respect. A complete authentic rollback of the workspace and all internal evidence cannot be detected under this boundary. Retain authenticated integrity, crash/retry and internal recovery claims only within their actual executed scope; no whole-workspace freshness or real-data acceptance follows. See [the current recovery direction](recovery.md#portable-self-contained-recovery-direction-2026-10-27).

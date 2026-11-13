@@ -1,0 +1,15 @@
+{
+  "[likec4]": {
+    "editor.defaultFormatter": "likec4.likec4-vscode"
+  },
+  "likec4.graphviz.mode": "wasm",
+  "likec4.exclude": [
+    "**/node_modules/**",
+    "**/architecture/site/**",
+    "**/artifacts/**",
+    "**/.oldspecs/**"
+  ],
+  "files.associations": {
+    "*.c4": "likec4"
+  }
+}

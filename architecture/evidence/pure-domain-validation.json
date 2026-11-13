@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-29",
+  "result": "passed",
+  "authority": "Proposed source interpretation;not V3 adoption/runtime/proof acceptance",
+  "views": 20,
+  "source_files": 10,
+  "new_elements": 27,
+  "new_relations": 41,
+  "static_views": {
+    "c3_pure_domain": {
+      "nodes": 9,
+      "edges": 7
+    },
+    "c4_domain_sources": {
+      "nodes": 16,
+      "edges": 18
+    },
+    "c4_domain_history": {
+      "nodes": 14,
+      "edges": 16
+    }
+  },
+  "sequences": {
+    "seq_domain_expansion": 9,
+    "seq_domain_fork": 24,
+    "seq_domain_parent_plan": 10
+  },
+  "domain_source_files": 12,
+  "test_declarations_reviewed_not_run": 47,
+  "protected_files": 429,
+  "concurrent_layout_observation": {
+    "view": "c3_executable",
+    "observation": "Saved geometry changed outside the agent navigation-only updater during modelling;latest arrangement retained,not reset to initial backup",
+    "comparison": "Other existing saved layouts compare to task-start backup;engine compares to latest observed saved arrangement"
+  },
+  "checks": [
+    "All prior model elements/status/relationships and14 view hashes/endpoints/styles retained",
+    "27 source/spec/symbol aliases and41 relationships resolve;each new relationship appears in exactly one intended static view",
+    "20 computed views/navigation targets;engine Pure domain drill-down and reuse of API/Commit/uncertain-result views resolve",
+    "Three guarded sequence trees match inventoried messages;current-authority-before-replay and source-before-plan-before-publication order cross-checked",
+    "All12 Rust domain source files/public-function/test declarations inventoried;47 test declarations reviewed not run",
+    "Direct source search finds no production expansion-validator/UTF16-helper/parent-selector calls;no orchestrator invented",
+    "Domain Cargo/source checks show no third-party dependencies/Serde/storage/network adapters",
+    "Historical extraction manifest matches current Rust source/generated helper/proof hashes;no extraction/proof replay",
+    "Single-binding snapshot adapter and current parent-base API handler cross-checked;experimental temporal methods have no runtime dispatch",
+    "Latest saved engine arrangement retained after external mid-task geometry change;all other prior saved geometry/curves/labels/styles unchanged;agent updates navigation only",
+    "41 new static connectors single cubic;301-point obstacle/bounds samples and box/label/containment checks pass;type/test links dotted",
+    "C2 blue/grey and green/amber/grey semantic badge conventions retained",
+    "All captured application/generated/dist/API/proof/legal/manifest/lockfile/counter inputs byte-identical"
+  ],
+  "formal_evidence": {
+    "status": "historical hashes compared only;not replayed",
+    "rust_toolchain": "nightly-2026-09-17",
+    "lean_toolchain": "leanprover/lean4:v4.35.0",
+    "charon_revision": "260ba2c82588291b1f9efaf4f42d7100adc9c6c2",
+    "aeneas_revision": "74aabd52f77001cf9eaad51b4f4b867a7dc6b111",
+    "start_from": "crate::expansion::spend"
+  },
+  "source_sha256": {
+    "architecture/pure-domain.c4": "ea19308bb89aa95833f2d29d2342aa9ba7cd74800f1df0575d0cd4427eaaf688",
+    "architecture/pure-domain-workflows.c4": "70bfacd67d74bab41c2b567a90dafe3196fde20a11eef0e26a2ef0b7fe40b393"
+  },
+  "visual_inspection": "Native AppKit approximations of three static views inspected;not actual VS Code/webview or UML visual acceptance",
+  "limits": [
+    "Source/manual review and symbol search are not extracted call-graph/formal correspondence",
+    "Full expansion validator/new planners/snapshot closure/application not proved",
+    "Current single-owner/single-occurrence and guarded temporal foundations are narrower than general specifications",
+    "No app tests/build/launch/browser/asset or contract generation/proof extraction or replay/trust/provider/workspace/commit/publication action"
+  ],
+  "likec4_validation": {
+    "valid": true,
+    "errors": [],
+    "stats": {
+      "totalFiles": 10,
+      "totalErrors": 0,
+      "filteredFiles": 10,
+      "filteredErrors": 0
+    }
+  },
+  "documentation_validation": {
+    "result": "passed",
+    "materialized_contracts": 67,
+    "canonical_sections": 116,
+    "claim_units": 509,
+    "requirement_seeds": 31,
+    "archive_bytes_and_spans": "skipped by documentation checker"
+  },
+  "commands_executed": [
+    "architecture/node_modules/.bin/likec4 export json -o /private/tmp/hpx-domain-final.json architecture",
+    "architecture/node_modules/.bin/likec4 validate --json architecture",
+    "python3 /private/tmp/hpx-verify-domain.py",
+    "python3 scripts/verify_documentation.py"
+  ]
+}

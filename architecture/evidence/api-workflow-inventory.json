@@ -1,0 +1,888 @@
+{
+  "seq_save": {
+    "title": "Sequence / Save draft",
+    "scope": "Current ordinary schema1/2 owned-buffer Save. Branch wrappers use branches::apply in the same transaction. Pending requests settle first; current resource authority precedes replay. Message loss recovery is a separate sequence. This is not multi-owner editing or immutable Commit.",
+    "sources": [
+      "docs/07-implementation/protocols/draft-publication.md",
+      "frontend/src/runtime-adapter.js",
+      "crates/runtime/src/main.rs",
+      "crates/storage/src/lib.rs",
+      "crates/storage/src/branches.rs"
+    ],
+    "messages": [
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Capture exact owned text/sequence; serialize by document; settle pending request",
+        "return": false,
+        "navigateTo": "seq_uncertain"
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "If already acknowledged, no Save is sent; otherwise freeze one operation/payload",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Send frozen Save (branch wrapper for a selected child)",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Safe error; keep pending/source",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Select existing command branch",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.api.c4_command_codec",
+        "text": "decode_command: existing Save codec",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_command_codec",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Decode error",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Invalid request; no writer invoked",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_command_codec",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Command without lossy payload round-trip",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Workspace::execute(frozen operation, command)",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "validate_command; exact command digest; BEGIN IMMEDIATE",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.authority.c4_checks",
+        "text": "Current owner/source/branch authority before protected replay",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.authority.c4_checks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Denied; do not grant retained outcome",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Denied/error; transaction rolls back",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Shared response/error path",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Denied/error; transaction rolls back",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Retain source and frozen pending request; no success inferred",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.authority.c4_checks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Current scope allowed",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Read original receipt/digest; only if absent check exact draft preconditions",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Original Saved receipt; no new write",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Shared response/error path",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Original Saved receipt; no new write",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Validate operation/context/generation/sequence; advance ACK only; retain newer typing",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "write_draft / branches::apply: encrypted mutable draft only; no revision or snapshot",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Store original receipt in the same transaction; tx.commit()",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Saved receipt with acknowledged draft generation/sequence",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Shared response/error path",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Saved receipt with acknowledged draft generation/sequence",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Validate operation/context/generation/sequence; advance ACK only; retain newer typing",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Conflict/error; no partial publication",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Shared response/error path",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Conflict/error; no partial publication",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Retain source and frozen pending request; no success inferred",
+        "return": false,
+        "navigateTo": null
+      }
+    ]
+  },
+  "seq_commit": {
+    "title": "Sequence / Commit captured draft",
+    "scope": "Explicit Commit path, not DOM blur or Save. Logical departure additionally skips unchanged captured text after exact snapshot comparison. A matching pending Commit is replayed; otherwise the captured draft is acknowledged before a new Commit. Normal single-parent publication only; no two-parent Merge acceptance.",
+    "sources": [
+      "docs/07-implementation/protocols/draft-publication.md",
+      "docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md",
+      "frontend/src/runtime-adapter.js",
+      "crates/storage/src/lib.rs",
+      "crates/storage/src/branches.rs"
+    ],
+    "messages": [
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Capture intended buffer; serialize within its exact document/branch context",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Reuse original operation and payload",
+        "return": false,
+        "navigateTo": "seq_uncertain"
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "saveCaptured: settle pending and acknowledge captured bytes first",
+        "return": false,
+        "navigateTo": "seq_save"
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Keep pending/source; do not send a Commit",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Freeze Commit with exact acknowledged generation/base/sequence",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Send captured Commit; retain later typing",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Error; captured source remains intact",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Command branch",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.api.c4_command_codec",
+        "text": "Decode existing Commit or branch command",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_command_codec",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Decode error",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Invalid request; no writer invoked",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_command_codec",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Exact command",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Workspace::execute",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "validate_command; exact command digest; BEGIN IMMEDIATE",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.authority.c4_checks",
+        "text": "Current owner/source/branch authority before protected replay",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.authority.c4_checks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Denied; do not grant retained outcome",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Denied/error; transaction rolls back",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Shared response/error path",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Denied/error; transaction rolls back",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Retain source and frozen pending request; no success inferred",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.authority.c4_checks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Current scope allowed",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Read original receipt/digest; only if absent check exact draft preconditions",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Original Committed receipt; no new write",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Shared response/error path",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Original Committed receipt; no new write",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Validate operation/context/generation/sequence; revision/snapshot bindings; advance ACK only; retain newer typing",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Post-Commit clipboard replacement is separate; errors retain committed text",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "write_draft / branches::apply: immutable revision + snapshot + head CAS + draft rebase + retained promotions",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Store original receipt in the same transaction; tx.commit()",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Committed receipt with revision/snapshot",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Shared response/error path",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Committed receipt with revision/snapshot",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Validate operation/context/generation/sequence; revision/snapshot bindings; advance ACK only; retain newer typing",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Post-Commit clipboard replacement is separate; errors retain committed text",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Conflict/error; no partial publication",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Shared response/error path",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Conflict/error; no partial publication",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Retain source and frozen pending request; no success inferred",
+        "return": false,
+        "navigateTo": null
+      }
+    ]
+  },
+  "seq_unlock": {
+    "title": "Sequence / Unlock workspace",
+    "scope": "Existing-workspace unlock. Optional launch bootstrap establishes a session, not storage access. Default passphrase and explicitly selected enrolled keychain paths remain distinct. Invalid input/provider/crypto failures return immediately; subsequent success steps are skipped. Lost unlock acknowledgement has no mutation receipt and remains an identified reconciliation gap.",
+    "sources": [
+      "docs/04-architecture/decisions/0004-local-https-bootstrap.md",
+      "docs/04-architecture/decisions/0014-keychain-unlock-policy.md",
+      "frontend/src/runtime-adapter.js",
+      "crates/runtime/src/main.rs",
+      "crates/storage/src/keychain.rs",
+      "crates/storage/src/lib.rs"
+    ],
+    "messages": [
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Remove fragment from URL before exchange",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Same-origin bootstrap request",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.native.transport.security.c4_bootstrap",
+        "text": "Bootstrap exception to cookie requirement",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_bootstrap",
+        "target": "hpx.native.transport.security.c4_compare",
+        "text": "secure_equal launch token",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_compare",
+        "target": "hpx.native.transport.security.c4_bootstrap",
+        "text": "Token comparison result",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_bootstrap",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Separate Secure/HttpOnly/SameSite cookie; workspace stays locked",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_bootstrap",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Safe denial; no session or workspace granted",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Authenticated runtime/status and explicit selected unlock",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.native.transport.lifecycle.c4_lifecycle",
+        "text": "Session valid; lifecycle routes may run while workspace locked",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.lifecycle.c4_lifecycle",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Conflict/rate-limit/error; no automatic recovery grant",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.lifecycle.c4_lifecycle",
+        "target": "hpx.native.storage.c4_lifecycle",
+        "text": "Workspace::open or open_keychain; shared attempt throttle",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_lifecycle",
+        "target": "hpx.native.storage.c4_lifecycle",
+        "text": "Read/validate bootstrap schema and selected wrapper",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_lifecycle",
+        "target": "hpx.native.crypto.c4_primitives",
+        "text": "SecretKey::unlock with expected workspace/epoch",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.crypto.c4_primitives",
+        "target": "hpx.native.storage.c4_lifecycle",
+        "text": "Managed key or authentication error",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_lifecycle",
+        "target": "hpx.native.keychain.c4_provider",
+        "text": "Provider::load for this workspace; OS approval may deny",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.keychain.c4_provider",
+        "target": "hpx.native.storage.c4_lifecycle",
+        "text": "Device secret or explicit provider error",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_lifecycle",
+        "target": "hpx.native.crypto.c4_primitives",
+        "text": "Unlock device wrapper for the same workspace key",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.crypto.c4_primitives",
+        "target": "hpx.native.storage.c4_lifecycle",
+        "text": "Managed key or authentication error",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_lifecycle",
+        "target": "hpx.native.storage.c4_lifecycle",
+        "text": "Workspace::from_key validates catalog; key remains Rust-only",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_lifecycle",
+        "target": "hpx.native.transport.lifecycle.c4_lifecycle",
+        "text": "Unlocked Workspace",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.lifecycle.c4_lifecycle",
+        "target": "hpx.native.transport.lifecycle.c4_lifecycle",
+        "text": "State.workspace = Some(workspace)",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.lifecycle.c4_lifecycle",
+        "target": "hpx.browser.c4_protocol",
+        "text": "locked=false; normal protected document reads may proceed",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_lifecycle",
+        "target": "hpx.native.transport.lifecycle.c4_lifecycle",
+        "text": "Safe error; no Workspace installed",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.lifecycle.c4_lifecycle",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Remain locked; explicit passphrase alternative stays available",
+        "return": true,
+        "navigateTo": null
+      }
+    ]
+  },
+  "seq_uncertain": {
+    "title": "Sequence / Uncertain command outcome",
+    "scope": "Current same-tab Save/Commit recovery, not unlock reconciliation. retryTransport makes at most two attempts per invocation and only auto-retries a status-less error. Pending operation/payload live in memory; no reload-safe journal or automatic receipt polling. Authorized receipt lookup exists separately, but this adapter replays commands.",
+    "sources": [
+      "docs/07-implementation/protocols/draft-publication.md",
+      "frontend/src/runtime-adapter.js",
+      "frontend/tests/runtime-adapter.test.js",
+      "crates/storage/src/lib.rs",
+      "crates/storage/src/authority.rs"
+    ],
+    "messages": [
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Freeze operation, payload and owner context before first send",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Send original command",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Current transport/session/unlock checks",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Execute original operation",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.authority.c4_checks",
+        "text": "Initial execute enforces current authority before writes/replay",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.authority.c4_checks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Current scope or error",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Result and receipt committed atomically",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "No committed original result; rollback/no execution",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Status-less failure: retry original once; if both fail retain pending unchanged",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Known HTTP errors are not auto-retried; mismatched replies never advance ACK",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.native.transport.security.c4_gates",
+        "text": "Later retry: original frozen request before newer intent",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Safe error; no writer invoked; keep frozen pending",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.security.c4_gates",
+        "target": "hpx.native.transport.api.c4_publication",
+        "text": "Current session/unlock valid",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.transport.api.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Same operation ID and identical command bytes",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.authority.c4_checks",
+        "text": "Reauthorize current command/source/branch scope before replay",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.browser.c4_protocol",
+        "text": "No retained outcome disclosed; keep local source",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.authority.c4_checks",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Current authority valid",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Lookup original receipt and compare command digest",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Original result; no second revision or duplicate mutation",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.native.storage.c4_publication",
+        "text": "Apply once and store receipt in one transaction",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Newly committed original result",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.native.storage.c4_publication",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Conflict; no fresh operation inferred safe",
+        "return": true,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Clear pending; advance captured ACK only; preserve newer typing",
+        "return": false,
+        "navigateTo": null
+      },
+      {
+        "source": "hpx.browser.c4_protocol",
+        "target": "hpx.browser.c4_protocol",
+        "text": "Only then process separately frozen newer intent",
+        "return": false,
+        "navigateTo": "seq_save"
+      }
+    ]
+  }
+}

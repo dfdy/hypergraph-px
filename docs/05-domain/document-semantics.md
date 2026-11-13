@@ -13,18 +13,26 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+User document, branch, draft and Commit operations enter through the shared user API with user–workspace permissions. Draft acknowledgement remains distinct from Commit; neither UI selection nor an AI tool call grants write authority. Domain semantics remain common to humans and AI users. See the [accepted shared API scope](../06-subsystems/interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Formal meanings do not imply every type or operation is implemented. See implementation discrepancies and requirement evidence separately.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Vocabulary and mathematical notation
-
-Occurrences, manifests, revision ancestry, derivation and closed snapshot reconstruction. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Entities and identities
 
+**Reconstruction scope (HPX-OWNER-043):** [M1 closed state](../../architecture/Conceptual/identity-closure.c4) now specifies an explicit logical list of the exact version at each inclusion position, including exact cycle-boundary targets. The first reconstruction guarantee is identical source text and included versions; visual appearance, font rendering and typesetting are external to that guarantee. Retain deterministic source-emission inputs and dependencies that affect source bytes; this does not require preserving a visual rendering environment. Physical record/encoding choices remain unadopted. The newer owner scope qualifies inherited renderer/profile wording below without rewriting source provenance.
+
+**Current cycle qualification (HPX-OWNER-041):** [cyclic inclusions may be saved](hypergraph-mathematics.md#accepted-cycle-aware-inclusion-policy--hpx-owner-041). A complete finite reconstruction accounts for exact expanded contexts and explicit cycle boundaries under the frozen stopping rule, rather than infinitely enumerating cyclic occurrence paths. Missing dependencies or exhausted budgets are not cycle boundaries or complete closure. Exact boundary/state encoding remains unadopted; immutable revision ancestry and historical selections are unchanged. Source passages below retain their provenance subject to this qualification.
 
 
 ### Identities, occurrences and temporal state
@@ -87,30 +95,6 @@ Composite manifests bind ordered child identities and pin/follow rules. Reorderi
 Compilation targets Markdown and HTML, with a machine-readable source/revision manifest; PDF is later. Outputs bind an exact authorized closure, citation resources and compiler profile. Multi-owner source exports and flattened assembly are distinct formats/options. Export failure cannot silently omit inaccessible material or use newer revisions. Temporary local-buffer downloads retain their existing uncommitted label.
 
 
-## Relationships and permitted states
-
-Occurrences, manifests, revision ancestry, derivation and closed snapshot reconstruction. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Operations and transitions
-
-Occurrences, manifests, revision ancestry, derivation and closed snapshot reconstruction. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Invariants
-
-Occurrences, manifests, revision ancestry, derivation and closed snapshot reconstruction. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Unresolved semantics
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Verification/proofs
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
 ## Source provenance
 
 - `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 20–27; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
@@ -118,3 +102,11 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../03-re
 - `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 53–59; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 113–125; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 28–37; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+## Retained autosaved selections and branch preservation — OWNER049/050
+
+[M1](../../architecture/Conceptual/identity-closure.c4) owns RQ040–041's retained-selection and constructed-version branch scope; [decision provenance](../02-governance/OWNER_DECISIONS.md#last-autosaved-composition-and-historical-version-accumulation--2026-11-01) retains the owner's successive refinements. Reopen A using its last successful acknowledged autosave, with exact occurrence-specific nested selections, not B's newest head or merely A's last Commit. Unacknowledged typing is not claimed durable. Newer authorised versions have a separate source-neutral indication; the comparison relation remains undesigned and cannot expose inaccessible versions or retarget history.
+
+Routine autosaves must not accumulate historical versions merely because they occur. The future universal autosave/Commit relationship is reopened; current ADR019 private Save/checkpoint versus Commit and OWNER010 departure Commit keep their original scoped meanings and implementation evidence. No deletion/coalescing or mutable-history exception is adopted. Current private visibility and authority remain; current whole-owned draft records do not establish general nested composition recovery.
+
+Save-as-branch must preserve an authorised constructed current-document composition and its exact selections without silently changing document/content identity into a Fork. Ordinary current editing already has an owning branch; selected constituent versions and read-only projections are separate. [Branch reconciliation](../../architecture/proposals/branch-selection-reconciliation.md) explains the tentative known-branch hypothesis, main designation, graph reconstruction and non-authoritative caching. Exact branch-capture publication/parentage, general working-state representation and main designation/construction remain design work, not accepted schemas or a latest-all-nodes rule.

@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-31",
+  "authority": "HPX-OWNER-041",
+  "scope": "Accepted cycle policy and required unproved Lean obligations; specification only",
+  "targetedLayout": {
+    "manual": {
+      "layout": "manual",
+      "drifts": 0,
+      "nodes": 9,
+      "edges": 7
+    },
+    "auto": {
+      "layout": "auto",
+      "drifts": 0,
+      "nodes": 9,
+      "edges": 7
+    },
+    "served": {
+      "layout": "manual",
+      "drifts": 0,
+      "nodes": 9,
+      "edges": 7
+    }
+  },
+  "modelViews": 45,
+  "snapshotSync": "Only existing expansion note and computed hash; all saved geometry/labels/bounds preserved",
+  "baselineFiles": 62,
+  "unchangedBaselineFiles": 60,
+  "changedBaselineFiles": [
+    "architecture/.likec4/c3_pure_domain.likec4.snap",
+    "architecture/C3/pure-domain.c4"
+  ],
+  "proofSources": "All baseline-covered Lean files byte-identical; no proof executed",
+  "attemptNotes": [
+    "Initial saved-to-served label comparison found renderer-inserted line wrapping; final comparison checks edge label content modulo whitespace, saved label bytes remain unchanged.",
+    "Raw layoutView without explicit layout type returns the cached automatic calculation; the final single-view served check applies the same manual-selection step used by diagrams().",
+    "Initial broad link scan matched prose mentioning link rewriting; the corrected declaration-aware scan passes."
+  ],
+  "limits": [
+    "No cyclic traversal implementation, UI implementation, Lean proof/extraction/replay, application build/runtime, persistent format/version change or publication.",
+    "No rendered inspection; one affected view only; unrelated layouts compared by hashes.",
+    "Exact recurrence key/boundary encoding and other proposal mechanisms remain unadopted."
+  ],
+  "syntax": {
+    "command": "npm --prefix architecture run validate",
+    "passed": true,
+    "files": 26,
+    "layoutCalculated": false
+  },
+  "documentation": {
+    "command": ".verification/semantic-protocol-venv/bin/python scripts/verify_documentation.py",
+    "passed": true,
+    "materialized": 71,
+    "reserved": 27,
+    "requirementSeeds": 38,
+    "localSourceArchiveSpans": "skipped"
+  },
+  "proofObligations": {
+    "HPX-PROP-006": "required;not proved",
+    "HPX-PROP-007": "required;not proved",
+    "HPX-PROP-008": "required;not proved"
+  },
+  "localModelLinkDeclarationsChecked": 1162,
+  "whitespace": "CRLF-aware scoped tracked-document diff check passed"
+}

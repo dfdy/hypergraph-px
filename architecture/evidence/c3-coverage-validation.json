@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-29",
+  "result": "passed",
+  "authority": "Proposed source-backed C3 grouping;not V3 adoption/runtime acceptance",
+  "views": 25,
+  "source_files": 11,
+  "overview_blocks": 8,
+  "focused_views_reused": 3,
+  "focused_views_added": 5,
+  "new_c4_views": 0,
+  "new_components": 18,
+  "new_relationships": 56,
+  "reused_relationships": 13,
+  "new_static_views": {
+    "c3_application": {
+      "nodes": 18,
+      "edges": 17
+    },
+    "c3_workspace_persistence": {
+      "nodes": 13,
+      "edges": 13
+    },
+    "c3_crypto": {
+      "nodes": 9,
+      "edges": 7
+    },
+    "c3_keychain": {
+      "nodes": 12,
+      "edges": 13
+    },
+    "c3_integrations": {
+      "nodes": 20,
+      "edges": 20
+    }
+  },
+  "protected_files": 429,
+  "externally_changed_layouts_retained": [
+    "c3_executable"
+  ],
+  "checks": [
+    "Eight overview leaf blocks uniquely map to scope-equivalent focused C3 views;external C2/presentation groups excluded",
+    "Three focused views reused;five C3 views added;C4 view set unchanged and no code elements/modules/services introduced",
+    "All original model elements/status/relationships and20 view hashes/endpoint/style sets retained",
+    "18 source/spec/symbol responsibility mappings and56 new relationships resolve;13 existing relationships reused unchanged",
+    "All five view relation sets exactly match intended scoped dependencies;no child-link leakage into higher views",
+    "All25 view/node/edge navigation targets resolve;overview and runtime/domain onward links checked",
+    "Latest externally changed engine saved arrangement retained;all other prior saved geometry unchanged;agent updates navigation only",
+    "Current authority before protected replay;keychain backup/create/wrapper-commit and wrapper-delete/native-delete order cross-checked",
+    "Locked session status remains separate from native credential access and unlocked enrollment/removal",
+    "Ciphertext-address utility has no production storage consumer;planned adapters remain planned;browser Markdown subset remains outside native integration",
+    "70 static single-cubic connectors pass301-point obstacle/bounds and box/label/containment checks;C2 palette/status and distinct data/planned styles retained",
+    "All captured application/generated/dist/API/proof/legal/manifest/lockfile/counter bytes unchanged"
+  ],
+  "source_sha256": {
+    "architecture/remaining-c3.c4": "d1ec212f96203c946d0a65d4ae307d6479a9b2b99de08c07db0fece9cb23a800"
+  },
+  "visual_inspection": "Five static native AppKit approximations inspected for basic spacing/routing;not actual VS Code/webview acceptance",
+  "limits": [
+    "Responsibility groupings share existing files/functions;not new Rust module boundaries or an adopted refactor",
+    "Source/symbol review and static diagram checks are not extracted call graphs or security/performance/formal assurance",
+    "Relevant test sources inventoried/reviewed;no app/native-provider/proof checks executed",
+    "No browser/app build or launch/generation/trust/provider/workspace/commit/publication action"
+  ],
+  "likec4_validation": {
+    "valid": true,
+    "errors": [],
+    "stats": {
+      "totalFiles": 11,
+      "totalErrors": 0,
+      "filteredFiles": 11,
+      "filteredErrors": 0
+    }
+  },
+  "documentation_validation": {
+    "result": "passed",
+    "materialized_contracts": 68,
+    "canonical_sections": 116,
+    "claim_units": 509,
+    "requirement_seeds": 31,
+    "archive_bytes_and_spans": "skipped by documentation checker"
+  },
+  "commands_executed": [
+    "architecture/node_modules/.bin/likec4 export json -o /private/tmp/hpx-c3-coverage-final.json architecture",
+    "architecture/node_modules/.bin/likec4 validate --json architecture",
+    "python3 /private/tmp/hpx-verify-c3-coverage.py",
+    "python3 scripts/verify_documentation.py"
+  ]
+}

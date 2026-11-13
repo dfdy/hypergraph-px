@@ -51,3 +51,7 @@ test('captured-reference Fork rejects malformed scopes and scalar byte lengths b
  const f=fixture(),binding={document:id(1),node:id(2),snapshot:id(5),revision:id(4),occurrence_path:[id(3)],start_byte:0,end_byte:1};
  assert.throws(()=>f.a.forkReference(binding,'😀','Historic fork'),/Invalid captured/);assert.equal(f.calls.length,0);
 });
+
+test('adaptive Fork from committed bytes retains its source in derivation without adding a clipboard entry',async()=>{
+ const f=fixture();f.a.features.workingCopy=true;const result=await f.fork();assert.equal(result.source,text);assert.deepEqual(f.calls.map(c=>c.path),['snapshot','commands','editor']);assert.equal(f.a.privateClipboard.total,0);assert.equal(f.a.workingClipboard.total,0);assert.equal(f.calls[1].body.request.plan.expected_draft,null);
+});

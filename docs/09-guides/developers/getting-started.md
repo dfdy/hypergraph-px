@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 Do not use certificate-warning bypasses. No trusted live runtime was launched by this migration.
 
@@ -56,7 +56,7 @@ Source `HPX-SRC-0028`, original lines 290–296. Preserved contract/evidence wor
 
 Frontend development takes place in this IDE/workspace. Receive exported source/assets in the local [frontend inbox](<../reference/development-evidence.md>), preserving raw input and reviewing it against this specification and the integration evaluation before adoption. An export is reference code/design, not an accepted data/storage/application architecture. Refactor or replace its internals where needed.
 
-The initial accepted frontend runs as a separate local development server with synthetic mock document data and a typed fixture adapter. Configure browser automation/screenshots and interactive checks against the actual local page. Do not claim a working frontend, screenshots or behavior tests before an implementation runs. The eventual Rust release embeds the built static frontend and assets in one executable; the development server and browser-test tools do not become production runtime dependencies. See [frontend development](<getting-started.md>) for intake state and workflow.
+The initial accepted frontend runs as a separate local development server with synthetic mock document data and a typed fixture adapter. Configure browser automation/screenshots and interactive checks against the actual local page. Do not claim a working frontend, screenshots or behavior tests before an implementation runs. The Rust runtime embeds the built static frontend and assets in one executable; current delivery/acceptance is bounded by the development-state record. The fixture development server and browser-test tools are not release-runtime dependencies. See [frontend development](<getting-started.md>) for intake state and workflow.
 
 
 ## Examples

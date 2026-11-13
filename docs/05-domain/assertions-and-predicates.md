@@ -13,18 +13,12 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 Formal meanings do not imply every type or operation is implemented. See implementation discrepancies and requirement evidence separately.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Vocabulary and mathematical notation
-
-Stable predicate identity, role-labelled assertions, overlapping tags and claim properties. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Entities and identities
-
 
 
 ### Relationship identity, browsing tags and assertion properties
@@ -72,30 +66,6 @@ Source `HPX-SRC-0022`, original lines 32–34. Preserved contract/evidence wordi
 
 These are tab-only fixture semantics. A real domain implementation must bind assertions and their revisions, authenticated proposer/creator and review events, permission-scoped participants, structured scope/evidence and vocabulary versions through the shared Rust command path. Claim attribution must never overwrite authenticated authorship or operation provenance. Free-text context does not satisfy a future multi-participant or authorization contract. This UI work adds no Rust predicate persistence, real-data transport, external disclosure or Lean theorem.
 
-
-## Relationships and permitted states
-
-Stable predicate identity, role-labelled assertions, overlapping tags and claim properties. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Operations and transitions
-
-Stable predicate identity, role-labelled assertions, overlapping tags and claim properties. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Invariants
-
-Stable predicate identity, role-labelled assertions, overlapping tags and claim properties. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Unresolved semantics
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Verification/proofs
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

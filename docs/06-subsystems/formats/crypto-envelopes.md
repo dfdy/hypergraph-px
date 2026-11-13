@@ -13,18 +13,12 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 Preserve the byte adapter format exactly. Future explicit application record versions do not silently change envelope version/suite.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Purpose and magic/version identifiers
-
-Exact implemented HGOB/HGWK byte layouts and cryptographic bindings. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Binary/text encoding and schema
-
 
 
 ### Versioned envelope bytes
@@ -62,26 +56,6 @@ Key wrapper: `HGWK[4] | version[1] | suite[1] | m_kib[4] | passes[4] | lanes[4] 
 
 Ciphertext/tag use the library postfix-tag format. Equal plaintexts sealed separately should have unrelated ciphertext/address because nonces are independently random; this does not hide lengths, reuse of an already-stored object or access patterns. Maximum object envelope is 16 MiB+46. There is no public plaintext digest or cross-domain plaintext deduplication.
 
-
-## Canonical and optional fields
-
-Exact implemented HGOB/HGWK byte layouts and cryptographic bindings. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Compatibility and migration
-
-Exact implemented HGOB/HGWK byte layouts and cryptographic bindings. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Data-preservation guarantees
-
-Exact implemented HGOB/HGWK byte layouts and cryptographic bindings. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Corruption and failure semantics
-
-Retain the scoped limits above and [open questions/conflicts](<../../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Validation fixtures
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

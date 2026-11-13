@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-31",
+  "authority": "HPX-OWNER-043",
+  "scope": "Specification choices only;timestamp meaning remains an owner question",
+  "targetedLayouts": {
+    "concept_identity_closure": {
+      "layout": "manual",
+      "drift": 0,
+      "nodes": 8,
+      "edges": 8
+    },
+    "c3_browser_ui": {
+      "layout": "manual",
+      "drift": 0,
+      "nodes": 19,
+      "edges": 19
+    }
+  },
+  "otherSavedLayoutsByteIdentical": 30,
+  "snapshotChanges": "one note and hash per affected view;all saved geometry and labels unchanged",
+  "limits": [
+    "No application implementation,test,build,format change,publication or Lean proof.",
+    "No actual rendered inspection;served manual selection checked through LikeC4 internal selection path.",
+    "Timestamp authority/ties,setting scope/default and marker lifecycle remain unadopted."
+  ],
+  "syntax": {
+    "passed": true,
+    "files": 26,
+    "layoutComputation": false
+  },
+  "records": {
+    "canonical": 5,
+    "examples": 5,
+    "errors": 0
+  },
+  "documentation": {
+    "passed": true,
+    "materialized": 71,
+    "reserved": 27,
+    "requirementSeeds": 38,
+    "archiveSourceSpanChecks": "skipped"
+  },
+  "decisionRecord": "docs/engineering/semantic-protocol/records/HPX-DEC-20261031-reconstruction-conflict-policy.json"
+}

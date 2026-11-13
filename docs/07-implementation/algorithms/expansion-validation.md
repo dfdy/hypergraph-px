@@ -13,23 +13,12 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 Only the spend helper has an extracted-Rust proof. Graph examples/oracle tests are separate evidence.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
+**Policy boundary, HPX-OWNER-041:** this existing validator still rejects cycles in its supplied finite DAG projection; its implementation and original tests are unchanged. It is not a validator of the newly accepted cyclic saved-inclusion graph and does not implement cycle-boundary expansion or UI navigation. Any reuse must declare the separate acyclic projection it validates; the [new policy](../../05-domain/hypergraph-mathematics.md#accepted-cycle-aware-inclusion-policy--hpx-owner-041) and [required unproved Lean obligations](../formal-invariants.md#required-cycle-aware-expansion-proofs--hpx-owner-041) do not follow from its old evidence.
 
-## Problem and assumptions
-
-Bounded Kahn expansion validation and its exact work/error contract. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Inputs and outputs
-
-Bounded Kahn expansion validation and its exact work/error contract. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Preconditions
-
-Bounded Kahn expansion validation and its exact work/error contract. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Mathematical definition
 
@@ -45,30 +34,6 @@ The implementation uses iterative Kahn validation and ordered maps. Parallel edg
 
 Five tests cover repeated/parallel/isolated dependencies, self/long/disconnected cycles, invalid vertex catalogues/endpoints and exact independent budgets. The last exhaustively checks all 512 directed graphs on three vertices against an independent transitive-closure oracle, with reversed input order and input preservation. Actual execution evidence belongs to the issue/work record; these tests are not Lean/Rust correspondence proofs. Separate rank/path model theorems are checked, as documented in the formal-assurance record.
 
-
-## Pseudocode
-
-Bounded Kahn expansion validation and its exact work/error contract. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## State transition and postconditions
-
-Bounded Kahn expansion validation and its exact work/error contract. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Invariants and termination
-
-Bounded Kahn expansion validation and its exact work/error contract. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Correctness argument
-
-Bounded Kahn expansion validation and its exact work/error contract. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Complexity and resource bounds
-
-Bounded Kahn expansion validation and its exact work/error contract. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Failure cases and test vectors
-
-Retain the scoped limits above and [open questions/conflicts](<../../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
 
 ## Source provenance
 

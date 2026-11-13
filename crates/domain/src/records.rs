@@ -17,6 +17,7 @@ ids!(
     SnapshotId,
     OperationId,
     DraftId,
+    CheckpointId,
     PrincipalId,
     DeviceId,
     GroupId,

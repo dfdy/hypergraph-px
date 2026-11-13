@@ -1,0 +1,66 @@
+{
+  "repository": "dfdy/HPX-Semantic-Communication-Protocol",
+  "commit": "fe740bdc66c55bfbd1fd55a5c4d19f0920b1ebd1",
+  "reachableCommits": 1,
+  "refs": [
+    "refs/heads/main",
+    "refs/remotes/origin/HEAD",
+    "refs/remotes/origin/main"
+  ],
+  "files": 29,
+  "secretOrPersonalDataCandidates": [],
+  "commitMetadataAudit": {
+    "authorEmailPreviouslyPublicOrNoreply": true,
+    "committerEmailPreviouslyPublicOrNoreply": true,
+    "authorNamePreviouslyPublic": true,
+    "committerNamePreviouslyPublic": true,
+    "message": "feat:add HPX semantic communication protocol v0.5.0"
+  },
+  "exampleRecordSummaries": [
+    {
+      "path": "docs/engineering/semantic-protocol/examples/HPX-HANDOFF-20261030-architecture-verification.json",
+      "id": "HPX-HANDOFF-20261030-architecture-verification",
+      "actor": "agent:architecture",
+      "sources": []
+    },
+    {
+      "path": "docs/engineering/semantic-protocol/examples/HPX-ISSUE-20261030-closure-semantics.json",
+      "id": "HPX-ISSUE-20261030-closure-semantics",
+      "actor": "agent:architecture",
+      "sources": []
+    },
+    {
+      "path": "docs/engineering/semantic-protocol/examples/HPX-PROP-20261030-closed-composition.json",
+      "id": "HPX-PROP-20261030-closed-composition",
+      "actor": "agent:architecture",
+      "sources": []
+    },
+    {
+      "path": "docs/engineering/semantic-protocol/examples/HPX-PROP-20261030-impact-example.json",
+      "id": "HPX-PROP-20261030-impact-example",
+      "actor": "agent:architecture",
+      "sources": []
+    },
+    {
+      "path": "docs/engineering/semantic-protocol/examples/HPX-PROTO-20261030-add-impact-extension.json",
+      "id": "HPX-PROTO-20261030-add-impact-extension",
+      "actor": "agent:architecture",
+      "sources": []
+    }
+  ],
+  "externalUrls": [
+    "https://json-schema.org/draft/2020-12/schema"
+  ],
+  "allFilesUTF8": true,
+  "date": "2026-10-31",
+  "finding": "No private information detected in29 tracked files and1 reachable commit;author/committer identifiers were already public",
+  "visibilityChange": "User condition fulfilled;repository made public and anonymous API access confirmed",
+  "limitations": "Targeted credential/personal-data scan and package/example/provenance review;not a mathematical guarantee of absence",
+  "ownerPrivacyClarification": "Previously public contact details were still personal information;owner requested removal from Git metadata.",
+  "currentMetadataAudit": {
+    "commit": "49cc59820b23c863709263ab0e0741cc0a8ef09b",
+    "personalEmailInCurrentMainHistory": false,
+    "oldObjectsStillAccessibleOnGitHub": true,
+    "details": "HISTORY_PRIVACY.md"
+  }
+}

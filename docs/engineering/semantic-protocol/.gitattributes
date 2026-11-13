@@ -1,0 +1,2 @@
+# Preserve canonical byte-for-byte LF framing across Windows/macOS/Linux checkouts.
+PROTOCOL.md text eol=lf

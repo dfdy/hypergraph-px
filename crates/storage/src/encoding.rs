@@ -7,6 +7,37 @@ use crate::{Error, Result};
 
 pub const RECORD_VERSION: u32 = 1;
 
+// Wire-schema primitives belong to adapters, never the pure domain. The optional
+// feature documents existing transport DTOs without changing persistence codecs.
+#[cfg(feature = "api-schema")]
+mod wire_schema {
+    use super::*;
+    pub const ID_BYTES: usize = 32;
+    #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+    #[serde(transparent)]
+    pub struct Id(pub [u8; ID_BYTES]);
+    // Utoipa's default array schema omits fixed length and the u8 upper bound.
+    // Derive these primitive constraints from the same Rust representation.
+    impl utoipa::PartialSchema for Id {
+        fn schema() -> utoipa::openapi::RefOr<utoipa::openapi::schema::Schema> {
+            use utoipa::openapi::schema::{ArrayBuilder, ObjectBuilder, Type};
+            ArrayBuilder::new()
+                .items(
+                    ObjectBuilder::new()
+                        .schema_type(Type::Integer)
+                        .minimum(Some(u8::MIN))
+                        .maximum(Some(u8::MAX)),
+                )
+                .min_items(Some(ID_BYTES))
+                .max_items(Some(ID_BYTES))
+                .into()
+        }
+    }
+    impl utoipa::ToSchema for Id {}
+}
+#[cfg(feature = "api-schema")]
+pub use wire_schema::{ID_BYTES, Id};
+
 /// Conversion is lossless; JSON decoding checks the exact array length and byte range.
 pub trait Identity: Sized {
     fn bytes(&self) -> [u8; 32];
@@ -31,6 +62,7 @@ identities!(
     SnapshotId,
     OperationId,
     DraftId,
+    CheckpointId,
     PrincipalId,
     DeviceId,
     GroupId,
@@ -140,6 +172,46 @@ pub(crate) fn encode_record<T: Serialize>(kind: i32, value: &T) -> Result<Vec<u8
         payload: value,
     })
     .map_err(|_| Error::Format)
+}
+
+/// Stream a strict wrapper without constructing an unbounded intermediate JSON value.
+pub(crate) fn encode_record_limited<T: Serialize>(
+    kind: i32,
+    value: &T,
+    limit: usize,
+) -> Result<Vec<u8>> {
+    use std::io::{self, Write};
+    struct Output {
+        bytes: Vec<u8>,
+        left: usize,
+    }
+    impl Write for Output {
+        fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+            self.left = self
+                .left
+                .checked_sub(bytes.len())
+                .ok_or_else(|| io::Error::other("record byte limit"))?;
+            self.bytes.extend_from_slice(bytes);
+            Ok(bytes.len())
+        }
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
+    let mut output = Output {
+        bytes: Vec::new(),
+        left: limit,
+    };
+    serde_json::to_writer(
+        &mut output,
+        &Record {
+            record_version: RECORD_VERSION,
+            record_kind: kind,
+            payload: value,
+        },
+    )
+    .map_err(|_| Error::Limit)?;
+    Ok(output.bytes)
 }
 
 pub(crate) fn decode_record<T: DeserializeOwned>(kind: i32, bytes: &[u8]) -> Result<T> {

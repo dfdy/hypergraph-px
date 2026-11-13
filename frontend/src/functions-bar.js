@@ -1,5 +1,5 @@
 import {selectionKind} from './selection.js';
-import {documentHeadings,selectedWords} from './context-actions.js';
+import {documentHeadings} from './context-actions.js';
 
 const make = (tag,text) => {const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
 export function installFunctionsBar(api) {
@@ -8,7 +8,7 @@ export function installFunctionsBar(api) {
   const embed=document.querySelector('#embedSelection');
   function frozen() {return Object.freeze({...api.getContext()});}
   function current(context) {
-    return api.getContext().document===context.document && api.getDocument(context.document).sequence===context.sequence;
+    const active=api.getContext();return (!api.canEdit||api.canEdit())&&active.document===context.document&&active.buffer===context.buffer&&api.getDocument(context.document).sequence===context.sequence;
   }
   function modal(title,description,context) {
     const dialog=make('dialog');dialog.className='function-dialog';
@@ -66,17 +66,21 @@ export function installFunctionsBar(api) {
     actions.append(create);title.focus();title.select();
   };
   link.onclick=()=>{
-    const context=frozen(),headings=documentHeadings(api.getDocument(context.document).source);
-    if(!headings.length)return;
-    const {dialog,body,actions,close}=modal('Link to a heading','Insert a Markdown heading link in this document. Graph relationships are not connected in this preview.',context);
+    if(api.canEdit&&!api.canEdit())return;
+    const context=frozen();if(context.from===context.to){api.notify('Select the text to link first.');return;}
+    const headings=documentHeadings(api.getDocument(context.document).source);
+    if(!headings.length){api.notify('Add a heading to this document before linking to it.');return;}
+    const selected=api.exactSelection?.(context)??context.text;
+    const {body,actions,close}=modal('Link to a heading','Link the selected text to a heading in this document.',context);
     const target=field(body,'Target heading',make('select'));
     headings.forEach((h,i)=>{const option=make('option',h.label);option.value=i;target.append(option);});
-    const label=field(body,'Link text',make('input'));label.value=context.text||headings[0].label;
+    const label=field(body,'Link text',make(/[\r\n]/.test(selected)?'textarea':'input'));label.value=selected||headings[0].label;let edited=false;label.oninput=()=>edited=true;
     const insert=make('button','Insert Markdown link');insert.className='primary-action';
     insert.onclick=()=>{
-      if(!current(context)){api.notify('Source changed. Reopen Link against the current document.');close();return;}
-      if(!label.value.trim()){label.focus();return;}
-      api.insertLink(context,headings[Number(target.value)],label.value.trim());close();
+      if(!current(context)){api.notify('Source changed. Reopen Link against the current selection.');close();return;}
+      const text=!edited&&context.from!==context.to?selected:label.value;
+      if(!text.trim()){label.focus();return;}
+      api.insertLink(context,headings[Number(target.value)],text);close();
     };
     actions.append(insert);
   };
@@ -101,8 +105,8 @@ export function installFunctionsBar(api) {
     fork.disabled=api.runtime?(!api.forkSupported||!api.canFork()||context.from===context.to):!selectionKind(source,context.from,context.to);
     embed.disabled=!!api.runtime;
     fork.title=api.runtime?'Create an independent document from committed source':fork.disabled?'Select a whole sentence, paragraph or section':'Create an independent tab-only demo fork';
-    link.disabled=!documentHeadings(source).length||context.from!==context.to&&!selectedWords(source,context.from,context.to);
-    link.title=link.disabled?'Use a caret or whole-word selection in a document with headings':'Insert a plain Markdown heading link';
+    link.disabled=context.from===context.to||!documentHeadings(source).length||!!api.canEdit&&!api.canEdit();
+    link.removeAttribute('title');
     embed.title='Choose and preview shared source content';
   }};
 }

@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-29",
+  "scope": "Specification-to-C2 audit; design interpretation proposed; no application acceptance claim",
+  "result": "passed",
+  "c2_elements": 16,
+  "presentation_groups": 2,
+  "c2_connections": 17,
+  "existing_connections": 9,
+  "planned_connections": 8,
+  "checks": [
+    "LikeC4 syntax and semantics: zero diagnostics",
+    "All three views layout successfully",
+    "Exact C2 elements and existing/planned line styles",
+    "Zotero desktop/cloud separately represented",
+    "Workspace outside executable; backup distinct from authoritative workspace",
+    "C1 -> C2 -> C3 navigation preserved; C1 hides internals",
+    "Local source links resolve",
+    "Curved routing retained in C2 source",
+    "Protected application/proof inputs unchanged",
+    "Documentation metadata/source/coverage/local-link mechanical checks passed; architecture audit links resolve"
+  ],
+  "protected_inputs_unchanged": 128,
+  "limits": [
+    "No browser opened or automated",
+    "No runtime build or application tests; no new runtime delivery or proof claim",
+    "Client-held deployment, Pandoc packaging, portable formats and remote protocols remain unselected"
+  ],
+  "model_sha256": {
+    "architecture/context.c4": "8d3c3885870b9fc83edf144bcb6d64cfba319546965a8ddf5f5f2b217f6f6cea",
+    "architecture/executable.c4": "4e017972e68a532cd36d790d90cb079ebbbbfa5628d18869482c47c47ccd52ae",
+    "architecture/containers.c4": "39adc667ef22fa1220b786ff350b1fea16b4b78d58b58812000a4e31329a89cf"
+  },
+  "source_sha256": {
+    "docs/README.md": "e25271bdda0f5042cbe5166a296a9be23498b0cd3f07a09e243adf229fadb8ef",
+    "docs/01-purpose/scope-and-non-goals.md": "ca29c67f6575b6ba577fd501f3b2194fbd37660c63c1a0763f311bba44e11f79",
+    "docs/02-governance/OWNER_DECISIONS.md": "81fe833d85761540af35c62fae231fe3daff6335b2bb4ea5d8dcca93defdb950",
+    "docs/02-governance/roadmap.md": "3941aec8d83abd73915ac52f3da8da157f11494f6eb8eaebf843dc3031172f76",
+    "docs/03-requirements/user-needs.md": "7f725f1128b9ca2c16f5c201b2cd248843bbc1b69c7c1385ecba9e555b004292",
+    "docs/03-requirements/system-requirements.md": "c22341420e8b6afcdb1e6d563a3896e6bd64021faa56c7a62b230ca997cc454b",
+    "docs/03-requirements/acceptance-criteria.md": "6907a68217c02291b6b34519928e165d8c329f2579228e1490ec0d88aff56e13",
+    "docs/04-architecture/system-architecture.md": "59faead4ef78bae55b3e488fc75e248fd9abf9e7cfc66e1b33680be285a4ba2c",
+    "docs/04-architecture/component-architecture.md": "a37fdeeb8eb94bb0a6c618865047a69593f75c3f02183ae6828cbd26d4629f86",
+    "docs/04-architecture/data-architecture.md": "869d3923b1618fd68922f64ed95c92c8d7d4bda909fec74a50c8fb02b5c18912",
+    "docs/04-architecture/decisions/0004-local-https-bootstrap.md": "bcc8c8062f3eed34faeeeb535b3a5cce2f7f4877e42a38d4167abeaad94d9518",
+    "docs/04-architecture/decisions/0014-keychain-unlock-policy.md": "96fe7cb10d659731ffc878bc488cadfad1ce87564584373b6b62c9ddfd7c7fea",
+    "docs/06-subsystems/document-engine.md": "8b696369b61edf791573f0e74310da3de97ad4bd4bd9cd58c100a8f9f566cb82",
+    "docs/06-subsystems/frontend-interaction.md": "7910b7cdc8dd06431c0222de30d0cc9ecdb1c87a7fb2d65de8116445dd50fc1c",
+    "docs/06-subsystems/workspace-storage.md": "886d604e19925d38a56408cbf2f06f88b15e024b630ce056f9bf2864ed60f915",
+    "docs/06-subsystems/external-integrations.md": "29c0ef69b62c5ac47511fb65af5ddbb881ca7567aedaa13610fd187f4aa723e4",
+    "docs/06-subsystems/import-export.md": "ca54b22998770ff393e0202f21bf1be9b5937d753b7cedf660fd4e61987ded47",
+    "docs/06-subsystems/security-cryptography.md": "d337e609b9fefe3d3eb49c25482cc7a39ff6970466cf7393e7993a4db4dc024d",
+    "docs/06-subsystems/formats/hpx-workspace.md": "6b3430cb91b0be6682e3eb2fb9c0cee40bc5e1dc70fa6907f01f9f4ba3db086c",
+    "docs/06-subsystems/interfaces/browser-runtime.md": "9a76f131f407e6a0217e0b69fdbb2012e903b86edc014f7cb4829e1379408505",
+    "docs/08-assurance/recovery.md": "4d15b1e6924621a4cdafbc010b13953600bf7bb98bd783456e4de5e1d467fd00",
+    "docs/08-assurance/security-threat-model.md": "ee73665ec8fba24c3c5c79edb0418216fff85c50e22a3bcb47be28950f3c5d00",
+    "docs/09-guides/reference/DEVELOPMENT_STATE.md": "1fbe00f1cccfb22cb99b48a796e321195493d82e4944fccc3892577b33826dcb",
+    "docs/registers/open-questions.csv": "405178464bf1f2b4491e008649ca35e7044422f49b50ce368a0c52ac4e482f79",
+    "docs/registers/requirements.csv": "759fbb925040358904fcfaae9e16bce2050c299628894bf62a279a2ae8e18fb9",
+    "INPUT.md": "026a2e57d2e38929ab711bb053be0c98fb048bd756eaa3b3db8f80a346fecbd0"
+  },
+  "audit_report_sha256": "edf384f9683c7e18cfc3c7f5f6526e5eccdc15c9cb85f4c015d1782d8376766e"
+}

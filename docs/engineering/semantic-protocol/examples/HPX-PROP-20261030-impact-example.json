@@ -1,0 +1,33 @@
+{
+  "protocol_version": "0.2.0",
+  "record_version": 1,
+  "id": "HPX-PROP-20261030-impact-example",
+  "kind": "proposal",
+  "subject": "SCP impact extension usage",
+  "summary": "Illustrative proposal annotated with a registered impact extension.",
+  "status": "proposed",
+  "authority": {
+    "basis": "agent_proposal"
+  },
+  "source_refs": [],
+  "relations": [],
+  "actor": "agent:architecture",
+  "created_on": "2026-10-30",
+  "content": {
+    "change": "Consider the impact extension for architecture proposals.",
+    "rationale": "Make impact summaries machine-checkable.",
+    "acceptance_criteria": [
+      "The extension is validated against its registered schema."
+    ],
+    "open_questions": []
+  },
+  "extensions": {
+    "x.hpx.impact": {
+      "components": [
+        "semantic-protocol"
+      ],
+      "risk": "low",
+      "notes": "Illustrative only."
+    }
+  }
+}

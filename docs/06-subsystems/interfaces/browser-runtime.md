@@ -10,26 +10,49 @@
 - **Maintainer:** project owner; agent-authored migration assembly
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-ARCH-002](<../../04-architecture/component-architecture.md>); [HPX-DOM-006](<../../05-domain/text-and-anchors.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
+- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); generated transport/implementation references below
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared human and AI user API — accepted owner scope
+
+HPX-OWNER-029 establishes **HPX-RQ-037**: all human and machine user interaction with protected hypergraph content must pass through one logical backend command/query API. The browser frontend and AI-user MCP adapter are access paths to that same API, not separate authorities or independent editing implementations. Chat-node creation, protected reads, graph operations, drafts, Commit and history use its common operation semantics wherever those operations are exposed. One logical API does not require one URL, identical wire payloads, a new service/crate, or an internal HTTP hop for MCP. Exact adapters and schemas remain to be specified; existing OpenAPI is partial implementation evidence, not a complete adopted V3 API.
+
+**HPX-RQ-038** assigns permissions to each workspace-local human or machine user; users are not reusable in another workspace and no separate node ACL is required. The backend authenticates the acting user, evaluates current workspace-user permissions, validates exact state, and returns only authorised results; it must not rely on hidden UI controls, model prompts, node selection, provider identity or possession of a workspace decryption key. Apply the same policy to queries, changes, chat/context capture and disclosures, history, receipts and uncertain-outcome reconciliation. Check current authority before protected replay and prevent permission changes from being bypassed by a different adapter. Permission administration itself requires authority; users cannot grant themselves rights.
+
+Inputs are authenticated actor identity, workspace/target context, operation, applicable grants/policy, and exact expected state/operation identity where relevant. Outputs are authorised query data or attributed results/drafts/Commit receipts, or explicit denial/conflict/failure/uncertainty without unauthorised disclosure. Draft acknowledgement is not Commit. Session authentication and workspace unlock do not confer resource rights. Domain planning remains deterministic; application policy controls access and storage publishes below that boundary. UI-local view preferences and buffer manipulation are not backend hypergraph publication.
+
+This clarifies HPX-OWNER-028: no separate general-purpose external/public API product or external API-client actor is required. The shared user API is nevertheless mandatory. The released system remains one Rust executable with embedded frontend and SQLite. Current one-owner checks do not implement the required multi-user permission model. Workspace permission vocabulary, representation, administration, revocation and compatibility remain unresolved (HPX-GAP-029); no ACL/RBAC/ABAC scheme, new endpoint, record format or migration is selected.
+
 
 Candidate endpoints in source contracts remain sketches. The local /api/v1 implementation is provisional and not a frozen complete wire contract.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Provider and consumers
-
-Browser/runtime capabilities, source ownership and versioned command boundary. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Version and compatibility
-
-Browser/runtime capabilities, source ownership and versioned command boundary. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Messages and type schemas
 
 The current local listener is [runtime/src/main.rs](../../../crates/runtime/src/main.rs). It reports contract1, trusted_server/whole_document and unavailable graph/provider/client-held services. It implements provisional bootstrap/runtime/unlock/lock/documents/editor/commands/receipt/snapshot routes under /api/v1. This is a local implementation subset, not acceptance of the source proposal's complete endpoint catalogue. Origin/session/TLS and source ownership must be verified independently. The domain must not inherit wire encoding through Serde derives.
+
+### Generated transport contract (OWNER021, 2026-10-27)
+
+Rust adapter DTOs in `crates/runtime/src/api.rs` define the first generated OpenAPI3.1 slice. `frontend/src/generated/openapi.json` inventories the current36 routed paths; committed Fork, exact snapshot-read request/result, runtime metadata, Bootstrap, keychain status/unlock, original/child editor reads, read-only audit and legacy/problem error components are typed. Other operation bodies/results explicitly remain route-only unknown schemas. This is progressive coverage, not a complete supported future API or a workspace-format change.
+
+`npm --prefix frontend run api:generate` runs the feature-gated offline Rust exporter when its source identity changes and generates TypeScript. `npm --prefix frontend run api:check` checks exact generated bytes, resolved local references, existing schema/operation/security compatibility and the typed client. The compatibility check conservatively rejects any change to existing schemas or operations; a reviewed evolution must follow existing owner/versioning rules. Generated TypeScript does not enforce numeric bounds, current authority, exact source or transaction validity at runtime.
+
+An explicitly reviewed `--reviewed-refinement /api/v1/snapshot` migrated the formerly untyped snapshot operation after comparison with its existing Rust fields/codecs. That bounded generation option permits only schema-reference/coverage changes for the selected route-only operation; existing typed components, errors, security and other operation metadata remain frozen. Check mode cannot accept refinements. It is not approval for a wire or format break.
+
+The editor response schema derives from the existing adapter `EditorState` behind optional storage feature `api-schema`, using the shared bounded wire Id schema. No copied editor response or persisted record definition is introduced; standalone storage still compiles without schema tooling. Actual conformance binds to the current executable; older-reader preservation runs retain their historical contract.
+
+Audit report enums use scoped schema names; its read budget and scope schema reference existing Rust constants. Generated `api-constraints.js` supplies those values to the frontend; semantic report interpretation remains explicit and the audit retains its bounded original-branch/read-only meaning.
+
+The shared `openapi-fetch` client replaces handwritten fetch construction; committed Fork envelopes use generated types. HTTP DTO conversion remains necessary between wire identifiers and immutable storage/application codecs. Both paths execute the same existing application command; no second Fork planner, persistence schema or authorization path is introduced. Request parsing borrows raw JSON to preserve duplicate-field rejection; canonical command/receipt bytes remain unchanged.
+
+Clients may request `application/problem+json`. Errors then contain RFC9457 `type`, `title`, HTTP `status` and the existing stable `error` extension. Clients without that opt-in retain the original JSON error body/MIME. Incomplete HTTP/parser failures still use legacy errors. Transport uncertainty remains distinct from a definite HTTP rejection and retains exact-operation retry handling. Source-free errors add no manuscript or secret data.
 
 ### Frontend integration specification
 
@@ -39,15 +62,19 @@ Status: development coordination specification, 2026-10-24. Audience: the agent 
 
 The behavioral requirements below govern frontend development. Adapter concepts and candidate HTTP routes are design targets, **not implemented endpoints, a frozen JSON schema or a durable storage format**. The product specification takes precedence. Agree executable DTO/schema fixtures with Rust implementation before connecting real data. Interface-study versions, application versions and transport-contract versions are independent.
 
-The [workspace interface specification](<../document-engine.md>) refines the desktop layout, multi-document/reuse semantics and investigation workflows. Its sections define the durable clipboard/promotion/transclusion and backend gates. The owner has **resumed frontend-only implementation** and explicitly waived authentication for the synthetic test preview. This does not authorize backend services, real-data access or removal of future authentication gates.
+The [workspace interface specification](<../document-engine.md>) refines the desktop layout, multi-document/reuse semantics and investigation workflows. Its sections define the durable clipboard/promotion/transclusion and backend gates. Synthetic previews remain isolated fixture-only development modes; they cannot bypass real runtime authentication, encrypted transport, workspace unlock or workspace-user permissions. Current runtime implementation and acceptance limits are recorded in the development state.
+
+### Mandatory multi-user and AI-user baseline (HPX-OWNER-027)
+
+[HPX-SUB-010](../ai-collaboration.md) requires multiple human/AI users and multiple agents per workspace; the table below is implementation staging, not product cardinality. Chat messages/prompts/context/responses must be nodes. Selected-node MCP editing is a baseline adapter requirement with the same authorised application/draft/Commit/history/recovery semantics as human edits; not a privileged writer or universal proposal-only path. Define exact tool/session/selection contracts before enabling them; this does not change existing API or persisted bytes. Current one-owner HTTPS and fixture paths are evidence only.
 
 ### 1. Current boundary and staged delivery
 
-Source `HPX-SRC-0028`, original lines 9–26. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Boundary provenance: `HPX-SRC-0028`, original lines 9–26. The obsolete no-runtime checkpoint is replaced by the current bounded evidence below; original bytes remain preserved.
 
-The repository implements a pure Rust expansion validator and an in-memory cryptographic adapter. It has **no Rust HTTP server, authentication/session service, draft store, publication service or live REST/MCP endpoints**. Crypto functions are not browser API endpoints. A separate synthetic preview now uses reviewed, pinned CodeMirror 6 and KaTeX packages; its simulated state is not a Rust service or durability result. See [frontend setup](<../../09-guides/developers/getting-started.md>).
+Current source includes the Rust HTTPS runtime (`crates/runtime/src/main.rs`), API adapters, encrypted SQLite drafts/publication and a browser runtime adapter. The existing bounded slice uses one-owner authority; workspace-local multi-user permissions, chat-node retention and product MCP remain incomplete. The generated OpenAPI contract covers part of the existing API, not a complete V3 interface. Crypto functions are not browser endpoints. Synthetic fixtures do not establish runtime durability or security; see [frontend setup](../../09-guides/developers/getting-started.md).
 
-Build a desktop interface against a replaceable typed application adapter. A fixture adapter may simulate the required state transitions with synthetic data; an HTTP adapter will later invoke the same application use cases. Show fixture mode persistently as **Demonstration — changes in this tab only**. Do not label fixture operations durable, committed to Rust, authenticated, encrypted at rest or restart-safe. A failed live connection must never silently switch to fixtures or report a successful save.
+Build a desktop interface against a replaceable typed application adapter. A fixture adapter may simulate the required state transitions with synthetic data; the live HTTP adapter invokes existing application operations; the AI MCP adapter must use the same logical API. Show fixture mode persistently as **Demonstration — changes in this tab only**. Do not label fixture operations durable, committed to Rust, authenticated, encrypted at rest or restart-safe. A failed live connection must never silently switch to fixtures or report a successful save.
 
 Do not implement the complete endpoint catalogue before a usable editor slice. Stage delivery as follows:
 
@@ -56,10 +83,10 @@ Do not implement the complete endpoint catalogue before a usable editor slice. S
 | A: visual/interaction study | Four columns/split Interaction and Investigation panels, editable synthetic document, selection/undo, outline/minimap, table/maths presentation, attribution and simulated failure states | Fixture-only; no backend dependency |
 | B: local editor | Create/open document, exact owned projection, draft autosave/recovery, explicit commit, error/conflict handling | Authentication/unlock design, authoritative identities/source mapping, encrypted durable drafts/publication and real recovery tests |
 | C: reviewed structure | Multi-document/composite structure, anchored promotion, private clipboard, fork/pinned inclusion, history and branch comparison/integration | Exact provenance/closure, promotion approval, protected clipboard/receipt recovery, atomic expected-state/idempotency and permission checks; Live gated separately by resolver acceptance |
-| D: integrations | Anchored comments, contributor/attribution services, annotations, exact export, mock then live agent, read-only Zotero and optional reviewed GitHub document publication | Per-feature contracts, disclosure/credential policy, capability checks and executed acceptance evidence |
-| E: remote/client-held | Live collaboration, offline exchange, federation, client-held mode | Separate concurrency, membership, policy, key lifecycle and trusted-client gates |
+| D: required AI-user delivery and optional integrations | Chat-node and selected-node MCP requirements need their own validated delivery; comments/attribution/annotations and optional export/Zotero/GitHub retain their scopes | Per-feature contracts, disclosure/credential policy, capability checks and executed acceptance evidence |
+| E: cross-instance/client-held | Offline exchange, federation, client-held mode | Replication/causal policy, key lifecycle and trusted-client gates; baseline same-instance users/agents are not deferred to this stage |
 
-Comments/agent visual panels can be demonstrated in A; their persistence/live execution belongs to D. UI presence does not mean feature availability. General backend implementation is not authorized merely by this coordination document.
+Visual agent panels can be demonstrated in A; required chat-node/MCP delivery belongs to D. Existing comments/attribution have separately recorded implemented scope; their presence does not deliver agent execution. UI presence does not mean feature availability. General backend implementation is not authorized merely by this coordination document.
 
 ### 3. Adapter design target
 
@@ -109,22 +136,6 @@ Errors need a safe code/category, operation/correlation reference, permitted con
 
 Optional server events may invalidate authorized projections or report progress. Treat them as hints to re-read/reconcile, not permission grants or authoritative editor patches. Connection/presence invalidations do not establish document contribution, authorship or workspace membership. Bound resume state; sequence numbers are local to the negotiated stream/context, not global federation order. Polling/reconciliation is sufficient for the first editor contract; SSE and future MCP transport/protocol are separate gates.
 
-
-## Preconditions, postconditions and errors
-
-Browser/runtime capabilities, source ownership and versioned command boundary. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Ordering, retry and idempotency
-
-Browser/runtime capabilities, source ownership and versioned command boundary. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Authentication and authorisation
-
-Browser/runtime capabilities, source ownership and versioned command boundary. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Examples and conformance tests
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 
@@ -278,7 +289,7 @@ The frontend RuntimeAdapter snapshot read freezes its document/snapshot identifi
 
 ## Desktop graph scrolling
 
-The selected-node graph dialog keeps its node chooser and graph/inspection region independently scrollable, within the desktop dialog bounds. The inspection region is named and keyboard-focusable; reaching older choices or textual relationship inspection does not move the other pane or the dialog action row. Graph selection, exact-source lookup, view invalidation and editor source/selection/undo contracts are unchanged.
+The required selected-node graph is a main-editor Graph tab (HPX-OWNER-026). Keep graph/inspection regions keyboard-accessible and independently scrollable where split; graph interaction must preserve exact-source lookup, invalidation and editor source/selection/Undo. The existing bounded graph dialog is current code evidence only; it does not fulfil the planned tab or complete selected-node linkage coverage.
 
 ## History inspection intent isolation
 
@@ -315,3 +326,51 @@ Strict authenticated unlocked `POST /working/clipboard` takes `{generation,offse
 `POST /branches/history/page` takes strict `{document,branch,snapshot,cursor,limit}` and returns `{document,branch,snapshot,entries,cursor,next}` with the encrypted context-bound continuation described in the record contract. `POST /working/derivation` takes `{document}` and returns exact kind27 unpublished-source Fork evidence. WorkingClipboard adds `promote` with expected generation and source publication OperationId. Text Commit/promotion and the bounded private replacement batch have separate receipts/transactions; failed replacements cannot roll back published text.
 
 The frontend now has independent buffer/queue references keyed by document/content branch, separate CodeMirror state caches, committed-source branch review/selection, adaptive committed-versus-working source capture, frozen working-copy retries/inspection and restart reconciliation for promotion batches. Working-source Fork transport is wired; its general Provenance panel still needs the kind27 reader connected. The graph explicitly labels its original-content-branch scope and excludes working-source Fork edges when these features are enabled. These paths are gated by **unadvertised** `local_branches` and `working_copy` capabilities: this checkpoint does not enable them or claim an actual-runtime/browser/old-reader workflow. Fixture/component checks are separate evidence. Complete integration/visual source-under-widgets/compatibility checks and guarded manual refresh remain next work after the owner resumes.
+
+## Advertised branch and working-source slice, 2026-10-27
+
+This supersedes the preceding local-wiring capability hold. The runtime advertises `local_branches` and `working_copy` following HPX-TEST-040's complete40-check actual isolated HTTPS/SQLite/older-reader workflow. The Provenance panel tries committed synthesis/Fork readers first, then the typed `/working/derivation` reader for unpublished-source Forks. It validates independent output identity and exact checkpoint range and inspects source through `/working/source`, retaining original evidence after later edits/Commit/restart. Delayed source results cannot open a dialog after lock or panel replacement. Committed-source Fork retains its direct derivation without an extra clipboard capture; pending-source Fork retains its working checkpoint/reference. Copy never silently commits.
+
+Commit refreshes reference status immediately, including separately uncertain replacement and its recovery controls. Startup can independently reconcile an eligible retained promotion after an unsent batch, preserving already-published text and original references. Scoped history continuations remain pinned across later Commit and reject other branches/snapshots. Current limits remain: one owner/owned buffer per content branch; latest-checkpoint/private-reference promotion only; original-content-branch graph projection excludes working-source Fork edges; broader entity links, branch-parent Merge and real-data acceptance are separate. All existing strict payloads, SQL/envelope/record/network versions retain their scopes.
+
+## Original-branch integrity audit transport, 2026-10-27
+
+The verified bounded integration exposes the existing [read-only audit slice](../../08-assurance/recovery.md#initial-bounded-read-only-audit-slice) through strict authenticated unlocked `POST /audit/document` with `{document,max_bytes}`. The document is an exact32-byte ID and `max_bytes` is an integer1–16777216. The response is `{document,scope:original_branch_immediate_editor_and_publication_records,authenticated_records,encrypted_bytes,finding}`. Finding is null only after all eight selected records pass; otherwise it is `{record,problem}` and dependent checks stop. Record roles are `document/head/draft/manifest/snapshot/revision/publication`; problems are `missing/unreadable_encrypted_record/unsupported_or_malformed/inconsistent/budget`. Catalog/authorization failures remain ordinary protected errors before document diagnostics. Counters describe this one view; they are not retained health status or a newer-state witness.
+
+The additive capability is `document_integrity_audit`. A self-labelled Check integrity control opens an explicit Original branch integrity dialog for the captured document. It explains saved-data scope and exclusions before the read is run; switching or editing a named child does not redirect the audit. It never saves typing, emits a mutation command, changes selection/undo, runs a repair or treats a passed slice as whole-workspace verification. Report DTOs/codecs stay in storage/runtime adapters; domain and durable formats are unchanged. HPX-TEST-044 records the complete42-check actual workflow, ciphertext/source/selection/Undo preservation, partial-budget and locked/repair rejection, desktop visual checks and guarded exact-binary handoff.
+
+## Read-only parent-branch comparison context, 2026-10-27
+
+The stage5 read-only comparison increment precedes separately gated branch-parent Merge. Strict authenticated unlocked `POST /branches/comparison` takes `{document,branch}` for a named child. In one consistent authorized SQLite view, validate immutable child creation/receipt and its fixed parent, then validate the current committed publication/snapshot of each selected branch. The response is `{document,node,branch,parent,source_name,parent_name,source_revision,source_snapshot,parent_revision,parent_snapshot}`. IDs are exact32-byte arrays; names remain bounded512-byte labels. An original branch has no parent comparison (400); missing, wrong-document, invalid or denied scope fails with no partial result. The two one-entry immutable-history validations share the existing16MiB read guard after the bounded catalog/branch/head metadata slots, and incomplete/budget failure does not return a comparison. No draft is saved, read into the result or committed.
+
+The additive capability is `branch_parent_comparison`. Within Document branches, a named child can open Compare committed with parent. The browser captures that exact branch and displays the two read-only exact snapshots pinned by the protected context query. Snapshot reads recheck current authority. Later edits/Commit, repeated text and branch changes cannot retarget either displayed snapshot. Close/lock/obsolete results are discarded; source, selection, Undo and acknowledgements remain unchanged. Both pending drafts are explicitly excluded. This is a two-version byte comparison, not a selected Merge base, conflict resolver, ancestry change or parent write. The witness proposal remains unadopted and independent. No durable record/schema/envelope/protocol version changes.
+
+Verification is recorded separately in HPX-TEST-046: ordinary storage/runtime/adapter/headless cases and the actual isolated HTTPS/SQLite/older-reader workflow. The latest executed counts and guarded handoff are in the [current development state](../../09-guides/reference/DEVELOPMENT_STATE.md#read-only-parent-comparison-delivered-2026-10-27).
+
+## Automatic Commit on node or branch departure, 2026-10-27
+
+HPX-OWNER-010 defines a logical editing-context departure, not DOM blur. Leaving the active content node or switching its branch automatically publishes changed outgoing text through the existing protected Save/Commit commands and frozen original receipts. Await publication before enabling destination editing. Same-context selections and unchanged text do not create revisions. Formatting/menu/comparison interactions do not Commit; manual Commit and autosave remain available. Unknown/failed publication retains the outgoing context and source for original-operation retry, with an actionable error rather than a routine decision prompt. Exact selection/Undo/scroll survive round trips. See [the publication protocol](../../07-implementation/protocols/draft-publication.md#owner-adopted-navigation-publication-boundary-2026-10-27).
+
+## Visible test build identity, 2026-10-27
+
+HPX-OWNER-011 adds `v<release-major>.<release-minor>.<release-patch>.<local-build>` at the bottom left, including the locked unlock screen. The embedded public `/build-version.json` asset supplies this executable's exact version; later compiles cannot retarget a running binary's identity. Validate four numeric parts before updating the inert label. Release package/API version metadata remains three-part; persistent schema/record/envelope/protocol versions are unchanged. Development-only frontend previews use suffix0 and are not executable build identities.
+
+## Read-only common-base inspection
+
+Protected `POST /api/v1/branches/merge-base` accepts the same strict `{document,branch}` request as parent comparison, under existing authenticated HTTPS/Host/Origin/session/unlock checks. The adapter captures the current named child and its fixed parent's committed heads and validates their reachable legacy ancestry in one SQLite view. Response is `{comparison:<existing exact comparison>,selection,revisions_read}`. Selection is `{result:base,revision,snapshot,source_in_target,target_in_source}`, `{result:unrelated}` or `{result:ambiguous,revisions:[...]}`. IDs retain exact32-byte arrays; flags are booleans. Failure/budget exhaustion returns an existing explicit error, never a partial base or guessed creation revision.
+
+The initial bounded reader supports existing single-parent records only:1024 unique revisions,64MiB charged immutable publication/manifest reads and1Mi logical ancestry work, after existing bounded catalog/branch metadata validation. `revisions_read` counts unique validated reachable revisions, not setup/repeated head reads. Capability `branch_parent_base` means this read-only inspection only, not temporal-format or Merge publication support.
+
+The comparison dialog offers **Inspect common base** after its two exact snapshots resolve. The browser freezes that displayed pair, validates the returned complete comparison against it, then resolves the exact base snapshot through current authorization. A changed pair requires explicit comparison refresh; no returned newer base is silently paired with older displayed inputs. Only a fully resolved base is displayed as inert exact source. Unknown/unrelated/multiple-base or budget failures are labelled honestly; no conflict resolution or parent write follows. Close/lock/view invalidation/comparison refresh discards delayed base reports and snapshot results. Source, selection, Undo, both drafts and encrypted storage remain unchanged by inspection.
+
+## Exact in-text semantic relation words
+
+HPX-OWNER-017 replaces adjacent-unit arrow glyphs with individually inspectable brace-enclosed relation words in the editor and Navigator. Runtime projection reuses protected `assertions` and exact `snapshot` reads; no new wire/schema/capability is introduced. Capture the selected document/content branch, text revision/snapshot, node and occurrence, and validate complete owned text before projecting UTF8 byte ranges into the editor's UTF16/LF coordinates. Bound conversion to requested scalar boundaries; a byte range inside a folded CRLF boundary or scalar cannot fabricate an editor position. Do not search for a matching quote or relocate retained anchors through edits.
+
+The initial projection supports loaded proposed/accepted binary assertions with both endpoints exactly matching the current committed document/node/revision/snapshot/occurrence and one eligible adjacent sentence, paragraph or sibling-section pair. Use separate controls for separate claims at one boundary. Between paragraphs/sections center the controls in the source gap. Rejected/superseded, historical, cross-document, nonadjacent and n-ary claims remain available in Relations without guessed adjacent controls. Current text snapshots still exclude these retrospective overlays. Source typing immediately removes runtime controls; exact matching Undo may restore the cached authorized projection, while a new revision/snapshot cannot inherit old controls merely because passages look alike.
+
+Default loading uses the existing first eight-entry bounded page; scope text states in-text count, loaded/total and adjacent-pair coverage. Explicit More assertions pages extend the projection only under the same generation/snapshot. Newer accepted index generations cannot be overwritten by delayed earlier views. Refresh, changed branch/head/source, lock, denied/invalid responses and obsolete controller requests cannot apply a new projection to the wrong buffer. Branch transitions pause controls, and lock clears their metadata cache. Failure is labelled unavailable rather than an empty complete result.
+
+Displayed words preserve negation and declared certainty. Reverse spatial roles use a registered converse only if the captured version1 meaning/roles match the current reviewed catalogue; otherwise append explicit second-to-first or below-to-above direction words without inventing a converse predicate. Symmetry is taken only from the captured definition. Inspection retains the exact assertion identity/version, canonical definition, roles and declared qualifiers; changed display wording is identified in the card. Text labels do not claim logical proof or create another record.
+
+Pointer or Enter/Space activation opens the exact relation in the lower Relations pane, including collapsed-pane recovery, preserving editor selection/Undo and other retained pins. Labels are self-labelled controls without redundant name tooltips. Projection effects, separator styling, status scope and Navigator replicas add no manuscript/clipboard/export characters, Save/Commit, review, provider call or persistent state. Existing current authorization and immutable storage boundaries remain authoritative.

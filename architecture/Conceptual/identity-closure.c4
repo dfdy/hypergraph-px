@@ -1,0 +1,76 @@
+// M1: one conceptual level below existing exact; not software decomposition or a record schema.
+specification {
+  element domain_concept { style { shape rectangle; color primary } }
+  relationship conceptual_relation { color slate; line solid }
+}
+model {
+  extend hpx.native.domain.exact {
+    concept_node = domain_concept "Node" {
+      description "Stable intellectual content identity."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L9;HPX-CLAIM-00105" authority "inherited source-scoped design;not implementation" }
+      link ../../docs/05-domain/core-object-model.md#identity-and-representations
+    }
+    concept_revision = domain_concept "Revision" {
+      description "Immutable content state of one logical node."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L9;HPX-SRC-0025:L28-L33" }
+      link ../../docs/05-domain/provenance-model.md#revision-and-transformation-histories
+    }
+    concept_document = domain_concept "Document" {
+      description "Named composition identity; not a plaintext file."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L9;HPX-SRC-0037:L28-L37" }
+      link ../../docs/05-domain/document-semantics.md
+    }
+    concept_branch = domain_concept "Branch" {
+      description "Independently identified evolving selection."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L9" }
+      link ../../docs/04-architecture/decisions/0018-initial-local-branches.md
+    }
+    concept_occurrence = domain_concept "Occurrence" {
+      description "Placement identity; reuse differs from content identity."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L9;HPX-SRC-0025:L20-L27" }
+      link ../../docs/05-domain/document-semantics.md#identities-occurrences-and-temporal-state
+    }
+    concept_manifest = domain_concept "Manifest revision" {
+      description "Immutable ordered structure and local prose."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L9;HPX-SRC-0025:L20-L27" }
+      link ../../docs/05-domain/document-semantics.md#identities-occurrences-and-temporal-state
+    }
+    concept_snapshot = domain_concept "Closed snapshot" {
+      description "Exact root, path-specific selections and reconstruction inputs."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L9;HPX-SRC-0025:L34-L43" }
+      link ../../docs/05-domain/document-semantics.md#closed-snapshots-and-source-ownership
+    }
+  }
+  hpx.native.domain.exact.concept_revision -[conceptual_relation]-> hpx.native.domain.exact.concept_node "State of exactly one same-node identity"
+  hpx.native.domain.exact.concept_occurrence -[conceptual_relation]-> hpx.native.domain.exact.concept_node "References one logical content identity"
+  hpx.native.domain.exact.concept_manifest -[conceptual_relation]-> hpx.native.domain.exact.concept_occurrence "Captures ordered placement structure"
+  hpx.native.domain.exact.concept_document -[conceptual_relation]-> hpx.native.domain.exact.concept_manifest "Composition structure; exact historical state is pinned"
+  hpx.native.domain.exact.concept_document -[conceptual_relation]-> hpx.native.domain.exact.concept_branch "Branch context; no general cardinality asserted"
+  hpx.native.domain.exact.concept_snapshot -[conceptual_relation]-> hpx.native.domain.exact.concept_manifest "Pins exact root and reachable manifest selections"
+  hpx.native.domain.exact.concept_snapshot -[conceptual_relation]-> hpx.native.domain.exact.concept_revision "Pins exact selections; never current heads"
+  hpx.native.domain.exact.concept_snapshot -[conceptual_relation]-> hpx.native.domain.exact.concept_occurrence "Bindings use full occurrence context/path"
+}
+views {
+  view concept_identity_closure of hpx.native.domain.exact {
+    title "Conceptual / Content identity and closed state"
+    description "M1 / HPX-CAN-018. One-level conceptual restatement owned by existing Identity and exact-source coordinates; not modules, storage records or a complete resolver. Source-scoped definitions retain their authority; unspecified cardinalities remain unspecified. Every required reachable selection and reconstruction input must be closed; missing/inaccessible dependencies fail explicitly. Revision pin and descendant-closure pin differ. Equal bytes do not imply equal identity; move preserves placement identity; reuse creates another placement. Content-only edits do not duplicate every containing manifest history. Concrete ordering/encoding/closure mechanisms remain unadopted."
+    link ../C3/pure-domain.c4
+    link ../../docs/05-domain/core-object-model.md
+    link ../../docs/05-domain/document-semantics.md
+    link ../../docs/06-subsystems/interfaces/domain-navigation.md
+    group "Conceptual subject: content identity and exact closed state" {
+      include hpx.native.domain.exact.concept_node with { notes "HPX-OWNER-048 / HPX-RQ-039: creation of every node kind requires a known creation origin and a determinable parent or position from its initiating UI context or caret; missing or ambiguous context prevents creation, with no silently chosen position. Machine/shared-API requests carry explicit equivalent creation context, validated under ordinary backend permissions. Origin is not one permanent containment parent, original authorship, same-node revision ancestry or cross-identity derivation. Logical identity remains reusable through distinct occurrences. See [creation context contract](../../docs/05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048)." }
+      include hpx.native.domain.exact.concept_revision
+      include hpx.native.domain.exact.concept_document
+      include hpx.native.domain.exact.concept_branch with { notes "HPX-OWNER-049 / HPX-RQ-041: offer save-as-branch for an authorised constructed version of the current document when it is not already represented as a specific branch, preserving exact composition selections and document/content identity rather than implicitly Forking. This capability does not require assuming an unnamed editable branch: ADR018/019 ordinary editing has an owning content branch; constituent selected branches/versions, working state and read-only projections differ. The owner's perhaps hypothesis about universal known branches remains an investigation, not adoption of a new lifecycle restriction or withdrawal of save-as. Main denotes an explicitly designated branch identity, not a name guess or latest-of-all-nodes graph algorithm. General capture/parentage, branch-capture publication and main designation/construction remain undesigned. See [branch reconciliation](../proposals/branch-selection-reconciliation.md)." }
+      include hpx.native.domain.exact.concept_occurrence with { notes "In each resolved composition, every non-root occurrence has exactly one structural parent; roots have no structural parent. Sharing uses references to content, not multiple structural parents. The structural projection is an ordered rooted forest. OWNER048 requires a known creation origin and determinable parent or position, including a root's initiating position/context without inventing a structural parent. Later move/reuse does not turn creation origin into permanent containment; inline notation is not the definition of placement. LikeC4 disallows a type-to-itself relationship here, so this exact invariant remains explicit prose rather than an invalid self-arrow." }
+      include hpx.native.domain.exact.concept_manifest
+      include hpx.native.domain.exact.concept_snapshot with {
+        notes "Retained example: D uses P at o1 and o2. s1 selects p1 at both; after p2 exists, s2 may select p2 at o1 and p1 at o2. Reading s1 still selects p1 twice. OWNER049 / RQ040: retained A shows its retained selected B version; a newer authorised version indication neither replaces that selection nor mutates history. OWNER050 clarifies reopening from A's last successful acknowledged autosave, retaining exact nested/repeated selections; unacknowledged typing is not claimed durable. Routine autosaving must not accumulate historical versions merely because it occurs. Whether autosave and Commit must always differ is reopened; current scoped ADR019/departure-Commit evidence remains historical and implemented, not a new universal future rule. No coalescing/deletion or mutable-history scheme is selected; current one-owned-buffer drafts do not prove general nested-selection recovery. Repeated nested inclusions require distinct full paths, even when a manifest or node is shared. HPX-OWNER-043 adopts an explicit logical list of exact versions at every inclusion position, including exact cycle-boundary targets. First reconstruction guarantees identical source text and selected versions; appearance, font rendering and typesetting are external to that guarantee. OWNER045 selects a finite selected-state table and finite use tree with one-step structural row equality and exact cycle-target/active-ancestor witnesses; see [selected design](../proposals/finite-cycle-closure-state.md). Checked Lean model coverage and its source-emission/implementation limits are recorded in the [checked model scope](../../docs/08-assurance/formal-validation-digest.md#finite-cycle-state-model--2026-10-31). OWNER047 retains exact original inclusion notation at a stopped cycle; warnings and deliberate navigation controls are separate presentation metadata, never generated placeholder source. The notation maps to its including owner and exact source range; target/ancestor context remains distinct. See [source-emission scope](../proposals/cycle-boundary-source-emission.md). TEST155 checks bounded emission and byte/source-map witnesses under supplied frozen source-faithful partitions; authenticated loading/parsing and runtime correspondence remain open. Physical encoding remains unadopted. This is a conceptual definition, not a new record format or implementation."
+      }
+    }
+    exclude * -> *
+    include hpx.native.domain.exact.* -> hpx.native.domain.exact.* where kind is conceptual_relation
+    autoLayout LeftRight 110 90 spline
+  }
+}

@@ -1,0 +1,790 @@
+{
+  "id": "HPX-TEST-102",
+  "date": "2026-10-30",
+  "scope": "view naming/navigation only;no architecture/application change",
+  "checks": {
+    "views": 34,
+    "source_files": 16,
+    "all_views_reachable_from_c1": true,
+    "all_non_root_views_have_visual_incoming_links": true,
+    "renamed_titles": 13,
+    "frontend_overview_path": [
+      "C1 / System context",
+      "C2 / HPX containers",
+      "C3 / HPX Rust executable",
+      "Frontend delivery \u2192 C4 / Frontend delivery \u2014 Implementation overview"
+    ],
+    "model_elements_unchanged": 140,
+    "model_relationships_unchanged": 286,
+    "view_nodes_edges_and_workflow_order_unchanged": true,
+    "saved_layouts_preserved": 20,
+    "source_links_and_navigation": "passed",
+    "protected_file_hashes_unchanged": 429
+  },
+  "visual_paths": {
+    "index": [],
+    "c2_containers": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ]
+    ],
+    "c3_executable": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ]
+    ],
+    "c3_runtime_api": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.transport",
+        "c3_runtime_api"
+      ]
+    ],
+    "c4_frontend_delivery": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.frontend_assets",
+        "c4_frontend_delivery"
+      ]
+    ],
+    "c3_keychain": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.keychain",
+        "c3_keychain"
+      ]
+    ],
+    "c3_application": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.application",
+        "c3_application"
+      ]
+    ],
+    "c3_pure_domain": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.domain",
+        "c3_pure_domain"
+      ]
+    ],
+    "c3_workspace_persistence": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.storage",
+        "c3_workspace_persistence"
+      ]
+    ],
+    "c3_integrations": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.integrations",
+        "c3_integrations"
+      ]
+    ],
+    "c3_crypto": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.crypto",
+        "c3_crypto"
+      ]
+    ],
+    "c4_api_routes": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.transport",
+        "c3_runtime_api"
+      ],
+      [
+        "c3_runtime_api",
+        "hpx.native.transport.security",
+        "c4_api_routes"
+      ]
+    ],
+    "c4_frontend_routing": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.transport",
+        "c3_runtime_api"
+      ],
+      [
+        "c3_runtime_api",
+        "hpx.native.transport.assets",
+        "c4_frontend_routing"
+      ]
+    ],
+    "seq_unlock": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.transport",
+        "c3_runtime_api"
+      ],
+      [
+        "c3_runtime_api",
+        "hpx.native.transport.lifecycle",
+        "seq_unlock"
+      ]
+    ],
+    "c3_frontend_delivery": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.transport",
+        "c3_runtime_api"
+      ],
+      [
+        "c3_runtime_api",
+        "hpx.native.frontend_assets",
+        "c3_frontend_delivery"
+      ]
+    ],
+    "c4_frontend_build": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.frontend_assets",
+        "c4_frontend_delivery"
+      ],
+      [
+        "c4_frontend_delivery",
+        "frontend_builder.bundle_code",
+        "c4_frontend_build"
+      ]
+    ],
+    "c4_frontend_embedding": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.frontend_assets",
+        "c4_frontend_delivery"
+      ],
+      [
+        "c4_frontend_delivery",
+        "hpx.native.frontend_assets.embedding.build_code",
+        "c4_frontend_embedding"
+      ]
+    ],
+    "seq_frontend_session": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.frontend_assets",
+        "c4_frontend_delivery"
+      ],
+      [
+        "c4_frontend_delivery",
+        "hpx.browser.delivery_entry",
+        "seq_frontend_session"
+      ]
+    ],
+    "c4_application_transaction": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.application",
+        "c3_application"
+      ],
+      [
+        "c3_application",
+        "hpx.native.application.admission",
+        "c4_application_transaction"
+      ]
+    ],
+    "c4_application_features": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.application",
+        "c3_application"
+      ],
+      [
+        "c3_application",
+        "hpx.native.application.dispatch",
+        "c4_application_features"
+      ]
+    ],
+    "c4_application_reads": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.application",
+        "c3_application"
+      ],
+      [
+        "c3_application",
+        "hpx.native.application.reads",
+        "c4_application_reads"
+      ]
+    ],
+    "c4_domain_history": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.domain",
+        "c3_pure_domain"
+      ],
+      [
+        "c3_pure_domain",
+        "hpx.native.domain.expansion_rules",
+        "c4_domain_history"
+      ]
+    ],
+    "c4_domain_sources": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.domain",
+        "c3_pure_domain"
+      ],
+      [
+        "c3_pure_domain",
+        "hpx.native.domain.source_plans",
+        "c4_domain_sources"
+      ]
+    ],
+    "seq_uncertain": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.transport",
+        "c3_runtime_api"
+      ],
+      [
+        "c3_runtime_api",
+        "hpx.native.transport.security",
+        "c4_api_routes"
+      ],
+      [
+        "c4_api_routes",
+        "hpx.browser.c4_protocol",
+        "seq_uncertain"
+      ]
+    ],
+    "seq_commit": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.transport",
+        "c3_runtime_api"
+      ],
+      [
+        "c3_runtime_api",
+        "hpx.native.transport.security",
+        "c4_api_routes"
+      ],
+      [
+        "c4_api_routes",
+        "hpx.native.transport.api.c4_publication",
+        "seq_commit"
+      ]
+    ],
+    "seq_save": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.transport",
+        "c3_runtime_api"
+      ],
+      [
+        "c3_runtime_api",
+        "hpx.native.transport.security",
+        "c4_api_routes"
+      ],
+      [
+        "c4_api_routes",
+        "hpx.native.storage.c4_publication",
+        "seq_save"
+      ]
+    ],
+    "seq_frontend_load": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.transport",
+        "c3_runtime_api"
+      ],
+      [
+        "c3_runtime_api",
+        "hpx.native.transport.assets",
+        "c4_frontend_routing"
+      ],
+      [
+        "c4_frontend_routing",
+        "hpx.native.transport.responses.delivery_writer",
+        "seq_frontend_load"
+      ]
+    ],
+    "seq_frontend_build": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.frontend_assets",
+        "c4_frontend_delivery"
+      ],
+      [
+        "c4_frontend_delivery",
+        "frontend_builder.bundle_code",
+        "c4_frontend_build"
+      ],
+      [
+        "c4_frontend_build",
+        "frontend_builder.bundle_code",
+        "seq_frontend_build"
+      ]
+    ],
+    "seq_application_transaction": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.application",
+        "c3_application"
+      ],
+      [
+        "c3_application",
+        "hpx.native.application.admission",
+        "c4_application_transaction"
+      ],
+      [
+        "c4_application_transaction",
+        "hpx.native.storage.c4_publication",
+        "seq_application_transaction"
+      ]
+    ],
+    "seq_domain_fork": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.application",
+        "c3_application"
+      ],
+      [
+        "c3_application",
+        "hpx.native.application.dispatch",
+        "c4_application_features"
+      ],
+      [
+        "c4_application_features",
+        "hpx.native.storage.domain_forks",
+        "seq_domain_fork"
+      ]
+    ],
+    "seq_application_checkpoint": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.application",
+        "c3_application"
+      ],
+      [
+        "c3_application",
+        "hpx.native.application.dispatch",
+        "c4_application_features"
+      ],
+      [
+        "c4_application_features",
+        "hpx.native.storage.domain_working",
+        "seq_application_checkpoint"
+      ]
+    ],
+    "seq_application_read": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.application",
+        "c3_application"
+      ],
+      [
+        "c3_application",
+        "hpx.native.application.reads",
+        "c4_application_reads"
+      ],
+      [
+        "c4_application_reads",
+        "hpx.native.storage.c4_documents",
+        "seq_application_read"
+      ]
+    ],
+    "seq_domain_expansion": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.domain",
+        "c3_pure_domain"
+      ],
+      [
+        "c3_pure_domain",
+        "hpx.native.domain.expansion_rules",
+        "c4_domain_history"
+      ],
+      [
+        "c4_domain_history",
+        "hpx.native.domain.test_calls",
+        "seq_domain_expansion"
+      ]
+    ],
+    "seq_domain_parent_plan": [
+      [
+        "index",
+        "hpx",
+        "c2_containers"
+      ],
+      [
+        "c2_containers",
+        "hpx.native",
+        "c3_executable"
+      ],
+      [
+        "c3_executable",
+        "hpx.native.domain",
+        "c3_pure_domain"
+      ],
+      [
+        "c3_pure_domain",
+        "hpx.native.domain.expansion_rules",
+        "c4_domain_history"
+      ],
+      [
+        "c4_domain_history",
+        "hpx.native.domain.history_plans.selector",
+        "seq_domain_parent_plan"
+      ]
+    ]
+  },
+  "not_executed": [
+    "browser/actual VS Code visual acceptance",
+    "application tests/build/launch",
+    "assets/contracts generation",
+    "proofs",
+    "trust/provider/workspace actions",
+    "commit/publication"
+  ],
+  "executed_tools": {
+    "likec4": "1.60.0",
+    "export": "architecture/node_modules/.bin/likec4 export json -o /private/tmp/hpx-diagram-navigation-final.json architecture",
+    "navigation_model_and_layout_checks": {
+      "command": "python3 /private/tmp/hpx-check-diagram-navigation.py",
+      "exit_code": 0
+    },
+    "validate": {
+      "command": "architecture/node_modules/.bin/likec4 validate --json architecture",
+      "exit_code": 0,
+      "valid": true,
+      "errors": [],
+      "files": 16
+    },
+    "documentation": {
+      "command": "python3 scripts/verify_documentation.py",
+      "exit_code": 0,
+      "materialized_contracts": 69,
+      "archive_byte_replay": "skipped"
+    }
+  },
+  "source_hashes": {
+    "architecture/context.c4": "6ff8970869991bd970f820e3dee14dc4ee9243320f5a6cc44e71bab8679965a5",
+    "architecture/C2/containers.c4": "000070d33a25229d037d9f7b26ca20920a3d81c5738afb923ad16f5addb7307b",
+    "architecture/C3/runtime-api.c4": "3bb49ee92d1fc5ef81ba7306bdfe0976db2f5c421b7ee1b1245147c3bc8f7da0",
+    "architecture/C3/executable.c4": "98e00d807e1f94d57c517961b3d09009639de5fb61ffe936b2ce1906936f4ab7",
+    "architecture/C3/pure-domain.c4": "2c7af1c126fd1cb1873a5bc7820041d590da8224934a47318451608490091cbc",
+    "architecture/C3/frontend-delivery.c4": "c132e27be9c338e4dcc18e7d4bfe052d5bd22ae63b031225034607db98a5736b",
+    "architecture/C3/remaining-c3.c4": "632da5db131b9a475e3b00e7c153b9334e18895e286221ae9d4f6f65456dbac1",
+    "architecture/C4/api-implementation.c4": "d727d224f3491857a3091ebf3310699f18eb37a500188bd7591741d6cf2f6494",
+    "architecture/C4/frontend-delivery-implementation.c4": "ddf16b2b763f7695f2112349a17260fd0d6ce9d43e0fd85a5f9fa1e9374417f7",
+    "architecture/C4/application-coordination.c4": "803de930db64cda68a51cd532b67cfb1ef4c6aded3652a700a97ed44fdde7d85",
+    "architecture/C4/frontend-delivery-overview.c4": "56bfaca54536f58806d843bfb67931cd3aafd69c8491d3ba7f84a1d046adaf66",
+    "architecture/C4/pure-domain.c4": "eeb4e35f3542e35aa1882395178a108495d03c67f82dd329ee0d8bfcbe98050e",
+    "architecture/Sequence/pure-domain-workflows.c4": "20f8d6e7a6f95268b2907429dac369811e4cafea90f5d4392a0bd35ebfdef6b2",
+    "architecture/Sequence/application-workflows.c4": "6fc965dfbae3643e6afd525f61b58d107a460619461e91c33c3f08de34112d1c",
+    "architecture/Sequence/api-workflows.c4": "e33665a85bcd6f64a0326c1c7452ebe42b5d5c231fe529085729244c6603a5ca",
+    "architecture/Sequence/frontend-delivery-workflows.c4": "f1ef9c48c61d2e6526f44fa7bc9177f2bbe0535ad9dea6a3e7682e77a803055b"
+  }
+}

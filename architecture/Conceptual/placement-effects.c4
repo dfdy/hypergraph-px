@@ -1,0 +1,30 @@
+// Supporting conceptual effects;no new operation protocol or direct implementation correspondence.
+views {
+  dynamic view seq_concept_placement {
+    variant sequence
+    title "Conceptual effects / Placement, derivation and retained history"
+    description "O2 / HPX-CAN-023. Independent source-backed effect cases under existing application dispatch. Repeated lifeline types denote roles;fresh IDs are explicitly distinct even when bytes match. OWNER048 / RQ039: before creating any node kind, determine its origin and parent or position from initiating UI/caret context or explicit machine-equivalent context; missing/ambiguous context prevents creation. Backend authority and exact-state validation remain required. This precondition adds no permanent parent, authorship inference or record format; structural placement and inline text representation differ. Every permitted operation requires exact source/context,current authority and all affected-head checks under linked contracts. These are not chronological steps of one operation,software calls or a selected transaction algorithm. Unsupported/general composition remains a requirement,not delivered code."
+    link ../C3/remaining-c3.c4
+    link ../../docs/05-domain/document-semantics.md
+    link ../../docs/05-domain/provenance-model.md
+    link ../../docs/05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048
+    alt "Distinct structural/history intents" {
+      when "Move an existing placement" {
+        hpx.native.domain.exact.concept_occurrence -> hpx.native.domain.exact.concept_occurrence "Preserve this placement identity;change permitted parent/order context"
+        hpx.native.domain.exact.concept_occurrence -> hpx.native.domain.exact.concept_manifest "Append changed immutable structure;retain old manifests and historical snapshot bindings"
+      }
+      when "Reuse or remove placement" {
+        hpx.native.domain.exact.concept_node -> hpx.native.domain.exact.concept_occurrence "Reuse creates a distinct placement referencing existing content;equal bytes do not merge identity"
+        hpx.native.domain.exact.concept_occurrence -> hpx.native.domain.exact.concept_manifest "Removal detaches this use in new structure;source content/history is not erased"
+      }
+      when "Fork/extract into a different identity" {
+        hpx.native.domain.source_plans.concept_input -> hpx.native.domain.source_plans.concept_transformation "Bind exact retained source revisions,ranges and occurrence context;do not follow later heads"
+        hpx.native.domain.source_plans.concept_transformation -> hpx.native.domain.source_plans.concept_output "Create fresh output identity and exact ordered result/contribution mappings"
+        hpx.native.domain.source_plans.concept_output -> hpx.native.domain.exact.concept_revision "Output history is independent;source identity revisions are not output same-node parents"
+      }
+      else "Restore an earlier same-node state" {
+        hpx.native.domain.exact.concept_revision -> hpx.native.domain.exact.concept_revision "Append a new same-identity state;retain earlier and divergent revisions rather than rewriting them"
+      }
+    }
+  }
+}

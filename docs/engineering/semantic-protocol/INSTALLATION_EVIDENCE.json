@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-31",
+  "package": "HPX-SCP0.5.0",
+  "filesInstalledAndVerified": 26,
+  "bootstrap": {
+    "passed": true,
+    "rules": 54
+  },
+  "recordValidation": {
+    "canonical": 0,
+    "examples": 5,
+    "errors": 0
+  },
+  "suppliedTests": {
+    "passed": 52,
+    "failed": 0
+  },
+  "pipCheck": "passed",
+  "dependencies": "6 MIT distributions reviewed; isolated .verification/semantic-protocol-venv",
+  "canonicalPolicyBytes": "unchanged from supplied ZIP",
+  "governance": "proposed;installation is not adoption",
+  "limits": [
+    "CI not executed",
+    "No external trust anchor configured",
+    "No new application permissions or runtime format",
+    "No legacy canonical records existed or were rewritten"
+  ],
+  "documentationChecks": "passed;71 materialized/27 reserved/38 requirement seeds;archive source spans skipped",
+  "standalonePublication": {
+    "date": "2026-10-31",
+    "ownerAuthorization": "Explicit request:push protocol to its own GitHub repository",
+    "repository": "https://github.com/dfdy/HPX-Semantic-Communication-Protocol",
+    "visibility": "private",
+    "branch": "main",
+    "commit": "fe740bdc66c55bfbd1fd55a5c4d19f0920b1ebd1",
+    "export": "26 manifest-verified original kit files plus requirements.txt,.gitignore,SOURCE_MANIFEST.json",
+    "standaloneChecks": "bootstrap passed;canonical0/examples5 validated;52 tests passed;clean;origin/main ahead0 behind0;remote commit matches",
+    "ci": "initial workflow in progress at verification;not claimed passed",
+    "scope": "protocol only;no HPX application/working-tree commit or publication",
+    "currentVisibility": "public",
+    "privacyAudit": "PUBLICATION_PRIVACY_AUDIT.json",
+    "currentCommit": "49cc59820b23c863709263ab0e0741cc0a8ef09b",
+    "privacyHistoryRewrite": {
+      "date": "2026-10-31",
+      "authorAndCommitter": "GitHub noreply",
+      "sourceTreeUnchanged": true,
+      "remoteMainVerified": true,
+      "githubOldObjectsStillAccessible": true,
+      "details": "HISTORY_PRIVACY.md"
+    }
+  }
+}

@@ -13,22 +13,38 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-26
+- **Last reviewed:** 2026-11-01
+
+## Reconstruction and changed-source choices — HPX-OWNER-043
+
+Planned checks must establish identical reconstructed source bytes and exact selected versions at each inclusion position, including cycle-boundary targets. Changing fonts, visual rendering or typesetting alone must not make that source-reconstruction guarantee fail. This does not waive exact source-emission/citation dependencies that affect the actual source bytes.
+
+For the [conflict setting](../06-subsystems/frontend-interaction.md#changed-source-conflict-handling--hpx-owner-043), verify Ask requests a choice;automatic mode uses HPX-recorded Commit time and asks on equal competing timestamps. Each workspace user defaults to Ask and changes only their own preference. Automatic selection marks the affected sentence/paragraph/section as a potential conflict. Two authorised viewers of the same affected committed version must see the shared marker even with different preferences;private draft markers remain private. Opening the comparison modal does not clear the marker;it persists until an authorised explicit resolution,with history retained. Marker comparison must name exact authorised changes. Automatic choice must not imply resolved status,erase alternatives,publish content by itself,mutate source for styling,or bypass ordinary draft/Commit/permission/recovery rules. Repeated placements retain exact context. Timestamp precision/encoding,missing or incomparable values,and marker/resolution representation remain open. OWNER043/044 acceptance cases are planned and unexecuted.
+
+## Cycle-aware inclusion acceptance — HPX-OWNER-041
+
+HPX-RQ-005 follows the [accepted cycle policy](../05-domain/hypergraph-mathematics.md#accepted-cycle-aware-inclusion-policy--hpx-owner-041). Planned acceptance must exercise self-cycles, A→B→A cycles, cycles reached after acyclic prefixes, repeated siblings, finite older-version inclusion and equal labels/bytes with distinct identities. Saving valid cyclic inclusion must not reject it merely because the inclusion graph cycles. Revision-ancestry cycles remain invalid.
+
+Verify automatic expansion stops at each exact cycle-closing boundary with a visible and keyboard/screen-reader-accessible warning and an explicit navigation action. No click means no recursive navigation/fetch/render. Each deliberate click may revisit the cycle but performs only bounded authorised work, preserving exact context and ordinary draft/selection/Undo/departure/recovery rules. Lock, revoked permission and stale replies must not leak or substitute targets.
+
+Verify complete output accounts for every required selected contribution and explicit boundary, including deterministic historical boundary targets after current heads change. Missing/corrupt/unauthorised dependencies, depth/work/output exhaustion and unsupported cyclic calculations must fail or be explicitly incomplete; they cannot silently omit content or be labelled complete. No algorithm may loop, silently treat a bounded cut as proof the original graph is acyclic, or alter saved relationships/history to obtain termination.
+
+Require the [HPX-PROP-006–008 Lean obligations](../07-implementation/formal-invariants.md#required-cycle-aware-expansion-proofs--hpx-owner-041), documented implementation correspondence and targeted runtime/UI/accessibility checks as distinct evidence. No proof or planned acceptance case in this section has been executed by this specification change; record/storage and exact traversal mechanisms remain to be designed.
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+Required future acceptance: exercise the same authorised read/edit/graph/draft/Commit/history operation through browser and MCP for distinct human/AI users; verify consistent results and attribution. Give users different permissions per user–workspace pair and verify permitted access, denied reads/writes/history/chat-context disclosure, private draft/receipt isolation, forbidden self-grants and permission changes during delayed requests/replay. A client cannot bypass denial by switching adapters, unlocking the workspace or selecting a node. Define exact policy/concurrency expectations before these tests. These checks have not been executed. See the [accepted shared API scope](../06-subsystems/interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Acceptance criteria are requirements, not passing evidence. No application or proof tests are rerun by this migration.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Requirements and invariants covered
-
-Acceptance gates for owned-source editing, persistence and integration. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Test fixtures and inputs
-
-Use the source-grounded examples/evidence above and [acceptance gates](<acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Unit/integration/property/fuzz cases
-
 
 
 ### Verification and delivery gates
@@ -91,22 +107,6 @@ Before enabling a real-data editor connection:
 No transport implementation, cryptographic proof or delivered confidentiality guarantee is claimed by these requirements.
 
 
-## Failure cases
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Platform matrix
-
-Use the source-grounded examples/evidence above and [acceptance gates](<acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Pass/fail or measurement thresholds
-
-Use the source-grounded examples/evidence above and [acceptance gates](<acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Automated reports
-
-Use the source-grounded examples/evidence above and [acceptance gates](<acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
 ## Source provenance
 
 - `HPX-SRC-0021` — `Specifications/ARCHITECTURE.md`, lines 61–71; SHA-256 `74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
@@ -121,7 +121,7 @@ The frontend target names **Fork, Link, Embed, Merge and Copy** together, with h
 
 For HPX-RQ-028, searching “logically equivalent” resolves to the existing equivalence choice without another predicate identity; participants retain formalisation/premise context, and assertion labels do not claim checked proof or node identity.
 
-For HPX-RQ-029, select arbitrary authorised nodes, including disconnected nodes and equal-labelled distinct identities. Verify labelled circles/connectors, direction, self/parallel relationship handling, n-ary role-preserving connectors, accessible keyboard/text inspection, explicit supported scope and bounded incomplete/unavailable results. Asserted relationships and recorded derivation must not acquire a proved status through display. Opening, changing selection, cancelling and closing preserve source bytes, editor selection and undo. A fixture or derivation-only projection is evidence only for its stated subset, not complete durable semantic graph delivery.
+For HPX-RQ-029, use the currently selected node as the Graph tab focus under HPX-OWNER-026; the selected-node tab checks below replace the earlier arbitrary-selection dialog target. Preserve distinct/equal-labelled identities, direction, self/parallel and role-labelled n-ary links, accessible inspection and honest completeness bounds. A bounded derivation-only projection does not establish complete selected-node graph coverage.
 
 The Lean-conversion proposal remains deferred by the owner's separate review; no acceptance claim or implementation dependency is inferred for it.
 
@@ -134,3 +134,40 @@ For future HPX-RQ-030, test every requested target (.docx/.odt/.rtf/.html/.tex/.
 Under accepted ADR019, demonstrate that autosave updates only the selected branch's recoverable working buffer and provenance copy/paste can checkpoint exact pending source without Commit. Capture before asynchronous work; later typing, switches, lock, delayed/lost replies, restart and undo/redo preserve independent branch buffers and frozen reference intent. Prove atomic checkpoint/reference/receipt and idempotent retry, current authority before replay, malformed/future source rejection, exact Unicode/newline/scalar ranges and no published-head change from capture. Exact Commit must retain original evidence and append an inspectable replacement; changed source must not silently retarget. Bound incoming-link work and preserve removed private-reference history. Verify independent working-source paste/Fork and actual older-reader preservation/upgrade behaviour, then inspect desktop controls/retry/promotion states and source below widgets in both themes. Run the isolated actual headless workflow and guarded exact tested-binary manual refresh before integrated delivery claims. Current local backend coverage is recorded separately; this gate is not complete.
 
 For avoidance of ambiguity, ADR019's publication boundaries are separate: Commit atomically publishes text, any eligible exact promotion fact and its original receipt; a later bounded generation-bound replacement batch has its own frozen operation/receipt. Test interruption between them, denied/stale/unknown batch outcomes, original-reference inspection and restart reconciliation. Batch failure must not undo already committed text. This is the adopted design, not a new requirement that replacements join the text transaction. Existing wrapper tests do not substitute for actual older-reader20–27 preservation or live branch-switch/undo/recovery checks. No capability advertisement or real-data acceptance is established by this specification refinement.
+
+## Logical departure Commit acceptance refinement, 2026-10-27
+
+HPX-OWNER-010 adds automatic publication when leaving the active content node or switching its branch. Idle autosave remains draft-only; formatting/menu/comparison blur and same-context selection do not publish. Test unchanged revisits, recovered acknowledged drafts, exact Unicode/CRLF/CR, independent node/branch selection/Undo, queued Save/newer typing, lost/delayed/denied Commit and original-operation retry, publication before destination editing, restart and exact older history. A failed or unknown transition retains outgoing text/context without a routine decision prompt. Working-reference promotion/replacement retains its separate acknowledgement and original checkpoint evidence. Manual Commit remains available.
+
+HPX-OWNER-009 requires portable workspace-contained application/recovery evidence. Complete authentic rollback of all workspace files and their internal evidence cannot be detected without independent surviving evidence; do not claim that acceptance property. Internal authenticated integrity, interrupted-write reconciliation and exact historical recovery retain their actual tested scope. No general restore format or real-data acceptance is granted here.
+
+## Semantic word controls — HPX-OWNER-017
+
+Verify separate brace-enclosed relation names between adjacent sentences and centered between adjacent paragraphs/sections, including multiple claims at one boundary, both desktop themes and the Navigator. Labels are inert source-neutral display controls, not manuscript characters; source/selection/copy/export/Undo must remain exact through pointer and keyboard inspection, view changes, widgets and restart. Preserve recorded polarity, declared certainty and participant direction, using only reviewed matching converse definitions or explicit spatial direction words. Acceptance is an owner judgement rather than checked proof.
+
+Runtime controls require the exact current committed whole source and complete document/node/revision/snapshot/occurrence/UTF8 bounds, with no quote-search relocation. Changed source, different head (even identical text), branch transition, lock, stale/denied/malformed replies and exhausted/partial paging must not produce guessed controls or false completeness. Show loaded scope; More assertions can extend only the same page generation/snapshot. Unsupported historical/cross-document/n-ary/nonadjacent and rejected/superseded claims remain inspectable without fabricated adjacent controls. Review updates must change control status/visibility without rewriting text or removing immutable claims. Run actual protected HTTPS/SQLite source/receipt/restart checks and guarded exact-binary handoff before claiming integrated delivery.
+
+
+## Planned selected-node editor Graph tab acceptance
+
+For HPX-RQ-029 / HPX-OWNER-026, verify Graph is a tab in the main editor rather than a separate dialog, identifies the current selected node/view, and shows all authorised supported linkages with explicit completeness/continuation. Exercise interactive node/edge inspection, navigation and keyboard/text alternatives; retain labelled direction, n-ary roles and evidence distinctions. Check disconnected/self/parallel cases and equal-labelled distinct identities, unavailable/withheld/unsupported/partial results, stale replies after changed context/lock, and exact source inspection. Switching Text/Graph alone preserves source bytes, editor selection/Undo, draft state and receipts without a Commit; actual logical-node changes retain departure/recovery rules. Gestures, neighbourhood expansion and mapping mechanisms require design before their executable acceptance cases are frozen. Existing dialog tests are not acceptance of the new tab or complete arbitrary-node adjacency. No checks in this paragraph have been executed by this documentation change.
+
+
+## Multi-user and AI-user baseline acceptance
+
+For HPX-RQ-032–036 / HPX-SUB-010, verify at least two humans and two machine users from different providers in one workspace without federation. Test workspace membership/permission denials, session/private draft/clipboard isolation, actor/delegator attribution, overlapping edits, stale heads, conflict handling and original-operation replay. Verify exact supplied prompts/context and every observed chat response reconstruct as protected versioned nodes with ordinary graph links/history, including failed/partial/cancelled interactions without fabricated output. Exercise human and MCP-selected-node parity for owned bytes/coordinates, graph operations, Save versus Commit, immutable same-node history, concurrency and lost acknowledgements; reject unauthorised targets, context-scope escalation and self-grants. One-human development or mock chat is not acceptance. Existing provider/transport/format migration gates remain. These are future required checks; none are claimed executed here.
+
+
+### Workspace-local user acceptance (HPX-OWNER-030/031)
+
+Required future checks: both human and machine users belong to one workspace; a user from workspace A cannot supply authority in B. A person/provider represented in B has a separate B-local user and B-local permissions. Allow two machine users from different providers in one workspace; reject a second machine user for the same provider there, regardless of model/session/chat. Verify workspace-user permission enforcement through both browser and MCP. These are requirements, not executed tests; no new credential, record or uniqueness mechanism is selected.
+
+## Node-creation origin acceptance — HPX-RQ-039
+
+Future acceptance must verify [M1/O2's creation precondition](../../architecture/Conceptual/identity-closure.c4) through human and machine/shared-API paths for every supported node kind and every operation that creates one, including creation outside the editor and chat/context/result creation. With exact authorised UI/caret or explicit equivalent machine context, parent/position is determinable; missing, ambiguous, stale or unauthorised context prevents successful creation without choosing a default or producing partial committed state. Test root creation with known contextual position but no fabricated structural parent, repeated placement of reusable content, move/reuse after creation, and distinct same-node ancestry versus cross-identity derivation. No original-author claim follows from creation context. Known structural placement without inline notation must not be classified as unknown origin; textual reconstruction/projection is a separate gate. Preserve bytes, exact history, draft versus Commit, original-operation recovery and current permissions. These are required future checks, not checks executed by this specification change; concrete context/revocation/format mechanisms remain unadopted.
+
+## Retained composition and branch capture acceptance — RQ040–041
+
+Future checks must restore A's exact nested/repeated selected B versions from its last successful acknowledged autosave after edits/restart, retaining private/current-authority scope and not treating unacknowledged typing as durable. Advancing B must not mutate retained A; a source-neutral newer-authorised-version indication must disclose no inaccessible version existence/counts and must remain separate from OWNER043/044 selection and shared review markers. Verify routine autosaves do not accumulate historical versions merely by cadence; test the eventual adopted autosave/Commit/retention policy without overwriting immutable history. No such future universal relationship is selected here.
+
+Exercise save-as of exact constructed compositions under current document/content identity, all ordered selections/positions/cycle context, owning-branch versus constituent versions, stale/denied/partial captures and original-operation recovery. Distinguish ordinary known-branch editing from read-only multi-branch projections; do not require hypothetical orphan branches or silently turn branch capture into Fork. Test actual designated-main selection and equivalent cold/cache reconstruction only after their mechanisms exist; a global latest-all-nodes rule or authoritative cache is not assumed. Existing departure Commit and earlier branch evidence retain their scope. These are future acceptance obligations, not executed application/proof tests.

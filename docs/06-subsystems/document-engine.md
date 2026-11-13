@@ -13,11 +13,24 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-26
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+All human/AI document reads and changes use shared user API operations with user–workspace permissions and common exact-source, graph, draft and Commit semantics. Application authorisation precedes publication; an adapter or pure domain plan cannot authorise itself. See the [accepted shared API scope](interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Fixture controls and future contracts are not durable service implementations. Capabilities must report unavailable honestly.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
+
+## Owner baseline reconciliation, 2026-10-30
+
+[HPX-SUB-010](ai-collaboration.md) makes multiple human/AI users and multiple agents per workspace mandatory. Chat prompts, contexts and responses are graph nodes with normal history/provenance. Selected-node MCP edits preserve the selected logical identity and use the same owned-source/draft/Commit/graph operations as human edits. Existing one-owner/fixture statements below are checkpoint evidence, not product cardinality; general multi-owner whole-buffer overwrite remains unsupported.
 
 ## Responsibilities and boundaries
 
@@ -25,19 +38,15 @@ Current readiness is linked from [the development state](../09-guides/reference/
 
 Composition, source promotion, private clipboard, pinned/live reuse and publication gates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
-## Inputs and outputs
-
-Composition, source promotion, private clipboard, pinned/live reuse and publication gates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
 ## State and operations
-
 
 
 ### Workspace, reuse and investigation interface
 
 Source `HPX-SRC-0037`, original lines 1–4. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-Status: current target requirements, 2026-10-24. Canonical backend capabilities in this document are **unimplemented**; the separate frontend preview implements selected presentation and explicitly tab-only fixture interactions. This document refines the [product specification](<../03-requirements/system-requirements.md>) and [frontend integration contract](<interfaces/browser-runtime.md>); it defines behavior, not a selected database, endpoint schema or frontend library. Frontend-only implementation is authorized; the synthetic preview opens without authentication. Backend implementation remains outside this scope.
+Current specification: required document/workspace behaviour with bounded implementation evidence. Rust runtime, encrypted drafts/publication, references, branches, history and comments exist in explicitly recorded subsets. Full composition, planned Graph tab, multi-user permissions and AI chat/MCP remain incomplete; consult the development state and linked contracts for exact scope. Synthetic previews remain fixture-only and do not establish durability or authority. This contract does not select new schemas or dependencies.
+
 
 ### 1. Core boundaries
 
@@ -106,11 +115,11 @@ Branch deletion/rename, offline fallback, concurrent head changes and cross-work
 
 Source `HPX-SRC-0037`, original lines 93–116. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-Logical capabilities (identity, content/anchors, composition, revisions, references, provenance, snapshots, private clipboard, queries, permissions and integrations) are modules inside the application boundary, not mandatory microservices. Browser, REST and MCP converge on the same authorized planner/publication semantics. Canonical records, reconstructible indexes and protected private user state have distinct responsibilities. SQLite is an available embedded-engine option, **not selected**. Keep the single Rust release executable and local-only initial serving restrictions.
+Logical capabilities (identity, content/anchors, composition, revisions, references, provenance, snapshots, private clipboard, queries, permissions and integrations) are modules inside the application boundary, not mandatory microservices. Browser HTTPS and AI MCP converge on the same authorized planner/publication semantics. Canonical records, reconstructible indexes and protected private user state have distinct responsibilities. SQLite is an available embedded-engine option, **not selected**. Keep the single Rust release executable and local-only initial serving restrictions.
 
 Zotero integration plans include separately selectable/authenticated desktop-local REST and cloud Web API adapters, read-only initially. Their actual protocol/credential/origin contracts require review before code. Bind cited metadata to reconstruction inputs; live provider refresh never changes historical output. GitHub publication remains an explicit external job, not canonical history.
 
-Dependency order below extends the editor delivery gates; each requires its own evidence; frontend-only authorization does not enable backend writes:
+Dependency order below extends the editor delivery gates; each requires its own evidence; a specification edit alone does not authorise backend implementation or existing-workspace changes:
 
 | Gate | Required capability and observable acceptance |
 |---|---|
@@ -127,22 +136,6 @@ History and snapshot semantics are foundations for every durable gate, not featu
 
 Future export/compilation and external integration capabilities are subject to the [client-held/non-trusted egress policy](<security-cryptography.md>): document export and GitHub publication are disabled at the core in that mode, even at a plaintext-capable client. Internal protected provenance-clipboard references are distinct from an OS clipboard export sink. These mode restrictions remain future implementation gates.
 
-
-## Invariants and error behavior
-
-Composition, source promotion, private clipboard, pinned/live reuse and publication gates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Dependencies and interfaces
-
-Composition, source promotion, private clipboard, pinned/live reuse and publication gates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Security and privacy
-
-Composition, source promotion, private clipboard, pinned/live reuse and publication gates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 
@@ -173,3 +166,9 @@ The owner selected reviewed new-document synthesis in [HPX-ADR-015](../04-archit
 The owner's 2026-10-26 clarification identifies the intended interface Merge workflow as integrating the current document branch's text into a parent branch. Plan this under [roadmap stage 5](../02-governance/roadmap.md#planned-branch-parent-merge-workflow--owner-clarification-2026-10-26), after durable multiple-branch heads, branch-specific drafts and safe branch viewing/switching. The parent destination and conflicts must be explicit; preserve source/target histories and use same-identity revision ancestry. Branch parentage is distinct from revision-parent edges and cross-identity derivation. Treatment of uncommitted text and exact publication/compatibility mechanics remain to be specified before enabling the operation.
 
 This is a documented future requirement, not an immediate implementation instruction. The current independently published synthesis remains its separately approved bounded operation; it does not implement merging into a parent branch. [ADR015](../04-architecture/decisions/0015-initial-merge-workflow.md#later-owner-clarification-parent-branch-merge) retains both the first increment and this later clarification.
+
+## Selected-text heading links, owner clarification 2026-10-27
+
+The owner explicitly requires Link to connect **selected text to a heading**. A caret alone is ineligible; require a nonempty selection and an available heading in the current document. Do not restrict labels to whole words: partial words, punctuation, Unicode and multiline selected text are valid. The heading picker resolves against the captured owned source, including LF/CRLF/CR documents and distinct duplicate heading anchors, without rewriting line endings. No external-URL destination or shared-content inclusion is added by this clarification.
+
+Opening/cancelling the picker preserves source and selection. Insertion changes only the frozen selected range through the ordinary undoable owned-buffer edit path; unchanged selected multiline bytes retain their exact original endings. Revalidate document, branch buffer, sequence and editability before insertion. A stale/locked/switched source does not receive the link. Opening the picker does not Commit; ordinary autosave and explicit/logical-departure Commit retain their adopted boundaries. This Markdown heading link is distinct from a durable semantic graph relationship or shared occurrence.

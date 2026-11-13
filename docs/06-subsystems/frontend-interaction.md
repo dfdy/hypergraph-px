@@ -13,22 +13,66 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+The browser is a client of the shared human/machine hypergraph API. UI availability may reflect permissions, but backend enforcement is mandatory for each protected operation and result. Preserve denial/conflict/uncertainty feedback and drafts; do not treat a disabled control, selected node, session cookie or workspace unlock as authority. Local editor/view behaviour remains browser execution. See the [accepted shared API scope](interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Fixture controls and future contracts are not durable service implementations. Capabilities must report unavailable honestly.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 
-## Responsibilities and boundaries
+## Functional organisation (owner direction, 2026-10-30)
 
-Desktop UI, formatting, navigation, selection, provenance and relation displays. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+The browser organisation and its displayed inputs/outputs are canonical in [C3 / Browser interface](../../architecture/C3/browser-interface.c4) and its [UI/functions expansions](../../architecture/C3/browser-organisation.c4), HPX-CAN-004. Grouping and implementation-path tables are removed from this document.
 
-## Inputs and outputs
+### User interface — visible regions
 
-Desktop UI, formatting, navigation, selection, provenance and relation displays. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+The User interface view owns spatial groups/nesting and planned Graph-tab placement. These are logical drawing groups, not a requirement to rename DOM controls or introduce modules. Existing Interaction/Investigation labels and tab meanings retain their detailed contracts below. Functions (right) is a sidebar group, distinct from Interface functions; a function may serve several regions.
+
+### Interface functions — retained logical responsibilities
+
+The Interface functions view owns the displayed responsibility decomposition. [Workspace and contents navigation C4](../../architecture/C4/workspace-navigation.c4) owns its source-symbol mapping; detailed editor behaviour, exact-source ownership, API state and error rules remain in this document and linked contracts.
+
+## Selected-node Graph tab (owner direction, 2026-10-30)
+
+HPX-OWNER-026 refines HPX-RQ-029: move graph visualisation from a separate dialog into a **Graph tab in the main editor window**, alongside the text/document editor. The graph shows a graphical representation of the **currently selected node with all its linkages**, with interactive node/relationship inspection and navigation. This is accepted future UI direction; the editor tab and expanded selected-node coverage are **planned**, not implemented by the existing dialog.
+
+- The selected node is the clearly identified graph focus. Carry its logical identity and exact authorised view/revision/occurrence context; a heading offset, selection label or equal text is not sufficient identity. Choosing an outline heading does not automatically establish a canonical graph node mapping.
+- Show labelled nodes and relationships with direction, participant roles, context and evidence status. Include all linkages in the authorised supported scope; progressive loading must expose permitted incompleteness/unsupported families, never silently present a partial Fork/assertion graph as the whole graph. Withheld identities/counts remain protected. The [graph contract](graph-engine.md#selected-node-editor-graph-tab-2026-10-30) preserves n-ary relationship identity and scope rules.
+- Support interactive selection/inspection and navigation of the visual graph, with an accessible text/keyboard alternative. This instruction does not add relationship creation/deletion or publication operations; HPX-RQ-029 remains read-only. Exact gestures, root-neighbour depth and whether selecting a neighbour changes the active editor node remain design questions, not invented mechanisms.
+- Text and Graph are views in the same main editor area. Switching tabs preserves the owned buffer, draft/acknowledgement state, selection, Undo and recoverable editor state. A tab switch alone is not logical-node departure, Save or Commit. If an interaction changes the active logical node, retain the existing departure/recovery rules.
+- Changing selected node, view, branch, permissions or workspace lifecycle invalidates obsolete graph replies. Bind results to their requested context; do not attach old-snapshot relationships to current draft passages by guessing. No new wire route, graph snapshot format or query adapter is selected here.
+
+**Current implementation evidence:** app.js invokes openRuntimeGraph from the capability-gated Graph navigation lens; runtime-graph.js implements a dialog with bounded selected document/assertion/transformation scopes. Retain that source mapping in C4 as **Current graph dialog**. The proposed route opens the new editor Graph tab instead. Data/selection transfer and broader adjacency queries still need design; no application code changed with this specification update.
+
+## Multi-user and AI-user UI baseline
+
+[HPX-SUB-010](ai-collaboration.md) requires distinct human/AI users and multiple agents per workspace. Agent chat must expose actual workspace prompt/context/response nodes and their graph/history/provenance, with authorised disclosure. A focused current-agent indicator may coexist with several assigned/active agents; it must not imply one agent per workspace. Contributor lists remain separate from membership/presence. MCP permits authorised direct editing of the selected node with the same draft/version/graph/Commit and recovery behaviour as human input; selection is not a permission grant. Existing mock chat, single-owner runtime and contributor UI are partial implementation evidence, not delivery of this baseline.
 
 ## State and operations
 
+### Changed-source conflict handling — HPX-OWNER-043
+
+The [existing Editor region](../../architecture/C3/browser-organisation.c4) owns the accepted control scope. For conflicts encountered while resolving changed followed sources before Commit, provide a setting that toggles between **Ask** (request a choice) and **Automatic latest timestamp** (choose the version with the latest timestamp). In automatic mode, visually mark the affected sentence, paragraph or section as having a **potential conflict**. The marker has a link opening a modal for comparing changes. This is accepted future behaviour, not an implemented setting or a general adoption of last-write-wins branch merging.
+
+Automatic choice does not prove the conflict resolved, confer permission or trigger Commit by itself. The chosen exact version must still be reflected in the committed snapshot; retained alternatives/history are not erased. Compare only authorised exact versions, preserve source bytes/selection/Undo and distinguish repeated occurrence contexts; sentence/paragraph/section display regions do not automatically become new persistent nodes. Normal current-authority, exact-state, uncertain-outcome and atomic publication requirements remain; this setting cannot change an already-submitted frozen operation or its receipt.
+
+**Follow-up choices (HPX-OWNER-044):** latest means the time **HPX recorded the version as committed**, not a writer-supplied device timestamp. Equal competing Commit timestamps require asking, even in automatic mode. The preference belongs to each workspace-local user;changing one user's mode does not change another's. **Ask is the default**;automatic selection is an explicit user choice.
+
+The potential-conflict marker is shared evidence about the affected committed version,not a private consequence of a viewer's preference. Every authorised viewer of that version sees the marker regardless of mode. A private unpublished draft and its markers do not thereby become shared. Keep the shared marker until someone authorised explicitly resolves the conflict;merely opening or reading the comparison modal cannot clear it. Retain resolution/history evidence rather than rewriting historical source bytes. Exact marker/resolution records and UI transitions still require design;no new permission vocabulary is adopted.
+
+Timestamp precision/encoding,missing or incomparable values,exact marker granularity/representation and modal/resolution mechanics remain open. Recorded Commit time is a selection heuristic,not proof of causal precedence,correctness or semantic agreement. Existing storage/wire versions and current UI capabilities are unchanged.
+
+### Cycle warnings and deliberate navigation — HPX-OWNER-041
+
+Follow the [accepted inclusion-cycle policy](../05-domain/hypergraph-mathematics.md#accepted-cycle-aware-inclusion-policy--hpx-owner-041): show an explicit accessible boundary warning instead of auto-expanding the stopped dependency. Offer deliberate authorised click-through; each action is bounded and must not trigger recursive auto-opening. Keep exact target/view context, stale/lock/permission handling and normal source/selection/Undo/departure rules. Exact wording, controls and state encoding remain design details. Required [Lean state-transition proofs](../07-implementation/formal-invariants.md#required-cycle-aware-expansion-proofs--hpx-owner-041) do not replace actual UI/accessibility checks. This behaviour is required, not implemented by current graph/navigation controls.
 
 
 ### 2. Desktop presentation and interaction responsibilities
@@ -57,7 +101,7 @@ Treat document text, comments, model output, remote labels and link destinations
 
 Source `HPX-SRC-0028`, original lines 174–187. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-The upper Interaction panel has three tabs: **Agent, Comments, Users**. **Users lists all known contributors to the current document, not logged-in or connected users.** Derive it from authorized contribution/attribution/provenance records for the viewed document/state. A disconnected contributor remains listed; connecting alone does not make anyone a contributor. This read projection is compatible with one active local human and does not enable multi-user mutation or federation.
+The upper Interaction panel has three tabs: **Agent, Comments, Users**. **Users lists all known contributors to the current document, not logged-in or connected users.** Derive it from authorized contribution/attribution/provenance records for the viewed document/state. A disconnected contributor remains listed; connecting alone does not make anyone a contributor. This read projection is not membership or mutation authority. HPX-OWNER-027 requires multiple human/AI users and agents in the product; the current one-human development view does not constrain that architecture.
 
 At the top, pin **current human** and **current agent**, resolved by opaque principal identity from the authenticated human and the agent assigned to this document/editing context. They remain distinguishable from historical contribution claims: pinning someone does not assert they wrote text. If no current agent is assigned, show an explicit “No current agent” row rather than fabricate a connected agent/principal. Fixture identities are clearly labelled synthetic/display-only; a provider label, model name, MCP connection or sample chat message is not an authoritative agent identity.
 
@@ -75,7 +119,7 @@ Source `HPX-SRC-0028`, original lines 200–209. Preserved contract/evidence wor
 
 Provide a **Source/Rendered** mathematics display toggle, default Source. Save/export the original Markdown/LaTeX source; generated HTML/MathML is presentation only. Support the planned delimiters `\(...\)`, `\[...\]` and `$$...$$` outside code spans/fences, including mapped table-cell source. Toggling must preserve source bytes, source ownership, draft sequence, attribution, selection and undo; it creates no save, revision or mathematical proof.
 
-Use a locally bundled browser renderer and its CSS/fonts/license notices, embedded with the final release assets. This preview needs no CDN, TeX service, Node runtime or Rust maths-render endpoint. **KaTeX is a candidate**, not a package/version adopted by this specification; select and pin it through frontend dependency/license review before use. If selected, disable trust, apply finite size/macro-expansion/input/output budgets, isolate mutable macro state to the explicit rendering context, and escape/sanitize errors without leaking raw source into executable HTML. See the renderer's [security guidance](https://katex.org/docs/security) and [options](https://katex.org/docs/options). Accessibility output does not replace actual keyboard/screen-reader acceptance.
+Use a locally bundled browser renderer and its CSS/fonts/license notices, embedded with the final release assets. This preview needs no CDN, TeX service, Node runtime or Rust maths-render endpoint. Current frontend source pins KaTeX in `frontend/package.json` and bundles its assets; this is implementation evidence, not blanket rendering/security acceptance. Preserve dependency/license review before changes. Disable trust, apply finite size/macro-expansion/input/output budgets, isolate mutable macro state to the explicit rendering context, and escape/sanitize errors without leaking raw source into executable HTML. See the renderer's [security guidance](https://katex.org/docs/security) and [options](https://katex.org/docs/options). Accessibility output does not replace actual keyboard/screen-reader acceptance.
 
 Invalid/unsupported formulas remain visibly recoverable as source. Widgets must map actions to exact source context even when rendering changes visual width. Escape-doubled fixture strings must not establish a production source encoding: any narrow fixture compatibility decoder is explicit, render-only and source-mapped. Do not broadly unescape/backslash-normalize stored documents or silently change legitimate LaTeX. Render success is not a mathematical correctness or Lean proof result.
 
@@ -303,22 +347,6 @@ Use a local checking/dictionary path as the baseline. Do not transmit manuscript
 Acceptance must cover real editor marking/suggestions, exact corrections and undo/redo, disabled mode, protected syntax, language/dictionary behavior, stale or delayed results after edits/document switches, accessibility and no unauthorized text disclosure. The synthetic editor currently sets browser spellcheck to false and implements no spelling engine; this requirement does not claim otherwise.
 
 
-## Invariants and error behavior
-
-Desktop UI, formatting, navigation, selection, provenance and relation displays. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Dependencies and interfaces
-
-Desktop UI, formatting, navigation, selection, provenance and relation displays. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Security and privacy
-
-Desktop UI, formatting, navigation, selection, provenance and relation displays. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
 ## Source provenance
 
 - `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 27–46; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
@@ -392,3 +420,26 @@ At the owner's request, [ADR019](../04-architecture/decisions/0019-working-branc
 ## Local gated wiring checkpoint and owner stop
 
 Branch review/selection and retained working-reference inspection are now component-tested at1280/1600/2000 in both themes; all six branch views and two working-source inspection views were visually inspected. Component tests cover cancellation, reviewed snapshot context and inert exact source. Mock adapter tests cover frozen branch retries, newer typing during delayed save, branch isolation and opaque history scope. Existing owned-buffer copy/paste/undo/lock and historical-dialog cancellation checks pass. The real CodeMirror branch-switch/restart/Fork/promotion workflow and below-widget integration visuals remain pending. The server does not advertise local_branches/working_copy, so this wiring is not enabled for the current runtime. The owner asked to stop after the current step; implementation is stopped after these checks and handoff.
+
+## Heading Link selection eligibility
+
+HPX-OWNER-016 requires selected text, not a caret-only insertion. Enable Link only for a nonempty selection with a heading target in the current editable document. Permit partial-word/punctuation/Unicode selections. Capture the exact owned range and branch buffer; preserve selection on cancel and treat insertion as one undoable draft edit, with no keyboard-focus Commit. The heading picker supports LF/CRLF/CR sources, retaining exact source offsets and duplicate anchors. [Document-engine contract](document-engine.md#selected-text-heading-links-owner-clarification-2026-10-27) owns the exact scope; HPX-TEST-065 records verification.
+
+## Current in-text semantic relation labels — HPX-OWNER-017
+
+The owner replaces the earlier adjacent-unit arrow glyphs with explicit brace-enclosed relation words: `{determines}{justifies}` between sentences; corresponding individual controls centered in the gap between paragraphs (and existing sibling-section boundaries). Each relation remains separately selectable with pointer/keyboard inspection in Relations; role/direction and review meaning are retained rather than inferred from the glyph. Labels are self-labelled controls and do not need redundant hover tooltips. They are editor/Navigator decorations, never Markdown, clipboard or exported source characters. Preserve original separator bytes while avoiding duplicated visible spacing; show no guessed controls for stale or unresolved anchors.
+
+The next runtime increment projects only loaded proposed/accepted binary assertions whose two exact participant document/node/revision/snapshot/occurrence/UTF8 ranges match the current complete committed owned buffer and one eligible adjacent sentence/paragraph/section pair. Retrospective overlay meaning remains explicit; rejected/superseded claims remain inspectable in retained views. Nonadjacent/cross-document/n-ary/old-source claims remain in Relations without fabricated adjacent controls. Display loaded-count/continuation scope; a bounded partial page is not absence of other relations. Protected source/page replies must be discarded after changed buffer/branch/head/lock or obsolete requests. No source write, persistent format upgrade or automatic Commit follows from projection/inspection.
+
+
+## Owner-prioritized readable Markdown, 2026-10-27
+
+HPX-OWNER-018 requires visible bold and italic styles, rendered link labels instead of destination syntax, and distinct sizes for all six parsed heading levels. Keep source text exact; CodeMirror presentation decorations and the Navigator must share the same parsed ranges/styles and hidden link syntax. Literal code/math must not acquire accidental Markdown emphasis/link interpretation. Escaped bracket labels in actual Markdown links are literal link text, not standalone maths delimiters. Link activation accepts heading fragments and safe explicit HTTP/HTTPS/mailto schemes; untrusted HTML stays inert and external anchors retain noopener/noreferrer. Heading links navigate only inside the current document and must not create history. Source mode exposes hidden link syntax for editing and suppresses link navigation; changing presentation creates no draft/Commit/Undo entry. Existing neutral grey syntax markers remain available outside hidden link ranges.
+
+The current partial working-tree implementation uses full-tree presentation metadata, inline marks, source-neutral atomic replacement ranges, an optional Markdown source checkbox and descending H1–H6 typography. It is not manually delivered yet: the owner stopped work before final link-selection review and actual HTTPS/SQLite integration/guarded handoff. HPX-TEST-071 records only checks actually executed. UI work remains the first continuation priority on explicit resumption.
+
+### Retained inclusion state and newer-version indication — HPX-RQ-040
+
+The [canonical editor notes](../../architecture/C3/browser-organisation.c4) and [M1](../../architecture/Conceptual/identity-closure.c4) require retained A to show its retained selected B versions from the last successful acknowledged autosave, including nested/repeated contexts. Indicate an available newer authorised version separately, without editing source, retargeting selections, revealing inaccessible identities/counts or creating/clearing a shared conflict marker. OWNER043/044's Ask/Automatic Commit-conflict selection rules keep their own scope. The hint's comparison rule and exact UI mapping remain undesigned; no global newest timestamp or background update is selected. OWNER050 reopens universal future autosave/Commit separation while forbidding historical-version accumulation merely from routine autosaves; no current draft publication or departure-Commit revocation follows.
+
+HPX-RQ-041 additionally requires the option to preserve an authorised constructed current-document version as a specific branch, retaining exact composition and logical identity. This is not a claim of branchless ordinary editing or existing single-node branch-creation delivery of arbitrary composition capture. [The reconciliation](../../architecture/proposals/branch-selection-reconciliation.md) retains the precise unresolved capture/main questions. No control or storage mechanism is implemented by this specification change.

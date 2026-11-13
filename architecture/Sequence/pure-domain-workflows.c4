@@ -1,0 +1,172 @@
+views {
+  dynamic view seq_domain_expansion {
+    variant sequence
+    title "Sequence / Pure domain — Validate supplied expansion"
+    description "Actual unit-test calls to the pure validator; no production caller or application acceptance is implied. Vertices/edges are an explicitly supplied expansion projection. Hyperlink cycles, placement ownership, closure completeness and reading order are outside its guarantee. No tests run here."
+    link ../audits/pure-domain-audit.md
+    link ../../crates/domain/src/expansion.rs
+    link ../../docs/07-implementation/algorithms/expansion-validation.md
+    link ../../docs/08-assurance/formal-validation-digest.md
+    hpx.native.domain.test_calls -> hpx.native.domain.expansion_rules.validate "Call validate with finite supplied vertices, edges and explicit budgets"
+    hpx.native.domain.expansion_rules.validate -> hpx.native.domain.expansion_rules.validate "Check declared vertex/edge counts before building graph"
+    alt "Input size limits" {
+      when "Exceeded" {
+    hpx.native.domain.test_calls <- hpx.native.domain.expansion_rules.validate "Error::Budget; supplied input unchanged"
+      }
+      else "Within size limits" {
+    hpx.native.domain.expansion_rules.validate -> hpx.native.domain.expansion_rules.validate "Register vertices and edges; charge each step; stop immediately on invalid catalogue/endpoint or work limit"
+        alt "Registration and endpoint validation" {
+          when "Duplicate vertex, unknown endpoint or exhausted work" {
+    hpx.native.domain.test_calls <- hpx.native.domain.expansion_rules.validate "Explicit error; no partial validated view"
+          }
+          else "Registered finite projection" {
+    hpx.native.domain.expansion_rules.validate -> hpx.native.domain.expansion_rules.validate "Seed ordered zero-indegree queue; remove vertices/parallel edges, charging work"
+            alt "Elimination result" {
+              when "Work exhausted" {
+    hpx.native.domain.test_calls <- hpx.native.domain.expansion_rules.validate "Error::Budget; no partial success"
+              }
+              when "Visited count differs from supplied vertex count" {
+    hpx.native.domain.test_calls <- hpx.native.domain.expansion_rules.validate "Error::Cycle; reference projection is not being validated"
+              }
+              else "All vertices removed" {
+    hpx.native.domain.test_calls <- hpx.native.domain.expansion_rules.validate "Validated counts; successful work = 2V + 2E; no returned document order"
+              }
+            }
+          }
+        }
+      }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    include hpx.native.domain.expansion_rules.validate with { navigateTo c4_domain_history }
+    include hpx.native.domain.test_calls with { navigateTo c4_domain_history }
+  }
+  dynamic view seq_domain_fork {
+    variant sequence
+    title "Sequence / Pure domain — Plan a Fork and hand off publication"
+    description "Entry after existing HTTPS/session/unlock gates. The ordinary committed-source Fork path authenticates source in adapters, calls a pure planner, then atomically publishes independent history/derivation/receipt. Draft acknowledgement/checkpoint capture is not this Commit-like publication. Source review only."
+    link ../audits/pure-domain-audit.md
+    link ../../crates/runtime/src/main.rs
+    link ../../crates/storage/src/lib.rs
+    link ../../crates/storage/src/forks.rs
+    link ../../crates/storage/src/clipboard.rs
+    link ../../crates/domain/src/fork.rs
+    link ../../crates/domain/src/records.rs
+    hpx.native.transport.api.c4_publication -> hpx.native.storage.c4_publication "execute(operation, frozen Fork command)"
+    hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Validate command; begin IMMEDIATE transaction; current authority before protected receipt lookup"
+    alt "Authority and replay" {
+      when "Denied, malformed or conflicting operation identity" {
+    hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Error; no new durable publication" { line dashed color gray }
+      }
+      when "Exact authorized receipt already exists" {
+    hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Return original receipt without replanning mutable source" { line dashed color gray }
+      }
+      else "Fresh authorized operation" {
+    hpx.native.storage.c4_publication -> hpx.native.storage.domain_forks "forks::apply inside the writer transaction"
+    hpx.native.storage.domain_forks -> hpx.native.storage.domain_forks "Verify catalog and pinned source via capture_source; allocate output node outside domain"
+        alt "Authenticated source / expected draft context" {
+          when "Denied, stale, corrupt or quote mismatch" {
+    hpx.native.storage.c4_publication <- hpx.native.storage.domain_forks "Error; transaction rolls back"
+    hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "No new result/receipt" { line dashed color gray }
+          }
+          else "Verified exact source" {
+    hpx.native.storage.domain_forks -> hpx.native.domain.source_plans.fork "plan(source node, revision, occurrence path, exact text, anchor, output node)"
+    hpx.native.domain.source_plans.fork -> hpx.native.domain.source_plans.fork "Reject same identity or mismatched revision/occurrence before slicing"
+            alt "Identity and context" {
+              when "Mismatch" {
+    hpx.native.storage.domain_forks <- hpx.native.domain.source_plans.fork "Explicit pure planning error"
+    hpx.native.storage.c4_publication <- hpx.native.storage.domain_forks "Error; rollback"
+              }
+              else "Matching context and distinct output" {
+    hpx.native.domain.source_plans.fork -> hpx.native.domain.exact.records "validate_byte_range against supplied exact text"
+    hpx.native.domain.source_plans.fork <- hpx.native.domain.exact.records "Range validity or scalar/bounds error"
+                alt "Range and passage" {
+                  when "Invalid or empty" {
+    hpx.native.storage.domain_forks <- hpx.native.domain.source_plans.fork "Error; no fragment plan"
+    hpx.native.storage.c4_publication <- hpx.native.storage.domain_forks "Error; rollback"
+                  }
+                  else "Valid nonempty passage" {
+    hpx.native.storage.domain_forks <- hpx.native.domain.source_plans.fork "Borrowed exact slice and source/output identities; no authority or IO"
+    hpx.native.storage.domain_forks -> hpx.native.storage.domain_forks "create_document: new node first revision has no same-node parent; persist pinned derivation"
+                    alt "Adapter staging" {
+                      when "Record or checkpoint failure" {
+    hpx.native.storage.c4_publication <- hpx.native.storage.domain_forks "Error; unwind writer transaction"
+    hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Error; no partial publication claimed" { line dashed color gray }
+                      }
+                      else "Output and derivation staged" {
+    hpx.native.storage.c4_publication <- hpx.native.storage.domain_forks "Forked outcome"
+    hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Persist original result/receipt; attempt SQL COMMIT"
+                        alt "Publication acknowledgement" {
+                          when "Receipt or commit error" {
+    hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Error; no partial-success claim; reconcile uncertain outcome through existing receipt workflow" { navigateTo seq_uncertain  line dashed color gray }
+                          }
+                          else "Committed" {
+    hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Receipt; cross-identity derivation is distinct from new node ancestry" { line dashed color gray }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    include hpx.native.domain.exact.records with { navigateTo c4_domain_sources }
+    include hpx.native.domain.source_plans.fork with { navigateTo c4_domain_sources }
+    include hpx.native.storage.c4_publication with { navigateTo c4_domain_sources }
+    include hpx.native.storage.domain_forks with { navigateTo c4_domain_sources }
+    include hpx.native.transport.api.c4_publication with { navigateTo c4_api_routes }
+  }
+  dynamic view seq_domain_parent_plan {
+    variant sequence
+    title "Sequence / Pure domain — Select a supplied parent-Merge result"
+    description "Actual pure selector tests supply Base/Side/edit/origin data. No production selector caller or authenticated ancestry/trace/origin-to-selector pipeline is modelled. Same-node planning is distinct from cross-identity synthesis. A returned Plan is in-memory only; no clocks, heads or records move."
+    link ../audits/pure-domain-audit.md
+    link ../../crates/domain/src/parent_merge.rs
+    link ../../crates/domain/src/records.rs
+    link ../../docs/07-implementation/algorithms/parent-merge.md
+    hpx.native.domain.test_calls -> hpx.native.domain.history_plans.selector "Supply exact Base, source/target Side maps, origin claims and Limits"
+    hpx.native.domain.history_plans.selector -> hpx.native.domain.history_plans.selector "Require same node and initial byte/work limits"
+    alt "Scope and initial budget" {
+      when "Wrong node or exceeded limits" {
+    hpx.native.domain.test_calls <- hpx.native.domain.history_plans.selector "Error; no plan"
+      }
+      else "Initial guards pass" {
+    hpx.native.domain.history_plans.selector -> hpx.native.domain.history_plans.selector "validate_side checks scalar-safe ranges, ordered nonoverlap, quotes, origins and exact reconstruction; stops at first error"
+        alt "Supplied map validity" {
+          when "Invalid map, reconstruction, origin/order claim or work limit" {
+    hpx.native.domain.test_calls <- hpx.native.domain.history_plans.selector "Explicit error; no partial result"
+          }
+          else "Both supplied sides validate" {
+    hpx.native.domain.history_plans.selector -> hpx.native.domain.history_plans.selector "Combine disjoint changes; identical replacements preserve both origins; compare known orders only for exact confident competition"
+            alt "Regional selection" {
+              when "Complex overlap, or unequal coincident replacements with unknown mapping/order or tied order" {
+    hpx.native.domain.test_calls <- hpx.native.domain.history_plans.selector "Outcome::Unresolved with region/reason; no merged text returned"
+              }
+              else "Selection resolved" {
+    hpx.native.domain.history_plans.selector -> hpx.native.domain.history_plans.selector "Charge output size/work; construct exact bytes with retained input identities"
+                alt "Final resource bound" {
+                  when "Exceeded" {
+    hpx.native.domain.test_calls <- hpx.native.domain.history_plans.selector "Error::Limit; no partial merged plan"
+                  }
+                  else "Within bounds" {
+    hpx.native.domain.test_calls <- hpx.native.domain.history_plans.selector "Outcome::Merged(Plan); no authorization or durable publication"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    include hpx.native.domain.history_plans.selector with { navigateTo c4_domain_history }
+    include hpx.native.domain.test_calls with { navigateTo c4_domain_history }
+  }
+}

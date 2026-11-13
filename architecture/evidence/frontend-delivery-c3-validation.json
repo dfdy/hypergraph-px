@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-30",
+  "result": "passed",
+  "authority": "Proposed scoped C3 reconciliation;not specification adoption or runtime acceptance",
+  "views": 25,
+  "source_files": 11,
+  "target_nodes": 13,
+  "target_edges": 13,
+  "new_elements": 1,
+  "new_relationships": 2,
+  "protected_files": 429,
+  "checks": [
+    "Specification/code input-transform-output checklist source hashes and paths resolve",
+    "Actual Cargo/version/counter input and early Host/cross-site rejection dependency are visible",
+    "Frontend input metadata includes build/cache scripts and logo;asset requests no longer imply bootstrap handler coverage",
+    "Exact static routing precedes session/unlock;shared response headers/error and existing TLS stream order cross-checked",
+    "All old logical model relationships retained;only shared frontend-input trace metadata expanded",
+    "Other24 view hashes/endpoint/style sets unchanged;C4 and sequence view sets unchanged",
+    "All other saved geometry/styles retained;semantic relation references refreshed where compiler IDs changed",
+    "All previous target node positions/sizes/styles and11 curves retained;only build group widens,one artifact andtwo curves added;label centres retained",
+    "13 single-cubic routes pass301-point bounds/obstacle checks;labels/nodes do not overlap;containment/navigation/palette pass",
+    "All protected application/generated/dist/API/proof/legal/manifest/lockfile/counter bytes unchanged"
+  ],
+  "source_sha256": {
+    "architecture/frontend-delivery.c4": "aeaca84fae0f0610139262293434cd1d8589e841acb6f1081bac30ffa1c601bc"
+  },
+  "visual_inspection": "Target native AppKit approximation inspected;not actual VS Code/webview acceptance",
+  "limits": [
+    "Prepared-tree freshness/atomicity/JSON MIME/policy clarification remain open;no new guarantee implemented",
+    "Historical inventory and test evidence not renewed as a build or binary assurance claim",
+    "No application tests/frontend build/Rust compile/app launch/browser/generation/proof/trust/provider/workspace/commit/publication action"
+  ],
+  "likec4_validation": {
+    "valid": true,
+    "errors": [],
+    "stats": {
+      "totalFiles": 11,
+      "totalErrors": 0,
+      "filteredFiles": 11,
+      "filteredErrors": 0
+    }
+  },
+  "documentation_validation": {
+    "result": "passed",
+    "materialized_contracts": 68,
+    "canonical_sections": 116,
+    "claim_units": 509,
+    "requirement_seeds": 31,
+    "archive_bytes_and_spans": "skipped by documentation checker"
+  },
+  "commands_executed": [
+    "architecture/node_modules/.bin/likec4 export json -o /private/tmp/hpx-frontend-c3-audit-final.json architecture",
+    "architecture/node_modules/.bin/likec4 validate --json architecture",
+    "python3 /private/tmp/hpx-verify-frontend-c3-audit.py",
+    "python3 scripts/verify_documentation.py"
+  ]
+}

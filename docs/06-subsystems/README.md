@@ -14,6 +14,8 @@ Level `06-subsystems`. This is navigation, not a new requirement. See the [docum
 - [Security and Cryptography](<security-cryptography.md>) — `HPX-SUB-012`; proposed.
 - [Workspace Storage](<workspace-storage.md>) — `HPX-SUB-006`; proposed.
 
+- [Multi-user and AI Collaboration](ai-collaboration.md) — `HPX-SUB-010`; accepted product requirements under HPX-OWNER-027; implementation/mechanisms remain incomplete.
+
 Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
 
 - [Future export and compilation scope](import-export.md) — HPX-SUB-008; owner-confirmed bundled Pandoc targets/citations/content selection; mechanisms proposed and implementation deferred.

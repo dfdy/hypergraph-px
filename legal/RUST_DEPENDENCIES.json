@@ -1,6 +1,6 @@
 {
-  "reviewed": "2026-10-25",
-  "scope": "Resolved registry manifests; own code AGPL-3.0-only. Bundled SQLite public domain; ring bundled third-party notices reviewed separately. No copied upstream application source.",
+  "reviewed": "2026-10-27",
+  "scope": "Resolved registry manifests; own code AGPL-3.0-only. Bundled SQLite public domain; ring bundled third-party notices reviewed separately. No copied upstream application source. API contract increment: six resolved utoipa/proc-macro dependencies reviewed from fetched manifests/notices; no copied application source.",
   "packages": [
     {
       "name": "aead",
@@ -676,6 +676,66 @@
       "declared_license": "MIT",
       "selected_license": "MIT",
       "repository": "https://github.com/dtolnay/zmij"
+    },
+    {
+      "name": "equivalent",
+      "version": "1.0.3",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "00d174d5400e5e8fd687ad1049e2f578285fa914201b1af7e8b112a4546bd826",
+      "declared_license": "Apache-2.0 OR MIT",
+      "selected_license": "MIT",
+      "repository": "https://github.com/indexmap-rs/equivalent",
+      "reviewed": "2026-10-27"
+    },
+    {
+      "name": "hashbrown",
+      "version": "0.17.1",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a",
+      "declared_license": "MIT OR Apache-2.0",
+      "selected_license": "MIT",
+      "repository": "https://github.com/rust-lang/hashbrown",
+      "reviewed": "2026-10-27"
+    },
+    {
+      "name": "indexmap",
+      "version": "2.14.2",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "cc4e190f5d26ca7051642629da2c52fc03bde85a03197c99408dcd291734c855",
+      "declared_license": "Apache-2.0 OR MIT",
+      "selected_license": "MIT",
+      "repository": "https://github.com/indexmap-rs/indexmap",
+      "reviewed": "2026-10-27"
+    },
+    {
+      "name": "syn",
+      "version": "3.0.9",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "d78c8dee4c7bf0e14673097256fed6142ce9d3b85a408189d07482442145823b",
+      "declared_license": "MIT OR Apache-2.0",
+      "selected_license": "MIT",
+      "repository": "https://github.com/dtolnay/syn",
+      "reviewed": "2026-10-27"
+    },
+    {
+      "name": "utoipa",
+      "version": "6.0.0",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "8765fe27aeff71012a3f90fa474cf1df863a7d0dd81ed25de4e63fff2544994f",
+      "declared_license": "MIT OR Apache-2.0",
+      "selected_license": "MIT",
+      "repository": "https://github.com/juhaku/utoipa",
+      "reviewed": "2026-10-27"
+    },
+    {
+      "name": "utoipa-gen",
+      "version": "6.0.1",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "checksum": "d935f1c83fdf8b88f09bbe050d0cea78ea4afee6d7b0317403228c1200b2c8ab",
+      "declared_license": "MIT OR Apache-2.0",
+      "selected_license": "MIT",
+      "repository": "https://github.com/juhaku/utoipa",
+      "reviewed": "2026-10-27"
     }
   ]
 }

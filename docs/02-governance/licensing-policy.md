@@ -13,22 +13,12 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 Keep root/upstream licenses unchanged. This document does not relicense supplied prose, private manuscripts or user content.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Context and problem
-
-Application licensing, dependency/source provenance and user-content rights. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Scope and exclusions
-
-Application licensing, dependency/source provenance and user-content rights. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Normative content
-
 
 
 ### Verification tooling and provenance
@@ -67,22 +57,6 @@ Source `HPX-SRC-0114`, original lines 27–29. Preserved contract/evidence wordi
 
 CodeMirror 6, KaTeX and esbuild dependencies are pinned with their resolved versions, integrity and reviewed SPDX metadata in [FRONTEND_DEPENDENCIES.json](<../../legal/FRONTEND_DEPENDENCIES.json>). Runtime/editor/renderer packages use MIT; Playwright browser tooling uses Apache-2.0. Node/Chromium/esbuild/Playwright are development tools, not Rust release runtime services. Browser binaries are installed by Playwright for testing and are not redistributed with app assets. The frontend build generates installed dependency license notices and includes the application license. Selected owner-provided AGPL source helpers/widgets have individual input digests and adaptation notes in [frontend provenance](<../../frontend/SOURCE_PROVENANCE.json>); manuscript/private fixtures and original built bundles were not adopted. No new Rust dependency or theorem is introduced by the frontend. Frontend CI reuses checkout and adds actions/setup-node (MIT) as build tooling.
 
-
-## Examples and counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Dependencies and consequences
-
-Application licensing, dependency/source provenance and user-content rights. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Open questions and conflicts
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

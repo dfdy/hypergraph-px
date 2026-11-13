@@ -1,0 +1,35 @@
+{
+  "protocol_version": "0.1.0",
+  "record_version": 1,
+  "id": "HPX-PROP-20261030-closed-composition",
+  "kind": "proposal",
+  "subject": "ClosedComposition",
+  "summary": "Specify closed composition invariants before implementing the snapshot representation.",
+  "status": "proposed",
+  "authority": {
+    "basis": "agent_proposal"
+  },
+  "source_refs": [],
+  "relations": [],
+  "actor": "agent:architecture",
+  "created_on": "2026-10-30",
+  "content": {
+    "change": "Define ClosedComposition closure semantics, dependency pinning, occurrence identity and deterministic reconstruction contracts before implementing the record.",
+    "rationale": "Reproducible composition snapshots require stable identities and revision selection; the original sketch does not itself specify these invariants.",
+    "constraints": [
+      "Integrate with existing composition, revision, provenance and snapshot structures.",
+      "Do not mistake implementation behaviour for specification authority.",
+      "Avoid creating duplicate canonical identities."
+    ],
+    "acceptance_criteria": [
+      "Document formal closure and reconstruction invariants with failure cases.",
+      "Specify closure and reconstruction operation preconditions, postconditions and tests.",
+      "Obtain owner review before treating architectural choices as approved."
+    ],
+    "open_questions": [
+      "Does closure mean dependency-pinned or fully self-contained?",
+      "How is occurrence identity maintained across structural edits?",
+      "Which resources are within the initial text-only closure boundary?"
+    ]
+  }
+}

@@ -13,22 +13,12 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
-Lists are intended capabilities, not a current implementation inventory. Sharing/federation and integrations retain their deferred status.
+Lists are intended capabilities, not a current implementation inventory. Same-workspace human/machine collaboration, node-based chat and selected-node MCP editing are mandatory baseline (HPX-OWNER-027–031). Federation and optional integrations remain separately gated. Users are workspace-local, with one machine user per provider per workspace and permissions on the workspace user.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Context and problem
-
-Owner-stated practical user needs, including future aspirations. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Scope and exclusions
-
-Owner-stated practical user needs, including future aspirations. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Normative content
-
 
 
 ### Practical User Capabilities of Hypergraph PX
@@ -80,7 +70,7 @@ Source `HPX-SRC-0001`, original lines 78–90. Preserved contract/evidence wordi
 
 - Connect AI agents through MCP-compatible interfaces.
 - Converse with agents alongside the document being written.
-- Allow agents to read, analyse, question, and propose changes to selected material, subject to permissions.
+- Allow machine users to read, analyse, question, propose changes and directly edit selected nodes through MCP under the same workspace permissions and graph/history rules as humans.
 - Visually distinguish human and agent contributions.
 - Inspect the authorship and provenance of individual passages.
 - Preserve prompts, responses, supplied context, tool interactions, and proposed edits where observable.
@@ -169,22 +159,6 @@ Source `HPX-SRC-0001`, original lines 147–158. Preserved contract/evidence wor
 
 ---
 
-
-## Examples and counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Dependencies and consequences
-
-Owner-stated practical user needs, including future aspirations. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Open questions and conflicts
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

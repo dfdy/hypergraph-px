@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-30",
+  "authority": "HPX-OWNER-039",
+  "scope": "Application coordination",
+  "canonical": "HPX-CAN-011",
+  "test": "HPX-TEST-126",
+  "modelAndLayout": {
+    "tool": "LikeC41.60.0;19 files",
+    "syntaxErrors": [],
+    "elements": 168,
+    "relations": 362,
+    "views": 38,
+    "otherViewsIdentical": 37,
+    "navigationLinks": 216,
+    "reachable": 38,
+    "layouts": {
+      "c3_application": {
+        "before": "manual;zero drift",
+        "after": "served manual;zero drift",
+        "boxes": 18,
+        "paths": 21,
+        "newNotes": 5,
+        "allBoundsGeometryLabelsPathsPreserved": true
+      }
+    },
+    "globalModelUnchanged": true,
+    "snapshotChangesOnlyNotesViewDescriptionLinksHash": true
+  },
+  "fiveGapDispositions": [
+    "Core identities/closure: coordinating complete plans/results allocated; conceptual cardinalities/lifecycle and full closure stay in domain/navigation contracts.",
+    "Relationships/events/interactions: dispatch/publication responsibilities allocated; general n-ary/interaction representations and conceptual provenance remain open.",
+    "Identity/permission/epochs/addressing: admission/replay/reads distinguish authority from identity/unlock; exact schemes remain unadopted under OWNER030/031/033.",
+    "Conceptual versus architectural: allocation and current writer evidence do not establish conceptual coverage; later conceptual/operation-effect work remains separate.",
+    "Historical wording: C2 qualifications and adopted ADR019 retained; no new wording conflict or implicit implementation claim."
+  ],
+  "sourceSnapshotFiles": 2670,
+  "protectedFilesUnchanged": 2660,
+  "preciseDefinitionsRemoved": 0,
+  "actualChangedExistingFiles": [
+    "architecture/.likec4/c3_application.likec4.snap",
+    "architecture/C3/remaining-c3.c4",
+    "architecture/SPECIFICATION.md",
+    "architecture/audits/dom001-c2-migration.md",
+    "architecture/audits/specification-migration-status.md",
+    "architecture/specification-ownership.csv",
+    "docs/02-governance/OWNER_DECISIONS.md",
+    "docs/05-domain/core-object-model.md",
+    "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+    "docs/registers/tests.csv"
+  ],
+  "sourceModelLinksResolved": 926,
+  "limits": [
+    "Static model/docs only;no rendered/browser/app tests/build/runtime,C4/sequence/conceptual addition,format/version/provider/trust action or publication.",
+    "Private archive spans not checked;source/provenance/requirement/proof registers unchanged."
+  ],
+  "attemptNotes": [
+    "First documentation check detected not-yet-written evidence link;created evidence before rerunning."
+  ],
+  "next": "Workspace persistence",
+  "documentation": {
+    "exitCode": 0,
+    "output": "CHECK Metadata/status/ID registry checked: 71 materialized contracts; 27 reserved\nCHECK Source/map IDs and current-location register consistency checked\nCHECK Coverage: 116 canonical sections; 169 retained canonical/policy/evidence sections; 138 sources; 509 claim units; 38 requirement seeds\nCHECK Current Markdown local file links checked; original archive links not rewritten\nSKIP: local archive bytes/source spans; use --check-local-sources when local originals are available\nPASS: documentation mechanical checks; semantic adoption remains reviewable"
+  },
+  "whitespace": "passed;CRLF retained",
+  "finalScope": "10 scoped existing files;1 new evidence file;other snapshot files unchanged"
+}

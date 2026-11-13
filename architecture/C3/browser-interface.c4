@@ -1,0 +1,119 @@
+// Canonical definition location: HPX-CAN-004 (HPX-OWNER-032). Existing design/implementation statuses retain their authority; see architecture/SPECIFICATION.md.
+// Existing functional responsibilities and stable IDs retained; owner split is defined in browser-organisation.c4.
+specification { relationship browser_detail { line solid; color slate } }
+model {
+ extend hpx.browser {
+  shell = component "Interface shell and navigation" {
+   #partial
+   description "Desktop shell, document switching, contents tree, minimap and display preferences. Workspace/concept lenses include synthetic or limited scope; preferences do not store manuscript content."
+   metadata { authority "proposed source-backed responsibility grouping;not new modules or adopted V3 design" implementation "partial" execution "browser" paths ["frontend/src/app.js", "frontend/src/outline-tree.js", "frontend/src/minimap.js", "frontend/src/column-widths.js", "frontend/src/tooltips.js"] spec_refs "HPX-SUB-009 §2; HPX-OWNER-010;018" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/app.js
+   link ../../frontend/src/outline-tree.js
+   link ../../frontend/src/minimap.js
+   link ../../frontend/src/column-widths.js
+   link ../../frontend/src/tooltips.js
+  }
+  access = component "Workspace access and capability gates" {
+   #implemented
+   description "Trusted-server launch session, capability checks, explicit create/unlock and lock controls. Session authentication, workspace unlock and server resource authorization remain distinct; keys stay in Rust."
+   metadata { authority "proposed source-backed responsibility grouping;not new modules or adopted V3 design" implementation "implemented" execution "browser" paths ["frontend/src/runtime-adapter.js", "frontend/src/app.js"] spec_refs "HPX-API-002 generated transport and staged delivery; ADR004;ADR014" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/runtime-adapter.js
+   link ../../frontend/src/app.js
+  }
+  editor = component "Owned-source editing and presentation" {
+   #partial
+   description "Exact whole-document owned text, selection/Undo and Markdown/table/math presentation. UTF16 display coordinates map against preserved source bytes. Multi-owner editing and general Embed remain gated."
+   metadata { authority "proposed source-backed responsibility grouping;not new modules or adopted V3 design" implementation "partial" execution "browser" paths ["frontend/src/app.js", "frontend/src/owned-source.js", "frontend/src/inline-presentation.js", "frontend/src/formatting.js", "frontend/src/table-view.js", "frontend/src/math-view.js", "frontend/src/functions-bar.js"] spec_refs "HPX-SUB-009 §2; HPX-DOM-006 exact text/anchors" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/app.js
+   link ../../frontend/src/owned-source.js
+   link ../../frontend/src/inline-presentation.js
+   link ../../frontend/src/formatting.js
+   link ../../frontend/src/table-view.js
+   link ../../frontend/src/math-view.js
+   link ../../frontend/src/functions-bar.js
+  }
+  coordination = component "Runtime requests and buffer coordination" {
+   #implemented
+   description "Per-context buffers and captured API operations; draft acknowledgements, explicit/departure Commit and original-operation reconciliation. Tentative browser state is not publication; typed schema coverage remains incomplete."
+   metadata { authority "proposed source-backed responsibility grouping;not new modules or adopted V3 design" implementation "implemented" execution "browser" paths ["frontend/src/runtime-adapter.js", "frontend/src/api-client.ts", "frontend/src/adapter.js"] spec_refs "HPX-API-002 generated transport contract; HPX-PROTO-001 draft/publication" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/runtime-adapter.js
+   link ../../frontend/src/api-client.ts
+   link ../../frontend/src/adapter.js
+  }
+  history = component "History, branches and graph inspection" {
+   #partial
+   description "Bounded retained history, snapshots, branch comparison, graph and audit inspection. Original-branch/working-source limits are explicit; general multi-parent integration and federation remain gated."
+   metadata { authority "proposed source-backed responsibility grouping;not new modules or adopted V3 design" implementation "partial" execution "browser" paths ["frontend/src/history-panel.js", "frontend/src/runtime-branches-panel.js", "frontend/src/runtime-branch-comparison.js", "frontend/src/runtime-graph.js", "frontend/src/runtime-audit-panel.js"] spec_refs "HPX-SUB-009 investigation/history; HPX-OWNER-010;014" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/history-panel.js
+   link ../../frontend/src/runtime-branches-panel.js
+   link ../../frontend/src/runtime-branch-comparison.js
+   link ../../frontend/src/runtime-graph.js
+   link ../../frontend/src/runtime-audit-panel.js
+  }
+  annotations = component "Annotations and provenance panels" {
+   #partial
+   description "Protected assertions, comments, contributors, derivation and private-reference panels. Synthetic examples stay labelled; agent execution, general Embed and provider integrations remain planned."
+   metadata { authority "proposed source-backed responsibility grouping;not new modules or adopted V3 design" implementation "partial" execution "browser" paths ["frontend/src/runtime-assertions-panel.js", "frontend/src/runtime-comments-panel.js", "frontend/src/runtime-contributors.js", "frontend/src/runtime-derivation.js", "frontend/src/runtime-clipboard-panel.js", "frontend/src/runtime-working-clipboard-panel.js", "frontend/src/app.js"] spec_refs "HPX-SUB-009 contributor/provenance responsibilities; HPX-API-002 staged integration gates" }
+   link ../../docs/06-subsystems/frontend-interaction.md
+   link ../../docs/06-subsystems/interfaces/browser-runtime.md
+   link ../../frontend/src/runtime-assertions-panel.js
+   link ../../frontend/src/runtime-comments-panel.js
+   link ../../frontend/src/runtime-contributors.js
+   link ../../frontend/src/runtime-derivation.js
+   link ../../frontend/src/runtime-clipboard-panel.js
+   link ../../frontend/src/runtime-working-clipboard-panel.js
+   link ../../frontend/src/app.js
+  }
+ }
+ hpx.native.frontend_assets -[browser_detail]-> hpx.browser.shell "Embedded frontend assets" { link ../../crates/runtime/build.rs }
+ user -[browser_detail]-> hpx.browser.shell "Open, navigate and invoke actions" { link ../../frontend/src/app.js }
+ hpx.browser.shell -[browser_detail]-> user "Rendered interface / status / errors" { link ../../frontend/src/app.js }
+ hpx.browser.shell -[browser_detail]-> hpx.browser.access "Start / unlock / lock controls" { link ../../frontend/src/app.js }
+ hpx.browser.access -[browser_detail]<-> hpx.native.transport "Session bootstrap / explicit unlock / capabilities" { link ../../frontend/src/runtime-adapter.js }
+ hpx.browser.access -[browser_detail]-> hpx.browser.coordination "Checked capabilities / initialized adapter" { link ../../frontend/src/runtime-adapter.js }
+ hpx.browser.shell -[browser_detail]-> hpx.browser.editor "Document, focus and display controls" { link ../../frontend/src/app.js }
+ hpx.browser.editor -[browser_detail]<-> hpx.browser.coordination "Exact owned buffers / acknowledgements / pending state" { link ../../frontend/src/runtime-adapter.js }
+ hpx.browser.shell -[browser_detail]-> hpx.browser.history "Inspect history / branches / graph" { link ../../frontend/src/app.js }
+ hpx.browser.shell -[browser_detail]-> hpx.browser.annotations "Inspect / capture / review" { link ../../frontend/src/app.js }
+ hpx.browser.history -[browser_detail]<-> hpx.browser.coordination "Scoped history / branch operations / results" { link ../../frontend/src/history-panel.js }
+ hpx.browser.annotations -[browser_detail]<-> hpx.browser.coordination "Protected annotation / provenance operations / results" { link ../../frontend/src/runtime-assertions-panel.js }
+ hpx.browser.coordination -[browser_detail]<-> hpx.native.transport "Protected reads / frozen commands / receipts / errors" { link ../../frontend/src/api-client.ts }
+ hpx.browser.editor -[browser_detail]<-> os_clipboard "Exact-source copy / paste" { link ../../frontend/src/owned-source.js }
+ hpx.browser.editor -[browser_detail]-> exchange_files "Exact uncommitted Markdown download" { link ../../frontend/src/app.js }
+}
+views {
+ view c3_browser of hpx.browser {
+  title "C3 / Browser interface"
+  description "Owner-requested functional organisation: User interface contains visible panels/controls; Interface functions contains their shared behaviour and data coordination. Both boxes open focused C3 expansions. Groupings describe existing browser code, not new modules or processes. External inputs/outputs remain outside the browser boundary. HPX-CAN-014: required HPX-DOM-001 allocation is recorded in view-only notes; current helper coverage is bounded. Precise concepts and unadopted mechanisms remain linked contracts; no conceptual gap is closed by allocation."
+  link ../../docs/05-domain/core-object-model.md
+  link ../../docs/05-domain/text-and-anchors.md
+  link ../../docs/06-subsystems/frontend-interaction.md
+  link ../../docs/06-subsystems/interfaces/browser-runtime.md
+  link ../../docs/06-subsystems/ai-collaboration.md
+  link ../../docs/07-implementation/protocols/draft-publication.md
+  link ../audits/browser-interface-c3-audit.md#user-interface-and-interface-functions
+  include user
+  include hpx.native.frontend_assets with { title "Frontend delivery" navigateTo c3_frontend_delivery }
+  include hpx.native.transport with { title "Runtime and API" navigateTo c3_runtime_api }
+  include os_clipboard, exchange_files
+  group "Browser interface" {
+   include hpx.browser.ui with { navigateTo c3_browser_ui  notes "Derived presentation of authorised content,not a second content identity or store. Headings/sentences and graph projections do not create physical nodes per keystroke. UI cannot confer resource permission or turn acknowledgement into Commit. Full conceptual definitions stay in linked contracts." }
+   include hpx.browser.functions with { navigateTo c3_browser_functions  notes "Coordinate exact owned source/context,requests and derived views through shared backend API. Rust retains authority,immutable publication and key custody. Current browser behavior is bounded evidence;general multi-owner editing and machine-user mechanisms remain incomplete." }
+  }
+  style * { color primary }
+  style element.tag = #planned { color muted; border dashed }
+  exclude * -> *
+  include * -> * where kind is browser_organisation
+  autoLayout LeftRight 120 100 spline
+ }
+}

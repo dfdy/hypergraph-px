@@ -1,0 +1,240 @@
+{
+  "date": "2026-10-30",
+  "renamed_titles": {
+    "c3_executable": "C3 / HPX Rust executable",
+    "c3_integrations": "C3 / Integration adapters (planned)",
+    "c4_frontend_delivery": "C4 / Frontend delivery \u2014 Implementation overview",
+    "c4_api_routes": "C4 / API dispatch and wire adapters \u2014 Implementation (shared)",
+    "c4_domain_sources": "C4 / Exact fragment and checkpoint plans \u2014 Implementation (shared)",
+    "c4_domain_history": "C4 / Same-node history and passage planning \u2014 Implementation (shared)",
+    "seq_frontend_build": "Sequence / Frontend delivery \u2014 Build and embed assets",
+    "seq_frontend_load": "Sequence / Frontend delivery \u2014 Load browser interface",
+    "seq_frontend_session": "Sequence / Frontend delivery \u2014 Establish launch session",
+    "seq_domain_expansion": "Sequence / Pure domain \u2014 Validate supplied expansion",
+    "seq_domain_fork": "Sequence / Pure domain \u2014 Plan a Fork and hand off publication",
+    "seq_domain_parent_plan": "Sequence / Pure domain \u2014 Select a supplied parent-Merge result",
+    "seq_unlock": "Sequence / Runtime and API \u2014 Unlock workspace"
+  },
+  "source_move": {
+    "from": "architecture/C4/frontend-delivery.c4",
+    "to": "architecture/C4/frontend-delivery-overview.c4"
+  },
+  "frontend_overview_entry": {
+    "from": "c3_executable",
+    "box": "hpx.native.frontend_assets",
+    "visible_title": "Frontend delivery",
+    "to": "c4_frontend_delivery"
+  },
+  "artifact_navigation": "Prepared frontend/dist now links to Rust asset embedding implementation,not the whole delivery overview",
+  "scope": "presentation/navigation only;stable IDs and architecture model preserved",
+  "frontend_responsibilities_entry": {
+    "from": "c3_runtime_api",
+    "box": "hpx.native.frontend_assets",
+    "visible_title": "Frontend delivery",
+    "to": "c3_frontend_delivery"
+  },
+  "primary_visual_entries": {
+    "index": null,
+    "c2_containers": {
+      "view": "index",
+      "click": "Hypergraph PX",
+      "element_or_step": "hpx"
+    },
+    "c3_executable": {
+      "view": "c2_containers",
+      "click": "HPX Rust executable",
+      "element_or_step": "hpx.native"
+    },
+    "c3_runtime_api": {
+      "view": "c3_executable",
+      "click": "Runtime and API",
+      "element_or_step": "hpx.native.transport"
+    },
+    "c4_frontend_delivery": {
+      "view": "c3_executable",
+      "click": "Frontend delivery",
+      "element_or_step": "hpx.native.frontend_assets"
+    },
+    "c3_keychain": {
+      "view": "c3_executable",
+      "click": "Keychain adapter",
+      "element_or_step": "hpx.native.keychain"
+    },
+    "c3_application": {
+      "view": "c3_executable",
+      "click": "Application coordination",
+      "element_or_step": "hpx.native.application"
+    },
+    "c3_pure_domain": {
+      "view": "c3_executable",
+      "click": "Pure domain",
+      "element_or_step": "hpx.native.domain"
+    },
+    "c3_workspace_persistence": {
+      "view": "c3_executable",
+      "click": "Workspace persistence",
+      "element_or_step": "hpx.native.storage"
+    },
+    "c3_integrations": {
+      "view": "c3_executable",
+      "click": "Integration adapters (planned)",
+      "element_or_step": "hpx.native.integrations"
+    },
+    "c3_crypto": {
+      "view": "c3_executable",
+      "click": "Cryptographic adapter",
+      "element_or_step": "hpx.native.crypto"
+    },
+    "c4_api_routes": {
+      "view": "c3_runtime_api",
+      "click": "Request, session and lock gates",
+      "element_or_step": "hpx.native.transport.security"
+    },
+    "c4_frontend_routing": {
+      "view": "c3_runtime_api",
+      "click": "Embedded-asset routing",
+      "element_or_step": "hpx.native.transport.assets"
+    },
+    "seq_unlock": {
+      "view": "c3_runtime_api",
+      "click": "Workspace session lifecycle",
+      "element_or_step": "hpx.native.transport.lifecycle"
+    },
+    "c3_frontend_delivery": {
+      "view": "c3_runtime_api",
+      "click": "Frontend delivery",
+      "element_or_step": "hpx.native.frontend_assets"
+    },
+    "c4_frontend_build": {
+      "view": "c4_frontend_delivery",
+      "click": "buildFrontend \u2022 bundle and copy",
+      "element_or_step": "frontend_builder.bundle_code"
+    },
+    "c4_frontend_embedding": {
+      "view": "c4_frontend_delivery",
+      "click": "build.rs \u2022 main / walk",
+      "element_or_step": "hpx.native.frontend_assets.embedding.build_code"
+    },
+    "seq_frontend_session": {
+      "view": "c4_frontend_delivery",
+      "click": "app.js entry / showBuildVersion",
+      "element_or_step": "hpx.browser.delivery_entry"
+    },
+    "c4_application_transaction": {
+      "view": "c3_application",
+      "click": "Command admission and transaction scope",
+      "element_or_step": "hpx.native.application.admission"
+    },
+    "c4_application_features": {
+      "view": "c3_application",
+      "click": "Feature operation coordination",
+      "element_or_step": "hpx.native.application.dispatch"
+    },
+    "c4_application_reads": {
+      "view": "c3_application",
+      "click": "Protected read entry points",
+      "element_or_step": "hpx.native.application.reads"
+    },
+    "c4_domain_history": {
+      "view": "c3_pure_domain",
+      "click": "Supplied expansion projection",
+      "element_or_step": "hpx.native.domain.expansion_rules"
+    },
+    "c4_domain_sources": {
+      "view": "c3_pure_domain",
+      "click": "Exact fragment and checkpoint plans",
+      "element_or_step": "hpx.native.domain.source_plans"
+    },
+    "seq_uncertain": {
+      "view": "c4_api_routes",
+      "click": "RuntimeAdapter / initializeRuntime",
+      "element_or_step": "hpx.browser.c4_protocol"
+    },
+    "seq_commit": {
+      "view": "c4_api_routes",
+      "click": "route_inner \u2022 Publication / receipts",
+      "element_or_step": "hpx.native.transport.api.c4_publication"
+    },
+    "seq_save": {
+      "view": "c4_api_routes",
+      "click": "Workspace \u2022 Publication / receipts",
+      "element_or_step": "hpx.native.storage.c4_publication"
+    },
+    "seq_frontend_load": {
+      "view": "c4_frontend_routing",
+      "click": "write_response \u2022 headers and body",
+      "element_or_step": "hpx.native.transport.responses.delivery_writer"
+    },
+    "seq_frontend_build": {
+      "view": "c4_frontend_build",
+      "click": "buildFrontend \u2022 bundle and copy",
+      "element_or_step": "frontend_builder.bundle_code"
+    },
+    "seq_application_transaction": {
+      "view": "c4_application_transaction",
+      "click": "Workspace \u2022 Publication / receipts",
+      "element_or_step": "hpx.native.storage.c4_publication"
+    },
+    "seq_domain_fork": {
+      "view": "c4_application_features",
+      "click": "forks \u2022 existing adapter code",
+      "element_or_step": "hpx.native.storage.domain_forks"
+    },
+    "seq_application_checkpoint": {
+      "view": "c4_application_features",
+      "click": "working \u2022 existing adapter code",
+      "element_or_step": "hpx.native.storage.domain_working"
+    },
+    "seq_application_read": {
+      "view": "c4_application_reads",
+      "click": "Workspace \u2022 Documents / editor reads",
+      "element_or_step": "hpx.native.storage.c4_documents"
+    },
+    "seq_domain_expansion": {
+      "view": "c4_domain_history",
+      "click": "Existing domain unit-test call sites",
+      "element_or_step": "hpx.native.domain.test_calls"
+    },
+    "seq_domain_parent_plan": {
+      "view": "c4_domain_history",
+      "click": "parent_merge \u2022 plan",
+      "element_or_step": "hpx.native.domain.history_plans.selector"
+    }
+  },
+  "view_titles": {
+    "c2_containers": "C2 / HPX containers",
+    "c3_executable": "C3 / HPX Rust executable",
+    "c3_frontend_delivery": "C3 / Frontend delivery",
+    "c3_pure_domain": "C3 / Pure domain",
+    "c3_application": "C3 / Application coordination",
+    "c3_workspace_persistence": "C3 / Workspace persistence",
+    "c3_crypto": "C3 / Cryptographic adapter",
+    "c3_keychain": "C3 / Keychain adapter",
+    "c3_integrations": "C3 / Integration adapters (planned)",
+    "c3_runtime_api": "C3 / Runtime and API",
+    "c4_api_routes": "C4 / API dispatch and wire adapters \u2014 Implementation (shared)",
+    "c4_application_transaction": "C4 / Command admission and transaction scope \u2014 Implementation (shared)",
+    "c4_application_features": "C4 / Feature operation coordination \u2014 Implementation (shared)",
+    "c4_application_reads": "C4 / Protected read entry points \u2014 Implementation",
+    "c4_frontend_build": "C4 / Frontend build tooling (development) \u2014 Implementation",
+    "c4_frontend_embedding": "C4 / Rust asset embedding \u2014 Implementation (shared)",
+    "c4_frontend_routing": "C4 / Embedded-asset routing \u2014 Implementation (shared)",
+    "c4_frontend_delivery": "C4 / Frontend delivery \u2014 Implementation overview",
+    "c4_domain_sources": "C4 / Exact fragment and checkpoint plans \u2014 Implementation (shared)",
+    "c4_domain_history": "C4 / Same-node history and passage planning \u2014 Implementation (shared)",
+    "seq_save": "Sequence / Application coordination \u2014 Save draft",
+    "seq_commit": "Sequence / Application coordination \u2014 Commit captured draft",
+    "seq_unlock": "Sequence / Runtime and API \u2014 Unlock workspace",
+    "seq_uncertain": "Sequence / Application coordination \u2014 Recover uncertain command outcome",
+    "seq_application_transaction": "Sequence / Application coordination \u2014 Authorize, reconcile and publish",
+    "seq_application_read": "Sequence / Application coordination \u2014 Read an exact retained snapshot",
+    "seq_application_checkpoint": "Sequence / Application coordination \u2014 Capture and promote a working reference",
+    "seq_frontend_build": "Sequence / Frontend delivery \u2014 Build and embed assets",
+    "seq_frontend_load": "Sequence / Frontend delivery \u2014 Load browser interface",
+    "seq_frontend_session": "Sequence / Frontend delivery \u2014 Establish launch session",
+    "seq_domain_expansion": "Sequence / Pure domain \u2014 Validate supplied expansion",
+    "seq_domain_fork": "Sequence / Pure domain \u2014 Plan a Fork and hand off publication",
+    "seq_domain_parent_plan": "Sequence / Pure domain \u2014 Select a supplied parent-Merge result",
+    "index": "C1 / System context"
+  }
+}

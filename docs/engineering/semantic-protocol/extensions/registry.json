@@ -1,0 +1,12 @@
+{
+  "registry_version": 1,
+  "extensions": [
+    {
+      "key": "x.hpx.impact",
+      "description": "Optional impact metadata associated with a design proposal; not an authority signal.",
+      "schema": "extensions/schemas/x.hpx.impact.schema.json",
+      "introduced_in": "0.2.0",
+      "status": "active"
+    }
+  ]
+}

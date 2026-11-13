@@ -1,0 +1,81 @@
+{
+  "id": "HPX-TEST-099",
+  "date": "2026-10-30",
+  "authority": "proposed architecture only",
+  "checks": {
+    "views": 34,
+    "dsl_files": 14,
+    "new_focused_c4": 3,
+    "new_sequences": 3,
+    "reused_sequences": 4,
+    "new_code_aliases": 8,
+    "new_relationships": 45,
+    "source_aliases_checked": 22,
+    "command_variants_covered": 13,
+    "c3_nodes": 18,
+    "c3_connections": 21,
+    "new_single_cubic_curves": 46,
+    "curve_samples_each": 301,
+    "existing_saved_layouts_preserved": 17,
+    "unrelated_view_hashes_preserved": 23,
+    "protected_file_hashes_unchanged": 429,
+    "sequence_messages": {
+      "seq_application_checkpoint": 18,
+      "seq_application_read": 9,
+      "seq_application_transaction": 25
+    },
+    "navigation": "all references resolve;new C4/sequences and reused workflows reachable from C3",
+    "source_links": "all DSL local links plus mapped source/symbols resolve",
+    "writer_order": "validation,digest,writer,supported schema,current authority,receipt,replay-or-new-dispatch,receipt insert,COMMIT,test hook",
+    "layout_limit": "C3 canvas widens900;all previous boxes/curves/labels/styles retained",
+    "existing_sequence_styles_preserved": true,
+    "source_hash_limit": "Reused Fork sequence inferred relation metadata changes;its messages,participants and styles are preserved.23 other unrelated view hashes unchanged."
+  },
+  "not_executed": [
+    "application tests",
+    "browser or actual VS Code/UML visual acceptance",
+    "application/frontend builds or launch",
+    "asset/contract generation",
+    "proof tools",
+    "trust/provider/workspace action",
+    "commit/publication"
+  ],
+  "executed_tools": {
+    "likec4_version": "1.60.0",
+    "export": "architecture/node_modules/.bin/likec4 export json -o /private/tmp/hpx-application-final.json architecture",
+    "validate": {
+      "command": "architecture/node_modules/.bin/likec4 validate --json architecture",
+      "exit_code": 0,
+      "valid": true,
+      "errors": [],
+      "files": 14
+    },
+    "source_geometry_hash_checks": {
+      "command": "python3 /private/tmp/hpx-verify-application.py",
+      "exit_code": 0
+    },
+    "documentation": {
+      "command": "python3 scripts/verify_documentation.py",
+      "exit_code": 0,
+      "materialized_contracts": 69,
+      "archive_byte_replay": "skipped"
+    },
+    "native_preview": "Three Swift/AppKit static approximations inspected;not actual VS Code/UML visual acceptance"
+  },
+  "dsl_hashes": {
+    "architecture/context.c4": "6ff8970869991bd970f820e3dee14dc4ee9243320f5a6cc44e71bab8679965a5",
+    "architecture/runtime-api.c4": "9aed90c8c96c4662e24bd9316d2e951721996d5c2bd998054a4a6e67ef24a0eb",
+    "architecture/pure-domain-workflows.c4": "9c39c985df6a302f4fb368f790aa3e50195779e00f967525312710e52c5e9cc3",
+    "architecture/api-implementation.c4": "1d40a2efc0571bd48419e3f7ad5468a5018f22a20be2b333520441bcd182e373",
+    "architecture/frontend-delivery-implementation.c4": "3ec518d2f2b8b1798ed42f89a6b2007065310bf2ae9e8783d4fc977dab1e30b8",
+    "architecture/application-workflows.c4": "12ef82a3dae0e0c7e241d7c53e00d69c157decf324893621dec96dda2d664f16",
+    "architecture/executable.c4": "e492b59d2334f5bb5f34840f2a2b2bda07d9ab4997733f00b53f46c0f8ddd4bc",
+    "architecture/api-workflows.c4": "ca89efa5fd126b3c1a92bd7fb20f15abfc530c909ee5914ca99ea7293089a719",
+    "architecture/application-coordination.c4": "98eb8fe627dc565d3c7480be7dd0bba479bb61e7a7f707b8cab019adf4a8275f",
+    "architecture/containers.c4": "c1e7a19505cc5ee09261e527e8ef5b605c0b99530b432b867a4d56535ff20979",
+    "architecture/frontend-delivery-workflows.c4": "bddb7d44693fe8c2b3bcbc3ea5bd7c2ba2e04f56a2162b9eb8debf16876d76f5",
+    "architecture/pure-domain.c4": "f2d23b401b8c7916d4363c483399268ebb9444bd8386385ca36282473b320853",
+    "architecture/frontend-delivery.c4": "4411056cb297dede33df0f993885cbb295a6bc0c837eda965901f4f8116bcca4",
+    "architecture/remaining-c3.c4": "c76ad5e19f6a40fbeba18390f359409a18520d42d0ad80b83f29fe0f9884cc31"
+  }
+}

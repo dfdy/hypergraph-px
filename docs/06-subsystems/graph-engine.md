@@ -13,19 +13,20 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+Graph queries and relationship changes use the shared user API with per-user-per-workspace permissions. Interactive graph views must not expose unauthorised nodes, edges or protected context through a different browser/MCP path. Exact visibility/completeness policy remains to be designed; no new graph query implementation is claimed. See the [accepted shared API scope](interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Fixture controls and future contracts are not durable service implementations. Capabilities must report unavailable honestly.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Responsibilities and boundaries
-
-Graph/navigation operations, predicate handling and bounded authorized projections. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Inputs and outputs
-
-Graph/navigation operations, predicate handling and bounded authorized projections. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## State and operations
 
@@ -45,22 +46,6 @@ Agent proposals retain proposed/accepted/rejected/superseded states, exact branc
 
 Snapshots bind the exact in-scope semantic/reference state or an explicit empty/excluded scope. Later annotations are separate, labelled retrospective overlays with their own view token, never inserted into old snapshots. Decide inclusion defaults and disclosure/closure rules before production snapshot formats are frozen.
 
-
-## Invariants and error behavior
-
-Graph/navigation operations, predicate handling and bounded authorized projections. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Dependencies and interfaces
-
-Graph/navigation operations, predicate handling and bounded authorized projections. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Security and privacy
-
-Graph/navigation operations, predicate handling and bounded authorized projections. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 
@@ -87,3 +72,14 @@ The graph now additionally supports explicitly selected assertion nodes alongsid
 ## Reviewed synthesis incidence extension
 
 The explicit transformation graph scope adds recorded Merge groups to document/Fork and assertion incidence. Each Merge retains one transformation identity, ordered pinned inputs and its independent initial output. The canvas uses a labelled connector with separate input incidences and a directed output; it does not turn synthesis into unrelated binary facts or a logical proof. Outside-selection inputs are counted without drawing additional content nodes, and exact original inputs/output remain inspectable. Existing graph scopes retain their formats and exclusions. See the [runtime projection contract](interfaces/browser-runtime.md#selected-transformation-incidence-graph) for authorization, bounds and incomplete-view semantics.
+
+
+## Selected-node editor Graph tab, 2026-10-30
+
+HPX-OWNER-026 refines presentation of HPX-RQ-029: the main editor hosts a Graph tab focused on the currently selected logical node and all its linkages, with interactive visual inspection/navigation. Replace the dialog as the intended UI destination; retain the dialog as current implementation evidence. The existing arbitrary-selected-nodes graph requirement is not revoked: this establishes the editor's default focus, not a restriction of the underlying permitted query scope.
+
+Preserve exact identity/view context, labelled direction, parallel/self links, role-labelled n-ary incidences and the distinction between asserted relationships, derivation and checked evidence. No binary expansion or proof inference follows from drawing a link. Read-only exploration does not publish graph or text changes. The frontend [Graph tab contract](frontend-interaction.md#selected-node-graph-tab-owner-direction-2026-10-30) owns tab placement/editor-state preservation.
+
+“All linkages” is the intended product coverage, subject to authorisation and explicit resource/completeness bounds. It does not establish that the current document/Fork/assertion/Merge projections provide general adjacency for every node family. The design must define relationship-family discovery and continuation without revealing hidden objects, and distinguish unavailable, unsupported, truncated and genuinely empty results.
+
+The initial interpretation is a node-centred relationship view; direct incidence versus recursively expanded neighbourhood, draft versus retained-view projection, heading-to-node mapping, and inspect/recentre/open behaviour remain unresolved (HPX-GAP-025). Do not implement an unbounded reachable-graph traversal or invent an adjacency API by implication. No persisted graph format, custody/security boundary or graph-writing permission changes here.

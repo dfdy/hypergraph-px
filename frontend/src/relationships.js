@@ -3,6 +3,7 @@ import {documentHeadings} from './context-actions.js';
 import {relationshipType,relationshipCategory} from './relationship-catalog.js';
 // Synthetic, tab-only relationships. Exact UTF-16 draft ranges are not graph identities.
 import {StateEffect,StateField} from '@codemirror/state';
+import {ownedSource} from './owned-source.js';
 import {documentPresentation} from './document-presentation.js';
 import {codeRanges,mathExpressions} from './math.js';
 
@@ -59,11 +60,14 @@ export function selectedRelationshipPair(state){if(state.selection.main.empty)re
 function samePair(pair,record){return pair.left.from===record.left.from&&pair.left.to===record.left.to&&pair.right.from===record.right.from&&pair.right.to===record.right.to;}
 export const addRelationship=StateEffect.define();
 export const removeRelationship=StateEffect.define();
+export const setRuntimeRelationships=StateEffect.define();
 export const relationshipField=StateField.define({
  create(){return {records:[],serial:0};},
  update(value,tr){
   let records=value.records,serial=value.serial,lastAddedId=value.lastAddedId??null;
   if(tr.docChanged){
+   // Durable anchors are never relocated through draft edits.
+   records=records.filter(record=>!record.runtime);
    const pairs={sentence:adjacentPairs(tr.state,'sentence'),paragraph:adjacentPairs(tr.state,'paragraph'),section:adjacentPairs(tr.state,'section')};
    records=records.map(record=>{
     const map=range=>({...range,from:tr.changes.mapPos(range.from,1),to:tr.changes.mapPos(range.to,-1)});
@@ -86,6 +90,10 @@ export const relationshipField=StateField.define({
     if(existing){lastAddedId=existing.id;continue;}
     lastAddedId=`demo:relationship:${++serial}`;records=[...records,{...candidate,id:lastAddedId}];
    }else if(effect.is(removeRelationship))records=records.filter(record=>record.id!==effect.value);
+   else if(effect.is(setRuntimeRelationships)){
+    const projection=effect.value,exact=projection&&tr.newDoc.toString()===projection.text&&tr.state.field(ownedSource,false)===projection.source;
+    records=[...records.filter(record=>!record.runtime),...(exact?projection.records:[])];
+   }
   }
   return records===value.records&&serial===value.serial&&lastAddedId===(value.lastAddedId??null)?value:{records,serial,lastAddedId};
  }

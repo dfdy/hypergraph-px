@@ -48,3 +48,15 @@ The owner explicitly answered “Start from committed snapshots” on 2026-10-26
 ## Working-branch design requested before integration
 
 The owner subsequently proposed pending edits as a special branch, automatically saved when copy/paste needs retained source, with new links replacing draft links after saving. The owner explicitly selected designing this now. [ADR019](0019-working-branches-and-reference-checkpoints.md) distinguishes the private working branch/checkpoint from this named content branch and retains explicit Commit and immutable history. The in-progress branch storage adapter is not integrated delivery; reconcile working-source formats and editor state before enabling branch UI. ADR018's accepted committed-source creation policy remains intact.
+
+## Later bounded delivery evidence, 2026-10-27
+
+HPX-TEST-040 supersedes the historical in-progress implementation status above for the scoped named/working-branch lifecycle. HPX-TEST-046 adds read-only comparison of a named child's current committed version with its fixed parent's current committed version. One authorized SQLite view pins both exact snapshots; both drafts remain excluded. This is stage5 comparison evidence, not parent-branch Merge, witness adoption or real-data acceptance. Accepted committed-source child creation and immutable history semantics remain unchanged.
+
+## Navigation publication policy refinement, 2026-10-27
+
+HPX-OWNER-010 supersedes explicit-user-action-only Commit at logical node/branch departure. Child creation still starts from the reviewed committed snapshot and does not itself publish parent draft text. Selecting the new child then leaves the parent and automatically commits its changed outgoing text, without changing the child's pinned creation source. Ordinary formatting/menu/comparison focus changes do not Commit. Existing branch identity, exact snapshot, independent Undo and frozen-operation rules remain unchanged.
+
+## Current composition/retention refinement — OWNER049/050, 2026-11-01
+
+The original accepted policy and dated implementation evidence above retain their interpretations. [OWNER049/050](../../02-governance/OWNER_DECISIONS.md#last-autosaved-composition-and-historical-version-accumulation--2026-11-01) now requires last-acknowledged-autosave restoration of exact general composition selections and no historical-version accumulation merely from routine autosaves; universal future autosave/Commit separation is reopened, not newly reaffirmed. Existing private working-state visibility, immutable history and OWNER010 departure Commit are not silently revoked. [Branch reconciliation](../../../architecture/proposals/branch-selection-reconciliation.md) separates the requested arbitrary constructed-composition save-as capability from this existing committed-parent child creation/working-source subset. Main construction, capture/publication and general nested-selection recovery mechanisms remain unadopted; no implementation or format change follows.

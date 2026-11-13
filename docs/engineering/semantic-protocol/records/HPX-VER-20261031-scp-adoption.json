@@ -1,0 +1,61 @@
+{
+  "protocol_version": "0.5.0",
+  "record_version": 1,
+  "id": "HPX-VER-20261031-scp-adoption",
+  "kind": "verification_result",
+  "subject": "HPX-SCP0.5.0 local adoption preflight and accepted decision",
+  "summary": "Verified scoped loading,canonical bootstrap,shared amendment index,accepted decision schema/approval reference and unchanged installed kit.",
+  "status": "reported",
+  "authority": {
+    "basis": "agent_report",
+    "notes": "Observed checks,not approval or independently authenticated authorship."
+  },
+  "source_refs": [
+    {
+      "ref": "docs/engineering/semantic-protocol/INSTALLATION.json",
+      "role": "observed"
+    },
+    {
+      "ref": "docs/engineering/semantic-protocol/records/HPX-DEC-20261031-scp-adoption.json",
+      "role": "observed"
+    },
+    {
+      "ref": "scripts/protocol_context.py",
+      "role": "context"
+    },
+    {
+      "ref": "scripts/bootstrap_semantic_protocol.py",
+      "role": "context"
+    },
+    {
+      "ref": "scripts/validate_semantic_records.py",
+      "role": "context"
+    }
+  ],
+  "relations": [
+    {
+      "type": "verifies",
+      "target": "HPX-DEC-20261031-scp-adoption"
+    }
+  ],
+  "actor": "agent:codex",
+  "created_on": "2026-10-31",
+  "content": {
+    "target": "HPX-DEC-20261031-scp-adoption",
+    "outcome": "pass",
+    "method": "Installed isolated interpreter:verified amend/records task packets and decision/verification contracts;bootstrap;shared amendment-index validation;canonical accepted-decision validation;manifest byte checks.",
+    "evidence": [
+      "Verified loader emitted HPX-SCP0.5.0 scopes with verified:true before mutations.",
+      "bootstrap_semantic_protocol.py:VERIFIED0.5.0,54 rules.",
+      "protocol_amendments.py validate:protocol0.5.0,applied0.",
+      "validate_semantic_records.py before this verification record:canonical1/examples5,errors0.",
+      "All26 supplied installed files match INSTALLATION.json;canonical policy,verifier,schema,registries and examples unchanged."
+    ],
+    "environment": "Existing .verification/semantic-protocol-venv;no dependency installation.",
+    "limitations": [
+      "Prior installation52-test result retains original scope;supplied test suite not rerun for this documentation/record-only adoption.",
+      "No CI,upstream publish/commit,external trust-anchor configuration,application tests/build/runtime or new product-format adoption.",
+      "Initial sandbox interpreter denial was resolved by authorized escalated execution;no tool repair."
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-29",
+  "result": "passed",
+  "scope": "Simplify C3 presentation; no new component identities, modules, application behavior or architecture decisions",
+  "visible_areas": 5,
+  "principal_connections": 5,
+  "retained_detailed_responsibilities": 24,
+  "retained_native_logical_flows": 54,
+  "mapping": "c3-components.json#presentation",
+  "likec4_validation": {
+    "files": 3,
+    "errors": 0
+  },
+  "checks": [
+    "Exactly one C3 and three total views",
+    "Five existing representative elements inside one executable boundary",
+    "Every detailed responsibility maps to exactly one area",
+    "All model element identities, links, status and all relationships retained",
+    "C1/C2 computed hashes, source bytes and saved C2 layout unchanged",
+    "Navigation targets exist",
+    "Leaf boxes and labels do not overlap; labels stay within canvas",
+    "Spline samples avoid unrelated component boxes",
+    "Saved snapshot matches current view hash",
+    "All captured application/proof inputs byte-identical"
+  ],
+  "protected_files": 197,
+  "view_hash": "pxKNwbx4KreJOzx5dGPuuwNg3hk-VvuhFVme-6_aCu4",
+  "source_sha256": "7c644653d2524437a5ff30c928bc68d11a914b8b670c46e1c66d571f7036ef49",
+  "snapshot_sha256": "d54cbe124b9e70ebaf9b80a13c2120025c648649805d434b5560ad7a89c73c70",
+  "visual_inspection": "Native AppKit approximation inspected; five readable areas and principal connections. Not an inspection of the actual VS Code webview.",
+  "limits": [
+    "No browser opened",
+    "Direct read/unlock and feature-level wiring omitted from diagram, retained in model",
+    "Aggregate partial status does not change bounded implemented status of representative elements",
+    "No application build/regression, runtime handoff, proof, provider/trust action or publication"
+  ]
+}

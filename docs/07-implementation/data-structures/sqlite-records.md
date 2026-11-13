@@ -13,11 +13,20 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-26
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+Workspace-user permissions are a mandatory shared API/application requirement. Existing sole-owner records/checks are evidence, not an adopted multi-user permission schema. No permission fields, record versions, schema upgrades or migrations are introduced by this clarification; design and compatibility approval remain required. See the [accepted shared API scope](../../06-subsystems/interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Describes local code, not proof of a complete data model. Domain serialization separation and explicit record wrappers are implemented locally; real-data browser/runtime acceptance remains pending.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 
 ## Exact types and fields
 
@@ -36,30 +45,6 @@ Compatibility acceptance distinguishes three claims: **ordinary old-reader opera
 
 Private document/node/branch/occurrence/draft references and full text are authenticated inside records. The initial one-owner document has one immutable manifest and one occurrence; this does not implement general nested composition. SQL should receive encrypted bytes, including data entering WAL/journals. JSON request digests are encrypted receipt data, not public plaintext addresses. Exact structural constraints and decode limits must remain bound to schema/record versions. No SQL migration or new JSON field was added here.
 
-
-## Keys and references
-
-Actual initial encrypted SQLite objects/slots and typed local record representation. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Constraints and invariants
-
-Actual initial encrypted SQLite objects/slots and typed local record representation. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Indices and operations
-
-Actual initial encrypted SQLite objects/slots and typed local record representation. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Migration and serialization
-
-Actual initial encrypted SQLite objects/slots and typed local record representation. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Valid/invalid example records
-
-Actual initial encrypted SQLite objects/slots and typed local record representation. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Integrity tests
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 
@@ -197,3 +182,75 @@ This adapter is not yet frontend-delivered. The first promotion hook considers o
 Optional immutable encrypted kind27, strict wrapper1, is addressed by the independent output DocumentId. `storage/working_forks.rs` stores `{kind:working_fork,transformation,operation,actor,device,input:<Working Source>,output:<committed Source>}`. `{command:working_fork,plan:{title,source,quote}}` validates the exact retained checkpoint passage and current permission before creating the independent node/document, parentless first revision/closed snapshot, draft/head/catalog, derivation and receipt atomically. Receipt is `{result:working_forked,state:{document,transformation,revision,snapshot}}`. Equal text does not unify node identity. Later source/output edits retain the exact original checkpoint and initial output. Reads verify source/output bytes, parentless output event and reconstructed command digest/receipt. This is an explicit unpublished-source derivation, not a committed-source disguise, original-authorship claim or same-identity branch Merge. Actual older-reader/graph integration is unverified; no existing payload/schema/envelope version changes.
 
 New branch history uses ephemeral encrypted cursor context kind1000002, bound to current owner/workspace key and `{document,branch,snapshot,next}`. These envelopes are not persisted as objects/slots. First-page selection must match the selected branch's current exact committed snapshot; stale heads conflict. Thereafter an opaque token follows that retained ancestry even after newer commits, and cannot be moved to another branch or snapshot. Cursor input is bounded to4096 bytes; reads retain1–32-entry/16MiB bounds and current authorization. Response includes an opaque current-page `cursor` for stable back navigation, opaque/null `next` and explicit document/branch/snapshot. Original raw same-document ancestry APIs remain unchanged; the new frontend uses the scoped endpoint and retains each history view's pinned snapshot while paging.
+
+## Actual optional-record compatibility evidence, 2026-10-27
+
+HPX-TEST-040 now verifies the existing kind20–27 layouts against the retained immutable pre-clipboard executable5adecffb3445ac32233e1808d36330d7ad2b4ed506f22f2a1fe530ac5b7dd687. All eight optional kinds were present in the synthetic workspace. Ordinary old-reader Save/Commit writes preserved their encrypted object/slot identifiers, generations and envelope bytes exactly; the current reader then recovered child drafts, retained checkpoints and original WorkingFork evidence. Stale capture against an earlier working base rejected409 after the old write. This supersedes the earlier unverified-reader status for this bounded pair, without changing a layout/version or implying every historical/future reader, portable restore or real-data format acceptance. The lazy working-metadata approach does not require a new schema upgrade for this tested pair.
+
+## Draft-lineage codec prototype under adopted parent-Merge direction
+
+HPX-OWNER-013/014 authorize staged versioned format design; upgrading existing workspaces remains separately explicit. The next adapter prototype reserves **candidate kind31**, wrapper version1, for a compact immediate-base draft trace. At the initial HPX-TEST-053 checkpoint this was an in-memory codec only. The subsequent guarded experimental transaction below supplies kind31 slot wiring under marker3, with feature32/receipt33; ordinary schemas1/2, Save/Commit routes and capability advertisements remain unchanged. Other clock/origin/integration kind numbers remain unallocated.
+
+Encoder field order is `record_version`, `record_kind`, `payload`. Payload order is `binding`, `text_bytes`, `changes`. Binding order is `document`, `node`, `branch`, `draft`, `base_revision`, `base_snapshot`, `generation`, `sequence`. Every identity uses the existing exact32-byte JSON-array adapter codec; counters are nonnegative integers <=2^53−1. Change order is `start_byte`, `end_byte`, `replacement`. Offsets are unsigned integers and must validate against exact UTF8 base boundaries; replacement retains original UTF8/newline bytes. All objects reject unknown and duplicate fields; future wrapper versions/kinds fail closed. This prototype stores no separate base/current whole-text field; the expected authorized base and acknowledged draft are separately supplied and reconstructed exactly.
+
+`encode` requires an internally validated domain Trace with matching node/base, validated binding/counters and caller text/work/encoded-byte bounds. Streaming JSON encoding fails without returning a partial record if its byte bound is exceeded. `decode` checks the encoded byte limit before parsing, strict wrapper/binding equality, exact current draft byte length, text/work limits and canonical `Trace::restore`. A stale expected binding is a conflict; corrupt reconstruction/mapping is integrity failure. Serialization stays in the adapter, not in domain records. Codec validation is not authentication, current permission, encrypted slot binding or proof that supplied text matches a real closed snapshot.
+
+A future persistent slot must additionally bind workspace/draft identity, generation and dedicated crypto purpose/addressing, and update atomically with the draft under a reviewed minimum-reader format. Do not add this optional slot to schema1/2 and claim chronology: old writers would omit its updates. Actual codec golden/invalid tests precede new-format writer wiring; later tests must cover encrypted context substitution, original receipts, crashes, old-reader rejection and backed-up upgrade. Unknown/coarse origin mapping and Undo/Redo restoration of the matching trace remain explicit upstream responsibilities.
+
+## Guarded experimental temporal Save transaction
+
+Within HPX-OWNER-013/014, isolated storage integration uses **experimental minimum-reader SQL marker3**, encrypted feature slot **kind32**, existing candidate draft-lineage slot31 and a dedicated frozen temporal-Save receipt object **kind33**, all with explicit wrapper1. Normal creation/opening still supports only schemas1/2: there is no upgrade command, schema3 opener or runtime route/capability. Disposable tests create their own fresh workspace before installing these markers; no existing owner workspace is enrolled or upgraded.
+
+The encrypted feature slot at ROOT binds workspace identity, `minimum_reader:3` and feature `temporal_parent_merge_v1`. Every temporal operation rechecks current catalog principal/document/branch scope and this marker inside its read/IMMEDIATE-write transaction. A numeric PRAGMA alone is insufficient. Legacy command execution rejects unsupported schema markers on an already-open handle too; it cannot bypass lineage by continuing to Save after a format transition. Full backup/upgrade/open/keychain composition remains separately required before schema3 delivery.
+
+The existing Cipher already binds arbitrary numeric record kind, ID and generation through `hpx/sqlite/record/v1\0` context hashing; non-core kinds use Purpose::Index. This is not a new crypto-purpose/envelope epoch, and the earlier inactive prototype did not mean the generic cipher rejected kind31. What was absent was a validated slot/transaction driver. The lineage slot ID is SHA256(`hpx/draft-lineage/slot/v1\0` plus exact draft ID); its row/AAD generation equals the acknowledged draft generation. Feature slot32 uses ROOT/generation0; temporal receipt33 uses operation ID/generation0. Serialized binding includes exact authorized document/node/branch/draft/base revision/base snapshot/generation/sequence.
+
+A temporal Save request freezes document, branch, expected generation/base, previous/new sequence, exact final text and ordered exact UTF8 splice quotes/replacements. Digest domain `hpx/temporal-save/v1\0` covers strict DTO serialization including the splices. The operation ID cannot reuse either a legacy receipt8 or a changed temporal receipt33 intent. Valid original receipt retries recheck current principal/document/branch scope but omit stale mutable preconditions and never reapply text. New writes validate exact head/draft/publication, restore prior lineage against the actual acknowledged source, compose splices, and publish draft text, encrypted compact lineage and original receipt in one transaction. A missing first trace can start empty only when the draft exactly equals its committed base; an existing unexplained uncommitted draft is not diffed or silently assigned history.
+
+Ciphertext length is budgeted before new lineage/feature/receipt blob allocation; raw JSON encoding/digest and mapping have explicit byte/work bounds. Failed intermediate writes roll back all values. Unknown result after SQL COMMIT retains the original receipt for retry. There is no text Commit, passage-clock allocation, origin publication, parent Merge, UI wiring or genuine process-unlock recovery in this Save component; reconnect tests retain the same authorized process key. Actual old-executable compatibility, schema3 opening, clocks/ancestry/origin codecs, upgrade/crash envelope and full synthetic UI workflow remain acceptance work.
+
+Experimental resource bounds retain the existing2MiB raw text and16MiB individual plaintext-envelope limits. Each charged ciphertext is capped at the existing16MiB plus46 framing/tag bytes before allocation. The combined charged-read allowance and streamed intent-serialization allowance are each64MiB, since exact old quote, replacement and final text can each expand under JSON escaping. Domain mapping work is separately bounded to at most16Mi logical units; these bounds are not latency targets. A maximum raw-text test uses control characters to exercise escaping, without changing envelope/database versions for normal workspaces or claiming a network request limit.
+
+## Candidate single-parent publication-origin evidence codec
+
+The next inactive adapter codec allocates candidate kind34/wrapper1 for **content-changing single-parent publication evidence**. It emits no SQL/crypto writes and enables no format or runtime route. Binding field order is document, node, revision, snapshot, parent_revision, parent_snapshot, order. IDs use exact32-byte arrays; order is a positive safe integer <=2^53−1. An authorized caller supplies the exact parent origin map and separately validated parent/current snapshot bindings; the codec does not authenticate or allocate clocks.
+
+Payload order is binding, text_bytes, changes, evidence. Changes use start_byte/end_byte/replacement against the immediate parent. Each corresponding evidence item holds pieces then deletion_mapping. Pieces contain start_byte/end_byte/source, with source a strict tagged fresh, unknown or copy carrying base_start. Confidence uses exact or unknown. Reconstruct the canonical working trace against exact parent/current bytes, then replay the pure origin-map publication operation; inherited age/parent coordinates and deletion complements are derived from that verified parent map rather than trusted serialized origin lists. Decoder rejects wrong bindings, noncanonical/reconstructed traces, forged copies and unsafe orders. Encoding also performs the replay before returning bounded bytes.
+
+This variant neither represents two-parent Merge nor rewrites legacy records. A legacy parent can be supplied as an explicitly unknown-order seed after its actual revision/snapshot is authenticated; a map seed does not erase that revision's real historical ancestry. Earlier parent maps still require bounded authenticated loading. Record size is capped by the existing16MiB plaintext limit with caller mapping/work/text bounds and streamed wrapper output; no partial encoded result on failure. New-root origin records, exact durable clock/revision/event/integration families and backed-up format opening/upgrade remain later work.
+
+## Candidate per-node committed-change clock codec
+
+Candidate kind35/wrapper1 is an inactive adapter codec for one workspace-local node's committed passage-change counter. Payload field order is document, node, last_order, last_change; last_change is null exactly when last_order is0, otherwise an object ordered revision, snapshot, operation. Identities use exact32-byte arrays; last_order is a safe integer0..2^53−1. A4096-byte encoded bound applies before parsing/streamed output. Expected document/node context must match on decode. These records are not SQL-written or enabled in ordinary workspace schemas.
+
+A prepared content-change step compares the expected previous order, refuses reuse of its immediately preceding operation/revision/snapshot, and returns a new value incremented exactly once. Overflow returns failure without changing the old value. This is planning only: the eventual authorized publication transaction must read/write the dedicated node slot under the same IMMEDIATE transaction as revision/snapshot/head/draft/event/origin/receipt, and must reconcile the original operation receipt before any second allocation. No standalone durable counter advance is allowed. Unknown replies do not permit a fresh operation; byte-identical no-op or ancestry-only integration does not consume a passage-change order.
+
+Future slot addressing binds node identity and generation to last_order with the existing kind/ID/generation cipher context. The exact upgrade must install/verify required zero-state clocks for legacy nodes atomically with explicit authenticated baseline evidence; a missing required future clock is not silently initialized. Explicit new-format node creation must initialize its own required clock. Decoding this codec does not establish allocation history, latest-branch-head equality, legacy chronology, backup recovery or new-reader/upgrade acceptance; those remain publication/format integration work. All required persistent evidence stays inside the workspace.
+
+## Experimental legacy origin seeds and bounded origin loading
+
+Candidate kind36/wrapper1 is an immutable explicit legacy-origin seed addressed by revision ID at generation0, binding document/node/revision/snapshot in that field order. Only a verified future format-upgrade/new-format initialization transaction can create these seeds. Seed presence means that exact authenticated revision can initialize an unknown-order origin map; it does not claim parentless revision ancestry. Required future origin-record absence must fail, not silently infer a seed. Concurrent seed36 and origin34 for one revision is inconsistent and rejects.
+
+An experimental adapter reader under marker3/feature32 and current catalog/document/branch authority captures the committed head, verifies clock35 (including row generation equal to last_order), and walks at most64 exact legacy publication edges in one read view. Each origin34 binding must match the actual revision/event/closed snapshot and parent edge; its order cannot exceed the node clock. The walk ends only at an exact seed36, then replays kind34 records from that parent forward against exact text. The shared charged encrypted-read allowance is64MiB after existing bounded authority metadata; each envelope is checked before blob allocation. Allocate16Mi logical replay work divided evenly among visited seed/publication stages, with each of the existing trace/map phases receiving that slice; bounded JSON parsing and input traversals remain separately limited by encrypted/record/text bytes. Exhaustion fails without partial origins. This is a conservative work guard, not a latency target.
+
+This reader performs no origin/seed/clock writes, missing-state initialization, Commit or upgrade. Normal opening still rejects marker3; disposable fixture setup alone installs these records. Replay validates supplied stored evidence under the current key; it does not independently prove global clock-allocation history or detect an authentic whole-workspace rollback. The future atomic temporal Commit and verified backup/minimum-reader upgrade must establish those stored claims before application delivery.
+
+## Candidate temporal Commit frozen receipt
+
+Candidate kind37/wrapper1 payload order is request, digest, receipt, order, changed. Request order is document, branch, generation, base, snapshot, sequence, text, evidence; IDs are exact32-byte arrays and evidence uses the strict kind34 piece/confidence DTO shape. Digest is the32-byte SHA256 specified in the publication protocol. Both bounded request-wrapper hashing and final receipt-wrapper encoding use the existing16MiB plaintext cap. Receipt is the existing explicitly branch-scoped Committed result with the exact operation ID. Counters are safe integers; changed publication uses generation+1/new revision/new snapshot/positive order, while unchanged uses the original generation/base/snapshot, empty evidence and no order allocation. Supplied order on an unchanged result describes the retained node clock, not a newly allocated passage age.
+
+Codec validation recomputes the frozen request digest and rejects inconsistent result/context/counter/changed metadata before any promotion consumer can use it. It does not authenticate source snapshots, prove mapping evidence, allocate/persist the clock, write SQL or make the existing workspace format available. Exact immutable result and current permission checks still belong to the authorized application/storage caller. The next writer and working-promotion reader must reuse this original request boundary, not manufacture a different legacy Commit receipt.
+
+## Experimental single-parent publication writer, 2026-10-27
+
+The candidate31–37 formats above now have a guarded adapter-only temporal Commit writer in `storage/temporal_commit.rs`; their earlier codec/reader checkpoints retain their original scope. Normal SQL1/2 opening, versions/wrappers and runtime commands are unchanged. Disposable fixtures alone enroll experimental3/feature32, explicit seed36 and initial clock35. Content-changing publication atomically writes revision4/snapshot5/event9, eligible promotion24, selected head6/draft7, reset lineage31, origin34, clock35 and frozen intent/result37. Existing optional branch/checkpoint/reference records and unselected branches retain their bytes unless an exact eligible promotion is added. A no-op writes37 alone and does not invent passage chronology for unknown legacy source. The adapter shares a64MiB temporal/history read cap and64-record reconstruction bound with independently bounded catalog/branch/checkpoint metadata validation.
+
+Original37 retries validate exact immutable publication and source/evidence bindings under current authority before returning the stored outcome. They do not use a later head, draft generation or clock as new preconditions. Cross-family8/33/37 collisions fail closed. The minimum-reader marker is not downgraded for tests or retries. HPX-TEST-068 includes transaction fault/exit probes and test-only fresh-process passphrase unlock; no public format opener/upgrade, manual migration or two-parent representation is introduced. Separately acknowledged reference replacement and verified backup/interrupted upgrade/old-reader rejection remain required before integrated upgraded delivery.
+
+## Temporal private reference batch, 2026-10-27
+
+HPX-TEST-069 adds a separate experimental3/feature32 reference-replacement driver using the unchanged actual WorkingClipboard Promote command and its8 receipt. Kinds25/26 retain their existing index/reference shapes. No new record kind/version or plain-Commit alias is introduced. The publication consumer authenticates actual changed37 intent/result plus exact immutable source/transition and current scope when8 is absent; missing8 on normal1/2 still fails as before. The text publication and private replacement remain distinct acknowledged transactions. Failed/terminated replacement leaves the original private entries and acknowledged text intact; retries of the original batch reconcile its receipt before newer mutable index state. Public opening/upgrade and temporal runtime commands remain unavailable.
+
+## Experimental capacity ceilings and result readability
+
+HPX-TEST-070 supersedes the initial temporal/origin read/work budgets while retaining every persisted shape/version and the normal1/2 boundary. The origin reader caps128MiB charged encrypted records,64 retained revisions and32Mi logical work units; temporal Commit caps160Mi work units split over five phases and two128MiB temporal/history read phases (256MiB aggregate). Catalog/branch/checkpoint metadata retains separate preexisting bounds. Changed publication reserves one result record in the64-record chain allowance and performs an ordinary exact result-map reconstruction before COMMIT. Failed post-write capacity/readback rolls back every write. No-op at an exact64-record current history remains eligible; no implicit truncation or unknown seed is created. Strict2MiB raw-source and16MiB plaintext-record/envelope bounds are unchanged. See the test register for actual escaped-source and boundary evidence; public opening/upgrade and real-data/performance acceptance remain outstanding.

@@ -1,43 +1,40 @@
 # Hypergraph PX documentation
 
-This nine-level documentation system is the current navigation for the migrated project documentation. Earlier documentation is preserved byte-for-byte under ignored `.oldspecs/`; its immutable source IDs/hashes and exact locations are in the registers. The archive is evidence, not active agent instructions. Root/upstream license texts, application/proof sources and existing unfinished code remain in place.
+**Start with the [LikeC4 specification](../architecture/SPECIFICATION.md).** Diagrams own the scopes in the [ownership index](../architecture/specification-ownership.csv). Supporting prose supplies details not yet sufficiently modelled; do not maintain parallel definitions. HPX-OWNER-032 changes definition ownership, not the status of proposed designs or implementation evidence.
 
 ## Authority and status
 
-The owner has approved the documentation migration procedure and explicitly decided retained immutable history, serialization outside domain and explicit record versions before real-data acceptance. Those decisions are recorded in [the owner record](02-governance/OWNER_DECISIONS.md) and decision ADRs. Inherited accepted source obligations retain their scope. New editorial assemblies are `proposed` pending topic review; that does not revoke existing obligations or approve speculative additions. No implementation resumes, certificate trust installs, commits or pushes are authorized by this migration.
-
-Accepted specifications own only their bounded subjects. Requirements constrain lower-level mechanisms; an ADR explains a choice without overriding upstream purpose or requirements. Implementation is evidence, not retroactive authority. New contradictions are recorded with competing sources and require explicit resolution. Recency and filenames do not settle authority.
+[Owner decisions](02-governance/OWNER_DECISIONS.md) and accepted obligations retain authority. Diagram-first ownership does not promote planned features to implemented ones. Current users are workspace-local, with one machine user per provider per workspace; see [canonical actor definitions](../architecture/context.c4) and the [supplemental chat/MCP contract](06-subsystems/ai-collaboration.md). No public API, new code or publication is authorised by documentation changes.
 
 ## Nine abstraction levels
 
-1. [Purpose](01-purpose/README.md): why HPX exists.
-2. [Governance](02-governance/README.md): who decides and contributes.
-3. [Requirements](03-requirements/README.md): observable outcomes and acceptance.
-4. [Architecture](04-architecture/README.md): major boundaries and decisions.
-5. [Domain](05-domain/README.md): objects, invariants and transformations.
-6. [Subsystems](06-subsystems/README.md): component, format and interface contracts.
-7. [Implementation](07-implementation/README.md): exact schema/protocol/algorithm/property contracts.
-8. [Assurance](08-assurance/README.md): proof/test evidence, security, recovery and release.
-9. [Guides](09-guides/README.md): reader/developer navigation.
+These organise supporting documents; they do not duplicate the C1–C4 model:
 
-These are abstraction levels, not waterfall phases. Work may refine them in both directions. Prefer concise source-backed documents and links over repeated normative definitions or empty templates.
+1. [Purpose](01-purpose/README.md)
+2. [Governance](02-governance/README.md)
+3. [Requirements and acceptance](03-requirements/README.md)
+4. [Architecture supplements and ADRs](04-architecture/README.md)
+5. [Domain invariants](05-domain/README.md)
+6. [Subsystems, interfaces and formats](06-subsystems/README.md)
+7. [Exact implementation contracts](07-implementation/README.md)
+8. [Assurance and evidence](08-assurance/README.md)
+9. [Guides](09-guides/README.md)
 
 ## Architectural review integration
 
-The owner authorized integration of supported review findings on 2026-10-26. Before any specification edit, **327 files** were preserved and verified byte-for-byte in the [pre-integration historical snapshot](../docproject/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d/README.md), including the supporting non-authoritative review. The unredacted immutable master remains local. The owner subsequently authorized redaction and GitHub publication of the linked public derivative; it preserves 324 payloads exactly and redacts only local paths in three reports. Ignored private originals remain excluded. See the [publication record](09-guides/reference/documentation-publication-2026-10-26.md).
-
-Use the [current scope and evidence summary](09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) for readiness and the [integration record](09-guides/reference/implementation-resumption.md#architecture-review-integration-2026-10-26) for finding dispositions, implementation effects and unresolved owner decisions. Retained source-era status statements are historical evidence; accepted semantics survive, but those statements do not override explicitly recorded later implementation or acceptance limits. The [roadmap](02-governance/roadmap.md#next-implementation-units-after-review-integration) gives the bounded next work. Application implementation remains stopped.
+Past review and migration records are provenance, not routine reading. Consult [implementation dispositions](09-guides/reference/implementation-resumption.md#architecture-review-integration-2026-10-26) or the authorised [public historical snapshot](../docproject/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d/README.md) only when needed. Private `.oldspecs` originals remain ignored; hashes/locations are retained in the registers.
 
 ## Constitution
 
-Use progressive precision and one authoritative definition per claim. Separate intent, decisions, implementation and evidence. Specify proportionately to risk and preserve bidirectional traceability where practical. Keep version-controlled UTF8 text, explicit uncertainty and maintained verification; never invent missing details or promote a proposal automatically. Preserve human approval authority and publicly inspectable contribution records without publishing private inputs.
-
-Every adopted specification has stable ID, title, purpose, level, one status, maintainer, applicability, upstream/downstream references, verification, history and review date. `accepted`, `implemented` and `verified` are different claims. `superseded` requires an explicit replacement/decision, not an edit timestamp. IDs remain stable across moves and are never reused. Source claims can retain acceptance while a newly assembled document is under editorial review.
-
-Use the [templates](templates/README.md) and [registers](registers/README.md). Full source bodies remain recoverable in `.oldspecs`; public readers get source identity/attribution without a false promise of access to ignored/private material. Philosophy need not be forced into engineering checklists. Future governance/federation mechanisms remain deferred until approved.
+Maintain one definition per claim. Update diagram-owned structure in its owning view; keep exact wire/schema/byte/permission/security rules and acceptance criteria in linked contracts until completely modelled. Preserve stable IDs and source provenance. Requirements, proposals, implementation and actual verification are separate. Do not invent missing mechanisms, infer acceptance by recency or discard evidence.
 
 ## Current state and verification
 
-Current source publication is 1.0.0; the README shows a refreshed synthetic frontend preview. The major increment records incompatible domain serialization API and experimental-record decoding changes, not real-data acceptance. The owner resumed implementation on 2026-10-25. Current local changes and the remaining acceptance gates are recorded in the [development state](09-guides/reference/DEVELOPMENT_STATE.md); integrated real-data acceptance remains unfinished. The [development evidence guide](09-guides/reference/development-evidence.md), [full formal digest](08-assurance/formal-validation-digest.md), [technical debt](registers/technical-debt.csv) and [migration report](MIGRATION-REPORT.md) state actual boundaries.
+Read [current execution status](09-guides/reference/DEVELOPMENT_STATE.md#current-execution-status) and the [current scope/evidence summary](09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary), then only the affected contracts. Read chronological logs, audit reports and full proof details when their evidence is relevant. Use the [test register](registers/tests.csv) for checks actually executed. No application acceptance follows from model validation.
 
-The [migration protocol](MIGRATION-AGENT-PROTOCOL.md) remains procedural guidance. Its original preservation wording is qualified by the owner's later explicit `.oldspecs` move instruction; preserve original bytes and do not expose private sources. No root files were overlaid from a template pack. No new architecture or software behavior is established by copying a checklist.
+## Current specification reconciliation
+
+[The scoped audit](../architecture/audits/specification-reconciliation-audit.md) records obsolete-requirement corrections. [Diagram ownership migration](../architecture/audits/diagram-canonicalization.md) records removed duplication and measured reduction. Exact source/claim identities remain in [registers](registers/README.md); no source archive or as-run test/proof record was deleted.
+
+
+[Complete migration status](../architecture/audits/specification-migration-status.md): fully/partially/not migrated, with intentionally retained supporting records separated.

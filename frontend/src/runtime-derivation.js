@@ -1,5 +1,6 @@
+import {validWorkingSource} from './runtime-working-clipboard.js';
 /** A fork's pinned input and initial output, independent of later revision history. */
-const node=(tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;return e;};
+const node=(tag,text,className)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(className)e.className=className;return e;};
 const validId=id=>Array.isArray(id)&&id.length===32&&id.every(n=>Number.isInteger(n)&&n>=0&&n<=255);
 const key=id=>id.map(n=>n.toString(16).padStart(2,'0')).join('');
 export function renderDerivation(parent,adapter,id,notify){
@@ -9,8 +10,24 @@ export function renderDerivation(parent,adapter,id,notify){
   try{
    let event;
    try{event=await adapter.request('merge',{document:adapter.get(id).runtime.document});}
-   catch(error){if(error.status!==404)throw error;event=await adapter.derivation(id);}
+   catch(error){
+    if(error.status!==404)throw error;
+    try{event=await adapter.derivation(id);}
+    catch(error){if(error.status!==404||!adapter.features.workingCopy)throw error;event=await adapter.request('working/derivation',{document:adapter.get(id).runtime.document});}
+   }
    if(!current())return;
+   if(event.kind==='working_fork'){
+    const {input,output}=event;
+    if(!['transformation','operation','actor','device'].every(k=>validId(event[k]))||!validWorkingSource(input)||!output||!['document','node','snapshot','revision'].every(k=>validId(output[k]))||!Array.isArray(output.occurrence_path)||output.occurrence_path.length!==1||!output.occurrence_path.every(validId)||output.start_byte!==0||!Number.isSafeInteger(output.end_byte)||output.end_byte!==input.end_byte-input.start_byte||key(output.document)!==id||key(input.node)===key(output.node))throw Error('Invalid recorded working-source derivation');
+    panel.replaceChildren(node('h3','Forked from unpublished working source'),node('p',adapter.docs.get(key(input.document))?.title??'Retained source document'),node('p','This independent document retains an exact private working checkpoint and its initial published output. Later edits and Commit do not change the original source.','caption'));
+    const source=structuredClone(input),inspect=node('button','Inspect exact working fork source');inspect.onclick=async()=>{
+     inspect.disabled=true;
+     try{
+      const result=await adapter.workingClipboard.inspect(source);if(!current())return;
+      const dialog=node('dialog');dialog.className='function-dialog';const preview=node('pre',result.passage);preview.className='source-preview';const close=node('button','Close source');close.onclick=()=>dialog.close();dialog.addEventListener('close',()=>dialog.remove(),{once:true});dialog.append(node('h2','Working fork source · read only'),node('p',result.promotion?'The original private checkpoint is retained with exact Commit promotion evidence.':'Retained private checkpoint · unpublished source.'),preview,close);document.body.append(dialog);dialog.showModal();
+     }catch(error){if(current())notify(error.message);}finally{inspect.disabled=false;}
+    };panel.append(inspect);return;
+   }
    if(event.kind==='reviewed_synthesis'){
     if(event.source_authorship!=='unknown'||!['transformation','operation','actor','device'].every(k=>validId(event[k]))||event.inputs?.length<2||event.inputs?.length>8||event.outputs?.length!==1||key(event.outputs[0].document)!==id)throw Error('Invalid recorded synthesis');
     panel.replaceChildren(node('h3','Reviewed synthesis from committed inputs'),node('p','Ordered inputs and initial output are pinned historical versions. The publisher reviewed this output; original sentence authorship is unknown. Source histories are retained.'));

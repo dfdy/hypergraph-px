@@ -9,13 +9,13 @@ export function selectedWords(text,from,to){
  return parts.some(p=>p.isWordLike&&p.index===from)&&parts.some(p=>p.isWordLike&&p.index+p.segment.length===to);
 }
 export function documentHeadings(text){
- const result=[],used=new Set();let offset=0,fence=null;
- for(const line of text.split('\n')){
+ const result=[],used=new Set();let fence=null;
+ for(const matchLine of text.matchAll(/([^\r\n]*)(\r\n|\r|\n|$)/g)){
+  const line=matchLine[1],offset=matchLine.index;
   const marker=/^\s{0,3}(`{3,}|~{3,})/.exec(line);
-  if(marker){if(!fence)fence=marker[1][0];else if(marker[1][0]===fence)fence=null;offset+=line.length+1;continue}
+  if(marker){if(!fence)fence=marker[1][0];else if(marker[1][0]===fence)fence=null;continue}
   const match=!fence&&/^(#{1,6})[\t ]+(.+?)[\t ]*$/.exec(line);
   if(match){const label=match[2].replace(/[\t ]+#+[\t ]*$/,'').trim(),base=label.toLowerCase().replace(/[^\p{L}\p{N}\p{M}\s_-]/gu,'').trim().replace(/\s+/g,'-')||'section';let n=0,anchor=base;while(used.has(anchor))anchor=base+'-'+(++n);used.add(anchor);result.push({from:offset,level:match[1].length,label,anchor})}
-  offset+=line.length+1;
  }
  for(let i=0;i<result.length;i++){const h=result[i];h.to=result.slice(i+1).find(next=>next.level<=h.level)?.from??text.length}
  return result;

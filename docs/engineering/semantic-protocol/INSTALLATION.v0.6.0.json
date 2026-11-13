@@ -1,0 +1,172 @@
+{
+  "package": "HPX-SCP",
+  "version": "0.6.0",
+  "source_archive": "hpx-semantic-communication-protocol-v0.6.0.zip",
+  "source_archive_sha256": "5d94f32ff98a1ee67246c10c7bc12d70ae0cafd448551223da5059a2c58411cf",
+  "status": "installed and activated by explicit owner instruction on 2026-10-31",
+  "approval": "Install the new version of scp for the hypergraph project and instruct the agent to use it",
+  "files": [
+    {
+      "archive_path": ".github/workflows/validate-semantic-records.yml",
+      "installed_path": ".github/workflows/validate-semantic-records.yml",
+      "sha256": "aab4f6ba60b965760b6622988262929e8fbe9474a44228cedbb753f4422c8813"
+    },
+    {
+      "archive_path": "AGENTS.md.fragment",
+      "installed_path": "docs/engineering/semantic-protocol/AGENTS.md.fragment",
+      "sha256": "11e9f1c541a8589ba149f0fd6fc50583eb7365e625e7f942a9c6f08542091567"
+    },
+    {
+      "archive_path": "CHANGELOG.md",
+      "installed_path": "docs/engineering/semantic-protocol/CHANGELOG.md",
+      "sha256": "64451a98360c1a4d0d34565c7d0a3b14cd03b02a490f278b2460880321ca7942"
+    },
+    {
+      "archive_path": "INSTALL_PROMPT.md",
+      "installed_path": "docs/engineering/semantic-protocol/INSTALL_PROMPT.md",
+      "sha256": "1738af3f94916df18ab36bc4d687130da52d30406793a8710931007d3c254d89"
+    },
+    {
+      "archive_path": "README.md",
+      "installed_path": "docs/engineering/semantic-protocol/README.md",
+      "sha256": "077343540406ca942d4992ebbd024abcf6a3768182ca9f0974c15e0d50b580a1"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/.gitattributes",
+      "installed_path": "docs/engineering/semantic-protocol/.gitattributes",
+      "sha256": "035f5c9a4ac373d1f124716217c5a7838b3ffc4c4b12b1a244ea94013ab23f43"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/PROTOCOL.md",
+      "installed_path": "docs/engineering/semantic-protocol/PROTOCOL.md",
+      "sha256": "f1fa99a3970212b4fc3cd6dc1b99422d4ddd76a2bee64727a90506e960cb5234"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/amendments/registry.json",
+      "installed_path": "docs/engineering/semantic-protocol/amendments/registry.json",
+      "sha256": "43cf5baf4e685f47732dffd092759fdc36b4b9e4b003c91d11c0867d7d8e4454"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/examples/HPX-HANDOFF-20261030-architecture-verification.json",
+      "installed_path": "docs/engineering/semantic-protocol/examples/HPX-HANDOFF-20261030-architecture-verification.json",
+      "sha256": "5e0de35fde59bb2ff5b5b8ff1abd73ed21fb7149afa2c734a93e5561fcb7e423"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/examples/HPX-ISSUE-20261030-closure-semantics.json",
+      "installed_path": "docs/engineering/semantic-protocol/examples/HPX-ISSUE-20261030-closure-semantics.json",
+      "sha256": "f982cec709a34f652223b4c3ec09785211e69d295ef4abf9d59c87de48172d57"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/examples/HPX-PROP-20261030-closed-composition.json",
+      "installed_path": "docs/engineering/semantic-protocol/examples/HPX-PROP-20261030-closed-composition.json",
+      "sha256": "8ea3189175336a0634434fc4934127b36f3492380e6c76865a71838e8b40bf70"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/examples/HPX-PROP-20261030-impact-example.json",
+      "installed_path": "docs/engineering/semantic-protocol/examples/HPX-PROP-20261030-impact-example.json",
+      "sha256": "3fdd7a22c13ec441b7c1fd2a7f59c74343cbcef07ed7eda5e7d22ebc9d8e01d4"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/examples/HPX-PROTO-20261030-add-impact-extension.json",
+      "installed_path": "docs/engineering/semantic-protocol/examples/HPX-PROTO-20261030-add-impact-extension.json",
+      "sha256": "45aa8fd1e4c644fa47c968097b12dc255070cbf2e1a4c9c9648df9fd416af1d9"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/examples/agent-request.yaml",
+      "installed_path": "docs/engineering/semantic-protocol/examples/agent-request.yaml",
+      "sha256": "1a1cccd35096b6644be8cfa31fffcdc6b6ebe99f6c8042d5055b5e7e02eb4f5d"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/examples/agent-response.yaml",
+      "installed_path": "docs/engineering/semantic-protocol/examples/agent-response.yaml",
+      "sha256": "133e980dd674bb68b7850518294f9f129fdb122475ed32c44e8e35e020b09213"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/extensions/registry.json",
+      "installed_path": "docs/engineering/semantic-protocol/extensions/registry.json",
+      "sha256": "e8221e12fab34afa754e6b51c75dcbfa63e77f7cf3d144e1429411ab18639be7"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/extensions/schemas/x.hpx.impact.schema.json",
+      "installed_path": "docs/engineering/semantic-protocol/extensions/schemas/x.hpx.impact.schema.json",
+      "sha256": "3d24a7b3b87c963a13597c8d3c6e2f120f8c683a87c10d8eed2b4c9df24f8f03"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/records/.gitkeep",
+      "installed_path": "docs/engineering/semantic-protocol/records/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "archive_path": "docs/engineering/semantic-protocol/schema/record.schema.json",
+      "installed_path": "docs/engineering/semantic-protocol/schema/record.schema.json",
+      "sha256": "e3d6aa0bb182ebbc58d1f7c46f5ac79a2bb7be47aaf7eb2c4bdf6d4bbb188403"
+    },
+    {
+      "archive_path": "scripts/bootstrap_semantic_protocol.py",
+      "installed_path": "scripts/bootstrap_semantic_protocol.py",
+      "sha256": "3af3a18fe5a44870debcc0217df892c51efbdb3a1ebf5fe8c40e2de70c3be8da"
+    },
+    {
+      "archive_path": "scripts/protocol_amendments.py",
+      "installed_path": "scripts/protocol_amendments.py",
+      "sha256": "34fdca91586c3d28b0195579deead7260b0f569a896ed7452ad9573c57a5ed27"
+    },
+    {
+      "archive_path": "scripts/protocol_context.py",
+      "installed_path": "scripts/protocol_context.py",
+      "sha256": "f3af7c224ba2af86602e7546732fd51c83c0bfe1d0299505debb929b63d35f37"
+    },
+    {
+      "archive_path": "scripts/protocol_recovery.py",
+      "installed_path": "scripts/protocol_recovery.py",
+      "sha256": "23908e87baf04568ef58a104ad9570c571b803dc849c6de797e9073f4c1651cf"
+    },
+    {
+      "archive_path": "scripts/rebuild_semantic_appendix.py",
+      "installed_path": "scripts/rebuild_semantic_appendix.py",
+      "sha256": "1f5e054f8319a123634ae4374d4277e6a2257faa32e655ce8f2fabd2463fd185"
+    },
+    {
+      "archive_path": "scripts/scp_wire.py",
+      "installed_path": "scripts/scp_wire.py",
+      "sha256": "45a02b1a5be97d2decb1cc30c8a925fd4c3e92e6b7324f64e16ce879bc613b60"
+    },
+    {
+      "archive_path": "scripts/validate_semantic_records.py",
+      "installed_path": "scripts/validate_semantic_records.py",
+      "sha256": "a0f4d597e2ac006cfbbb09e76fbec39dc67d9d28605c7744da62e5afb478b785"
+    },
+    {
+      "archive_path": "tests/test_bootstrap_semantic_protocol.py",
+      "installed_path": "tests/test_bootstrap_semantic_protocol.py",
+      "sha256": "6fb792305dd5e36d0657e81437ed98161c4fbf6b40117747b3570093d23a187e"
+    },
+    {
+      "archive_path": "tests/test_recovery_and_amendments.py",
+      "installed_path": "tests/test_recovery_and_amendments.py",
+      "sha256": "358316f2798a86b90758c2a0794340eb9908d25107377c1e9e96a06eddf897f9"
+    },
+    {
+      "archive_path": "tests/test_scp_wire.py",
+      "installed_path": "tests/test_scp_wire.py",
+      "sha256": "12dd07d350f2d09c7c4863bb434aab49c6c769deca0b1ad39fd9d2e8ce4d62a1"
+    },
+    {
+      "archive_path": "tests/test_semantic_records.py",
+      "installed_path": "tests/test_semantic_records.py",
+      "sha256": "13263d84c98b6b9c2e79b211aadd9a9088bd3355620eaa0ea036bacb18765493"
+    }
+  ],
+  "preserved_record_hashes": {
+    "HPX-PROP-20261031-finite-cycle-state.json": "fa6eb01b4c45ed9c7c84c28f05263799c3c8b6d63b26c8a99f8294d95ace1e32",
+    "HPX-DEC-20261031-reconstruction-conflict-policy.json": "f56ec4a671b0bca97dd62abe4aca030ac75544ca4f986c8b0df7493acdb043e4",
+    "HPX-DEC-20261031-conflict-policy-followup.json": "7b30c0eb7630900a333bbba1aaabf5e2d3751cdb5743c052e81595521f92d16b",
+    "HPX-VER-20261031-scp-readme-links.json": "704f445a5879e888ca75852f22059d218055458f11b478d8d7aa04c59a5aa773",
+    "HPX-VER-20261031-finite-cycle-state.json": "bd6bf22ad09d7ff14c5d3c314c7e33f7d547b6e3e49ee7e31002e009f85d901f",
+    "HPX-DEC-20261031-scp-adoption.json": "59d559d7f25a4128255f8131a288269a61ce2872d0e1a5a9c0f0982dc6fe4e87",
+    "HPX-VER-20261031-scp-readme-publication.json": "a36b6456d1fb0e80d50acf74f105f2c5480a30245d108353b588227ad76cf268",
+    "HPX-HANDOFF-20261031-finite-cycle-closure.json": "3bcc514ad2e72a8b696c1dc878a0161f3a4576109dc82280e5727707db8f8655",
+    "HPX-VER-20261031-scp-adoption.json": "d5dd43f42415ebbf6f935a8f1a172434694a6a6442153edf43de7b2f7db6a836",
+    "HPX-DEC-20261031-finite-cycle-state.json": "f64ec4a628f51aae0398d6d2a6b0e8d0a1a4dcfcadcc1b2b807d7a515947ec39"
+  }
+}

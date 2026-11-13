@@ -1,0 +1,986 @@
+{
+  "c3_frontend_delivery": {
+    "boxes": {
+      "@gr2": [
+        1200,
+        190,
+        1620,
+        420
+      ],
+      "frontend_builder": [
+        1300,
+        290,
+        420,
+        220
+      ],
+      "hpx.native.frontend_assets.embedding": [
+        2300,
+        290,
+        420,
+        220
+      ],
+      "@gr3": [
+        1200,
+        740,
+        1620,
+        850
+      ],
+      "hpx.native.transport.assets": [
+        1300,
+        840,
+        420,
+        220
+      ],
+      "hpx.native.frontend_assets.resources": [
+        2300,
+        840,
+        420,
+        220
+      ],
+      "hpx.native.transport.responses": [
+        1300,
+        1270,
+        420,
+        220
+      ],
+      "@gr1": [
+        1120,
+        100,
+        1780,
+        2060
+      ],
+      "frontend_inputs": [
+        100,
+        240.0,
+        420,
+        220
+      ],
+      "runtime_build_identity_inputs": [
+        100,
+        630.0,
+        420,
+        220
+      ],
+      "hpx.native.transport.https": [
+        100,
+        1020.0,
+        420,
+        220
+      ],
+      "hpx.native.transport.security": [
+        100,
+        1410.0,
+        420,
+        220
+      ],
+      "hpx.browser": [
+        100,
+        1800.0,
+        420,
+        220
+      ],
+      "frontend_dist": [
+        3500,
+        340,
+        420,
+        220
+      ]
+    },
+    "width": 4080,
+    "height": 2610,
+    "subject_group": "@gr1",
+    "internal": [
+      "frontend_builder",
+      "hpx.native.frontend_assets.embedding",
+      "hpx.native.frontend_assets.resources",
+      "hpx.native.transport.assets",
+      "hpx.native.transport.responses"
+    ],
+    "external": [
+      "frontend_dist",
+      "frontend_inputs",
+      "hpx.browser",
+      "hpx.native.transport.https",
+      "hpx.native.transport.security",
+      "runtime_build_identity_inputs"
+    ]
+  },
+  "c3_application": {
+    "boxes": {
+      "@gr2": [
+        1200,
+        190,
+        1620,
+        420
+      ],
+      "hpx.native.application.admission": [
+        1300,
+        290,
+        420,
+        220
+      ],
+      "hpx.native.application.replay": [
+        2300,
+        290,
+        420,
+        220
+      ],
+      "@gr3": [
+        1200,
+        740,
+        1620,
+        420
+      ],
+      "hpx.native.application.dispatch": [
+        1800.0,
+        840,
+        420,
+        220
+      ],
+      "@gr4": [
+        1200,
+        1290,
+        1620,
+        420
+      ],
+      "hpx.native.application.reads": [
+        1300,
+        1390,
+        420,
+        220
+      ],
+      "hpx.native.application.publication": [
+        2300,
+        1390,
+        420,
+        220
+      ],
+      "@gr1": [
+        1120,
+        100,
+        1780,
+        2060
+      ],
+      "hpx.native.transport": [
+        100,
+        240.0,
+        420,
+        220
+      ],
+      "hpx.native.authority": [
+        100,
+        1800.0,
+        420,
+        220
+      ],
+      "hpx.native.documents": [
+        3500,
+        240.0,
+        420,
+        220
+      ],
+      "hpx.native.provenance": [
+        3500,
+        630.0,
+        420,
+        220
+      ],
+      "hpx.native.clipboard": [
+        3500,
+        1020.0,
+        420,
+        220
+      ],
+      "hpx.native.assertions": [
+        3500,
+        1410.0,
+        420,
+        220
+      ],
+      "hpx.native.comments": [
+        3500,
+        1800.0,
+        420,
+        220
+      ],
+      "hpx.native.domain": [
+        1270,
+        2490,
+        420,
+        220
+      ],
+      "hpx.native.storage": [
+        1970,
+        2490,
+        420,
+        220
+      ]
+    },
+    "width": 4080,
+    "height": 3160,
+    "subject_group": "@gr1",
+    "internal": [
+      "hpx.native.application.admission",
+      "hpx.native.application.dispatch",
+      "hpx.native.application.publication",
+      "hpx.native.application.reads",
+      "hpx.native.application.replay"
+    ],
+    "external": [
+      "hpx.native.assertions",
+      "hpx.native.authority",
+      "hpx.native.clipboard",
+      "hpx.native.comments",
+      "hpx.native.documents",
+      "hpx.native.domain",
+      "hpx.native.provenance",
+      "hpx.native.storage",
+      "hpx.native.transport"
+    ]
+  },
+  "c4_api_routes": {
+    "boxes": {
+      "@gr1": [
+        1120,
+        100,
+        1780,
+        3420
+      ],
+      "@gr2": [
+        1190,
+        190,
+        680,
+        3240
+      ],
+      "@gr3": [
+        2000,
+        190,
+        810,
+        3240
+      ],
+      "hpx.native.transport.api.c4_decode": [
+        1320,
+        450,
+        420,
+        220
+      ],
+      "hpx.native.transport.api.c4_command_codec": [
+        1320,
+        1130,
+        420,
+        220
+      ],
+      "hpx.native.transport.security.c4_bootstrap": [
+        2200,
+        300,
+        420,
+        220
+      ],
+      "hpx.native.transport.lifecycle.c4_lifecycle": [
+        2200,
+        690,
+        420,
+        220
+      ],
+      "hpx.native.transport.api.c4_documents": [
+        2200,
+        1080,
+        420,
+        220
+      ],
+      "hpx.native.transport.api.c4_history": [
+        2200,
+        1470,
+        420,
+        220
+      ],
+      "hpx.native.transport.api.c4_graph": [
+        2200,
+        1860,
+        420,
+        220
+      ],
+      "hpx.native.transport.api.c4_annotations": [
+        2200,
+        2250,
+        420,
+        220
+      ],
+      "hpx.native.transport.api.c4_working": [
+        2200,
+        2640,
+        420,
+        220
+      ],
+      "hpx.native.transport.api.c4_publication": [
+        2200,
+        3030,
+        420,
+        220
+      ],
+      "hpx.browser.c4_protocol": [
+        100,
+        240,
+        420,
+        220
+      ],
+      "hpx.native.transport.security.c4_gates": [
+        100,
+        630,
+        420,
+        220
+      ],
+      "hpx.native.transport.security.c4_compare": [
+        100,
+        1020,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_lifecycle": [
+        3500,
+        690,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_documents": [
+        3500,
+        1080,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_history": [
+        3500,
+        1470,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_graph": [
+        3500,
+        1860,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_annotations": [
+        3500,
+        2250,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_working": [
+        3500,
+        2640,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_publication": [
+        3500,
+        3030,
+        420,
+        220
+      ],
+      "hpx.native.authority.c4_checks": [
+        3500,
+        3420,
+        420,
+        220
+      ]
+    },
+    "width": 4080,
+    "height": 4090,
+    "subject_group": "@gr1",
+    "internal": [
+      "hpx.native.transport.api.c4_annotations",
+      "hpx.native.transport.api.c4_command_codec",
+      "hpx.native.transport.api.c4_decode",
+      "hpx.native.transport.api.c4_documents",
+      "hpx.native.transport.api.c4_graph",
+      "hpx.native.transport.api.c4_history",
+      "hpx.native.transport.api.c4_publication",
+      "hpx.native.transport.api.c4_working",
+      "hpx.native.transport.lifecycle.c4_lifecycle",
+      "hpx.native.transport.security.c4_bootstrap"
+    ],
+    "external": [
+      "hpx.browser.c4_protocol",
+      "hpx.native.authority.c4_checks",
+      "hpx.native.storage.c4_annotations",
+      "hpx.native.storage.c4_documents",
+      "hpx.native.storage.c4_graph",
+      "hpx.native.storage.c4_history",
+      "hpx.native.storage.c4_lifecycle",
+      "hpx.native.storage.c4_publication",
+      "hpx.native.storage.c4_working",
+      "hpx.native.transport.security.c4_compare",
+      "hpx.native.transport.security.c4_gates"
+    ]
+  },
+  "c4_application_transaction": {
+    "boxes": {
+      "hpx.native.storage.c4_publication": [
+        1320,
+        200,
+        420,
+        220
+      ],
+      "hpx.native.application.admission.validation_code": [
+        2280,
+        200,
+        420,
+        220
+      ],
+      "hpx.native.application.replay.records_code": [
+        1320,
+        630,
+        420,
+        220
+      ],
+      "hpx.native.application.dispatch.match_code": [
+        2280,
+        630,
+        420,
+        220
+      ],
+      "@gr1": [
+        1120,
+        100,
+        1780,
+        920
+      ],
+      "hpx.native.transport.api.c4_publication": [
+        100,
+        450.0,
+        420,
+        220
+      ],
+      "hpx.native.authority.c4_checks": [
+        3500,
+        240.0,
+        420,
+        220
+      ],
+      "hpx.native.storage.coordination_records": [
+        3500,
+        660.0,
+        420,
+        220
+      ]
+    },
+    "width": 4080,
+    "height": 1470,
+    "subject_group": "@gr1",
+    "internal": [
+      "hpx.native.application.admission.validation_code",
+      "hpx.native.application.dispatch.match_code",
+      "hpx.native.application.replay.records_code",
+      "hpx.native.storage.c4_publication"
+    ],
+    "external": [
+      "hpx.native.authority.c4_checks",
+      "hpx.native.storage.coordination_records",
+      "hpx.native.transport.api.c4_publication"
+    ]
+  },
+  "c4_application_features": {
+    "boxes": {
+      "@gr2": [
+        1200,
+        190,
+        1800,
+        420
+      ],
+      "hpx.native.application.dispatch.match_code": [
+        1890.0,
+        290,
+        420,
+        220
+      ],
+      "@gr3": [
+        1200.0,
+        740,
+        860.0,
+        1530
+      ],
+      "hpx.native.storage.coordination_documents": [
+        1420.0,
+        840,
+        420,
+        220
+      ],
+      "hpx.native.storage.coordination_branches": [
+        1420.0,
+        1210,
+        420,
+        220
+      ],
+      "hpx.native.storage.domain_forks": [
+        1420.0,
+        1580,
+        420,
+        220
+      ],
+      "hpx.native.storage.domain_merges": [
+        1420.0,
+        1950,
+        420,
+        220
+      ],
+      "@gr4": [
+        2140.0,
+        740,
+        860.0,
+        1900
+      ],
+      "hpx.native.storage.domain_working": [
+        2360.0,
+        840,
+        420,
+        220
+      ],
+      "hpx.native.storage.coordination_working_forks": [
+        2360.0,
+        1210,
+        420,
+        220
+      ],
+      "hpx.native.storage.coordination_private_refs": [
+        2360.0,
+        1580,
+        420,
+        220
+      ],
+      "hpx.native.storage.domain_assertions": [
+        2360.0,
+        1950,
+        420,
+        220
+      ],
+      "hpx.native.storage.domain_comments": [
+        2360.0,
+        2320,
+        420,
+        220
+      ],
+      "@gr1": [
+        1120,
+        100,
+        1960,
+        2640
+      ],
+      "hpx.native.storage.c4_publication": [
+        100,
+        1310.0,
+        420,
+        220
+      ],
+      "hpx.native.domain": [
+        3680,
+        1700,
+        420,
+        220
+      ],
+      "hpx.native.storage.coordination_records": [
+        3680,
+        1310,
+        420,
+        220
+      ],
+      "hpx.native.storage.domain_trace_driver": [
+        3680,
+        2380,
+        420,
+        220
+      ]
+    },
+    "width": 4260,
+    "height": 3190,
+    "subject_group": "@gr1",
+    "internal": [
+      "hpx.native.application.dispatch.match_code",
+      "hpx.native.storage.coordination_branches",
+      "hpx.native.storage.coordination_documents",
+      "hpx.native.storage.coordination_private_refs",
+      "hpx.native.storage.coordination_working_forks",
+      "hpx.native.storage.domain_assertions",
+      "hpx.native.storage.domain_comments",
+      "hpx.native.storage.domain_forks",
+      "hpx.native.storage.domain_merges",
+      "hpx.native.storage.domain_working"
+    ],
+    "external": [
+      "hpx.native.domain",
+      "hpx.native.storage.c4_publication",
+      "hpx.native.storage.coordination_records",
+      "hpx.native.storage.domain_trace_driver"
+    ]
+  },
+  "c4_application_reads": {
+    "boxes": {
+      "hpx.native.storage.c4_documents": [
+        1320,
+        200,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_history": [
+        2280,
+        200,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_graph": [
+        1320,
+        630,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_annotations": [
+        2280,
+        630,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_working": [
+        1320,
+        1060,
+        420,
+        220
+      ],
+      "hpx.native.storage.c4_publication": [
+        2280,
+        1060,
+        420,
+        220
+      ],
+      "@gr1": [
+        1120,
+        100,
+        1780,
+        1280
+      ],
+      "hpx.native.transport.api": [
+        100,
+        630.0,
+        420,
+        220
+      ],
+      "hpx.native.authority": [
+        3500,
+        240.0,
+        420,
+        220
+      ],
+      "hpx.native.storage.coordination_records": [
+        3500,
+        1020.0,
+        420,
+        220
+      ]
+    },
+    "width": 4080,
+    "height": 2780,
+    "subject_group": "@gr1",
+    "internal": [
+      "hpx.native.storage.c4_annotations",
+      "hpx.native.storage.c4_documents",
+      "hpx.native.storage.c4_graph",
+      "hpx.native.storage.c4_history",
+      "hpx.native.storage.c4_publication",
+      "hpx.native.storage.c4_working"
+    ],
+    "external": [
+      "hpx.native.authority",
+      "hpx.native.storage.coordination_records",
+      "hpx.native.transport.api"
+    ]
+  },
+  "c4_frontend_routing": {
+    "boxes": {
+      "@gr2": [
+        1200,
+        190,
+        1620,
+        420
+      ],
+      "hpx.native.transport.security.c4_gates": [
+        1300,
+        290,
+        420,
+        220
+      ],
+      "hpx.native.transport.assets.delivery_lookup": [
+        2300,
+        290,
+        420,
+        220
+      ],
+      "@gr3": [
+        1200,
+        740,
+        1620,
+        420
+      ],
+      "hpx.native.transport.responses.delivery_errors": [
+        1300,
+        840,
+        420,
+        220
+      ],
+      "hpx.native.transport.responses.delivery_writer": [
+        2300,
+        840,
+        420,
+        220
+      ],
+      "@gr1": [
+        1120,
+        100,
+        1780,
+        1300
+      ],
+      "hpx.native.frontend_assets.resources.map_code": [
+        100,
+        240.0,
+        420,
+        220
+      ],
+      "hpx.native.transport.https.delivery_socket": [
+        100,
+        640.0,
+        420,
+        220
+      ],
+      "hpx.browser.delivery_entry": [
+        100,
+        1040.0,
+        420,
+        220
+      ]
+    },
+    "width": 3060,
+    "height": 1850,
+    "subject_group": "@gr1",
+    "internal": [
+      "hpx.native.transport.assets.delivery_lookup",
+      "hpx.native.transport.responses.delivery_errors",
+      "hpx.native.transport.responses.delivery_writer",
+      "hpx.native.transport.security.c4_gates"
+    ],
+    "external": [
+      "hpx.browser.delivery_entry",
+      "hpx.native.frontend_assets.resources.map_code",
+      "hpx.native.transport.https.delivery_socket"
+    ]
+  },
+  "c4_frontend_delivery": {
+    "boxes": {
+      "@gr2": [
+        1200,
+        190,
+        1620,
+        850
+      ],
+      "frontend_builder.bundle_code": [
+        1300,
+        290,
+        420,
+        220
+      ],
+      "frontend_builder.cache_code": [
+        2300,
+        290,
+        420,
+        220
+      ],
+      "hpx.native.frontend_assets.embedding.build_code": [
+        1300,
+        720,
+        420,
+        220
+      ],
+      "@gr3": [
+        1200,
+        1170,
+        1620,
+        850
+      ],
+      "hpx.native.transport.assets.delivery_lookup": [
+        1300,
+        1270,
+        420,
+        220
+      ],
+      "hpx.native.frontend_assets.resources.map_code": [
+        2300,
+        1270,
+        420,
+        220
+      ],
+      "hpx.native.transport.responses.delivery_writer": [
+        1300,
+        1700,
+        420,
+        220
+      ],
+      "@gr1": [
+        1120,
+        100,
+        1780,
+        2020
+      ],
+      "frontend_inputs": [
+        100,
+        240.0,
+        420,
+        220
+      ],
+      "frontend_dist": [
+        100,
+        1000.0,
+        420,
+        220
+      ],
+      "hpx.native.transport.security.c4_gates": [
+        100,
+        1760.0,
+        420,
+        220
+      ],
+      "hpx.browser.delivery_entry": [
+        3500,
+        240.0,
+        420,
+        220
+      ],
+      "hpx.browser.c4_protocol": [
+        3500,
+        1760.0,
+        420,
+        220
+      ]
+    },
+    "width": 4080,
+    "height": 2570,
+    "subject_group": "@gr1",
+    "internal": [
+      "frontend_builder.bundle_code",
+      "frontend_builder.cache_code",
+      "hpx.native.frontend_assets.embedding.build_code",
+      "hpx.native.frontend_assets.resources.map_code",
+      "hpx.native.transport.assets.delivery_lookup",
+      "hpx.native.transport.responses.delivery_writer"
+    ],
+    "external": [
+      "frontend_dist",
+      "frontend_inputs",
+      "hpx.browser.c4_protocol",
+      "hpx.browser.delivery_entry",
+      "hpx.native.transport.security.c4_gates"
+    ]
+  },
+  "c4_domain_history": {
+    "boxes": {
+      "@gr2": [
+        1200,
+        190,
+        1620,
+        1280
+      ],
+      "hpx.native.domain.history_plans.ancestry": [
+        1300,
+        290,
+        420,
+        220
+      ],
+      "hpx.native.domain.history_plans.origins": [
+        2300,
+        290,
+        420,
+        220
+      ],
+      "hpx.native.domain.history_plans.selector": [
+        1300,
+        720,
+        420,
+        220
+      ],
+      "hpx.native.domain.history_plans.lineage": [
+        2300,
+        720,
+        420,
+        220
+      ],
+      "hpx.native.domain.history_plans.types": [
+        1300,
+        1150,
+        420,
+        220
+      ],
+      "hpx.native.domain.exact.records": [
+        2300,
+        1150,
+        420,
+        220
+      ],
+      "@gr3": [
+        1200,
+        1600,
+        1620,
+        420
+      ],
+      "hpx.native.domain.expansion_rules.validate": [
+        1800.0,
+        1700,
+        420,
+        220
+      ],
+      "@gr1": [
+        1120,
+        100,
+        1780,
+        2020
+      ],
+      "hpx.native.storage.domain_base_reader": [
+        100,
+        240.0,
+        420,
+        220
+      ],
+      "hpx.native.storage.domain_trace_driver": [
+        100,
+        746.6666666666667,
+        420,
+        220
+      ],
+      "hpx.native.storage.domain_origin_replay": [
+        100,
+        1253.3333333333335,
+        420,
+        220
+      ],
+      "hpx.native.domain.test_calls": [
+        100,
+        1760.0,
+        420,
+        220
+      ]
+    },
+    "width": 3060,
+    "height": 2570,
+    "subject_group": "@gr1",
+    "internal": [
+      "hpx.native.domain.exact.records",
+      "hpx.native.domain.expansion_rules.validate",
+      "hpx.native.domain.history_plans.ancestry",
+      "hpx.native.domain.history_plans.lineage",
+      "hpx.native.domain.history_plans.origins",
+      "hpx.native.domain.history_plans.selector",
+      "hpx.native.domain.history_plans.types"
+    ],
+    "external": [
+      "hpx.native.domain.test_calls",
+      "hpx.native.storage.domain_base_reader",
+      "hpx.native.storage.domain_origin_replay",
+      "hpx.native.storage.domain_trace_driver"
+    ]
+  }
+}

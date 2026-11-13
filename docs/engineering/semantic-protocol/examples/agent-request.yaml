@@ -1,0 +1,12 @@
+scp: HPX-SCP
+version: 0.6.0
+kind: request
+id: m-example-request
+sender: architect
+recipient: implementer
+conversation: example
+body:
+  action: implement
+  target: ClosedComposition
+  requirements: [REQ-031, REQ-042]
+  constraints: [preserve_revision_history]

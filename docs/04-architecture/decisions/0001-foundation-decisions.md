@@ -13,11 +13,15 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 The underlying decision retains its recorded acceptance. This new editorial wrapper does not expand that decision or imply implemented services.
 
 Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
+
+## Owner baseline reconciliation, 2026-10-30
+
+HPX-OWNER-027 supersedes “One human locally first” as a product-architecture restriction. One-human development remains permitted; multiple human/AI users and several AI agents in one workspace are mandatory baseline independent of federation. The original decision text below is retained as provenance. Other accepted foundation choices remain; [HPX-SUB-010](../../06-subsystems/ai-collaboration.md) defines the new scoped requirement.
 
 ## Status and decision date
 

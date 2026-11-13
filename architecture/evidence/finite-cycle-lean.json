@@ -1,0 +1,297 @@
+{
+  "stage": "HPX-DOM-001 finite cycle-state Lean model",
+  "date": "2026-10-31",
+  "request": {
+    "path": ".verification/scp-wire/messages/request-hpx-dom001-lean.yaml",
+    "id": "m-hpx-dom001-lean-20261031-01",
+    "validated_inbound": true,
+    "authority": "OWNER045 accepted semantics;owner-approved bounded request;not a product mechanism adoption"
+  },
+  "result": "pass_with_explicit_correspondence_limits",
+  "checks": [
+    {
+      "command": [
+        "lean",
+        "--version"
+      ],
+      "cwd": "proofs/lean",
+      "exit_code": 0,
+      "source": "Successful subprocess exits captured before static comment-scan failure;reused rather than rerun. Executed after Lean source finalization;prior to concurrent SCP0.6.1 upgrade."
+    },
+    {
+      "command": [
+        "lake",
+        "--version"
+      ],
+      "cwd": "proofs/lean",
+      "exit_code": 0,
+      "source": "Successful subprocess exits captured before static comment-scan failure;reused rather than rerun. Executed after Lean source finalization;prior to concurrent SCP0.6.1 upgrade."
+    },
+    {
+      "command": [
+        "lake",
+        "build"
+      ],
+      "cwd": "proofs/lean",
+      "exit_code": 0,
+      "source": "Successful subprocess exits captured before static comment-scan failure;reused rather than rerun. Executed after Lean source finalization;prior to concurrent SCP0.6.1 upgrade."
+    },
+    {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Hypergraph/CycleState.lean"
+      ],
+      "cwd": "proofs/lean",
+      "exit_code": 0,
+      "source": "Successful subprocess exits captured before static comment-scan failure;reused rather than rerun. Executed after Lean source finalization;prior to concurrent SCP0.6.1 upgrade.",
+      "stdout": "'Hypergraph.CycleState.sameState_equivalence' does not depend on any axioms\n'Hypergraph.CycleState.key_sound' does not depend on any axioms\n'Hypergraph.CycleState.sameState_iff' does not depend on any axioms\n'Hypergraph.CycleState.different_selection' does not depend on any axioms\n'Hypergraph.CycleState.coversSlots_map' does not depend on any axioms\n'Hypergraph.CycleState.nearest_witness' depends on axioms: [propext]\n'Hypergraph.CycleState.nearest_none' depends on axioms: [propext, Quot.sound]\n'Hypergraph.CycleState.available_descend' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.complete_covers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.active_descend' depends on axioms: [propext, Quot.sound]\n'Hypergraph.CycleState.rename_roundtrip' depends on axioms: [propext, Quot.sound]\n'Hypergraph.CycleState.renamed_descriptor_equality' depends on axioms: [propext, Quot.sound]\n'Hypergraph.CycleState.covers_unique' does not depend on any axioms\n'Hypergraph.CycleState.coversSlots_unique' does not depend on any axioms\n'Hypergraph.CycleState.ordered_length' does not depend on any axioms\n'Hypergraph.CycleState.boundary_justified' depends on axioms: [propext]\n'Hypergraph.CycleState.preflight_failure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.successful_coverage' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.adequate_budget' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.output_deterministic' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.warnings_visible' depends on axioms: [propext, Quot.sound]\n'Hypergraph.CycleState.every_boundary_warned' depends on axioms: [propext, Quot.sound]\n'Hypergraph.CycleState.no_automatic_open' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.authorized_click' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.denied_click' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.comparison_keeps_marker' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.click_keeps_marker' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.covered_target_path' does not depend on any axioms\n'Hypergraph.CycleState.ordered_targets_paths' does not depend on any axioms\n'Hypergraph.CycleState.only_resolution_clears' depends on axioms: [propext, Classical.choice, Quot.sound]\n'Hypergraph.CycleState.no_click_trace' depends on axioms: [propext, Classical.choice, Quot.sound]\n"
+    },
+    {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Hypergraph/CycleExamples.lean"
+      ],
+      "cwd": "proofs/lean",
+      "exit_code": 0,
+      "source": "Successful subprocess exits captured before static comment-scan failure;reused rather than rerun. Executed after Lean source finalization;prior to concurrent SCP0.6.1 upgrade."
+    },
+    {
+      "command": [
+        "lake",
+        "env",
+        "leanchecker",
+        "Hypergraph"
+      ],
+      "cwd": "proofs/lean",
+      "exit_code": 0,
+      "source": "Successful subprocess exits captured before static comment-scan failure;reused rather than rerun. Executed after Lean source finalization;prior to concurrent SCP0.6.1 upgrade."
+    },
+    {
+      "command": [
+        ".verification/semantic-protocol-venv/bin/python",
+        "scripts/validate_semantic_records.py"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "source": "Successful subprocess exits captured before static comment-scan failure;reused rather than rerun. Executed after Lean source finalization;prior to concurrent SCP0.6.1 upgrade."
+    }
+  ],
+  "named_theorems": [
+    "sameState_equivalence",
+    "key_sound",
+    "sameState_iff",
+    "different_selection",
+    "coversSlots_map",
+    "nearest_witness",
+    "nearest_none",
+    "available_descend",
+    "complete_covers",
+    "active_descend",
+    "rename_roundtrip",
+    "renamed_descriptor_equality",
+    "covers_unique",
+    "coversSlots_unique",
+    "ordered_length",
+    "boundary_justified",
+    "preflight_failure",
+    "successful_coverage",
+    "adequate_budget",
+    "output_deterministic",
+    "warnings_visible",
+    "every_boundary_warned",
+    "no_automatic_open",
+    "authorized_click",
+    "denied_click",
+    "comparison_keeps_marker",
+    "click_keeps_marker",
+    "covered_target_path",
+    "ordered_targets_paths",
+    "only_resolution_clears",
+    "no_click_trace"
+  ],
+  "theorem_count": 31,
+  "model_guard_count": 33,
+  "axiom_union": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "axiom_free_count": 10,
+  "no_project_axioms_or_placeholders": true,
+  "source_sha256": {
+    "proofs/lean/Hypergraph/CycleState.lean": "4edbdd06ea3895f559c8defda6bd61009ccdfa589247e1173a209baa89a2c993",
+    "proofs/lean/Hypergraph/CycleExamples.lean": "0a33e158fc42d924bffa9119529938627be62b61bd54ceaa6e80325a83fccff9",
+    "proofs/lean/Hypergraph.lean": "6f54ff9785708943c1b6fe228182b351dfdc35d04825eb63d4ce9fdbdd09daab",
+    "proofs/lean/Hypergraph/Expansion.lean": "ff74aa4802f979d79e9c25e69f514379148abf890e58619dc916aa77214c3f7d",
+    "proofs/lean/lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
+    "proofs/lean/lakefile.toml": "8c3d8daa40c560f4a4d2c8ceaa5164916793fbe8df958a4eede4bb705e0f85fb",
+    "proofs/lean/lake-manifest.json": "8dc018eec747831c3900fbb06298dfda82707e46132cacd9c41ca1a46dc228b1",
+    "proofs/rust/Spend.lean": "feef095d9ad83706fa45ff0112cf40a9cced536527db7d7e48d200855b32cc9b",
+    "proofs/rust/SpendProof.lean": "e61df9d66ff4da04af2e6ca860a8a01eab195811d7562032fc0732d2578e0875",
+    "proofs/rust/extraction.json": "2649ede145dece8d6b9a31d67e98a297081d5d45549bb13e5f58eed9729ad5f2"
+  },
+  "pinned_tool_restore": {
+    "reason": "Prior temporary installation had empty bin directory;not a macOS tool failure",
+    "official_asset": "https://github.com/leanprover/lean4/releases/download/v4.35.0/lean-4.35.0-darwin_aarch64.tar.zst",
+    "official_digest": "sha256:c0c6f34f35ba1dcc5c4a5fd106fefab9eb5e8469712624dd2c868d51b63177c2",
+    "download_sha256": "c0c6f34f35ba1dcc5c4a5fd106fefab9eb5e8469712624dd2c868d51b63177c2",
+    "license_review": "docs/02-governance/licensing-policy.md;Apache-2.0;unchanged pinned release;external Lake packages empty"
+  },
+  "layout": {
+    "syntaxErrors": [],
+    "elements": 204,
+    "relations": 408,
+    "views": 45,
+    "navigationLinks": 216,
+    "affectedServed": {
+      "c3_pure_domain": {
+        "layout": "manual",
+        "drifts": 0,
+        "nodes": 9,
+        "edges": 7,
+        "hash": "wqyFFX7tb60tniKquoFFVtgoKe4eFmofx3B7lvwH-eU",
+        "geometryLabelsPathsPreserved": true,
+        "currentProofNotesServed": true
+      },
+      "concept_identity_closure": {
+        "layout": "manual",
+        "drifts": 0,
+        "nodes": 8,
+        "edges": 8,
+        "hash": "v4UyIsP8ezusUxcTaJ_KY_3i2ZDspW-_G44zPiARt-U",
+        "geometryLabelsPathsPreserved": true,
+        "currentProofNotesServed": true
+      }
+    },
+    "metadataSynchronized": [
+      [
+        "c3_pure_domain",
+        "hpx.native.domain.expansion_rules",
+        "notes"
+      ],
+      [
+        "concept_identity_closure",
+        "hpx.native.domain.exact.concept_snapshot",
+        "notes"
+      ]
+    ],
+    "renderedVisualInspection": false,
+    "completeLayoutSweep": "not_run:two view-note overrides only;AGENTS26 scoped check",
+    "service": "Existing MCP served baselines reused;one-shot workspace service required to read computed notes and synchronize stale snapshot metadata;manual views served and verified after sync."
+  },
+  "preservation": {
+    "baseline_files": 4467,
+    "changed_existing_files": [
+      "AGENTS.md",
+      "proofs/lean/Hypergraph.lean",
+      "docs/07-implementation/formal-invariants.md",
+      "docs/registers/open-questions.csv",
+      "docs/registers/requirements.csv",
+      "docs/registers/tests.csv",
+      "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+      "docs/08-assurance/formal-validation-digest.md",
+      "docs/05-domain/hypergraph-mathematics.md",
+      "architecture/.likec4/c3_pure_domain.likec4.snap",
+      "architecture/.likec4/concept_identity_closure.likec4.snap",
+      "architecture/audits/dom001-current-coverage.md",
+      "architecture/audits/specification-migration-status.md",
+      "architecture/Conceptual/identity-closure.c4",
+      "architecture/C3/pure-domain.c4",
+      "architecture/proposals/finite-cycle-closure-state.md",
+      "architecture/proposals/finite-cycle-lean-plan.md"
+    ],
+    "concurrent_changes_preserved": [
+      "tests/test_recovery_and_amendments.py",
+      "tests/test_scp_wire.py",
+      "tests/test_bootstrap_semantic_protocol.py",
+      "tests/__pycache__/test_recovery_and_amendments.cpython-314.pyc",
+      "tests/__pycache__/test_scp_wire.cpython-314.pyc",
+      "tests/__pycache__/test_bootstrap_semantic_protocol.cpython-314.pyc",
+      "tests/__pycache__/test_semantic_records.cpython-314.pyc",
+      "docs/engineering/semantic-protocol/CHANGELOG.md",
+      "docs/engineering/semantic-protocol/AGENTS.md.fragment",
+      "docs/engineering/semantic-protocol/README.md",
+      "docs/engineering/semantic-protocol/INSTALL_PROMPT.md",
+      "docs/engineering/semantic-protocol/PROTOCOL.md",
+      "docs/engineering/semantic-protocol/amendments/registry.json",
+      "scripts/scp_wire.py",
+      "scripts/__pycache__/rebuild_semantic_appendix.cpython-314.pyc",
+      "scripts/__pycache__/bootstrap_semantic_protocol.cpython-314.pyc",
+      "scripts/__pycache__/protocol_amendments.cpython-314.pyc",
+      "scripts/__pycache__/validate_semantic_records.cpython-314.pyc",
+      "scripts/__pycache__/scp_wire.cpython-314.pyc",
+      "scripts/__pycache__/protocol_recovery.cpython-314.pyc",
+      "scripts/__pycache__/protocol_context.cpython-314.pyc"
+    ],
+    "concurrent_upgrade": "SCP0.6.1 installed by coordinator during stage;AGENTS and development-state protocol subsections also changed externally and were preserved. No protocol/test-source modifications by this task.",
+    "protected_unchanged_files": 4429,
+    "application_frontend_C4_original_sequences": "byte-identical",
+    "historical_records": 10,
+    "historical_record_hashes_preserved": true,
+    "unaffected_manual_snapshots": 30,
+    "canonical_scopes": 24,
+    "migration_table_counts": {
+      "Fully migrated": 1,
+      "Partially migrated": 24,
+      "Not migrated — subject specifications": 13,
+      "Not migrated — supporting records": 33
+    },
+    "five_gap_rows": "retained,not closed by proof allocation"
+  },
+  "assurance_limits": [
+    "Finite validated-total-table semantic model;actual authenticated/source-faithful loader and validation of WellFormed/source dependency completeness not proved.",
+    "Budget is result-use admission after finite construction;no early CPU/byte/I/O/stack/scheduler bound.",
+    "Ordered exact-use result deterministic;source-emission/boundary bytes/source-map relation still unadopted and unproved.",
+    "Descriptor equality rename invariance checked;not a minimal bisimulation quotient or complete traversal/Rust conversion theorem.",
+    "Warnings/actions and supplied permission/events modeled;pixels/accessibility/backend permission/event provenance/recovery and Rust correspondence unproved.",
+    "No application/runtime/format/provider/trust/commit/publication action;old extracted helper sources preserved,not re-extracted/replayed."
+  ],
+  "development_failures": "Initial core API/mutual recursor/comparison-instance errors corrected;wrong-directory Lake calls failed before finding a project. Initial saved-versus-served comparison found serializer label-wrap/null-field differences and made no mutation;final checks compare saved and served baselines within their respective representations.",
+  "next_dependency": "Owner choice of cycle-boundary source-emission policy before proving exact emitted composite-source correspondence.",
+  "documentation": {
+    "command": ".verification/semantic-protocol-venv/bin/python scripts/verify_documentation.py",
+    "exit_code": 0,
+    "materialized": 71,
+    "reserved": 27,
+    "requirement_seeds": 38,
+    "local_archive_bytes": "not_run;unchanged private source scope"
+  },
+  "current_record_validation": {
+    "command": ".verification/semantic-protocol-venv/bin/python scripts/validate_semantic_records.py",
+    "canonical": 10,
+    "examples": 5,
+    "errors": 0,
+    "protocol_context": "v0.6.1 verified after concurrent upgrade;historical JSON versions preserved"
+  },
+  "scoped_note_links": "owning-note Markdown target files/heading anchors resolve",
+  "whitespace": "changed source/prose/register lines checked with CRLF-aware handling;intentional Markdown hard breaks allowed",
+  "next_owner_question": {
+    "question": "At a stopped cycle,should reconstructed composite source retain its original inclusion notation with warning/navigation metadata separate (recommended),or insert generated placeholder text? Neither alternative is adopted by the checked state model;graph-only inclusions without textual notation need explicit treatment in the selected policy.",
+    "status": "proposed_question;no_adoption",
+    "dependent_work": "Exact emitted-source/boundary source-map proof",
+    "independent_completed_work": "Finite-state traversal/ordered coverage/determinism and warning/navigation model proofs"
+  },
+  "communication": {
+    "original_request": "Validated under v0.6.0 before concurrent upgrade;task authority retained",
+    "v061_ready": {
+      "id": "m-bcc31bfa870347e69b48b5ed56ad69d8",
+      "binding": "accept-ready passed against pending hello;SESSION READY"
+    },
+    "completion_handoff": {
+      "version": "0.6.1",
+      "kind": "handoff",
+      "validated_outbound": true,
+      "transport": "complete literal YAML via send_message",
+      "messageId": "ce52b222-a3ad-4e49-b604-d6496e266c5b",
+      "delivery": "started;processing",
+      "peer_acknowledgment": "not_confirmed"
+    },
+    "reason_for_handoff": "Original request belongs to retired v0.6.0 session;current-version handoff carries original request ID and full result/limits without rewriting old session history."
+  }
+}

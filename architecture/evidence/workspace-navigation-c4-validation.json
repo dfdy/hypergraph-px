@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-30",
+  "scope": "Workspace and contents navigation C4 source-linked implementation only",
+  "checks": {
+    "one_c4_view_added": true,
+    "existing_model_elements_and_relationships_preserved": true,
+    "37_prior_views_preserved_except_intended_parent_navigation": true,
+    "all_23_prior_saved_geometries_preserved": true,
+    "seven_actual_code_areas_inside_subject_boundary": true,
+    "33_single_cubic_links_clear_boxes_labels_and_subject_boundary": true,
+    "all_38_views_reachable": true,
+    "c4_has_matching_c3_expansion_home": true,
+    "all_local_dsl_link_literals_including_inline_relationship_links_resolve": true,
+    "new_code_alias_source_paths_exist": true,
+    "named_navigation_and_context_functions_found": true,
+    "protected_application_files_byte_identical": true,
+    "likec4_model_and_saved_layouts_validate": true
+  },
+  "counts": {
+    "views": 38,
+    "source_files": 19,
+    "internal_code_areas": 7,
+    "outside_contexts": 9,
+    "connections": 33,
+    "curve_sample_points_each": 321,
+    "prior_saved_geometries_preserved": 23,
+    "local_source_link_literals_checked": 1112,
+    "protected_files": 429
+  },
+  "likec4_validation": {
+    "valid": true,
+    "errors": [],
+    "stats": {
+      "totalFiles": 19,
+      "totalErrors": 0,
+      "filteredFiles": 19,
+      "filteredErrors": 0
+    }
+  },
+  "source_hashes": {
+    "architecture/C4/workspace-navigation.c4": "33f8f170420b65d0d38f0c54f82a23a119bb77b63314f0f49eff80ef98658d17",
+    "architecture/C3/browser-organisation.c4": "7aa69d2a8c914c17b766fd862a1b50907a7c4bd52c5d0e99ed4fab3a9c52919f"
+  },
+  "limits": [
+    "Selected source/specification/test-source review;application tests not run.",
+    "Native static preview is not actual VS Code rendering acceptance.",
+    "No application code/build/launch,browser,generation,proof,trust/provider/workspace,commit or publication.",
+    "Code aliases are existing fragments/providers,not new modules;History lens/general workspace resolver remain incomplete."
+  ],
+  "documentation_verification": {
+    "command": "python3 scripts/verify_documentation.py",
+    "exit_code": 0,
+    "archive_bytes": "skipped as reported"
+  },
+  "native_static_preview": "inspected without browser;not actual VS Code acceptance",
+  "commands_executed": [
+    "LikeC4 1.60.0 export json",
+    "LikeC4 1.60.0 validate --json architecture",
+    "Python source/function/navigation/321-point curve/preservation checks",
+    "Swift/AppKit native static preview inspected",
+    "python3 scripts/verify_documentation.py"
+  ]
+}

@@ -1,0 +1,31 @@
+import {test,expect} from './fixtures.js';
+import {build} from 'esbuild';
+import {fileURLToPath} from 'node:url';
+import {readFile} from 'node:fs/promises';
+let bundle;const styles=await readFile(new URL('../../styles.css',import.meta.url),'utf8');
+test.beforeAll(async()=>{const result=await build({stdin:{contents:"import {openParentComparison} from './src/runtime-branch-comparison.js';window.openComparison=openParentComparison;",resolveDir:fileURLToPath(new URL('../../',import.meta.url))},bundle:true,format:'iife',write:false});bundle=result.outputFiles[0].text;});
+async function open(page){await page.goto('about:blank');await page.addStyleTag({content:styles});await page.addScriptTag({content:bundle});await page.evaluate(()=>{
+ window.calls=[];window.delay=false;window.valid=true;window.denied=false;
+ const id=n=>Array(32).fill(n),text='<script>😀\r\nAfter table and math\r';
+ window.adapter={lifecycle:'unlocked',parentComparison:async(document,branch)=>{window.calls.push({document,branch});if(window.delay)await new Promise(r=>window.release=r);if(window.denied)throw Error('Current scope denied');return {source_name:'Alternative',parent_name:'Original branch',source_snapshot:id(1),parent_snapshot:id(2)};},snapshot:async(_doc,snapshot)=>({text:snapshot[0]===1?text:'Parent e\u0301\n'})};
+ window.open=()=>window.openComparison(window.adapter,'captured',id(9),()=>window.valid);window.open();
+ });}
+test('comparison shows inert exact committed bytes and explicit pending-draft exclusion',async({page})=>{
+ await open(page);const popup=page.getByRole('dialog',{name:'Compare committed branch with parent'});await expect(popup.getByRole('status')).toHaveText('Committed snapshots differ.');await expect(popup).toContainText('Pending edits on either branch are excluded.');expect(await popup.getByLabel('Selected branch · committed').textContent()).toBe('<script>😀\r\nAfter table and math\r');expect(await popup.getByLabel('Parent branch · committed').textContent()).toBe('Parent e\u0301\n');await expect(popup.locator('script')).toHaveCount(0);await page.keyboard.press('Escape');await expect(popup).toHaveCount(0);
+});
+test('closing, lock and invalidated parent view discard a delayed comparison context',async({page})=>{
+ for(const action of ['close','lock','obsolete']){await open(page);await expect(page.getByRole('status')).toHaveText('Committed snapshots differ.');await page.evaluate(()=>window.delay=true);await page.getByRole('button',{name:'Refresh comparison'}).click();await expect.poll(()=>page.evaluate(()=>!!window.release)).toBe(true);if(action==='close')await page.keyboard.press('Escape');else await page.evaluate(action=>{if(action==='lock')window.adapter.lifecycle='locked';else window.valid=false;},action);await page.evaluate(()=>window.release());await expect(page.locator('.snapshot-comparison-columns')).toHaveCount(0);}
+});
+test('failed exact snapshot resolution does not display a partial source or retain older success',async({page})=>{
+ await open(page);await expect(page.getByRole('status')).toHaveText('Committed snapshots differ.');await page.evaluate(()=>window.adapter.snapshot=async(_doc,snapshot)=>{if(snapshot[0]===2)throw Error('Source unavailable');return {text:'Unpaired source'};});await page.getByRole('button',{name:'Refresh comparison'}).click();await expect(page.getByRole('status')).toHaveText('Comparison unavailable: Source unavailable');await expect(page.locator('.snapshot-comparison-columns')).toHaveCount(0);
+});
+async function enableBase(page){await page.evaluate(()=>{document.querySelector('dialog').close();window.adapter.features={parentBase:true};window.adapter.parentBase=async()=>{if(window.delayBase)await new Promise(resolve=>window.releaseBase=resolve);return {selection:{result:'base',snapshot:Array(32).fill(3),source_in_target:false,target_in_source:false}};};const snapshot=window.adapter.snapshot;window.adapter.snapshot=async(doc,id)=>id[0]===3?{text:'Common <script> 😀\r\nBase\r'}:snapshot(doc,id);window.open();});}
+test('common-base inspection renders inert exact source without replacing the committed pair',async({page})=>{
+ await open(page);await enableBase(page);const popup=page.getByRole('dialog',{name:'Compare committed branch with parent'});await popup.getByRole('button',{name:'Inspect common base'}).click();await expect(popup.getByLabel('Common committed base')).toBeVisible();expect(await popup.getByLabel('Common committed base').textContent()).toBe('Common <script> 😀\r\nBase\r');expect(await popup.getByLabel('Selected branch · committed').textContent()).toBe('<script>😀\r\nAfter table and math\r');await expect(popup.locator('script')).toHaveCount(0);await expect(popup).toContainText('Inspection preserves both branches and their pending edits.');
+});
+test('common-base results are discarded after close, lock, invalidation or comparison refresh',async({page})=>{
+ for(const action of ['close','lock','obsolete','refresh']){await open(page);await enableBase(page);await page.evaluate(()=>window.delayBase=true);await page.getByRole('button',{name:'Inspect common base'}).click();await expect.poll(()=>page.evaluate(()=>!!window.releaseBase)).toBe(true);if(action==='close')await page.keyboard.press('Escape');else if(action==='refresh')await page.getByRole('button',{name:'Refresh comparison'}).click();else await page.evaluate(action=>{if(action==='lock')window.adapter.lifecycle='locked';else window.valid=false;},action);await page.evaluate(()=>window.releaseBase());await expect(page.getByLabel('Common committed base')).toHaveCount(0);}
+});
+test('failed common-base snapshot lookup leaves the compared versions available without partial base text',async({page})=>{
+ await open(page);await enableBase(page);await page.evaluate(()=>{const snapshot=window.adapter.snapshot;window.adapter.snapshot=async(doc,id)=>{if(id[0]===3)throw Error('Source unavailable');return snapshot(doc,id);};});await page.getByRole('button',{name:'Inspect common base'}).click();await expect(page.getByRole('dialog')).toContainText('Common base unavailable: Source unavailable');await expect(page.getByLabel('Common committed base')).toHaveCount(0);await expect(page.getByLabel('Selected branch · committed')).toBeVisible();
+});

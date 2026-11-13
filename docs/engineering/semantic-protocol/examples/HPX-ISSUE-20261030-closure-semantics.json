@@ -1,0 +1,27 @@
+{
+  "protocol_version": "0.1.0",
+  "record_version": 1,
+  "id": "HPX-ISSUE-20261030-closure-semantics",
+  "kind": "issue",
+  "subject": "ClosedComposition",
+  "summary": "Meaning of closure must be resolved before an implementation contract can be accepted.",
+  "status": "open",
+  "authority": {
+    "basis": "agent_proposal"
+  },
+  "source_refs": [],
+  "relations": [
+    {
+      "type": "derived_from",
+      "target": "HPX-PROP-20261030-closed-composition"
+    }
+  ],
+  "actor": "agent:architecture",
+  "created_on": "2026-10-30",
+  "content": {
+    "problem": "The sketch does not determine whether ClosedComposition is self-contained or merely pins dependencies.",
+    "impact": "Reconstruction and retention guarantees depend on this distinction.",
+    "blocking": true,
+    "next_action": "Request owner review and document the agreed meaning as an approved decision."
+  }
+}

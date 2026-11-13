@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-29",
+  "result": "passed",
+  "scope": "C2 presentation only",
+  "snapshot_sha256": "62aa447cb4a8dd101fc809d204c741685c5daefab6bf915859663941c54fd4da",
+  "prior_snapshot_sha256": "9a688b71a13741c526a4adf50586126a910d7128b1ecc3ef7b207564d828d61f",
+  "source_sha256": "95479c715ba57932179cb6a46f7880783046469df510fb5e91eab77d32941172",
+  "checks": [
+    "LikeC4 full validation: zero diagnostics",
+    "Model elements and relationships byte-equivalent as parsed",
+    "All 16 named C2 elements and 17 relationships retained",
+    "Leaf boxes do not overlap; groups contain their children",
+    "Curve sampling avoids unrelated leaf boxes; labels avoid boxes and each other",
+    "Snapshot hash matches current computed view",
+    "C1 and C3 view hashes unchanged; C2-to-C3 navigation retained",
+    "Browser-free geometry preview inspected"
+  ],
+  "limits": [
+    "Geometry preview uses a native drawing helper, not actual VS Code webview rendering",
+    "Manual C2 snapshot remains local under existing .likec4 ignore policy; previous snapshot preserved under ignored artifacts",
+    "No browser opened; no application source or runtime changes"
+  ]
+}

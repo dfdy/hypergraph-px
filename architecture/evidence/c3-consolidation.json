@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-29",
+  "result": "passed",
+  "scope": "Owner-requested single C3 diagram consolidation; presentation grouping and refinement of one generic planned flow only",
+  "c3_views": 1,
+  "component_responsibilities": 24,
+  "leaf_components": 23,
+  "presentation_groups": 6,
+  "existing_native_calls": 36,
+  "planned_flows": 18,
+  "connections": 54,
+  "generic_flow_refinement": "Original approved integration execution to the integration boundary is shown separately to its six already specified adapters; no new execution behavior adopted.",
+  "checks": [
+    "Only C1, C2 and one C3 view remain",
+    "All 24 existing component identities, status, source links and requirement mappings retained",
+    "All 54 current logical flows appear in C3",
+    "All original relationships retained except the generic-to-six refinement",
+    "Functional groups nested inside one executable boundary; planned adapters nested together",
+    "No leaf box overlaps; all groups contain their children",
+    "All curve samples avoid unrelated component boxes",
+    "No label overlaps a component or another label; all labels within canvas",
+    "Snapshot hash matches current view source",
+    "No navigation targets removed views",
+    "C1/C2 computed hashes and saved C2 layout unchanged",
+    "Captured application/proof inputs unchanged"
+  ],
+  "protected_inputs_unchanged": 216,
+  "source_sha256": "338f130c2dd72fe412fe9fd45e3eeadcea8e2c7fd3e58e1eb5c81f3aa047fc63",
+  "snapshot_sha256": "56af05e377b583f8db9d8f8a918f29975151e2f0cc22f8ad037cc9a47ef24a49",
+  "limits": [
+    "No browser opened; geometry preview is a native drawing approximation, not the actual VS Code webview",
+    "No application build/regression, deployment, proof, provider/trust action or publication",
+    "Large diagram is intended for zoom/pan; grouping does not create services or crates"
+  ],
+  "palette": "Editorial status convention: green bounded implemented, amber partial, muted dashed planned. C2 blue is default styling, not a completeness claim.",
+  "likec4_validation": {
+    "valid": true,
+    "files": 3,
+    "errors": 0
+  },
+  "documentation_verification": {
+    "result": "passed",
+    "materialized_contracts": 63,
+    "local_archive_replay": "not executed"
+  }
+}

@@ -1,0 +1,542 @@
+// Focused C3 responsibilities; interpretations remain proposed, not new modules/services.
+specification {
+  relationship coverage_call { line solid; color slate }
+  relationship coverage_data { line dotted; color slate }
+  relationship coverage_plan { line dashed; color muted }
+}
+model {
+  extend hpx.native.application {
+    admission = component "Command admission and transaction scope" {
+      #implemented
+      description "Frozen command validation, original digest and current writer transaction scope in existing Workspace methods. Current authority precedes protected replay; session authentication/unlock occur outside this responsibility."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/lib.rs"] symbols ["validate_command", "execute_inner"] }
+      link ../../docs/04-architecture/component-architecture.md
+      link ../../docs/07-implementation/protocols/draft-publication.md
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../crates/storage/src/lib.rs
+    }
+  }
+  extend hpx.native.application {
+    replay = component "Original operation and receipt reconciliation" {
+      #implemented
+      description "Compare exact operation/digest and recheck current result authority; authorized exact retry returns the original receipt before mutable generation preconditions. This is local replay, not exactly-once external delivery."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/lib.rs", "crates/storage/src/authority.rs"] symbols ["execute_inner", "receipt", "outcome"] }
+      link ../../docs/04-architecture/component-architecture.md
+      link ../../docs/07-implementation/protocols/draft-publication.md
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../crates/storage/src/lib.rs
+      link ../../crates/storage/src/authority.rs
+    }
+  }
+  extend hpx.native.application {
+    dispatch = component "Feature operation coordination" {
+      #implemented
+      description "Existing Command match delegates to co-located document/branch, Fork/synthesis, checkpoint/reference, assertion and comment helpers. Helpers invoke pure rules and stage effects in the same transaction; no new dispatcher module or service is selected."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/lib.rs"] symbols ["execute_inner"] }
+      link ../../docs/04-architecture/component-architecture.md
+      link ../../docs/07-implementation/protocols/draft-publication.md
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../crates/storage/src/lib.rs
+    }
+  }
+  extend hpx.native.application {
+    publication = component "Atomic outcome and receipt publication" {
+      #implemented
+      description "One existing transaction binds the staged feature result and original receipt before COMMIT. Draft acknowledgement is not an immutable text Commit; Commit/history construction remains feature-specific. No second transaction manager is introduced."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/lib.rs"] symbols ["execute_inner", "write_draft"] }
+      link ../../docs/04-architecture/component-architecture.md
+      link ../../docs/07-implementation/protocols/draft-publication.md
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../crates/storage/src/lib.rs
+    }
+  }
+  extend hpx.native.application {
+    reads = component "Protected read entry points" {
+      #implemented
+      description "Logical group of existing protected Workspace read methods; runtime calls these directly rather than through execute. Current scope and bounded consistent views remain method-specific. No shared read facade or general navigation engine exists."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/lib.rs", "crates/storage/src/history.rs", "crates/storage/src/graph.rs", "crates/storage/src/assertions.rs", "crates/storage/src/comments.rs"] symbols ["list_documents", "reconstruct_snapshot", "history_page", "document_fork_graph", "assertion_page", "comments_page"] }
+      link ../../docs/04-architecture/component-architecture.md
+      link ../../docs/07-implementation/protocols/draft-publication.md
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../crates/storage/src/lib.rs
+      link ../../crates/storage/src/history.rs
+      link ../../crates/storage/src/graph.rs
+      link ../../crates/storage/src/assertions.rs
+      link ../../crates/storage/src/comments.rs
+    }
+  }
+  extend hpx.native.storage {
+    access = component "Workspace creation and supported opening" {
+      #implemented
+      description "Create-only local workspace and explicit existing-file opening; normal readers accept schemas1/2, authenticate catalog and configure bundled SQLite WAL/FULL. Passphrase is default; no implicit migration, creation on open, keychain enrollment or schema3 activation."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/lib.rs", "crates/storage/src/keychain.rs"] symbols ["create", "open", "from_key", "open_existing", "configure", "bootstrap"] }
+      link ../../docs/06-subsystems/workspace-storage.md
+      link ../../docs/06-subsystems/formats/hpx-workspace.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../docs/04-architecture/decisions/0006-domain-serialization-boundary.md
+      link ../../crates/storage/src/lib.rs
+      link ../../crates/storage/src/keychain.rs
+    }
+  }
+  extend hpx.native.storage {
+    records = component "Versioned record and envelope boundary" {
+      #implemented
+      description "Adapter-owned strict record version/kind decoding and typed identity/snapshot codecs. Cipher builds expected workspace/kind/identity/generation binding and invokes crypto; domain records remain dependency-free. Crypto context authentication is not current authorization."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/encoding.rs", "crates/storage/src/lib.rs"] symbols ["encode_record", "decode_record", "Cipher", "context"] }
+      link ../../docs/06-subsystems/workspace-storage.md
+      link ../../docs/06-subsystems/formats/hpx-workspace.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../docs/04-architecture/decisions/0006-domain-serialization-boundary.md
+      link ../../crates/storage/src/encoding.rs
+      link ../../crates/storage/src/lib.rs
+    }
+  }
+  extend hpx.native.storage {
+    record_store = component "Immutable records and mutable heads" {
+      #implemented
+      description "Existing SQLite object/slot operations, immutable insertion and expected-generation updates participate in caller-owned transactions. Encrypted record bodies coexist with visible bootstrap/structural metadata and WAL/SHM. No database server or independent storage process."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/lib.rs"] symbols ["Cipher", "object", "insert", "slot", "new_slot", "update"] }
+      link ../../docs/06-subsystems/workspace-storage.md
+      link ../../docs/06-subsystems/formats/hpx-workspace.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../docs/04-architecture/decisions/0006-domain-serialization-boundary.md
+      link ../../crates/storage/src/lib.rs
+    }
+  }
+  extend hpx.native.crypto {
+    material = component "Managed key lifetime and entropy" {
+      #implemented
+      description "OS-random key/nonce/salt generation and zeroizing managed secret buffers. No fallback entropy, raw data-key export, complete hostile-host erasure guarantee or TLS-key management."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/crypto/src/lib.rs"] symbols ["SecretKey", "generate", "random"] }
+      link ../../docs/06-subsystems/interfaces/crypto-adapter.md
+      link ../../docs/06-subsystems/formats/crypto-envelopes.md
+      link ../../docs/04-architecture/decisions/0002-trusted-server-envelopes.md
+      link ../../crates/crypto/src/lib.rs
+    }
+  }
+  extend hpx.native.crypto {
+    envelopes = component "Context-bound record encryption" {
+      #implemented
+      description "Bounded authenticated object envelopes using caller-supplied expected context; plaintext is returned only after authentication. Purpose/binding are not permission grants. No record decoding, file/network IO or policy decisions."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/crypto/src/lib.rs"] symbols ["seal", "open", "Context", "object_aad"] }
+      link ../../docs/06-subsystems/interfaces/crypto-adapter.md
+      link ../../docs/06-subsystems/formats/crypto-envelopes.md
+      link ../../docs/04-architecture/decisions/0002-trusted-server-envelopes.md
+      link ../../crates/crypto/src/lib.rs
+    }
+  }
+  extend hpx.native.crypto {
+    wrapping = component "Passphrase and device-secret wrapping" {
+      #implemented
+      description "Wrap/unlock the same workspace data key against expected workspace/epoch, with exact supported framing/profile guards before derivation. Retained old wrappers remain usable; no implicit rotation, revocation or new custody mode."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/crypto/src/lib.rs"] symbols ["wrap", "unlock", "wrap_aad", "check_passphrase"] }
+      link ../../docs/06-subsystems/interfaces/crypto-adapter.md
+      link ../../docs/06-subsystems/formats/crypto-envelopes.md
+      link ../../docs/04-architecture/decisions/0002-trusted-server-envelopes.md
+      link ../../crates/crypto/src/lib.rs
+    }
+  }
+  extend hpx.native.crypto {
+    derivation = component "Bounded password derivation" {
+      #implemented
+      description "Fixed Argon2id profile, checked allocation and zeroizing KDF backing memory; caller passphrase allocations/concurrent aggregate work are outside this primitive. No password storage or provider lookup."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/crypto/src/lib.rs"] symbols ["derive"] }
+      link ../../docs/06-subsystems/interfaces/crypto-adapter.md
+      link ../../docs/06-subsystems/formats/crypto-envelopes.md
+      link ../../docs/04-architecture/decisions/0002-trusted-server-envelopes.md
+      link ../../crates/crypto/src/lib.rs
+    }
+  }
+  extend hpx.native.crypto {
+    addressing = component "Ciphertext address calculation" {
+      #implemented
+      description "SHA256 of complete encrypted bytes, separate from logical identity and authentication. Existing tests consume this helper; no production storage consumer was found. SQLite object identity must not be depicted as ciphertext-hash addressing."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/crypto/src/lib.rs"] symbols ["storage_address", "StorageAddress"] }
+      link ../../docs/06-subsystems/interfaces/crypto-adapter.md
+      link ../../docs/06-subsystems/formats/crypto-envelopes.md
+      link ../../docs/04-architecture/decisions/0002-trusted-server-envelopes.md
+      link ../../crates/crypto/src/lib.rs
+    }
+  }
+  extend hpx.native.keychain {
+    lifecycle = component "Explicit enrollment and removal" {
+      #implemented
+      description "Enrollment/removal require explicit unlocked owner scope; status can read bootstrap enrollment while locked without accessing native credentials. Preserve passphrase wrapper; schema1 upgrade first verifies backup. Create native item before wrapper commit; remove wrapper before native deletion. No startup enrollment or general key revocation."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/keychain.rs"] symbols ["enroll_keychain", "remove_keychain", "current_keychain_status", "keychain_status", "check_owner"] }
+      link ../../docs/04-architecture/decisions/0014-keychain-unlock-policy.md
+      link ../../docs/06-subsystems/security-cryptography.md
+      link ../../docs/06-subsystems/formats/hpx-workspace.md
+      link ../../crates/storage/src/keychain.rs
+    }
+  }
+  extend hpx.native.keychain {
+    unlock = component "Workspace-bound alternative unlock" {
+      #implemented
+      description "Explicitly load the selected workspace device secret and unlock/verify the same data key; authenticate catalog through supported workspace opening. No browser keys, human passphrase storage or session/resource authorization grant."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/keychain.rs"] symbols ["open_keychain", "verify_secret"] }
+      link ../../docs/04-architecture/decisions/0014-keychain-unlock-policy.md
+      link ../../docs/06-subsystems/security-cryptography.md
+      link ../../docs/06-subsystems/formats/hpx-workspace.md
+      link ../../crates/storage/src/keychain.rs
+    }
+  }
+  extend hpx.native.keychain {
+    provider = component "Native scoped credential operations" {
+      #implemented
+      description "Actual native provider boundary: inert capability query, create-only workspace-scoped item, load and expected-secret checked removal. macOS file-keychain implementation; other targets return unavailable. No file/env/cloud fallback or atomic compare-and-delete guarantee."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/keychain/src/lib.rs"] symbols ["Provider", "Native", "DeviceSecret"] }
+      link ../../docs/04-architecture/decisions/0014-keychain-unlock-policy.md
+      link ../../docs/06-subsystems/security-cryptography.md
+      link ../../docs/06-subsystems/formats/hpx-workspace.md
+      link ../../crates/keychain/src/lib.rs
+    }
+  }
+  extend hpx.native.keychain {
+    backup = component "Verified pre-upgrade recovery copy" {
+      #implemented
+      description "Consistent schema1 encrypted SQLite backup, restrictive file/directory permissions, fingerprint verification and source recheck before explicit upgrade. No portable/remote backup, general repair or backup on ordinary open."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/keychain.rs"] symbols ["recovery_backup", "fingerprint", "sync_parent"] }
+      link ../../docs/04-architecture/decisions/0014-keychain-unlock-policy.md
+      link ../../docs/06-subsystems/security-cryptography.md
+      link ../../docs/06-subsystems/formats/hpx-workspace.md
+      link ../../crates/storage/src/keychain.rs
+    }
+  }
+  extend hpx.native.keychain {
+    cleanup = component "Failed native cleanup and retry state" {
+      #implemented
+      description "A failed scoped item removal retains the expected secret only in the unlocked process for retry. Lock/exit drops it; a crash orphan is not silently overwritten/deleted. No durable cleanup daemon or erasure guarantee."
+      metadata { authority "proposed responsibility grouping;not a new Rust module or V3 adoption" implementation "implemented" paths ["crates/storage/src/keychain.rs"] symbols ["remove_keychain", "enroll_keychain_inner"] }
+      link ../../docs/04-architecture/decisions/0014-keychain-unlock-policy.md
+      link ../../docs/06-subsystems/security-cryptography.md
+      link ../../docs/06-subsystems/formats/hpx-workspace.md
+      link ../../crates/storage/src/keychain.rs
+    }
+  }
+  hpx.native.transport -[coverage_call]-> hpx.native.application.admission "Submit frozen commands" { metadata { evidence "crates/runtime/src/main.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/runtime/src/main.rs }
+  hpx.native.transport -[coverage_call]-> hpx.native.application.reads "Invoke protected read methods directly" { metadata { evidence "crates/runtime/src/main.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/runtime/src/main.rs }
+  hpx.native.application.admission -[coverage_call]-> hpx.native.authority "Check current authority before replay" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.admission -[coverage_call]-> hpx.native.application.replay "Look up exact original operation" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.replay -[coverage_call]-> hpx.native.authority "Recheck stored result scope" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.replay -[coverage_call]-> hpx.native.application.dispatch "Fresh operation only" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.dispatch -[coverage_call]-> hpx.native.documents "Delegate scoped documents work" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.dispatch -[coverage_call]-> hpx.native.provenance "Delegate scoped provenance work" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.dispatch -[coverage_call]-> hpx.native.clipboard "Delegate scoped clipboard work" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.dispatch -[coverage_call]-> hpx.native.assertions "Delegate scoped assertions work" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.dispatch -[coverage_call]-> hpx.native.comments "Delegate scoped comments work" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.dispatch -[coverage_call]-> hpx.native.domain "Pure rules through feature adapters" { metadata { evidence "crates/storage/src/forks.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/forks.rs }
+  hpx.native.application.dispatch -[coverage_call]-> hpx.native.storage "Stage effects in the current transaction" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.dispatch -[coverage_call]-> hpx.native.application.publication "Return feature outcome" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.publication -[coverage_call]-> hpx.native.storage "Original receipt and atomic COMMIT" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application.reads -[coverage_call]-> hpx.native.authority "Current principal / document / source scope" { metadata { evidence "crates/storage/src/authority.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/authority.rs }
+  hpx.native.application.reads -[coverage_call]-> hpx.native.storage "Bounded consistent read views" { metadata { evidence "crates/storage/src/history.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/history.rs }
+  hpx.native.application -[coverage_call]-> hpx.native.storage.record_store "Stage effects and atomically publish receipts" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application -[coverage_call]-> hpx.native.history "Protected exact historical queries" { metadata { evidence "crates/storage/src/history.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/history.rs }
+  hpx.native.storage.record_store -[coverage_call]-> hpx.native.storage.records "Encode / authenticate / decode records" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage.records -[coverage_call]-> hpx.native.crypto "Seal / open expected context" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.history -[coverage_call]-> hpx.native.storage.record_store "Read exact retained publication records" { metadata { evidence "crates/storage/src/history.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/history.rs }
+  hpx.native.storage.access -[coverage_call]-> hpx.native.storage.record_store "Open/configure and authenticate catalog" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage.access -[coverage_call]-> hpx.native.crypto "Generate / wrap / unlock data key" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.keychain -[coverage_call]-> hpx.native.storage.access "Supported existing-file opening" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain -[coverage_call]-> hpx.native.storage.record_store "Enrollment wrapper transaction" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.recovery -[coverage_call]-> hpx.native.storage.record_store "Bounded immediate-record audit" { metadata { evidence "crates/storage/src/audit.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/audit.rs }
+  hpx.native.storage.records -[coverage_data]-> hpx.native.domain "Use pure identity / binding types; codecs stay outside" { metadata { evidence "crates/storage/src/encoding.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/encoding.rs }
+  hpx.native.storage.record_store -[coverage_data]-> hpx.workspace "Encrypted bodies / heads in SQLite and WAL" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage -[coverage_call]-> hpx.native.crypto.material "Create independent workspace key" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage -[coverage_call]-> hpx.native.crypto.envelopes "Encrypt / authenticate record bodies" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage -[coverage_call]-> hpx.native.crypto.wrapping "Default passphrase create / unlock" { metadata { evidence "crates/storage/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/lib.rs }
+  hpx.native.keychain -[coverage_call]-> hpx.native.crypto.wrapping "Same workspace key via device secret" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.crypto.wrapping -[coverage_call]-> hpx.native.crypto.derivation "Fixed bounded KDF after framing checks" { metadata { evidence "crates/crypto/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/crypto/src/lib.rs }
+  hpx.native.crypto.envelopes -[coverage_data]-> hpx.native.crypto.material "Managed secret / random nonce dependency" { metadata { evidence "crates/crypto/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/crypto/src/lib.rs }
+  hpx.native.crypto.wrapping -[coverage_data]-> hpx.native.crypto.material "Managed secret / random nonce dependency" { metadata { evidence "crates/crypto/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/crypto/src/lib.rs }
+  hpx.native.transport -[coverage_call]-> hpx.native.keychain.lifecycle "Session status / explicit lifecycle actions" { metadata { evidence "crates/runtime/src/main.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/runtime/src/main.rs }
+  hpx.native.transport -[coverage_call]-> hpx.native.keychain.unlock "Explicit alternative unlock" { metadata { evidence "crates/runtime/src/main.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/runtime/src/main.rs }
+  hpx.native.keychain.lifecycle -[coverage_call]-> hpx.native.keychain.backup "Verify recovery copy for schema1 upgrade" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.lifecycle -[coverage_call]-> hpx.native.keychain.provider "Create / load / scoped remove" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.lifecycle -[coverage_call]-> hpx.native.keychain.unlock "Verify same-key wrapper binding" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.lifecycle -[coverage_call]-> hpx.native.keychain.cleanup "Retain failed cleanup for explicit retry" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.cleanup -[coverage_call]-> hpx.native.keychain.provider "Retry expected-secret scoped removal" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.unlock -[coverage_call]-> hpx.native.keychain.provider "Load selected workspace device secret" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.unlock -[coverage_call]-> hpx.native.crypto "Unlock same data key" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.lifecycle -[coverage_call]-> hpx.native.crypto "Wrap retained workspace key" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.backup -[coverage_call]-> hpx.native.storage "Consistent SQLite backup / fingerprint" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.backup -[coverage_data]-> enrollment_backups "Verified encrypted pre-upgrade snapshot" { metadata { evidence "crates/storage/src/keychain.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/storage/src/keychain.rs }
+  hpx.native.keychain.provider -[coverage_data]-> credentials "macOS service + opaque workspace account" { metadata { evidence "crates/keychain/src/lib.rs" scope "logical responsibility dependency in existing code;not new modules or services" } link ../../crates/keychain/src/lib.rs }
+  ai_users -[coverage_plan]<-> hpx.native.integrations.agents "Chat / context / responses (required)" { description "Logical chat interaction via browser/chat transport and the shared user API, not a direct writer or inference call. Exact transport remains unspecified." link ../../docs/06-subsystems/ai-collaboration.md }
+  hpx.native.integrations.citations -[coverage_plan]-> zotero.desktop "Separately selected desktop-local reads (planned)" { metadata { evidence "docs/06-subsystems/document-engine.md" scope "explicitly planned contract relationship;mechanisms unselected" } link ../../docs/06-subsystems/document-engine.md }
+  hpx.native.integrations.citations -[coverage_plan]-> zotero.cloud "Separately selected cloud reads (planned)" { metadata { evidence "docs/06-subsystems/document-engine.md" scope "explicitly planned contract relationship;mechanisms unselected" } link ../../docs/06-subsystems/document-engine.md }
+  exchange_files -[coverage_plan]-> hpx.native.integrations.word_import "Untrusted document / review input (planned)" { metadata { evidence "docs/06-subsystems/external-integrations.md" scope "explicitly planned contract relationship;mechanisms unselected" } link ../../docs/06-subsystems/external-integrations.md }
+  hpx.native.integrations.export -[coverage_plan]-> exchange_files "Frozen authorized export (planned)" { metadata { evidence "docs/06-subsystems/external-integrations.md" scope "explicitly planned contract relationship;mechanisms unselected" } link ../../docs/06-subsystems/external-integrations.md }
+  hpx.native.integrations.github_jobs -[coverage_plan]-> github "Separate release / publication / backup jobs (planned)" { metadata { evidence "docs/06-subsystems/external-integrations.md" scope "explicitly planned contract relationship;mechanisms unselected" } link ../../docs/06-subsystems/external-integrations.md }
+  hpx.native.integrations.federation -[coverage_plan]-> peers "Authorized exchange; protocol unresolved (planned)" { metadata { evidence "docs/06-subsystems/security-cryptography.md" scope "explicitly planned contract relationship;mechanisms unselected" } link ../../docs/06-subsystems/security-cryptography.md }
+}
+views {
+  view c3_application of hpx.native.application {
+    title "C3 / Application coordination"
+    description "Logical responsibilities in current co-located Workspace methods, not a new application crate/services. Current authority before protected replay; draft ACK differs from Commit. Direct protected reads bypass command execution. Solid arrows are evidenced dependencies, with explicit return/data outputs, not a sequence or an adopted V3 refactor. HPX-CAN-011: required HPX-DOM-001 allocation is recorded in view-only notes; current helper coverage is bounded. Precise concepts and unadopted mechanisms remain linked contracts; no conceptual gap is closed by allocation."
+    link ../../docs/05-domain/core-object-model.md
+    link ../../docs/07-implementation/protocols/draft-publication.md
+    link ../../docs/06-subsystems/interfaces/browser-runtime.md
+    link ../../docs/06-subsystems/ai-collaboration.md
+    link ../../docs/05-domain/provenance-model.md
+    link ../audits/c3-coverage-audit.md
+    link ../audits/application-coordination-audit.md
+    // Presentation boundary for the focal responsibility;shared code remains co-located as evidenced.
+    group "Application coordination" { color primary; border solid
+      group "Admission and replay" { color primary; border solid
+        include hpx.native.application.admission with { description "Frozen command validation; writer transaction scope. Current authority precedes replay." navigateTo c4_application_transaction  notes "Required: authenticate workspace-local actor and enforce current workspace permissions before any protected operation. Validate exact document/branch/draft context and expected state; neither domain plans, selection nor unlock grant authority. Current sole-owner writer admission is incomplete multi-user evidence; no permission scheme adopted." }
+        include hpx.native.application.replay with { description "Exact operation/digest and current result scope; original receipt before mutable rechecks." navigateTo c4_application_transaction  notes "Required: recheck current actor/result authority before returning a retained original receipt. Exact retry reconciles the original operation; changed reuse conflicts. Lost acknowledgement is not a new mutation or proof of Commit. Current bounded receipts do not implement general multi-user revocation or policy epochs." }
+      }
+      group "Feature dispatch" { color primary; border solid
+        include hpx.native.application.dispatch with { description "Existing feature helpers; pure rules and staged effects share the same transaction." navigateTo c4_application_features  notes '''Required: coordinate pure plans for identity/occurrence, exact snapshots, relationships and derivations, keeping same-node parents distinct from cross-identity origins. Chat/observable interaction capture uses ordinary graph rules but is distinct from contribution/authorship. Existing feature helpers cover bounded one-owner cases; full closure, n-ary/event/interaction mechanisms remain contract-owned.
+
+[Conceptual placement/derivation effects](../Conceptual/placement-effects.c4)''' }
+      }
+      group "Publication and protected reads" { color primary; border solid
+        include hpx.native.application.publication with { description "One result + original receipt + COMMIT; draft acknowledgement remains distinct." navigateTo c4_application_transaction  notes '''Required: publish complete immutable result/closed snapshot/event and mutable head/draft/receipt changes atomically after current-state/authority checks. Draft acknowledgement and private checkpoints are not Commit; retain newer typing and immutable history. ADR019 is adopted design; current bounded transactions do not complete general publication or provenance mechanisms.
+
+[Conceptual draft/Commit effects](../Conceptual/publication-effects.c4)''' }
+        include hpx.native.application.reads with { description "Existing Workspace reads, called directly; no execute/read facade is introduced." navigateTo c4_application_reads  notes "Required: protected consistent reads and exact historical reconstruction with current authority, exact occurrence-path bindings and bounded scope. Never substitute current heads or infer historical-key rights from present access. Existing direct Workspace readers are partial evidence; no new facade, closure resolver or access mechanism is adopted." }
+      }
+    }
+    // Callers,providers,artifacts and consumers stay outside the focal boundary.
+    include hpx.native.assertions with { description "Role-labelled retrospective claims/review; no automatic logical proof." navigateTo c4_application_features }
+    include hpx.native.authority with { description "Current sole-owner scope; workspace-user permissions/disclosure/egress policy remains partial." navigateTo c4_application_transaction notes '''[Conceptual authority and representation distinctions](../Conceptual/authority-distinction.c4)''' }
+    include hpx.native.clipboard with { description "Private exact committed/working references; capture and promotion are not implicit Commit." navigateTo c4_application_features }
+    include hpx.native.comments with { description "Pinned committed passage comments; broader annotation lifecycle remains partial." navigateTo c4_application_features }
+    include hpx.native.documents with { description "Local documents/branches and owned drafts; general composition and parent-Merge remain incomplete." navigateTo c4_application_features }
+    include hpx.native.domain with { title "Pure domain" description "Pure supplied-input rules/types; no serialization, authorization or storage IO." navigateTo c3_pure_domain }
+    include hpx.native.provenance with { description "Pinned independent derivation and publisher evidence; not original-authorship proof." navigateTo c4_application_features }
+    include hpx.native.storage with { title "Workspace persistence" description "Same native executable: supported workspace access, codecs, SQLite and retained state." navigateTo c3_workspace_persistence }
+    include hpx.native.transport with { title "Runtime and API" description "Existing HTTPS/session/unlock/API boundary; startup remains locked." navigateTo c3_runtime_api }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include hpx.native.transport -> hpx.native.application.admission where kind is coverage_call with { title "Frozen command + operation" }
+    include hpx.native.transport -> hpx.native.application.reads where kind is coverage_call with { title "Protected queries / receipt lookup" }
+    include hpx.native.application.admission -> hpx.native.authority where kind is coverage_call
+    include hpx.native.application.admission -> hpx.native.application.replay where kind is coverage_call
+    include hpx.native.application.replay -> hpx.native.authority where kind is coverage_call
+    include hpx.native.application.replay -> hpx.native.application.dispatch where kind is coverage_call
+    include hpx.native.application.dispatch -> hpx.native.documents where kind is coverage_call
+    include hpx.native.application.dispatch -> hpx.native.provenance where kind is coverage_call
+    include hpx.native.application.dispatch -> hpx.native.clipboard where kind is coverage_call
+    include hpx.native.application.dispatch -> hpx.native.assertions where kind is coverage_call
+    include hpx.native.application.dispatch -> hpx.native.comments where kind is coverage_call
+    include hpx.native.application.dispatch -> hpx.native.domain where kind is coverage_call
+    include hpx.native.application.dispatch -> hpx.native.storage where kind is coverage_call
+    include hpx.native.application.dispatch -> hpx.native.application.publication where kind is coverage_call
+    include hpx.native.application.publication -> hpx.native.storage where kind is coverage_call
+    include hpx.native.application.reads -> hpx.native.authority where kind is coverage_call
+    include hpx.native.application.reads -> hpx.native.storage where kind is coverage_call
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    include hpx.native.application.admission -> hpx.native.transport where kind is coordination_result
+    include hpx.native.application.replay -> hpx.native.transport where kind is coordination_result
+    include hpx.native.application.publication -> hpx.native.transport where kind is coordination_result
+    include hpx.native.application.reads -> hpx.native.transport where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+  view c3_workspace_persistence of hpx.native.storage {
+    title "C3 / Workspace persistence"
+    description "Supported opening, adapter-owned representation and embedded SQLite state in the same Rust executable. Logical grouping is proposed, not new storage services. Encrypted bodies do not hide all structural metadata. WAL/transactions do not establish authenticated provenance, arbitrary closure, rollback detection or federation. Wider repair/temporal upgrade remain separate. HPX-CAN-012: required HPX-DOM-001 allocation is recorded in view-only notes; current helper coverage is bounded. Precise concepts and unadopted mechanisms remain linked contracts; no conceptual gap is closed by allocation."
+    link ../../docs/05-domain/core-object-model.md
+    link ../../docs/06-subsystems/workspace-storage.md
+    link ../../docs/06-subsystems/formats/hpx-workspace.md
+    link ../../docs/07-implementation/data-structures/sqlite-records.md
+    link ../../docs/08-assurance/recovery.md
+    link ../audits/c3-coverage-audit.md
+    group "Workspace persistence" { color primary; border solid
+      include hpx.native.storage.access with { description "Explicit create/open, schemas1/2 and WAL/FULL; no implicit migration or enrollment."  notes "Workspace is the storage/key boundary, not a content identity or permission grant. Explicit supported open/create and passphrase/keychain unlock retain schema/record compatibility boundaries. Current schemas1/2 and trusted-server custody are bounded evidence; no new identity, epoch, format or client-held mechanism is adopted." }
+      include hpx.native.storage.records with { description "Version/kind and expected-context checks; serialization stays outside pure domain." navigateTo c4_domain_sources  notes "Required: adapter-owned explicit version/kind wrappers and exact identity/context codecs for domain records; serialization stays outside pure domain. Logical identity is distinct from private commitments and ciphertext addresses. Current wrapped families do not define all Node/Occurrence/Manifest/Snapshot, n-ary edge or interaction records. Preserve exact source bytes and reject unsupported versions." }
+      include hpx.native.storage.record_store with { description "Immutable records, mutable heads and generation checks in caller-owned SQLite transactions."  notes "Required: retain immutable revisions/manifests/snapshots/events/provenance separately from mutable heads/drafts; publish authorised complete results and original receipts atomically under exact preconditions. No automatic pruning or silent erasure. Current transactions are bounded evidence; one SQLite writer does not constrain product users or deliver full policy/closure." }
+      include hpx.native.history with { description "Exact bounded retained-history/snapshot/anchor reads; current one-occurrence scope."  notes "Required: reconstruct exact closed historical snapshots and occurrence-path bindings without current-head/provider substitution; history reads remain permission-controlled. Existing one-occurrence history/anchor readers are partial implementation evidence, not general nested closure, retained-history grants or conceptual lifecycle completeness." }
+      include hpx.native.recovery with { description "Immediate original-branch audit and bounded recovery; no repair or rollback witness."  notes "Required: recover acknowledged exact drafts, original receipts and immutable history across restart/crash without inferring Commit from timeout or discarding newer typing. WAL is recovery machinery, not provenance/history or federation convergence. Current bounded recovery does not provide arbitrary repair, hostile rollback detection or a redaction/erasure design." }
+    }
+    group "Existing executable and C2 context" { color primary; border solid
+      include hpx.native.application with { title "Application coordination" description "Co-located command/read responsibilities; current authority and original-result replay." navigateTo c3_application }
+      include hpx.native.domain with { title "Pure domain" description "Pure supplied-input rules/types; no serialization, authorization or storage IO." navigateTo c3_pure_domain }
+      include hpx.native.crypto with { title "Cryptographic adapter" description "In-memory crypto adapter; TLS identity and current authorization remain separate." navigateTo c3_crypto }
+      include hpx.native.keychain with { title "Keychain adapter" description "Explicit device-secret alternative; default passphrase recovery stays available." navigateTo c3_keychain }
+      include hpx.workspace with { description "Embedded SQLite workspace/WAL; encrypted bodies plus visible structural metadata." navigateTo c2_containers }
+      include enrollment_backups with { description "Existing verified encrypted schema1 snapshots created before keychain upgrade." }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include hpx.native.application -> hpx.native.storage.record_store where kind is coverage_call
+    include hpx.native.application -> hpx.native.history where kind is coverage_call
+    include hpx.native.storage.record_store -> hpx.native.storage.records where kind is coverage_call
+    include hpx.native.storage.records -> hpx.native.crypto where kind is coverage_call
+    include hpx.native.history -> hpx.native.storage.record_store where kind is coverage_call
+    include hpx.native.storage.access -> hpx.native.storage.record_store where kind is coverage_call
+    include hpx.native.storage.access -> hpx.native.crypto where kind is coverage_call
+    include hpx.native.keychain -> hpx.native.storage.access where kind is coverage_call
+    include hpx.native.keychain -> hpx.native.storage.record_store where kind is coverage_call
+    include hpx.native.recovery -> hpx.native.storage.record_store where kind is coverage_call
+    include hpx.native.storage.records -> hpx.native.domain where kind is coverage_data
+    include hpx.native.storage.record_store -> hpx.workspace where kind is coverage_data
+    include hpx.native.keychain -> enrollment_backups where kind is coverage_data
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+  view c3_crypto of hpx.native.crypto {
+    title "C3 / Cryptographic adapter"
+    description "In-memory responsibility decomposition of the existing crypto crate. Solid arrows are calls/dependencies; dotted arrows are managed-secret data dependencies. Current authority and expected context come from callers. Key/nonce entropy is OS-backed; no filesystem/network policy or TLS key lifecycle is implemented here. Address utility is not wired into production SQLite addressing. HPX-CAN-015: required HPX-DOM-001 allocation is recorded in view-only notes; current helper coverage is bounded. Precise concepts and unadopted mechanisms remain linked contracts; no conceptual gap is closed by allocation."
+    link ../../docs/05-domain/core-object-model.md
+    link ../../docs/06-subsystems/security-cryptography.md
+    link ../../docs/06-subsystems/interfaces/crypto-adapter.md
+    link ../../docs/06-subsystems/formats/crypto-envelopes.md
+    link ../audits/c3-coverage-audit.md
+    group "Cryptographic adapter" { color primary; border solid
+      include hpx.native.crypto.material with { description "OS entropy and managed secret lifetime; no complete host-memory erasure guarantee." }
+      include hpx.native.crypto.envelopes with { description "Authenticate caller-expected record context before plaintext; no permissions or IO."  notes "Authenticate independently supplied workspace/kind/identity/generation/epoch context before returning plaintext. The authorised application supplies expected context;untrusted envelope fields and successful authentication do not grant resource rights. Existing primitives do not define a general SecurityPolicy,principal or provenance-signature mechanism." }
+      include hpx.native.crypto.wrapping with { description "Same data key, expected workspace/epoch; passphrase or device secret, not new custody."  notes "Wrap/unwrap the same workspace key using adopted passphrase/device-secret boundaries. Key availability is distinct from user authentication,permission and policy authority. Logical identities survive re-encryption;no client-held custody,epoch migration or group key hierarchy is selected here." }
+      include hpx.native.crypto.derivation with { description "Fixed Argon2id profile, bounded allocation and zeroizing working memory." }
+      include hpx.native.crypto.addressing with { description "Ciphertext hash utility; tests use it, no production SQLite consumer found."  notes "StorageAddress hashes ciphertext,not logical content/revision identity or a private plaintext commitment. Equality grants no permission to disclose cross-domain existence. This utility has no production SQLite consumer;general private commitments,signing/deduplication and catalogue/address mechanisms remain unadopted." }
+    }
+    group "Actual caller responsibilities" { color primary; border solid
+      include hpx.native.storage with { title "Workspace persistence" description "Same native executable: supported workspace access, codecs, SQLite and retained state." navigateTo c3_workspace_persistence }
+      include hpx.native.keychain with { title "Keychain adapter" description "Explicit device-secret alternative; default passphrase recovery stays available." navigateTo c3_keychain }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include hpx.native.storage -> hpx.native.crypto.material where kind is coverage_call
+    include hpx.native.storage -> hpx.native.crypto.envelopes where kind is coverage_call
+    include hpx.native.storage -> hpx.native.crypto.wrapping where kind is coverage_call
+    include hpx.native.keychain -> hpx.native.crypto.wrapping where kind is coverage_call
+    include hpx.native.crypto.wrapping -> hpx.native.crypto.derivation where kind is coverage_call
+    include hpx.native.crypto.envelopes -> hpx.native.crypto.material where kind is coverage_data
+    include hpx.native.crypto.wrapping -> hpx.native.crypto.material where kind is coverage_data
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+  view c3_keychain of hpx.native.keychain {
+    title "C3 / Keychain adapter"
+    description "Explicit ADR014 lifecycle, native provider, verified upgrade backup and cleanup ordering. Logical parts share existing files, not new processes. macOS support is bounded; passphrase recovery retained. Enrollment/removal are not startup actions or revocation/erasure guarantees. Arrows describe dependencies, not a full sequence. No credential/state operation runs for this model. HPX-CAN-016: required HPX-DOM-001 allocation is recorded in view-only notes; current helper coverage is bounded. Precise concepts and unadopted mechanisms remain linked contracts; no conceptual gap is closed by allocation."
+    link ../../docs/05-domain/core-object-model.md
+    link ../../docs/04-architecture/decisions/0014-keychain-unlock-policy.md
+    link ../../docs/06-subsystems/security-cryptography.md
+    link ../audits/c3-coverage-audit.md
+    group "Keychain adapter" { color primary; border solid
+      include hpx.native.keychain.lifecycle with { description "Unlocked explicit enroll/remove; locked status reads no native credential. Recovery retained."  notes "ADR014 adopts explicit enrollment with verified pre-upgrade backup and retained passphrase recovery. This is key availability support,not a principal/device/group directory,user permission grant or security-policy epoch design. Historical initial-slice no-keychain wording is not current exclusion;existing macOS lifecycle evidence remains bounded." }
+      include hpx.native.keychain.unlock with { description "Explicit device-secret unlock and same-key verification; not a browser session grant." navigateTo seq_unlock  notes "Unlock the same workspace key only through explicit enrolled-device flow;workspace unlock,session authentication and resource authority remain separate. Removing enrollment is neither revocation of previously disclosed content nor history erasure. No client-held custody,permission or recovery-key mechanism is adopted." }
+      include hpx.native.keychain.provider with { description "macOS create-only scoped native item; unsupported platforms report unavailable." }
+      include hpx.native.keychain.backup with { description "Verified schema1 SQLite recovery copy before explicit upgrade; not portable backup." }
+      include hpx.native.keychain.cleanup with { description "Unlocked-process retry handle only; crash orphan requires scoped manual recovery." }
+    }
+    group "Existing executable and C2 context" { color primary; border solid
+      include hpx.native.transport with { title "Runtime and API" description "Existing HTTPS/session/unlock/API boundary; startup remains locked." navigateTo c3_runtime_api }
+      include hpx.native.storage with { title "Workspace persistence" description "Same native executable: supported workspace access, codecs, SQLite and retained state." navigateTo c3_workspace_persistence }
+      include hpx.native.crypto with { title "Cryptographic adapter" description "In-memory crypto adapter; TLS identity and current authorization remain separate." navigateTo c3_crypto }
+      include credentials with { description "macOS native credential store; no cloud/plaintext/environment fallback." }
+      include enrollment_backups with { description "Existing verified encrypted schema1 snapshots created before keychain upgrade." }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include hpx.native.transport -> hpx.native.keychain.lifecycle where kind is coverage_call
+    include hpx.native.transport -> hpx.native.keychain.unlock where kind is coverage_call
+    include hpx.native.keychain.lifecycle -> hpx.native.keychain.backup where kind is coverage_call
+    include hpx.native.keychain.lifecycle -> hpx.native.keychain.provider where kind is coverage_call
+    include hpx.native.keychain.lifecycle -> hpx.native.keychain.unlock where kind is coverage_call
+    include hpx.native.keychain.lifecycle -> hpx.native.keychain.cleanup where kind is coverage_call
+    include hpx.native.keychain.cleanup -> hpx.native.keychain.provider where kind is coverage_call
+    include hpx.native.keychain.unlock -> hpx.native.keychain.provider where kind is coverage_call
+    include hpx.native.keychain.unlock -> hpx.native.crypto where kind is coverage_call
+    include hpx.native.keychain.lifecycle -> hpx.native.crypto where kind is coverage_call
+    include hpx.native.keychain.backup -> hpx.native.storage where kind is coverage_call
+    include hpx.native.keychain.backup -> enrollment_backups where kind is coverage_data
+    include hpx.native.keychain.provider -> credentials where kind is coverage_data
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+  view c3_integrations of hpx.native.integrations {
+    title "C3 / Integration adapters (planned)"
+    description "Specification-backed proposal only: six existing planned roles, no native integration implementation or selected wire/packaging protocols. Dashed links are planned contracts; current browser-only exact Markdown download is separate. Disclosure/execution policy must be rechecked, and non-trusted plaintext egress remains denied by required core policy. External jobs are not atomic local transactions; no exactly-once remote-write guarantee. HPX-CAN-017: required HPX-DOM-001 allocation is recorded in view-only notes; current helper coverage is bounded. Precise concepts and unadopted mechanisms remain linked contracts; no conceptual gap is closed by allocation."
+    link ../../docs/05-domain/core-object-model.md
+    link ../../docs/05-domain/provenance-model.md
+    link ../../docs/06-subsystems/ai-collaboration.md
+    link ../../docs/06-subsystems/import-export.md
+    link ../../docs/06-subsystems/interfaces/browser-runtime.md
+    link ../audits/c3-coverage-audit.md
+    group "Integration adapters (planned)" { color muted; border dashed
+      include hpx.native.integrations.agents with { description "Chat prompts/context/responses as workspace nodes; machine-user permissions. No HPX inference orchestration; transport/records unresolved."  notes "Required chat prompts/context/responses are workspace nodes and observable exchanges,distinct from resulting contributions. Preserve observed/declared/inferred provenance and adoption versus verification/authorship/endorsement. Workspace-local machine users use shared API permissions and ordinary graph/draft/Commit/history/recovery;inference stays machine-side. Existing planned role does not implement chat records,identity,MCP or provider accounts." }
+      include hpx.native.integrations.citations with { description "Separate read-only desktop/cloud choices; freeze cited metadata; no fallback." }
+      include hpx.native.integrations.word_import with { description "Bound untrusted parsing and review exact mappings before authorized application."  notes "Treat external statements/review evidence as untrusted input;capture exact source/revision/range and ordered mappings before authorised application operations. Imported content is not automatically authored or endorsed by the importer. General derivation/interaction formats remain unadopted;this planned adapter does not mutate graph state independently." }
+      include hpx.native.integrations.export with { description "Freeze exact permitted inputs/citations/styles; packaging and Pandoc binding unresolved."  notes "Export authorised exact content/snapshot/occurrence context and provenance without live-head/provider substitution. Output is a projection/artifact,not a new logical identity,Commit or history deletion. Respect current disclosure policy;general packaging/citation/relationship representations remain linked contract/design work." }
+      include hpx.native.integrations.github_jobs with { description "Separate publication, encrypted backup and release discovery; durable outcomes unresolved." }
+      include hpx.native.integrations.federation with { description "Future authorized exchange/causality; no replication or conflict protocol selected." }
+    }
+    group "Existing scope and exact-state responsibilities" { color primary; border solid
+      include hpx.native.authority with { description "Current sole-owner scope; workspace-user permissions/disclosure/egress policy remains partial." navigateTo c3_application }
+      include hpx.native.application with { title "Application coordination" description "Co-located command/read responsibilities; current authority and original-result replay." navigateTo c3_application }
+      include hpx.native.history with { description "Exact bounded retained-history/snapshot/anchor reads; current one-occurrence scope." }
+      include hpx.native.storage with { title "Workspace persistence" description "Same native executable: supported workspace access, codecs, SQLite and retained state." navigateTo c3_workspace_persistence }
+    }
+    group "External context and current browser subset" { color primary; border solid
+      include ai_users with { description "Workspace-local machine users provide chat and use MCP; inference stays on their side." }
+      include zotero.desktop with { description "Planned desktop-local citation interface; separately configured." }
+      include zotero.cloud with { description "Planned cloud citation interface; separately authenticated." }
+      include exchange_files with { description "External input/output artifacts; no second running service or database." }
+      include github with { description "Planned external release/publication/backup interactions; no connection enabled." }
+      include peers with { description "Future authorized HPX peers; protocol and membership mechanisms remain unresolved." }
+      include hpx.browser with { description "Current exact Markdown download runs in browser; native conversion remains planned." navigateTo c2_containers }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include ai_users -> hpx.native.integrations.agents where kind is coverage_plan
+    include hpx.native.integrations.citations -> zotero.desktop where kind is coverage_plan
+    include hpx.native.integrations.citations -> zotero.cloud where kind is coverage_plan
+    include exchange_files -> hpx.native.integrations.word_import where kind is coverage_plan
+    include hpx.native.integrations.export -> exchange_files where kind is coverage_plan
+    include hpx.native.integrations.github_jobs -> github where kind is coverage_plan
+    include hpx.native.integrations.federation -> peers where kind is coverage_plan
+    include hpx.native.integrations.agents -> hpx.native.authority where kind is planned_flow
+    include hpx.native.integrations.citations -> hpx.native.authority where kind is planned_flow
+    include hpx.native.integrations.word_import -> hpx.native.authority where kind is planned_flow
+    include hpx.native.integrations.export -> hpx.native.authority where kind is planned_flow
+    include hpx.native.integrations.github_jobs -> hpx.native.authority where kind is planned_flow
+    include hpx.native.integrations.federation -> hpx.native.authority where kind is planned_flow
+    include hpx.native.integrations.agents -> hpx.native.application where kind is planned_flow
+    include hpx.native.integrations.word_import -> hpx.native.application where kind is planned_flow
+    include hpx.native.integrations.export -> hpx.native.history where kind is planned_flow
+    include hpx.native.integrations.citations -> hpx.native.storage where kind is planned_flow
+    include hpx.native.integrations.github_jobs -> hpx.native.storage where kind is planned_flow
+    include hpx.native.integrations.federation -> hpx.native.application where kind is planned_flow
+    include hpx.browser -> exchange_files where kind is existing_flow
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "protocol_version": "0.5.0",
+  "record_version": 1,
+  "id": "HPX-DEC-20261031-reconstruction-conflict-policy",
+  "kind": "decision",
+  "subject": "Exact reconstruction and configurable changed-source conflict policy",
+  "summary": "Owner accepts source-only reconstruction,explicit occurrence version selections,and Ask/automatic latest-timestamp conflict handling with marked comparison;clock semantics remain open.",
+  "status": "accepted",
+  "authority": {
+    "basis": "user_directive",
+    "notes": "Explicit owner replies recorded in HPX-OWNER-043;agent records rather than approves."
+  },
+  "source_refs": [
+    {
+      "ref": "docs/02-governance/OWNER_DECISIONS.md#reconstruction-and-configurable-source-conflicts-2026-10-31",
+      "role": "approval",
+      "note": "Owner confirms source-only reconstruction and explicit per-inclusion selections;requires configurable conflict handling,markers and comparison modal."
+    },
+    {
+      "ref": "architecture/Conceptual/identity-closure.c4",
+      "role": "normative"
+    },
+    {
+      "ref": "architecture/C3/browser-organisation.c4",
+      "role": "normative"
+    },
+    {
+      "ref": "docs/06-subsystems/frontend-interaction.md#changed-source-conflict-handling--hpx-owner-043",
+      "role": "normative"
+    }
+  ],
+  "relations": [],
+  "actor": "agent:codex (decision recorder)",
+  "created_on": "2026-10-31",
+  "content": {
+    "resolution": "Accept source-only exact reconstruction,explicit exact versions at each inclusion position including cycle targets,and a toggle between asking and automatic latest-timestamp selection that marks the affected sentence/paragraph/section as a potential conflict with a comparison-modal link. Timestamp definition,ties,setting scope/default and marker lifecycle remain unresolved. No implementation,clock algorithm,physical format,automatic Commit or publication is adopted.",
+    "approved_by": "project owner (explicit user replies)",
+    "approval_ref": "docs/02-governance/OWNER_DECISIONS.md#reconstruction-and-configurable-source-conflicts-2026-10-31",
+    "scope": [
+      "HPX-DOM-001 closure/reconstruction specification",
+      "changed followed-source conflicts before Commit",
+      "planned UI toggle,potential-conflict marker and comparison modal"
+    ]
+  }
+}

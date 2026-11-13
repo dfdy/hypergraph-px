@@ -1,0 +1,35 @@
+{
+  "protocol_version": "0.2.0",
+  "record_version": 1,
+  "id": "HPX-PROTO-20261030-add-impact-extension",
+  "kind": "protocol_change",
+  "subject": "HPX-SCP extension registry",
+  "summary": "Illustrative proposed registration of optional impact metadata for proposals.",
+  "status": "proposed",
+  "authority": {
+    "basis": "agent_proposal"
+  },
+  "source_refs": [],
+  "relations": [],
+  "actor": "agent:architecture",
+  "created_on": "2026-10-30",
+  "content": {
+    "change_class": "compatible",
+    "change_summary": "Register x.hpx.impact as an optional typed extension.",
+    "rationale": "Allow structured impact annotations without expanding the core proposal payload.",
+    "files_changed": [
+      "docs/engineering/semantic-protocol/extensions/registry.json",
+      "docs/engineering/semantic-protocol/extensions/schemas/x.hpx.impact.schema.json"
+    ],
+    "compatibility": "Existing records without extensions remain valid; legacy v0.1.0 fixtures are preserved.",
+    "rollback": "Remove the example extension key from records and deregister its schema after checking references.",
+    "validation": {
+      "outcome": "not_run",
+      "commands": [],
+      "evidence": []
+    },
+    "affected_record_kinds": [
+      "proposal"
+    ]
+  }
+}

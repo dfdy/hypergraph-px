@@ -13,19 +13,26 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+AI MCP is an adapter of the common user API, not an independent external API product. User-driven integration requests carry actor/target/operation context and obey shared backend permissions; provider access does not establish user identity or rights. No general public endpoint, extra service or provider connection is required. See the [accepted shared API scope](interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Fixture controls and future contracts are not durable service implementations. Capabilities must report unavailable honestly.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 
-## Responsibilities and boundaries
+## Owner baseline reconciliation, 2026-10-30
 
-Explicitly gated citations, providers, Word import, GitHub, exports and future updates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+HPX-OWNER-028 removes the separate external API client requirement; MCP belongs to AI-user interaction, not a parallel external actor. Internal browser HTTPS remains.
 
-## Inputs and outputs
-
-Explicitly gated citations, providers, Word import, GitHub, exports and future updates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+[HPX-SUB-010](ai-collaboration.md) requires AI-user chat and selected-node MCP interaction as baseline product scope. There is no separate AI inference-provider adapter: the workspace-local machine user provides chat and uses MCP; inference stays outside HPX. Chat retains supplied prompts/context and observed responses as workspace nodes; MCP edits are authorised ordinary application operations, not a mandatory proposal-only channel or direct database writer. Federation and optional scholarly/GitHub integrations remain separate future work.
 
 ## State and operations
 
@@ -150,22 +157,6 @@ Source `HPX-SRC-0036`, original lines 29–37. Preserved contract/evidence wordi
 
 No parser, storage schema, new dependency or formal proof result is selected by this requirement.
 
-
-## Invariants and error behavior
-
-Explicitly gated citations, providers, Word import, GitHub, exports and future updates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Dependencies and interfaces
-
-Explicitly gated citations, providers, Word import, GitHub, exports and future updates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Security and privacy
-
-Explicitly gated citations, providers, Word import, GitHub, exports and future updates. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

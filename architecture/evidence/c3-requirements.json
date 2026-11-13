@@ -1,0 +1,319 @@
+{
+  "date": "2026-10-29",
+  "scope": "All 31 registered compound requirement seeds; supplementary source clauses are covered in the report; this is not an atomic requirement count or adoption decision.",
+  "requirements": [
+    {
+      "requirement": "HPX-RQ-001",
+      "statement": "One Rust release executable embeds frontend assets; no Node/Lean/database server at runtime",
+      "components": [
+        "hpx.native.transport",
+        "hpx.native.frontend_assets"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-002",
+      "statement": "Text is UTF8; preserve Unicode/CRLF and explicitly convert browser UTF16 boundaries",
+      "components": [
+        "hpx.native.domain",
+        "hpx.native.documents",
+        "hpx.native.composition"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-003",
+      "statement": "Revision ancestry stays same-identity and immutable; cross-identity derivations are distinct",
+      "components": [
+        "hpx.native.domain",
+        "hpx.native.documents",
+        "hpx.native.history",
+        "hpx.native.provenance"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-004",
+      "statement": "Snapshots pin exact occurrence-context revisions without following newer heads",
+      "components": [
+        "hpx.native.composition",
+        "hpx.native.history"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-005",
+      "statement": "Reject expansion cycles, allow reference cycles",
+      "components": [
+        "hpx.native.domain",
+        "hpx.native.composition"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-006",
+      "statement": "Autosave mutable drafts after five-second idle without publishing immutable history",
+      "components": [
+        "hpx.native.documents",
+        "hpx.native.application",
+        "hpx.native.storage"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-007",
+      "statement": "Retry identical operations returns original receipt; changed reuse conflicts",
+      "components": [
+        "hpx.native.application",
+        "hpx.native.authority",
+        "hpx.native.storage"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-008",
+      "statement": "Publish revisions, events, snapshots, heads and receipts atomically",
+      "components": [
+        "hpx.native.application",
+        "hpx.native.storage"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-009",
+      "statement": "Sensitive payloads/drafts/indexes remain encrypted at rest",
+      "components": [
+        "hpx.native.crypto",
+        "hpx.native.storage",
+        "hpx.native.clipboard"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-010",
+      "statement": "Authenticate encrypted HTTPS loopback before connecting real data",
+      "components": [
+        "hpx.native.transport"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-011",
+      "statement": "Passphrase default and keychain alternative are distinct unlock paths",
+      "components": [
+        "hpx.native.keychain",
+        "hpx.native.crypto"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-012",
+      "statement": "Client-held mode remains unavailable until safe execution/egress support exists",
+      "components": [
+        "hpx.native.authority",
+        "hpx.native.integrations"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-013",
+      "statement": "Future non-trusted mode denies core-controlled plaintext export/publication",
+      "components": [
+        "hpx.native.authority",
+        "hpx.native.integrations"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-014",
+      "statement": "Users displays contributors rather than session presence",
+      "components": [
+        "hpx.native.provenance"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-015",
+      "statement": "One predicate identity appears across overlapping browsing tags without duplicate facts",
+      "components": [
+        "hpx.native.assertions",
+        "hpx.native.domain"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-016",
+      "statement": "Negation, certainty, attribution and scope qualify the assertion",
+      "components": [
+        "hpx.native.assertions",
+        "hpx.native.domain"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-017",
+      "statement": "Provenance attribution must distinguish authorship, influence, adoption and verification",
+      "components": [
+        "hpx.native.provenance",
+        "hpx.native.integrations.agents",
+        "hpx.native.integrations.word_import"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-018",
+      "statement": "Fine-grained source ownership cannot be replaced by generic whole-buffer overwrites",
+      "components": [
+        "hpx.native.composition",
+        "hpx.native.documents",
+        "hpx.native.domain"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-019",
+      "statement": "Retain history without arbitrary revision-count pruning",
+      "components": [
+        "hpx.native.storage",
+        "hpx.native.history",
+        "hpx.native.recovery"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-020",
+      "statement": "Human-readable proof digest distinguishes model proofs from actual extracted Rust",
+      "components": [
+        "hpx.native.domain"
+      ],
+      "disposition": "Assurance obligation: proof digest/extraction remains outside runtime; no whole-application proof.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-021",
+      "statement": "Desktop layout/selection/source preservation remain usable during integration",
+      "components": [
+        "hpx.native.frontend_assets"
+      ],
+      "disposition": "Browser UI/source/selection/Undo obligation; executable packages resources, not a Rust editor.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-022",
+      "statement": "No publishing without explicit owner request; SemVer classification preserved",
+      "components": [
+        "hpx.native.integrations.github_jobs"
+      ],
+      "disposition": "Owner publication/SemVer rule is governance; planned update adapter grants no publication authority.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-023",
+      "statement": "Keep serialization outside the pure domain; adapter types/conversions own persisted and wire representations.",
+      "components": [
+        "hpx.native.domain",
+        "hpx.native.storage",
+        "hpx.native.transport"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-024",
+      "statement": "Require explicit persistent record versions before durable real-data acceptance.",
+      "components": [
+        "hpx.native.storage"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-025",
+      "statement": "At completion of Phase C archive previous documentation byte-for-byte under ignored .oldspecs.",
+      "components": [],
+      "disposition": "Documentation/archive procedure, outside executable.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-026",
+      "statement": "Present Fork; Link; Embed; Merge; Copy as distinct actions with their identity and history semantics preserved",
+      "components": [
+        "hpx.native.documents",
+        "hpx.native.composition",
+        "hpx.native.clipboard",
+        "hpx.native.provenance"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-027",
+      "statement": "Use owner-supplied logo appropriately in application and documentation branding",
+      "components": [
+        "hpx.native.frontend_assets"
+      ],
+      "disposition": "Branding asset obligation, not a separate runtime component.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-028",
+      "statement": "Explicitly discover contextual logical equivalence while preserving predicate identity and proof/identity distinctions",
+      "components": [
+        "hpx.native.assertions",
+        "hpx.native.domain"
+      ],
+      "disposition": "Manual contextual assertion exists; automatic discovery and proof conversion are not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-029",
+      "statement": "Read-only graph of arbitrary selected authorised nodes with labelled circles/connectors; direction; n-ary roles; evidence and completeness",
+      "components": [
+        "hpx.native.queries"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-030",
+      "statement": "Future bundled Pandoc export with academic citations and selectable hypergraph content plus readable relation fallbacks and rights appendix",
+      "components": [
+        "hpx.native.integrations.export",
+        "hpx.native.history"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    },
+    {
+      "requirement": "HPX-RQ-031",
+      "statement": "Pending edits use private working branches; provenance copy/paste checkpoints exact source without Commit; exact Commit can append replacement references retaining earlier history",
+      "components": [
+        "hpx.native.documents",
+        "hpx.native.clipboard",
+        "hpx.native.application",
+        "hpx.native.storage"
+      ],
+      "disposition": "Bounded implementation and open scope are stated on the mapped components; acceptance is not inferred.",
+      "source": "docs/registers/requirements.csv"
+    }
+  ]
+}

@@ -13,24 +13,38 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-26
+- **Last reviewed:** 2026-11-01
+
+## Workspace-local users — owner clarification
+
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+
+
+## Shared user API and per-user permissions
+
+**HPX-RQ-037:** every human or AI user accesses protected hypergraph operations through one shared logical backend command/query API, including browser and MCP paths. **HPX-RQ-038:** enforce permissions assigned to each user–workspace pair on reads and changes. Different adapters must not bypass common policy, validation or history/publication semantics. See the [accepted shared API scope](../06-subsystems/interfaces/browser-runtime.md) (HPX-OWNER-029; HPX-RQ-037–038).
+
 
 Inherited accepted obligations remain effective. The editorial migration is proposed; no functionality is newly claimed delivered.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 
-## Context and problem
+## Mandatory multi-user and AI-user baseline, 2026-10-30
 
-Observable requirements and invariant commitments, independent of implementation completeness. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+HPX-OWNER-027–031 define the following current mandatory product requirements; one-human development and the current one-owner implementation do not restrict the architecture. Federation is separate future scope. [Multi-user and AI Collaboration](../06-subsystems/ai-collaboration.md) owns the detailed contract and explicit mechanism gaps.
 
-## Scope and exclusions
+- **HPX-RQ-032:** Mandatory multi-user baseline;human/machine users belong to one workspace and are not reusable across workspaces;one-human development does not constrain architecture.
+- **HPX-RQ-033:** AI agents are workspace-local users;at most one machine user per provider in each workspace;no cross-workspace identity reuse.
+- **HPX-RQ-034:** Multiple workspace-local machine users may share a workspace through different providers;models/sessions/chats do not create additional users.
+- **HPX-RQ-035:** Chat prompts, all supplied context, messages and responses are workspace nodes with ordinary graph/history/provenance/protection, not merely ephemeral transcripts.
+- **HPX-RQ-036:** An authorised AI user edits a specifically selected node directly through MCP, using the same graph functions, source/draft/Commit/version/history/receipt/recovery rules as a human. Selection is not authority; MCP is not a second writer.
 
-Observable requirements and invariant commitments, independent of implementation completeness. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+HPX-OWNER-028 removes general-purpose external API access as a product requirement. MCP is an AI-user interaction mode; the internal browser HTTPS API remains.
+
+These are accepted requirements, not implementation claims. Exact identity/grant/concurrency/chat-node/MCP contracts remain to be designed. Earlier source-era single-human-first and unconditional proposal-only staging is qualified by this owner direction.
 
 ## Normative content
 
 Implementation-status words in retained source passages below belong to their recorded milestone. The [current scope/evidence summary](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) and [requirement register](../registers/requirements.csv) distinguish accepted obligations, local implementation, verified scope and future work. This clarification changes no requirement: in particular general composition, same-identity branch Merge, rights/authority, academic export, client-held mode and federation retain their full intended scope even where implementation is deferred. Thirty-one registered compound seeds and source-coverage counts are not an exhaustive set of individually verified atomic obligations.
-
 
 
 ### Hypergraph PX MU-F — product specification
@@ -49,7 +63,7 @@ The core is a typed temporal multigraph exposed through constrained projections,
 
 1. Stable logical content identities have immutable revision DAGs. Same-identity parents are distinct from cross-identity derivation.
 2. Ordered occurrence placements identify where shared content appears. Repeated content and repeated nested manifests retain distinct binding contexts; moving a placement preserves its identity.
-3. Immutable manifests record composition independently of constituent text changes. Links may cycle; accepted recursive expansion dependencies may not.
+3. Immutable manifests record composition independently of constituent text changes. Under HPX-OWNER-041, saved inclusion relationships may cycle; automatic expansion stops at explicit warned cycle boundaries with deliberate bounded click-through navigation. See the [precise cycle policy](../05-domain/hypergraph-mathematics.md#accepted-cycle-aware-inclusion-policy--hpx-owner-041), which supersedes the source-era blanket rejection. Revision ancestry remains a DAG.
 4. Transformation events record exact ordered immutable inputs/outputs, source ranges, operation parameters and provenance for extraction/fork/split/merge. Reverse lineage is derivable without rewriting sources.
 5. Closed snapshots bind exact manifest and nested occurrence-selected revisions, rules/pins and compiler inputs. Historical reconstruction never follows newer heads, reruns mutable queries or refreshes external metadata silently.
 6. Node, composition and snapshot history remain retained without arbitrary revision-count caps. Request/storage quotas reject work atomically rather than prune history silently. Restore appends a new state.
@@ -62,7 +76,7 @@ Each traversal identifies its projection, order, context, permission scope, dupl
 
 Source `HPX-SRC-0032`, original lines 30–43. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-Embedded SQLite is selected for native `.hpx` workspaces. The [core object model](<../05-domain/core-object-model.md>) and [persistence/recovery specification](<../06-subsystems/formats/hpx-workspace.md>) define the first single-owner durable writer and its explicit exclusions. Portable formats, GitHub backup and federation remain separate milestones.
+Embedded SQLite is selected for native `.hpx` workspaces. The [core object model](<../05-domain/core-object-model.md>) and [persistence/recovery specification](<../06-subsystems/formats/hpx-workspace.md>) document the current single-owner development writer and its explicit exclusions. That current catalog is not the mandatory multi-user product architecture (HPX-OWNER-027); a single SQLite publication writer does not restrict user cardinality. Portable formats, GitHub backup and federation remain separate milestones.
 
 Define one authoritative object/commit publication model with an explicitly recoverable index/read model. No mutable working file or unverified database cache becomes historical truth. A full history audit/read model must avoid redundant replay inside every helper; optimization must preserve integrity rather than trust stale authorization.
 
@@ -88,7 +102,7 @@ Future client-held/non-trusted mode must deny application-controlled plaintext e
 
 Authenticated workspace/group security policy controls key custody and migration; operational TOML cannot create missing decryption authority. Mode changes and re-encryption preserve logical identities and require the applicable authorization. Client-encryption recovery uses a user-held recovery key; server account reset cannot recover client-only keys. Revocation cannot erase data already disclosed to a participant.
 
-Initial future sharing scope is workspace/document. Full retained history is shared only by explicit grant. Current-state sharing must specify dependencies/provenance disclosure and opaque/hidden inaccessible references; read permission does not automatically imply every historical key.
+Mandatory same-instance multi-user sharing covers workspace/document scope; federation remains separate. Full retained history is shared only by explicit grant. Current-state sharing must specify dependencies/provenance disclosure and opaque/hidden inaccessible references; read permission does not automatically imply every historical key.
 
 Keep cryptographic transport/group-key agreement separate from document synchronization, authorization, conflict resolution and archival access. MLS is a candidate for future group transport, not an adopted implementation or complete federation protocol. Reject silent security downgrades. Retain both browser-only and independently trusted client deployment paths for future client-held mode. The stronger guarantee against a malicious hosting server changing editor code requires the independently trusted client and update channel; browser-only deployments must explicitly exclude malicious client-code delivery from their confidentiality guarantee. A client/server deployment role need not imply distinct application implementations.
 
@@ -100,28 +114,12 @@ Provide a desktop writing interface with four default columns, from left to righ
 
 The [frontend integration specification](<../06-subsystems/interfaces/browser-runtime.md>) defines browser/Rust responsibilities, exact selection and source-mapping rules, draft/commit state handling, staged capabilities and frontend acceptance scenarios. Its candidate endpoints and adapter shapes are not implemented or frozen wire formats.
 
-Human and agent principals remain distinct. Context selection, model output and document instructions grant no permissions. Proposals freeze exact targets, action scope, model/actor attribution and expected state; approval rechecks current rights. Mock proposal/approval/recovery precedes live authoring. External model disclosure is explicit and mode-dependent.
+Human and AI-agent user kinds remain distinguishable within the common principal/permission model. Multiple agents may share a workspace. Chat prompts/context/responses are nodes; authorised selected-node MCP editing uses the same application semantics as human editing. Context selection/model output grant no permissions. Proposal review applies where policy requires it, not unconditionally to every authorised AI edit. External model disclosure remains explicit and mode-dependent. HPX-OWNER-027 / HPX-SUB-010 qualify earlier staging.
 
-Branch comparison/selected integration, anchored comments, typed reasoning annotations, graph navigation, read-only Zotero citation integration, export and shared REST/MCP interfaces are planned product areas. They are not implemented yet. Specify and validate detailed capability, provider and protocol contracts before enabling them.
+Branch comparison/selected integration, anchored comments, typed reasoning annotations, graph navigation, read-only Zotero citation integration, export and required AI-user MCP access are product areas with incomplete implementation. They are not implemented yet. Specify and validate detailed capability, provider and protocol contracts before enabling them.
 
 The [workspace interface specification](<../06-subsystems/document-engine.md>) extends the desktop contract with independent chapter documents in versioned composite works, per-user/workspace protected provenance clipboards, explicit selection promotion, repeated paste-as-fork, pinned/live transclusion and contextual semantic assertions. Exact history, ownership, authorization and recovery are prerequisites for these durable capabilities. Clipboard previews and anchors are sensitive private state; ordinary copy never silently commits unsaved work. Lower-panel context pinning and accessible navigation are required. Zotero targets separately authenticated desktop-local REST and cloud Web API adapters, read-only initially. All these capabilities remain planned.
 
-
-## Examples and counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Dependencies and consequences
-
-Observable requirements and invariant commitments, independent of implementation completeness. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Open questions and conflicts
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 
@@ -138,7 +136,7 @@ Expose **Fork, Link, Embed, Merge and Copy** as distinct action names. The owner
 ## Separately reviewed owner additions, 2026-10-25
 
 - **HPX-RQ-028:** Make “logically equivalent” explicitly discoverable as the existing contextual equivalence relation, preserving identity and the distinction between an assertion, a checked proof and node identity. See [domain definition](../05-domain/assertions-and-predicates.md#owner-approved-logical-equivalence-clarification-2026-10-25).
-- **HPX-RQ-029:** Provide a read-only graph of any selected authorised nodes as labelled circles and their relationships as labelled connectors, preserving direction, n-ary roles, context, completeness and evidence status. See [graph view contract](../06-subsystems/graph-engine.md#owner-approved-selected-node-graph-view-2026-10-25).
+- **HPX-RQ-029:** Provide a read-only graph of any selected authorised nodes as labelled circles and their relationships as labelled connectors, preserving direction, n-ary roles, context, completeness and evidence status. HPX-OWNER-026 places the node-centred interactive view in a main-editor Graph tab, showing the currently selected node and all its authorised linkages; tab integration and broader linkage coverage remain planned. See [graph view contract](../06-subsystems/graph-engine.md#owner-approved-selected-node-graph-view-2026-10-25) and [editor-tab refinement](../06-subsystems/graph-engine.md#selected-node-editor-graph-tab-2026-10-30).
 
 The owner explicitly deferred the separately proposed statement/relationship-to-Lean conversion workflow. It is not an adopted requirement or an enabled feature by this review.
 
@@ -149,3 +147,17 @@ HPX-RQ-030 records future embedded/bundled Pandoc integration without a separate
 ## HPX-RQ-031: private working branches and exact provenance checkpoints
 
 The owner explicitly adopted [ADR019](../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md) on2026-10-26. Pending edits belong to a private working branch associated with the selected content branch. Autosave acknowledges that branch's exact recoverable buffer; provenance-bearing copy/paste can automatically retain an exact immutable checkpoint without advancing published content. Explicit Commit remains the publication boundary. Exact source correspondence may produce new committed replacement references with inspectable predecessor/promotion evidence; original links/checkpoints remain retained. Changed source stays historical working evidence until explicit review, without heuristic relocation. Current authorization applies to capture, replay, inspection and replacement. This accepted design precedes branch UI integration; backend tests are not complete clipboard/paste/branch delivery evidence.
+
+## Owner-adopted seamless node editing, 2026-10-27
+
+HPX-OWNER-010 defines logical loss of focus as leaving the active content node or switching its branch. Autosave during writing acknowledges recoverable draft text; departure automatically commits changed exact text without routine confirmation. Formatting/menu/comparison focus changes, same-context selection and unchanged revisits do not publish. On failure/unknown acknowledgement retain the outgoing active context, source and frozen operation for retry. Preserve independent source/selection/Undo and exact historical reconstruction. Manual Commit remains available; whole-document multi-node closure publication and parent-Merge semantics are not inferred. See [the exact publication protocol](../07-implementation/protocols/draft-publication.md#owner-adopted-navigation-publication-boundary-2026-10-27).
+
+HPX-OWNER-009 requires required persistent application/recovery evidence to remain inside the portable workspace. No external witness/registration is required or to be implemented. Complete authentic workspace rollback with all evidence restored together is outside detectable guarantees; internal recovery mechanisms and real-data acceptance remain separately verified.
+
+## Known node-creation origin — HPX-RQ-039
+
+Accepted under HPX-OWNER-048: [M1](../../architecture/Conceptual/identity-closure.c4) defines the universal known-origin and determinable-parent/position precondition for every node kind; [O2](../../architecture/Conceptual/placement-effects.c4) applies it before creation effects. [Context and shared-API constraints](../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048) distinguish reusable identity, occurrence placement, root context, ancestry, derivation and machine-equivalent creation context. Creation must not succeed with missing/ambiguous context or a silently selected position. This is specification acceptance, not implementation or a new format.
+
+## Retained selections and constructed-version branches — RQ040–041
+
+Under OWNER049/050, [M1](../../architecture/Conceptual/identity-closure.c4) and [editor notes](../../architecture/C3/browser-organisation.c4) require exact last-successful-autosave composition restoration with nested/repeated inclusion selections, a separate newer-authorised-version indication, and saving an authorised constructed current-document version as a specific branch while retaining logical identity. Routine autosaves must not accumulate historical versions merely because they occur; universal future autosave/Commit separation remains open. [Current scope and unresolved mechanisms](../../architecture/proposals/branch-selection-reconciliation.md) preserve original ADR/departure-Commit/history/authority boundaries and distinguish owning branch, constituent selections, private working state, committed snapshots and read-only projections. No unnamed editable-branch premise, main algorithm, cache or storage format is adopted.

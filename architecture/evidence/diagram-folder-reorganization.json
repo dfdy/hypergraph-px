@@ -1,0 +1,237 @@
+{
+  "date": "2026-10-30",
+  "scope": "diagram source organization only;no architecture change",
+  "primary_file_moves": {
+    "architecture/context.c4": "architecture/context.c4",
+    "architecture/runtime-api.c4": "architecture/C3/runtime-api.c4",
+    "architecture/pure-domain-workflows.c4": "architecture/Sequence/pure-domain-workflows.c4",
+    "architecture/api-implementation.c4": "architecture/C4/api-implementation.c4",
+    "architecture/frontend-delivery-implementation.c4": "architecture/C4/frontend-delivery-implementation.c4",
+    "architecture/application-workflows.c4": "architecture/Sequence/application-workflows.c4",
+    "architecture/executable.c4": "architecture/C3/executable.c4",
+    "architecture/api-workflows.c4": "architecture/Sequence/api-workflows.c4",
+    "architecture/application-coordination.c4": "architecture/C4/application-coordination.c4",
+    "architecture/containers.c4": "architecture/C2/containers.c4",
+    "architecture/frontend-delivery-workflows.c4": "architecture/Sequence/frontend-delivery-workflows.c4",
+    "architecture/pure-domain.c4": "architecture/C3/pure-domain.c4",
+    "architecture/frontend-delivery.c4": "architecture/C3/frontend-delivery.c4",
+    "architecture/remaining-c3.c4": "architecture/C3/remaining-c3.c4"
+  },
+  "views": {
+    "index": {
+      "level": "C1",
+      "old_source": "architecture/context.c4",
+      "new_source": "architecture/context.c4"
+    },
+    "c3_runtime_api": {
+      "level": "C3",
+      "old_source": "architecture/runtime-api.c4",
+      "new_source": "architecture/C3/runtime-api.c4"
+    },
+    "seq_domain_expansion": {
+      "level": "Sequence",
+      "old_source": "architecture/pure-domain-workflows.c4",
+      "new_source": "architecture/Sequence/pure-domain-workflows.c4"
+    },
+    "seq_domain_fork": {
+      "level": "Sequence",
+      "old_source": "architecture/pure-domain-workflows.c4",
+      "new_source": "architecture/Sequence/pure-domain-workflows.c4"
+    },
+    "seq_domain_parent_plan": {
+      "level": "Sequence",
+      "old_source": "architecture/pure-domain-workflows.c4",
+      "new_source": "architecture/Sequence/pure-domain-workflows.c4"
+    },
+    "c4_api_routes": {
+      "level": "C4",
+      "old_source": "architecture/api-implementation.c4",
+      "new_source": "architecture/C4/api-implementation.c4"
+    },
+    "c4_frontend_build": {
+      "level": "C4",
+      "old_source": "architecture/frontend-delivery-implementation.c4",
+      "new_source": "architecture/C4/frontend-delivery-implementation.c4"
+    },
+    "c4_frontend_embedding": {
+      "level": "C4",
+      "old_source": "architecture/frontend-delivery-implementation.c4",
+      "new_source": "architecture/C4/frontend-delivery-implementation.c4"
+    },
+    "c4_frontend_routing": {
+      "level": "C4",
+      "old_source": "architecture/frontend-delivery-implementation.c4",
+      "new_source": "architecture/C4/frontend-delivery-implementation.c4"
+    },
+    "seq_application_transaction": {
+      "level": "Sequence",
+      "old_source": "architecture/application-workflows.c4",
+      "new_source": "architecture/Sequence/application-workflows.c4"
+    },
+    "seq_application_read": {
+      "level": "Sequence",
+      "old_source": "architecture/application-workflows.c4",
+      "new_source": "architecture/Sequence/application-workflows.c4"
+    },
+    "seq_application_checkpoint": {
+      "level": "Sequence",
+      "old_source": "architecture/application-workflows.c4",
+      "new_source": "architecture/Sequence/application-workflows.c4"
+    },
+    "c3_executable": {
+      "level": "C3",
+      "old_source": "architecture/executable.c4",
+      "new_source": "architecture/C3/executable.c4"
+    },
+    "seq_save": {
+      "level": "Sequence",
+      "old_source": "architecture/api-workflows.c4",
+      "new_source": "architecture/Sequence/api-workflows.c4"
+    },
+    "seq_commit": {
+      "level": "Sequence",
+      "old_source": "architecture/api-workflows.c4",
+      "new_source": "architecture/Sequence/api-workflows.c4"
+    },
+    "seq_unlock": {
+      "level": "Sequence",
+      "old_source": "architecture/api-workflows.c4",
+      "new_source": "architecture/Sequence/api-workflows.c4"
+    },
+    "seq_uncertain": {
+      "level": "Sequence",
+      "old_source": "architecture/api-workflows.c4",
+      "new_source": "architecture/Sequence/api-workflows.c4"
+    },
+    "c4_application_transaction": {
+      "level": "C4",
+      "old_source": "architecture/application-coordination.c4",
+      "new_source": "architecture/C4/application-coordination.c4"
+    },
+    "c4_application_features": {
+      "level": "C4",
+      "old_source": "architecture/application-coordination.c4",
+      "new_source": "architecture/C4/application-coordination.c4"
+    },
+    "c4_application_reads": {
+      "level": "C4",
+      "old_source": "architecture/application-coordination.c4",
+      "new_source": "architecture/C4/application-coordination.c4"
+    },
+    "c2_containers": {
+      "level": "C2",
+      "old_source": "architecture/containers.c4",
+      "new_source": "architecture/C2/containers.c4"
+    },
+    "seq_frontend_build": {
+      "level": "Sequence",
+      "old_source": "architecture/frontend-delivery-workflows.c4",
+      "new_source": "architecture/Sequence/frontend-delivery-workflows.c4"
+    },
+    "seq_frontend_load": {
+      "level": "Sequence",
+      "old_source": "architecture/frontend-delivery-workflows.c4",
+      "new_source": "architecture/Sequence/frontend-delivery-workflows.c4"
+    },
+    "seq_frontend_session": {
+      "level": "Sequence",
+      "old_source": "architecture/frontend-delivery-workflows.c4",
+      "new_source": "architecture/Sequence/frontend-delivery-workflows.c4"
+    },
+    "c3_pure_domain": {
+      "level": "C3",
+      "old_source": "architecture/pure-domain.c4",
+      "new_source": "architecture/C3/pure-domain.c4"
+    },
+    "c4_domain_sources": {
+      "level": "C4",
+      "old_source": "architecture/pure-domain.c4",
+      "new_source": "architecture/C4/pure-domain.c4"
+    },
+    "c4_domain_history": {
+      "level": "C4",
+      "old_source": "architecture/pure-domain.c4",
+      "new_source": "architecture/C4/pure-domain.c4"
+    },
+    "c3_frontend_delivery": {
+      "level": "C3",
+      "old_source": "architecture/frontend-delivery.c4",
+      "new_source": "architecture/C3/frontend-delivery.c4"
+    },
+    "c4_frontend_delivery": {
+      "level": "C4",
+      "old_source": "architecture/frontend-delivery.c4",
+      "new_source": "architecture/C4/frontend-delivery.c4"
+    },
+    "c3_application": {
+      "level": "C3",
+      "old_source": "architecture/remaining-c3.c4",
+      "new_source": "architecture/C3/remaining-c3.c4"
+    },
+    "c3_workspace_persistence": {
+      "level": "C3",
+      "old_source": "architecture/remaining-c3.c4",
+      "new_source": "architecture/C3/remaining-c3.c4"
+    },
+    "c3_crypto": {
+      "level": "C3",
+      "old_source": "architecture/remaining-c3.c4",
+      "new_source": "architecture/C3/remaining-c3.c4"
+    },
+    "c3_keychain": {
+      "level": "C3",
+      "old_source": "architecture/remaining-c3.c4",
+      "new_source": "architecture/C3/remaining-c3.c4"
+    },
+    "c3_integrations": {
+      "level": "C3",
+      "old_source": "architecture/remaining-c3.c4",
+      "new_source": "architecture/C3/remaining-c3.c4"
+    }
+  },
+  "old_source_hashes": {
+    "architecture/context.c4": "6ff8970869991bd970f820e3dee14dc4ee9243320f5a6cc44e71bab8679965a5",
+    "architecture/runtime-api.c4": "70200958387b5553e154c3bf79425ef9156dc0f9ca80f8c658478bfdffc07b1f",
+    "architecture/pure-domain-workflows.c4": "9c39c985df6a302f4fb368f790aa3e50195779e00f967525312710e52c5e9cc3",
+    "architecture/api-implementation.c4": "1d40a2efc0571bd48419e3f7ad5468a5018f22a20be2b333520441bcd182e373",
+    "architecture/frontend-delivery-implementation.c4": "3ec518d2f2b8b1798ed42f89a6b2007065310bf2ae9e8783d4fc977dab1e30b8",
+    "architecture/application-workflows.c4": "d97024434ed87dba9b9a243cc4b4196ebc708bc0be5bf70f0ae47317303865ff",
+    "architecture/executable.c4": "dda961fc770e547f53c945efa51728092b5b0f472d6eed95543a6bdd987e5ee2",
+    "architecture/api-workflows.c4": "ca89efa5fd126b3c1a92bd7fb20f15abfc530c909ee5914ca99ea7293089a719",
+    "architecture/application-coordination.c4": "0286b7451a2d964c37a097fd004372e6618e751a1a2486205b49dd18aa180f54",
+    "architecture/containers.c4": "c1e7a19505cc5ee09261e527e8ef5b605c0b99530b432b867a4d56535ff20979",
+    "architecture/frontend-delivery-workflows.c4": "bddb7d44693fe8c2b3bcbc3ea5bd7c2ba2e04f56a2162b9eb8debf16876d76f5",
+    "architecture/pure-domain.c4": "f2d23b401b8c7916d4363c483399268ebb9444bd8386385ca36282473b320853",
+    "architecture/frontend-delivery.c4": "4411056cb297dede33df0f993885cbb295a6bc0c837eda965901f4f8116bcca4",
+    "architecture/remaining-c3.c4": "5525d62506934833c096853ae2ddd06a025dcfe35a23d235c242180f035049a9"
+  },
+  "new_source_hashes": {
+    "architecture/context.c4": "6ff8970869991bd970f820e3dee14dc4ee9243320f5a6cc44e71bab8679965a5",
+    "architecture/C2/containers.c4": "000070d33a25229d037d9f7b26ca20920a3d81c5738afb923ad16f5addb7307b",
+    "architecture/C3/runtime-api.c4": "2424c553606246547e1011e463f21dc5f254b849d94f375c30c8004b39a01574",
+    "architecture/C3/executable.c4": "94569661383a872984efad87bea3825a9e1472ec26174177f30f75d9905d0f75",
+    "architecture/C3/pure-domain.c4": "20e106146558f22352e9b6472d96fd764491f461c0d3e8c04a7904cd8fbd3347",
+    "architecture/C3/frontend-delivery.c4": "01b0c863d30d48cc80def8fe30e548683927ff3ab2d578c564186bfdb61a088c",
+    "architecture/C3/remaining-c3.c4": "b9a6a8b18131fda24c5ebd09ca21c04e4d9200753ae3df9d6ba60fb5776fc7d8",
+    "architecture/C4/api-implementation.c4": "dfe1be6ff00c432eb4cbe0e2446e880a9baefea00c5f85f198d56c6d5fb87065",
+    "architecture/C4/frontend-delivery-implementation.c4": "ddf16b2b763f7695f2112349a17260fd0d6ce9d43e0fd85a5f9fa1e9374417f7",
+    "architecture/C4/application-coordination.c4": "b74d7760d70f408f7365a49d5ab880d3c4cd1b7eab3bffb5c7a658cd9b6617c9",
+    "architecture/C4/pure-domain.c4": "8912dcffab7a76ac32600be8991179ad2cabe9b31b65659b6918f39edd1544b0",
+    "architecture/C4/frontend-delivery.c4": "951510983d9420bbad2cc0754e9de63b7d70bb06f558ef7c98233febaf2f2b16",
+    "architecture/Sequence/pure-domain-workflows.c4": "df513631142641e4b87ff7414c6c4645ace2e95849aed57c44723d4a7271c816",
+    "architecture/Sequence/application-workflows.c4": "6fc965dfbae3643e6afd525f61b58d107a460619461e91c33c3f08de34112d1c",
+    "architecture/Sequence/api-workflows.c4": "576d6873806c8be3e50b57e7192613dc70a8ef7e6b8ad9da3b56f3e64da8f2df",
+    "architecture/Sequence/frontend-delivery-workflows.c4": "516639928359c5b467f4f4f303b5da0cb7b5b86cca5c1dd0c85e2f7147e6ac1c"
+  },
+  "historical_evidence": "Earlier execution records and JSON inventories retain as-run paths/hashes;use this relocation map for current sources.",
+  "audit_file_moves": {
+    "architecture/api-implementation-audit.md": "architecture/audits/api-implementation-audit.md",
+    "architecture/application-coordination-audit.md": "architecture/audits/application-coordination-audit.md",
+    "architecture/c2-audit.md": "architecture/audits/c2-audit.md",
+    "architecture/c3-audit.md": "architecture/audits/c3-audit.md",
+    "architecture/c3-coverage-audit.md": "architecture/audits/c3-coverage-audit.md",
+    "architecture/frontend-delivery-audit.md": "architecture/audits/frontend-delivery-audit.md",
+    "architecture/pure-domain-audit.md": "architecture/audits/pure-domain-audit.md",
+    "architecture/runtime-api-audit.md": "architecture/audits/runtime-api-audit.md"
+  }
+}

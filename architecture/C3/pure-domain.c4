@@ -1,0 +1,386 @@
+// Proposed source-backed decomposition; no new modules or approved V3 design.
+specification {
+  relationship domain_use { line solid; color slate }
+  relationship domain_call { line solid; color slate }
+  relationship domain_type { line dotted; color slate }
+  relationship domain_test { line dotted; color slate }
+}
+model {
+  extend hpx.native.domain {
+    exact = component "Identity and exact-source coordinates" {
+      #implemented
+      description "Distinct opaque identity types, exact historical anchors and snapshot-binding data; scalar-safe range/conversion helpers. No allocation, closure resolution, source ownership proof or authorization."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/records.rs"] symbols ["Anchor", "SnapshotBinding", "utf16_to_byte", "validate_byte_range"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/05-domain/core-object-model.md
+      link ../../docs/05-domain/text-and-anchors.md
+      link ../../crates/domain/src/records.rs
+    }
+  }
+  extend hpx.native.domain {
+    expansion_rules = component "Supplied expansion projection" {
+      #implemented
+      description "Bounded finite supplied-graph Kahn validation only. No production caller found. Repeated/parallel edges allowed; hyperlinks excluded. Does not establish complete closure, placement ownership or reading order."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/expansion.rs"] symbols ["validate", "Budget", "Validated"] }
+      link ../../docs/07-implementation/algorithms/expansion-validation.md
+      link ../../docs/05-domain/hypergraph-mathematics.md
+      link ../../crates/domain/src/expansion.rs
+    }
+  }
+  extend hpx.native.domain {
+    source_plans = component "Exact fragment and checkpoint plans" {
+      #implemented
+      description "Bounded cross-identity Fork/reviewed synthesis and exact private capture. Callers supply verified context/source/output identity; returned slices/checks do not authorize or persist anything."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/fork.rs", "crates/domain/src/merge.rs", "crates/domain/src/working.rs"] symbols ["plan", "validate", "capture"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/05-domain/core-object-model.md
+      link ../../docs/05-domain/text-and-anchors.md
+      link ../../crates/domain/src/fork.rs
+      link ../../crates/domain/src/merge.rs
+      link ../../crates/domain/src/working.rs
+    }
+  }
+  extend hpx.native.domain {
+    annotation_rules = component "Passage comments and assertion rules" {
+      #implemented
+      description "Exact anchored passage/comment and role-labelled participant checks; supplied predicate orientation and review-state transition checks. Neither truth inference nor general graph navigation."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/comment.rs", "crates/domain/src/assertion.rs"] symbols ["plan", "validate", "binary_order", "review"] }
+      link ../../docs/05-domain/assertions-and-predicates.md
+      link ../../docs/04-architecture/decisions/0017-initial-durable-comments.md
+      link ../../crates/domain/src/comment.rs
+      link ../../crates/domain/src/assertion.rs
+    }
+  }
+  extend hpx.native.domain {
+    history_plans = component "Same-node history and passage planning" {
+      #partial
+      description "Implemented bounded supplied-DAG base selection, immediate-base traces/origins and competing-passage selection. Wider parent-Merge scope remains partial: no arbitrary older/two-parent map composition or production selector orchestration. No authenticated clock allocation, record IO or publication."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "partial" execution "pure domain" paths ["crates/domain/src/parent_merge.rs", "crates/domain/src/parent_merge/ancestry.rs", "crates/domain/src/parent_merge/lineage.rs", "crates/domain/src/parent_merge/origins.rs"] symbols ["plan", "common_base", "Trace", "Map"] }
+      link ../../docs/07-implementation/algorithms/parent-merge.md
+      link ../../crates/domain/src/parent_merge.rs
+      link ../../crates/domain/src/parent_merge/ancestry.rs
+      link ../../crates/domain/src/parent_merge/lineage.rs
+      link ../../crates/domain/src/parent_merge/origins.rs
+    }
+  }
+  extend hpx.native.domain.exact {
+    records = code "records • IDs, anchors and byte ranges" {
+      #implemented
+      description "records.rs data and helpers. UTF16 conversion rejects split surrogates; range checks preserve exact UTF8. SnapshotBinding is data, not a closure validator. No production utf16_to_byte caller found."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/records.rs"] symbols ["Anchor", "SnapshotBinding", "utf16_to_byte", "validate_byte_range"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/05-domain/core-object-model.md
+      link ../../docs/05-domain/text-and-anchors.md
+      link ../../crates/domain/src/records.rs
+    }
+  }
+  extend hpx.native.domain.expansion_rules {
+    validate = code "expansion • validate / spend" {
+      #implemented
+      description "Supplied input limits, unique vertex registration, endpoint validation, deterministic Kahn queue and charged work. Returns counts only; not a topological order, complete renderer or accepted application mutation."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/expansion.rs"] symbols ["validate", "spend", "Budget", "Validated"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/05-domain/core-object-model.md
+      link ../../docs/05-domain/text-and-anchors.md
+      link ../../crates/domain/src/expansion.rs
+    }
+  }
+  extend hpx.native.domain.source_plans {
+    fork = code "fork • plan" {
+      #implemented
+      description "Reject same identity, mismatched revision/path, invalid or empty byte range; return a borrowed exact fragment for an externally supplied new node ID."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/fork.rs"] symbols ["plan", "Plan"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/05-domain/core-object-model.md
+      link ../../docs/05-domain/text-and-anchors.md
+      link ../../crates/domain/src/fork.rs
+    }
+  }
+  extend hpx.native.domain.source_plans {
+    merge = code "merge • validate" {
+      #implemented
+      description "Reviewed cross-identity synthesis; bounded input/output bytes and nonempty output. Reuses fork::plan for each exact source. Not same-node parent-Merge or automatic authorship inference."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/merge.rs"] symbols ["validate", "Input"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/05-domain/core-object-model.md
+      link ../../docs/05-domain/text-and-anchors.md
+      link ../../crates/domain/src/merge.rs
+    }
+  }
+  extend hpx.native.domain.source_plans {
+    working = code "working • capture" {
+      #implemented
+      description "Require supplied owned == acknowledged text, exact nonempty scalar-safe range and quote equality. Caller proves acknowledged sequence/generation and persists the checkpoint."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/working.rs"] symbols ["capture"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/05-domain/core-object-model.md
+      link ../../docs/05-domain/text-and-anchors.md
+      link ../../crates/domain/src/working.rs
+    }
+  }
+  extend hpx.native.domain.annotation_rules {
+    comment = code "comment • plan" {
+      #implemented
+      description "Verify exact revision/path/passage/quote and nonblank bounded body. Body is retained unchanged; trimming is an emptiness check only."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/comment.rs"] symbols ["plan", "Plan"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/05-domain/core-object-model.md
+      link ../../docs/05-domain/text-and-anchors.md
+      link ../../crates/domain/src/comment.rs
+    }
+  }
+  extend hpx.native.domain.annotation_rules {
+    assertion = code "assertion • validate / orientation / review" {
+      #implemented
+      description "Bound arity/roles/quoted bytes; verify participant source context; prevent self-reference. Canonical orientation uses adapter-supplied keys. Review checks a state transition; adapters record attributable judgement, not proof."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/assertion.rs"] symbols ["validate", "binary_order", "review", "Participant", "ReviewState"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/05-domain/core-object-model.md
+      link ../../docs/05-domain/text-and-anchors.md
+      link ../../crates/domain/src/assertion.rs
+    }
+  }
+  extend hpx.native.domain.history_plans {
+    types = code "parent_merge • shared plan data" {
+      #implemented
+      description "Actual grouped structs/enums and logical Budget in parent_merge.rs; type dependencies are dotted. Supplied origin order is not authenticated by these types."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/parent_merge.rs"] symbols ["Base", "Side", "Edit", "Origin", "Mapping", "Limits", "Outcome"] }
+      link ../../docs/07-implementation/algorithms/parent-merge.md
+      link ../../crates/domain/src/parent_merge.rs
+    }
+  }
+  extend hpx.native.domain.history_plans {
+    selector = code "parent_merge • plan" {
+      #implemented
+      description "Validate supplied base-aligned source/target maps and exact reconstruction before deterministic selection. Equal replacements retain origins; unknown mapping/order or complex competition returns Unresolved without partial merged text. No production caller found."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/parent_merge.rs"] symbols ["plan", "validate_side", "apply"] }
+      link ../../docs/07-implementation/algorithms/parent-merge.md
+      link ../../crates/domain/src/parent_merge.rs
+    }
+  }
+  extend hpx.native.domain.history_plans {
+    ancestry = code "ancestry • common_base" {
+      #implemented
+      description "Validate supplied same-node metadata and reachable parent DAG under work bounds; return unique maximal common ancestor/incorporation flags, or explicit missing/cycle/unrelated/ambiguous/limit outcomes. No history fetching."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/parent_merge/ancestry.rs"] symbols ["common_base", "Record", "CommonBase"] }
+      link ../../docs/07-implementation/algorithms/parent-merge.md
+      link ../../crates/domain/src/parent_merge/ancestry.rs
+    }
+  }
+  extend hpx.native.domain.history_plans {
+    lineage = code "lineage • Trace new / restore / apply" {
+      #implemented
+      description "Immutable-on-error immediate-base splice trace; exact current/after bytes, intermediate ranges, quoted old text and canonical restoration. No guessed inverse-Undo origin or general diff."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/parent_merge/lineage.rs"] symbols ["Trace", "new", "restore", "apply"] }
+      link ../../docs/07-implementation/algorithms/parent-merge.md
+      link ../../crates/domain/src/parent_merge/lineage.rs
+    }
+  }
+  extend hpx.native.domain.history_plans {
+    origins = code "origins • Map root / publish" {
+      #implemented
+      description "Pure in-memory origin-map derivation despite publish name. Require matching trace, supplied positive order and explicit fresh/copy/unknown evidence; preserve inherited age and deletion complements. No SQL COMMIT or clock allocator."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "pure domain" paths ["crates/domain/src/parent_merge/origins.rs"] symbols ["Map", "root", "publish"] }
+      link ../../docs/07-implementation/algorithms/parent-merge.md
+      link ../../crates/domain/src/parent_merge/origins.rs
+    }
+  }
+  extend hpx.native.domain {
+    test_calls = code "Existing domain unit-test call sites" {
+      #implemented
+      description "Actual cfg(test) modules invoke the otherwise uncalled expansion validator and parent-Merge selector. Inventory/source review only; these tests are not executed by this task."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "test-only;not release runtime" paths ["crates/domain/src/expansion.rs", "crates/domain/src/parent_merge.rs"] symbols ["tests"] }
+      link ../../docs/08-assurance/formal-validation-digest.md
+      link ../../crates/domain/src/expansion.rs
+      link ../../crates/domain/src/parent_merge.rs
+    }
+  }
+  extend hpx.native.storage {
+    domain_forks = code "forks • existing adapter code" {
+      #implemented
+      description "forks::apply captures authenticated pinned source, calls pure Fork plan, creates independent document/history and derivation within the existing writer transaction."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "adapter outside pure domain" paths ["crates/storage/src/forks.rs", "crates/storage/src/lib.rs"] symbols ["apply", "create_document"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../crates/storage/src/forks.rs
+      link ../../crates/storage/src/lib.rs
+    }
+  }
+  extend hpx.native.storage {
+    domain_merges = code "merges • existing adapter code" {
+      #implemented
+      description "merges::apply verifies source captures and calls cross-identity merge validation; output/derivation records remain adapter-owned."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "adapter outside pure domain" paths ["crates/storage/src/merges.rs"] symbols ["apply"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../crates/storage/src/merges.rs
+    }
+  }
+  extend hpx.native.storage {
+    domain_working = code "working • existing adapter code" {
+      #implemented
+      description "working request checks and current generation/sequence/source guards surround pure capture; checkpoint/clipboard persistence is separate from Commit."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "adapter outside pure domain" paths ["crates/storage/src/working.rs"] symbols ["validate", "authorize", "apply"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../crates/storage/src/working.rs
+    }
+  }
+  extend hpx.native.storage {
+    domain_comments = code "comments • existing adapter code" {
+      #implemented
+      description "comments::apply verifies committed source then calls comment::plan; exact historical annotation records/indexes remain outside domain."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "adapter outside pure domain" paths ["crates/storage/src/comments.rs"] symbols ["apply"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../crates/storage/src/comments.rs
+    }
+  }
+  extend hpx.native.storage {
+    domain_assertions = code "assertions • existing adapter code" {
+      #implemented
+      description "assertions adapter supplies predicate roles/order keys and verified sources; calls validate/binary_order/review and persists retrospective revisions."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "adapter outside pure domain" paths ["crates/storage/src/assertions.rs"] symbols ["apply", "read_entry"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../crates/storage/src/assertions.rs
+    }
+  }
+  extend hpx.native.storage {
+    domain_encoding = code "encoding • adapter codecs" {
+      #implemented
+      description "Actual adapter identity/snapshot binding codecs and strict versioned record wrapper. Serialization remains outside domain; dotted link denotes type use."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "adapter outside pure domain" paths ["crates/storage/src/encoding.rs"] symbols ["Identity", "RECORD_VERSION"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../crates/storage/src/encoding.rs
+    }
+  }
+  extend hpx.native.storage {
+    domain_base_reader = code "base reader • existing adapter code" {
+      #implemented
+      description "Authorized consistent-read legacy-history adapter; bounds encrypted bytes/revisions and passes complete reachable records to common_base. Current API route exists; this is not parent-Merge publication."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "adapter outside pure domain" paths ["crates/storage/src/branches/merge_base.rs", "crates/storage/src/history.rs"] symbols ["parent_merge_base", "read_entry"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../crates/storage/src/branches/merge_base.rs
+      link ../../crates/storage/src/history.rs
+    }
+  }
+  extend hpx.native.storage {
+    domain_trace_driver = code "trace driver • existing adapter code" {
+      #implemented
+      description "Schema3/feature-guarded experimental Save/reset and candidate lineage codec call Trace constructors/restoration/application. Normal opening remains schemas1/2; no runtime temporal route."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "adapter outside pure domain" paths ["crates/storage/src/temporal_save.rs", "crates/storage/src/lineage_record.rs", "crates/storage/src/temporal_commit.rs"] symbols ["temporal_save", "decode", "Trace"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../crates/storage/src/temporal_save.rs
+      link ../../crates/storage/src/lineage_record.rs
+      link ../../crates/storage/src/temporal_commit.rs
+    }
+  }
+  extend hpx.native.storage {
+    domain_origin_replay = code "origin replay • existing adapter code" {
+      #implemented
+      description "Candidate origin codec/guarded reader and single-parent temporal Commit replay Map root/publish. Explicit marker3/feature/context controls, not a production two-parent workflow."
+      metadata { authority "proposed source-backed grouping;not V3 adoption" implementation "implemented" execution "adapter outside pure domain" paths ["crates/storage/src/origin_record.rs", "crates/storage/src/origin_history.rs", "crates/storage/src/temporal_commit.rs"] symbols ["decode", "encode", "temporal_origins"] }
+      link ../../docs/06-subsystems/interfaces/domain-navigation.md
+      link ../../docs/07-implementation/data-structures/sqlite-records.md
+      link ../../crates/storage/src/origin_record.rs
+      link ../../crates/storage/src/origin_history.rs
+      link ../../crates/storage/src/temporal_commit.rs
+    }
+  }
+  hpx.native.application -[domain_use]-> hpx.native.domain.source_plans "Fork / synthesis / checkpoint via adapters" { metadata { evidence "crates/storage/src/lib.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/lib.rs }
+  hpx.native.application -[domain_use]-> hpx.native.domain.annotation_rules "Comment / assertion commands via adapters" { metadata { evidence "crates/storage/src/lib.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage -[domain_use]-> hpx.native.domain.exact "Exact read/write bindings and ranges" { metadata { evidence "crates/storage/src/anchors.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/anchors.rs }
+  hpx.native.storage -[domain_use]-> hpx.native.domain.history_plans "History reader / guarded temporal foundations" { metadata { evidence "crates/storage/src/branches/merge_base.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/branches/merge_base.rs }
+  hpx.native.domain.source_plans -[domain_use]-> hpx.native.domain.exact "Exact IDs, anchors and ranges" { metadata { evidence "crates/domain/src/fork.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/fork.rs }
+  hpx.native.domain.annotation_rules -[domain_use]-> hpx.native.domain.exact "Exact participant/passages" { metadata { evidence "crates/domain/src/assertion.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/assertion.rs }
+  hpx.native.domain.history_plans -[domain_use]-> hpx.native.domain.exact "Same-node IDs and byte coordinates" { metadata { evidence "crates/domain/src/parent_merge.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge.rs }
+  hpx.native.storage.c4_publication -[domain_call]-> hpx.native.storage.domain_forks "Dispatch forks operation" { metadata { evidence "crates/storage/src/lib.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage.domain_forks -[domain_call]-> hpx.native.domain.source_plans.fork "Invoke pure planning / rules" { metadata { evidence "crates/storage/src/forks.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/forks.rs }
+  hpx.native.storage.c4_publication -[domain_call]-> hpx.native.storage.domain_merges "Dispatch merges operation" { metadata { evidence "crates/storage/src/lib.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage.domain_merges -[domain_call]-> hpx.native.domain.source_plans.merge "Invoke pure planning / rules" { metadata { evidence "crates/storage/src/merges.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/merges.rs }
+  hpx.native.storage.c4_publication -[domain_call]-> hpx.native.storage.domain_working "Dispatch working operation" { metadata { evidence "crates/storage/src/lib.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage.domain_working -[domain_call]-> hpx.native.domain.source_plans.working "Invoke pure capture" { metadata { evidence "crates/storage/src/working.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/working.rs }
+  hpx.native.storage.c4_publication -[domain_call]-> hpx.native.storage.domain_comments "Dispatch comments operation" { metadata { evidence "crates/storage/src/lib.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage.domain_comments -[domain_call]-> hpx.native.domain.annotation_rules.comment "Invoke pure planning / rules" { metadata { evidence "crates/storage/src/comments.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/comments.rs }
+  hpx.native.storage.c4_publication -[domain_call]-> hpx.native.storage.domain_assertions "Dispatch assertions operation" { metadata { evidence "crates/storage/src/lib.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/lib.rs }
+  hpx.native.storage.domain_assertions -[domain_call]-> hpx.native.domain.annotation_rules.assertion "Invoke pure planning / rules" { metadata { evidence "crates/storage/src/assertions.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/assertions.rs }
+  hpx.native.domain.source_plans.fork -[domain_call]-> hpx.native.domain.exact.records "Validate exact byte range" { metadata { evidence "crates/domain/src/fork.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/fork.rs }
+  hpx.native.domain.source_plans.working -[domain_call]-> hpx.native.domain.exact.records "Validate exact byte range" { metadata { evidence "crates/domain/src/working.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/working.rs }
+  hpx.native.domain.annotation_rules.comment -[domain_call]-> hpx.native.domain.exact.records "Validate exact byte range" { metadata { evidence "crates/domain/src/comment.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/comment.rs }
+  hpx.native.domain.annotation_rules.assertion -[domain_call]-> hpx.native.domain.exact.records "Validate exact byte range" { metadata { evidence "crates/domain/src/assertion.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/assertion.rs }
+  hpx.native.domain.source_plans.merge -[domain_call]-> hpx.native.domain.source_plans.fork "Validate each pinned input" { metadata { evidence "crates/domain/src/merge.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/merge.rs }
+  hpx.native.domain.source_plans.merge -[domain_type]-> hpx.native.domain.exact.records "Input identity / anchor types" { metadata { evidence "crates/domain/src/merge.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/merge.rs }
+  hpx.native.storage.c4_history -[domain_call]-> hpx.native.domain.exact.records "resolve_anchor range check" { metadata { evidence "crates/storage/src/anchors.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/anchors.rs }
+  hpx.native.storage.domain_encoding -[domain_type]-> hpx.native.domain.exact.records "Identity / SnapshotBinding codecs" { metadata { evidence "crates/storage/src/encoding.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/encoding.rs }
+  hpx.native.storage.domain_base_reader -[domain_call]-> hpx.native.domain.history_plans.ancestry "Supplied authenticated reachable DAG" { metadata { evidence "crates/storage/src/branches/merge_base.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/branches/merge_base.rs }
+  hpx.native.storage.domain_trace_driver -[domain_call]-> hpx.native.domain.history_plans.lineage "Construct / restore / apply exact trace" { metadata { evidence "crates/storage/src/temporal_save.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/temporal_save.rs }
+  hpx.native.storage.domain_origin_replay -[domain_call]-> hpx.native.domain.history_plans.origins "Replay retained origin evidence" { metadata { evidence "crates/storage/src/origin_record.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/origin_record.rs }
+  hpx.native.storage.domain_origin_replay -[domain_call]-> hpx.native.domain.history_plans.lineage "Restore trace before origin replay" { metadata { evidence "crates/storage/src/origin_record.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/storage/src/origin_record.rs }
+  hpx.native.domain.history_plans.selector -[domain_call]-> hpx.native.domain.exact.records "Validate exact source ranges" { metadata { evidence "crates/domain/src/parent_merge.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge.rs }
+  hpx.native.domain.history_plans.lineage -[domain_call]-> hpx.native.domain.exact.records "Validate exact source ranges" { metadata { evidence "crates/domain/src/parent_merge/lineage.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge/lineage.rs }
+  hpx.native.domain.history_plans.origins -[domain_call]-> hpx.native.domain.exact.records "Validate exact source ranges" { metadata { evidence "crates/domain/src/parent_merge/origins.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge/origins.rs }
+  hpx.native.domain.history_plans.ancestry -[domain_type]-> hpx.native.domain.exact.records "Same-node revision identity types" { metadata { evidence "crates/domain/src/parent_merge/ancestry.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge/ancestry.rs }
+  hpx.native.domain.history_plans.types -[domain_type]-> hpx.native.domain.exact.records "Typed node / revision identities" { metadata { evidence "crates/domain/src/parent_merge.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge.rs }
+  hpx.native.domain.history_plans.selector -[domain_type]-> hpx.native.domain.history_plans.types "Shared plan data / limits" { metadata { evidence "crates/domain/src/parent_merge.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge.rs }
+  hpx.native.domain.history_plans.ancestry -[domain_type]-> hpx.native.domain.history_plans.types "Shared plan data / limits" { metadata { evidence "crates/domain/src/parent_merge/ancestry.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge/ancestry.rs }
+  hpx.native.domain.history_plans.lineage -[domain_type]-> hpx.native.domain.history_plans.types "Shared plan data / limits" { metadata { evidence "crates/domain/src/parent_merge/lineage.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge/lineage.rs }
+  hpx.native.domain.history_plans.origins -[domain_type]-> hpx.native.domain.history_plans.types "Shared plan data / limits" { metadata { evidence "crates/domain/src/parent_merge/origins.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge/origins.rs }
+  hpx.native.domain.history_plans.origins -[domain_call]-> hpx.native.domain.history_plans.lineage "Read supplied immediate-base trace" { metadata { evidence "crates/domain/src/parent_merge/origins.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge/origins.rs }
+  hpx.native.domain.test_calls -[domain_test]-> hpx.native.domain.expansion_rules.validate "Existing supplied-graph test calls" { metadata { evidence "crates/domain/src/expansion.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/expansion.rs }
+  hpx.native.domain.test_calls -[domain_test]-> hpx.native.domain.history_plans.selector "Existing supplied-map test calls" { metadata { evidence "crates/domain/src/parent_merge.rs" scope "actual call/data/type dependency at the labelled abstraction;not an authorization or publication grant" } link ../../crates/domain/src/parent_merge.rs }
+}
+views {
+  view c3_pure_domain of hpx.native.domain {
+    title "C3 / Pure domain"
+    description "Focused source interpretation, not new Rust modules/services. Pure rules accept supplied inputs; adapters authenticate, load, allocate and publish. Expansion is not wired to runtime; partial parent-Merge foundations are not an integrated feature. Byte/occurrence/ancestry/derivation distinctions remain explicit. HPX-CAN-010 notes allocate required domain scope to five existing responsibilities; current helper coverage is separately bounded. Conceptual definitions and unresolved mechanisms stay in linked contracts; no conceptual gap is closed here."
+    link ../audits/pure-domain-audit.md
+    link ../../docs/05-domain/core-object-model.md
+    link ../../docs/06-subsystems/interfaces/domain-navigation.md
+    link ../../docs/05-domain/provenance-model.md
+    link ../../docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md
+    group "Pure domain — no IO, authority or serialization" { color primary; border solid
+      include hpx.native.domain.exact with { description "Typed IDs, historical anchors, exact ranges. No allocation, ownership or closure resolution." notes '''Required: distinct Node/Revision/Document/Branch/Occurrence/Manifest/Snapshot identities and exact UTF8 anchors; principal/session/permission and logical-ID/digest/address distinctions remain contract-defined. Current typed data/range helpers do not establish cardinalities, lifecycle, ownership or closure. No entropy, authorization, security-policy format or serialization. See linked Core Object Model and navigation contracts.
+
+[Conceptual content identity and closed state](../Conceptual/identity-closure.c4)''' navigateTo c4_domain_sources }
+      include hpx.native.domain.source_plans with { description "Pinned Fork/synthesis checks and private capture; plans do not grant authority or persist." notes '''Required: exact cross-identity input/output provenance, distinct from same-node parents; mutable draft acknowledgement versus Commit and adopted ADR019 private checkpoints remain separate. Current Fork/synthesis/capture helpers validate supplied context only; full transformations/interactions are not delivered. No authority, persistence or publication. See linked Core Object Model, provenance and ADR019.
+
+[M3 provenance and working state](../Conceptual/provenance-working.c4)
+
+[Conceptual retained-evidence effects](../Conceptual/evidence-effects.c4)''' navigateTo c4_domain_sources }
+      include hpx.native.domain.annotation_rules with { description "Exact anchored comment/participant checks and judgement transitions; no truth inference." notes '''Required: revisioned n-ary hyperedges with ordered role-labelled participants, distinct predicates/assertions, and observable interaction/provenance distinctions. Current anchored comment, participant and judgement helpers cover a bounded subset; binary helpers do not restrict product arity or infer truth, authorship or permission. Full event/interaction records remain contract/design work. See linked Core Object Model and provenance contracts.
+
+[M2 relationships and assertion context](../Conceptual/relationships.c4)''' navigateTo c4_domain_sources }
+      include hpx.native.domain.history_plans with { description "Bounded DAG/base, trace/origin and selection helpers. Wider parent-Merge remains partial." notes "Required: immutable same-node ancestry distinct from cross-identity derivation, exact retained sources and closed historical reconstruction without current-head substitution. Current supplied-DAG/base/trace/origin helpers do not complete arbitrary history maps or publication. Event/Commit coordination and authority remain application responsibilities. See linked Core Object Model, provenance and navigation contracts." navigateTo c4_domain_history }
+      include hpx.native.domain.expansion_rules with { description "Supplied expansion DAG only; no production caller, closure builder or reading-order result." notes "HPX-OWNER-041: cyclic inclusion relationships may be saved. Automatic expansion must stop at an explicit exact cycle boundary, show a warning and permit deliberate bounded click-through navigation without recursive auto-opening. Finite historical inclusion and repeated siblings remain valid; exact cycle detection is not a logical-ID-only or ever-growing-path test. Results retain every required expanded selection and cycle boundary; budgets never silently truncate a closed result. OWNER045 selects finite selected-state tables,structural row equality and finite use trees with exact target/ancestor witnesses. Checked pure Lean model results cover finite stopping,ordered exact-use coverage/determinism and warning/manual-navigation transitions for supplied finite typed tables; OWNER047 source emission now has 19 checked pure Lean theorems and18 synthetic guards under TEST155 for supplied frozen source-faithful partitions; operational resource bounds and Rust/UI/permission correspondence remain unproved. See [checked model scope](../../docs/08-assurance/formal-validation-digest.md#finite-cycle-state-model--2026-10-31) for exact statements and limits. OWNER047 retains exact original inclusion notation at a stop and keeps generated warning/navigation controls outside authored bytes. Pure emission requires frozen source-faithful byte/range/slot inputs; source-map witnesses do not grant edit authority. See [source-emission scope](../proposals/cycle-boundary-source-emission.md). Current supplied-DAG validator still rejects cycles and does not implement this policy, closure or UI. Precise rules remain in the linked mathematics and formal contracts." navigateTo c4_domain_history }
+    }
+    group "Existing co-located caller responsibilities" { color primary; border solid
+      include hpx.native.application with { title "Application coordination" description "Existing co-located adapter responsibility; see source-linked detail." navigateTo c3_application }
+      include hpx.native.storage with { title "Workspace persistence" description "Existing co-located adapter responsibility; see source-linked detail." navigateTo c3_workspace_persistence }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include hpx.native.application -> hpx.native.domain.source_plans where kind is domain_use
+    include hpx.native.application -> hpx.native.domain.annotation_rules where kind is domain_use
+    include hpx.native.storage -> hpx.native.domain.exact where kind is domain_use
+    include hpx.native.storage -> hpx.native.domain.history_plans where kind is domain_use
+    include hpx.native.domain.source_plans -> hpx.native.domain.exact where kind is domain_use
+    include hpx.native.domain.annotation_rules -> hpx.native.domain.exact where kind is domain_use
+    include hpx.native.domain.history_plans -> hpx.native.domain.exact where kind is domain_use
+    exclude * -> * where kind is coverage_call
+    exclude * -> * where kind is coverage_data
+    exclude * -> * where kind is coverage_plan
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+}

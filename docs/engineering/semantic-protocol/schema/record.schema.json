@@ -1,0 +1,1164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hpx:semantic-protocol:record:0.5.0",
+  "title": "HPX-SCP semantic record",
+  "description": "Versioned development-agent records; subordinate to the human-readable canonical HPX-SCP 0.5.0 natural-language specification.",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "enum": [
+        "0.1.0",
+        "0.2.0",
+        "0.3.0",
+        "0.4.0",
+        "0.5.0"
+      ]
+    },
+    "record_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^HPX-(?:REQ|PROP|DEC|EVID|VER|ISSUE|HANDOFF|PROTO)-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "kind": {
+      "enum": [
+        "requirement",
+        "proposal",
+        "decision",
+        "implementation_evidence",
+        "verification_result",
+        "issue",
+        "handoff",
+        "protocol_change"
+      ]
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "status": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority": {
+      "type": "object",
+      "properties": {
+        "basis": {
+          "enum": [
+            "agent_proposal",
+            "user_directive",
+            "approved_specification",
+            "observed_implementation",
+            "external_standard",
+            "agent_report"
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 0
+        }
+      },
+      "required": [
+        "basis"
+      ],
+      "additionalProperties": false
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "enum": [
+              "normative",
+              "observed",
+              "context",
+              "approval",
+              "external"
+            ]
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 0
+          },
+          "note": {
+            "type": "string",
+            "minLength": 0
+          }
+        },
+        "required": [
+          "ref",
+          "role"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "derived_from",
+              "proposes_change_to",
+              "implements",
+              "verifies",
+              "contradicts",
+              "supersedes",
+              "blocks",
+              "affects",
+              "resolves",
+              "hands_off"
+            ]
+          },
+          "target": {
+            "type": "string",
+            "pattern": "^HPX-(?:REQ|PROP|DEC|EVID|VER|ISSUE|HANDOFF|PROTO)-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        },
+        "required": [
+          "type",
+          "target"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "content": {
+      "type": "object"
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Optional registered namespaced fields. Each value is validated against its registered extension schema by the repository validator.",
+      "propertyNames": {
+        "pattern": "^x\\.[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)+$"
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "protocol_version",
+    "record_version",
+    "id",
+    "kind",
+    "subject",
+    "summary",
+    "status",
+    "authority",
+    "source_refs",
+    "relations",
+    "actor",
+    "created_on",
+    "content"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "requirement": {
+      "type": "object",
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 0
+        }
+      },
+      "required": [
+        "statement",
+        "acceptance_criteria"
+      ],
+      "additionalProperties": false
+    },
+    "proposal": {
+      "type": "object",
+      "properties": {
+        "change": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "open_questions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "change",
+        "rationale",
+        "acceptance_criteria",
+        "open_questions"
+      ],
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "properties": {
+        "resolution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approved_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approval_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 0
+        }
+      },
+      "required": [
+        "resolution",
+        "approved_by",
+        "approval_ref"
+      ],
+      "additionalProperties": false
+    },
+    "implementation_evidence": {
+      "type": "object",
+      "properties": {
+        "observations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "commit": {
+          "type": "string",
+          "minLength": 0
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "observations",
+        "paths"
+      ],
+      "additionalProperties": false
+    },
+    "verification_result": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome": {
+          "enum": [
+            "pass",
+            "fail",
+            "partial",
+            "not_run"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 0
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "target",
+        "outcome",
+        "method",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "issue": {
+      "type": "object",
+      "properties": {
+        "problem": {
+          "type": "string",
+          "minLength": 1
+        },
+        "impact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blocking": {
+          "type": "boolean"
+        },
+        "next_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "problem",
+        "impact",
+        "blocking",
+        "next_action"
+      ],
+      "additionalProperties": false
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "from_agent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "to_agent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confirmed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "next_actions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "open_questions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "from_agent",
+        "to_agent",
+        "objective",
+        "confirmed",
+        "next_actions",
+        "open_questions"
+      ],
+      "additionalProperties": false
+    },
+    "protocol_change": {
+      "type": "object",
+      "properties": {
+        "change_class": {
+          "enum": [
+            "compatible",
+            "breaking",
+            "governance"
+          ]
+        },
+        "change_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "files_changed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "compatibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rollback": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "outcome": {
+              "enum": [
+                "pass",
+                "fail",
+                "not_run"
+              ]
+            },
+            "commands": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "outcome",
+            "commands",
+            "evidence"
+          ],
+          "additionalProperties": false
+        },
+        "authorisation": {
+          "type": "object",
+          "properties": {
+            "basis": {
+              "enum": [
+                "delegated_compatible",
+                "owner_review"
+              ]
+            },
+            "ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "basis",
+            "ref"
+          ],
+          "additionalProperties": false
+        },
+        "affected_record_kinds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "change_class",
+        "change_summary",
+        "rationale",
+        "files_changed",
+        "compatibility",
+        "rollback",
+        "validation"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "requirement"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^HPX-REQ-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "accepted",
+              "rejected",
+              "superseded"
+            ]
+          },
+          "content": {
+            "$ref": "#/$defs/requirement"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "proposal"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^HPX-PROP-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "accepted",
+              "rejected",
+              "superseded"
+            ]
+          },
+          "content": {
+            "$ref": "#/$defs/proposal"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "decision"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^HPX-DEC-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "status": {
+            "enum": [
+              "accepted",
+              "superseded"
+            ]
+          },
+          "content": {
+            "$ref": "#/$defs/decision"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "implementation_evidence"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^HPX-EVID-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "status": {
+            "enum": [
+              "reported",
+              "superseded"
+            ]
+          },
+          "content": {
+            "$ref": "#/$defs/implementation_evidence"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "verification_result"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^HPX-VER-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "status": {
+            "enum": [
+              "reported",
+              "superseded"
+            ]
+          },
+          "content": {
+            "$ref": "#/$defs/verification_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "issue"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^HPX-ISSUE-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "blocked",
+              "resolved",
+              "superseded"
+            ]
+          },
+          "content": {
+            "$ref": "#/$defs/issue"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "handoff"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^HPX-HANDOFF-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "acknowledged",
+              "completed"
+            ]
+          },
+          "content": {
+            "$ref": "#/$defs/handoff"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "protocol_change"
+          }
+        },
+        "required": [
+          "kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "id": {
+            "pattern": "^HPX-PROTO-[0-9]{8}-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "applied",
+              "rejected",
+              "reverted"
+            ]
+          },
+          "content": {
+            "$ref": "#/$defs/protocol_change"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "accepted"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_refs": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "const": "approval"
+                }
+              },
+              "required": [
+                "role"
+              ]
+            },
+            "minContains": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "authority": {
+            "properties": {
+              "basis": {
+                "const": "approved_specification"
+              }
+            },
+            "required": [
+              "basis"
+            ]
+          }
+        },
+        "required": [
+          "authority"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_refs": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "enum": [
+                    "normative"
+                  ]
+                }
+              },
+              "required": [
+                "role"
+              ]
+            },
+            "minContains": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "authority": {
+            "properties": {
+              "basis": {
+                "const": "observed_implementation"
+              }
+            },
+            "required": [
+              "basis"
+            ]
+          }
+        },
+        "required": [
+          "authority"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_refs": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "enum": [
+                    "observed"
+                  ]
+                }
+              },
+              "required": [
+                "role"
+              ]
+            },
+            "minContains": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "authority": {
+            "properties": {
+              "basis": {
+                "const": "external_standard"
+              }
+            },
+            "required": [
+              "basis"
+            ]
+          }
+        },
+        "required": [
+          "authority"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_refs": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "enum": [
+                    "external"
+                  ]
+                }
+              },
+              "required": [
+                "role"
+              ]
+            },
+            "minContains": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "authority": {
+            "properties": {
+              "basis": {
+                "const": "user_directive"
+              }
+            },
+            "required": [
+              "basis"
+            ]
+          }
+        },
+        "required": [
+          "authority"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_refs": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "enum": [
+                    "normative",
+                    "approval"
+                  ]
+                }
+              },
+              "required": [
+                "role"
+              ]
+            },
+            "minContains": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "protocol_version": {
+            "const": "0.1.0"
+          }
+        },
+        "required": [
+          "protocol_version"
+        ]
+      },
+      "then": {
+        "properties": {
+          "kind": {
+            "not": {
+              "const": "protocol_change"
+            }
+          }
+        },
+        "not": {
+          "required": [
+            "extensions"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "protocol_change"
+          },
+          "status": {
+            "const": "applied"
+          }
+        },
+        "required": [
+          "kind",
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "content": {
+            "required": [
+              "authorisation"
+            ],
+            "properties": {
+              "validation": {
+                "properties": {
+                  "outcome": {
+                    "const": "pass"
+                  },
+                  "commands": {
+                    "minItems": 1
+                  },
+                  "evidence": {
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "protocol_change"
+          },
+          "status": {
+            "const": "applied"
+          },
+          "content": {
+            "properties": {
+              "authorisation": {
+                "properties": {
+                  "basis": {
+                    "const": "delegated_compatible"
+                  }
+                },
+                "required": [
+                  "basis"
+                ]
+              }
+            },
+            "required": [
+              "authorisation"
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "status",
+          "content"
+        ]
+      },
+      "then": {
+        "properties": {
+          "content": {
+            "properties": {
+              "change_class": {
+                "const": "compatible"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "protocol_change"
+          },
+          "status": {
+            "const": "applied"
+          },
+          "content": {
+            "properties": {
+              "change_class": {
+                "enum": [
+                  "breaking",
+                  "governance"
+                ]
+              }
+            },
+            "required": [
+              "change_class"
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "status",
+          "content"
+        ]
+      },
+      "then": {
+        "properties": {
+          "content": {
+            "properties": {
+              "authorisation": {
+                "properties": {
+                  "basis": {
+                    "const": "owner_review"
+                  }
+                },
+                "required": [
+                  "basis"
+                ]
+              }
+            }
+          },
+          "source_refs": {
+            "contains": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "const": "approval"
+                }
+              },
+              "required": [
+                "role"
+              ]
+            },
+            "minContains": 1
+          }
+        }
+      }
+    }
+  ]
+}

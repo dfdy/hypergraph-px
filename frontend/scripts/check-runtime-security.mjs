@@ -78,6 +78,16 @@ async function run(){
   const response=await raw(guard.port,request(guard.port,'/api/v1/bootstrap',{method:'POST',origin,body:JSON.stringify({token})}));
   ensure(response.status===200,'Verified TLS bootstrap failed');auth=response.data.match(/Set-Cookie: (__Host-hpx=[^;]+)/i)?.[1];ensure(auth,'Bootstrap cookie missing');
  }
+ for(const [body,code,label] of [
+  ['{}',400,'missing bootstrap token'],
+  ['{"token":"invalid","extra":0}',400,'unknown bootstrap field'],
+  ['{"token":"invalid","token":"invalid"}',400,'duplicate bootstrap token'],
+  ['{"token":null}',400,'null bootstrap token'],
+  ['{"token":"invalid"}',403,'wrong bootstrap token']
+ ]){
+  const response=await raw(guard.port,request(guard.port,'/api/v1/bootstrap',{method:'POST',origin,body}));
+  ensure(response.status===code&&!/Set-Cookie:/i.test(response.data),label+' accepted or issued session');checks.push(label+' rejects without issuing a session');
+ }
  await status(200,{cookie:auth},'authenticated locked-runtime status allowed');
  await status(401,{},'missing session rejected');await status(401,{cookie:'__Host-hpx=invalid'},'forged session rejected');
  await status(401,{cookie:auth+'; __Host-hpx=invalid'},'conflicting session cookies rejected');

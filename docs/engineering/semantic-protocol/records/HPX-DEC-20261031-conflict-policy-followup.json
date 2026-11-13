@@ -1,0 +1,44 @@
+{
+  "protocol_version": "0.5.0",
+  "record_version": 1,
+  "id": "HPX-DEC-20261031-conflict-policy-followup",
+  "kind": "decision",
+  "subject": "Commit timestamps,per-user conflict preferences and shared marker lifetime",
+  "summary": "Owner resolves timestamp basis,ties,per-user Ask default and shared unresolved-marker lifecycle;implementation details remain open.",
+  "status": "accepted",
+  "authority": {
+    "basis": "user_directive",
+    "notes": "Explicit follow-up answers in HPX-OWNER-044;agent records decisions without inferring implementation."
+  },
+  "source_refs": [
+    {
+      "ref": "docs/02-governance/OWNER_DECISIONS.md#conflict-timestamps-and-shared-review-state-2026-10-31",
+      "role": "approval",
+      "note": "Owner selects HPX-recorded committed time and confirms asking on ties,per-user preference,Ask default,shared visibility and explicit resolution."
+    },
+    {
+      "ref": "docs/engineering/semantic-protocol/records/HPX-DEC-20261031-reconstruction-conflict-policy.json",
+      "role": "context"
+    },
+    {
+      "ref": "architecture/C3/browser-organisation.c4",
+      "role": "normative"
+    },
+    {
+      "ref": "docs/06-subsystems/frontend-interaction.md#changed-source-conflict-handling--hpx-owner-043",
+      "role": "normative"
+    }
+  ],
+  "relations": [],
+  "actor": "agent:codex (decision recorder)",
+  "created_on": "2026-10-31",
+  "content": {
+    "resolution": "Automatic selection uses when HPX recorded a version as committed;equal competing timestamps ask. Each workspace user has an independent preference,default Ask. All authorised viewers of an affected committed version see its potential-conflict marker until an authorised explicit resolution;opening the modal does not clear it. Private drafts/history/permissions remain protected. Precision/encoding,missing/incomparable timestamps and exact marker/resolution mechanics remain open.",
+    "approved_by": "project owner (explicit follow-up answers)",
+    "approval_ref": "docs/02-governance/OWNER_DECISIONS.md#conflict-timestamps-and-shared-review-state-2026-10-31",
+    "scope": [
+      "Changed followed-source conflicts under OWNER043",
+      "Workspace-local user preference and shared committed-version conflict evidence"
+    ]
+  }
+}

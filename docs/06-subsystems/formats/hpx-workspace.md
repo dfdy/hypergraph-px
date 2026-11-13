@@ -13,15 +13,10 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-26
+- **Last reviewed:** 2026-10-30
 
 OWNER-002 requires explicit per-record versions. The strict wrapper is implemented through adapter codecs; [the record contract](../../07-implementation/data-structures/sqlite-records.md) owns exact fields and current optional kinds. Legacy unversioned payload conversion and real-data acceptance remain unavailable.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Purpose and magic/version identifiers
-
-Native .hpx file identity, record compatibility and real-data acceptance. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Binary/text encoding and schema
 
@@ -47,26 +42,6 @@ Version-1 payload encoding is strictly typed UTF-8 JSON with fixed struct field 
 
 Encrypted catalog authenticates the list of documents and the owner/device context. Each document has a branch head, current draft and immutable root manifest/occurrence. Immutable object insert is create-only; existing records cannot be overwritten by the API. Sealed records authenticate expected kind, identity and generation. Referenced missing/corrupt objects fail; never substitute latest revisions. This detects substitution and many corruptions, not complete rollback of an earlier valid database. Independent rollback witnesses, full policy authority, signatures and group key hierarchies remain future gates.
 
-
-## Canonical and optional fields
-
-Native .hpx file identity, record compatibility and real-data acceptance. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Compatibility and migration
-
-Native .hpx file identity, record compatibility and real-data acceptance. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Data-preservation guarantees
-
-Native .hpx file identity, record compatibility and real-data acceptance. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Corruption and failure semantics
-
-Retain the scoped limits above and [open questions/conflicts](<../../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Validation fixtures
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
 
 ## Source provenance
 

@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 //! Loopback HTTPS single-executable writer. See ADR0004 for trust/bootstrap limits.
+mod api;
+mod api_transport;
 use hypergraph_domain::records::{
-    Anchor, DocumentId, OccurrenceId, OperationId, RevisionId, SnapshotId,
+    Anchor, BranchId, DocumentId, OccurrenceId, OperationId, RevisionId, SnapshotId,
 };
 use hypergraph_keychain::{Native, Provider};
 use hypergraph_storage::{Command, Workspace, encoding};
@@ -110,29 +112,41 @@ fn storage_error(e: hypergraph_storage::Error) -> Response {
 }
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
-struct Bootstrap {
-    token: String,
-}
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct Unlock {
-    passphrase: String,
-}
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct Empty {}
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct Execute {
+struct WorkingReferenceRequest {
     #[serde(with = "encoding::identity")]
-    operation: OperationId,
-    request: Command,
+    entry: hypergraph_storage::clipboard::EntryId,
 }
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
-struct DocumentRequest {
+struct BranchListRequest {
     #[serde(with = "encoding::identity")]
     document: DocumentId,
+    #[serde(with = "encoding::optional_identity")]
+    next: Option<BranchId>,
+    limit: usize,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct BranchHistoryPageRequest {
+    #[serde(with = "encoding::identity")]
+    document: DocumentId,
+    #[serde(with = "encoding::identity")]
+    branch: BranchId,
+    #[serde(with = "encoding::identity")]
+    snapshot: SnapshotId,
+    cursor: Option<Vec<u8>>,
+    limit: usize,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct BranchHistoryRequest {
+    #[serde(with = "encoding::identity")]
+    document: DocumentId,
+    #[serde(with = "encoding::identity")]
+    branch: BranchId,
+    #[serde(with = "encoding::optional_identity")]
+    next: Option<RevisionId>,
+    limit: usize,
 }
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -144,14 +158,6 @@ struct OverlayGraphRequest {
 struct GraphRequest {
     #[serde(with = "encoding::identities")]
     documents: Vec<DocumentId>,
-}
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
-struct SnapshotRequest {
-    #[serde(with = "encoding::identity")]
-    document: DocumentId,
-    #[serde(with = "encoding::identity")]
-    snapshot: SnapshotId,
 }
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -170,6 +176,17 @@ struct HistoryRequest {
     document: DocumentId,
     #[serde(with = "encoding::optional_identity")]
     next: Option<RevisionId>,
+    limit: usize,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CommentsRequest {
+    #[serde(with = "encoding::identity")]
+    document: DocumentId,
+    #[serde(with = "encoding::identity")]
+    snapshot: SnapshotId,
+    #[serde(with = "encoding::optional_identity")]
+    next: Option<hypergraph_domain::records::RevisionId>,
     limit: usize,
 }
 #[derive(Deserialize)]
@@ -232,6 +249,54 @@ fn secure_equal(a: &str, b: &str) -> bool {
     a.bytes().zip(b.bytes()).fold(0u8, |n, (a, b)| n | (a ^ b)) == 0
 }
 fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
+    let problem = r.headers.get("accept").is_some_and(|accept| {
+        accept.split(',').any(|range| {
+            let mut parts = range.split(';');
+            if !parts
+                .next()
+                .unwrap_or("")
+                .trim()
+                .eq_ignore_ascii_case("application/problem+json")
+            {
+                return false;
+            }
+            parts
+                .filter_map(|part| part.trim().split_once('='))
+                .filter(|(name, _)| name.eq_ignore_ascii_case("q"))
+                .all(|(_, value)| value.parse::<f32>().is_ok_and(|q| q > 0.0 && q <= 1.0))
+        })
+    });
+    let mut response = route_inner(r, state, host);
+    if problem
+        && response.status >= 400
+        && let Ok(legacy) = serde_json::from_slice::<api::LegacyError>(&response.bytes)
+    {
+        let title = match response.status {
+            400 => "Bad Request",
+            401 => "Unauthorized",
+            403 => "Forbidden",
+            404 => "Not Found",
+            405 => "Method Not Allowed",
+            409 => "Conflict",
+            413 => "Content Too Large",
+            415 => "Unsupported Media Type",
+            423 => "Locked",
+            429 => "Too Many Requests",
+            503 => "Service Unavailable",
+            _ => "Internal Server Error",
+        };
+        response.bytes = serde_json::to_vec(&api::Problem {
+            problem_type: "about:blank".into(),
+            title: title.into(),
+            status: response.status,
+            error: legacy.error,
+        })
+        .unwrap();
+        response.mime = "application/problem+json";
+    }
+    response
+}
+fn route_inner(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
     if r.headers.get("host").map(String::as_str) != Some(host) {
         return error(403, "host_rejected");
     }
@@ -283,14 +348,16 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
         return error(404, "not_found");
     }
     if r.method == "POST" && r.path == "/api/v1/bootstrap" {
-        let request: Bootstrap = match decode(&r) {
+        let request: api::BootstrapRequest = match decode(&r) {
             Ok(v) => v,
             Err(e) => return e,
         };
         if !secure_equal(&request.token, &state.launch) {
             return error(403, "unauthorized");
         }
-        let mut result = json(&serde_json::json!({"authenticated":true}));
+        let mut result = json(&api::BootstrapResponse {
+            authenticated: true,
+        });
         result.cookie = Some(format!(
             "__Host-hpx={}; Path=/; Secure; HttpOnly; SameSite=Strict",
             state.cookie
@@ -311,15 +378,17 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
         return error(401, "unauthorized");
     }
     if r.method == "GET" && r.path == "/api/v1/runtime" {
-        return json(
-            &serde_json::json!({"version":env!("CARGO_PKG_VERSION"),"contract":1,"locked":state.workspace.is_none(),"create":state.create,"mode":"trusted_server","ownership":"whole_document","max_text_bytes":hypergraph_storage::MAX_TEXT_BYTES,"keychain_supported":state.provider.supported(),"capabilities":["documents","durable_drafts","commit","snapshot","history","historical_anchor","private_clipboard","fork","reviewed_merge","document_fork_graph","semantic_assertion_overlay","semantic_overlay_graph","transformation_graph","assertion_review_history","publication_contributors","keychain"],"unavailable":["general_relationship_queries","comments","provenance_mutation","agents","federation","client_held"]}),
-        );
+        return json(&api::RuntimeResponse::new(
+            state.workspace.is_none(),
+            state.create,
+            state.provider.supported(),
+        ));
     }
     if r.method != "POST" {
         return error(405, "method_rejected");
     }
     if r.path == "/api/v1/keychain/status" {
-        if let Err(e) = decode::<Empty>(&r) {
+        if let Err(e) = decode::<api::EmptyRequest>(&r) {
             return e;
         }
         let status = if let Some(workspace) = &state.workspace {
@@ -334,14 +403,15 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
             Workspace::keychain_status(&state.path)
         };
         return match status {
-            Ok(status) => json(
-                &serde_json::json!({"supported":state.provider.supported(),"schema":status.schema,"enrolled":status.enrolled,"cleanup_pending":status.cleanup_pending}),
-            ),
+            Ok(status) => json(&api::KeychainStatusResponse::new(
+                status,
+                state.provider.supported(),
+            )),
             Err(e) => storage_error(e),
         };
     }
     if r.path == "/api/v1/unlock/keychain" {
-        if let Err(e) = decode::<Empty>(&r) {
+        if let Err(e) = decode::<api::EmptyRequest>(&r) {
             return e;
         }
         if state.workspace.is_some() {
@@ -360,7 +430,7 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
         return match Workspace::open_keychain(&state.path, &mut state.provider) {
             Ok(workspace) => {
                 state.workspace = Some(workspace);
-                json(&serde_json::json!({"locked":false}))
+                json(&api::LockStateResponse { locked: false })
             }
             Err(e) => storage_error(e),
         };
@@ -376,7 +446,7 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
             return error(429, "retry_later");
         }
         state.last_unlock = Some(Instant::now());
-        let mut unlock: Unlock = match decode(&r) {
+        let mut unlock: api::UnlockRequest = match decode(&r) {
             Ok(v) => v,
             Err(e) => return e,
         };
@@ -390,19 +460,49 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
             Ok(workspace) => {
                 state.workspace = Some(workspace);
                 state.create = false;
-                json(&serde_json::json!({"locked":false}))
+                json(&api::LockStateResponse { locked: false })
             }
             Err(_) => error(403, "unlock_failed"),
         };
     }
     if r.path == "/api/v1/lock" {
         state.workspace = None;
-        return json(&serde_json::json!({"locked":true}));
+        return json(&api::LockStateResponse { locked: true });
     }
     let Some(workspace) = state.workspace.as_mut() else {
         return error(423, "locked");
     };
     match r.path.as_str() {
+        "/api/v1/branches/merge-base" => {
+            let input: api::BranchRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.parent_merge_base(input.document, input.branch, Default::default()) {
+                Ok(view) => json(&view),
+                Err(e) => storage_error(e),
+            }
+        }
+        "/api/v1/branches/comparison" => {
+            let input: api::BranchRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.branch_comparison(input.document, input.branch) {
+                Ok(comparison) => json(&comparison),
+                Err(e) => storage_error(e),
+            }
+        }
+        "/api/v1/audit/document" => {
+            let input: api::AuditRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.audit_document(input.document, input.max_bytes) {
+                Ok(report) => json(&report),
+                Err(e) => storage_error(e),
+            }
+        }
         "/api/v1/assertion/revision" => {
             let input: AssertionRevisionRequest = match decode(&r) {
                 Ok(v) => v,
@@ -462,7 +562,7 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
             }
         }
         "/api/v1/merge" => {
-            let input: DocumentRequest = match decode(&r) {
+            let input: api::DocumentRequest = match decode(&r) {
                 Ok(v) => v,
                 Err(e) => return e,
             };
@@ -472,7 +572,7 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
             }
         }
         "/api/v1/derivation" => {
-            let input: DocumentRequest = match decode(&r) {
+            let input: api::DocumentRequest = match decode(&r) {
                 Ok(v) => v,
                 Err(e) => return e,
             };
@@ -507,6 +607,16 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
                 Err(e) => storage_error(e),
             }
         }
+        "/api/v1/comments" => {
+            let input: CommentsRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.comments_page(input.document, input.snapshot, input.next, input.limit) {
+                Ok(page) => json(&page),
+                Err(e) => storage_error(e),
+            }
+        }
         "/api/v1/contributors/publications" => {
             let input: ContributorsRequest = match decode(&r) {
                 Ok(v) => v,
@@ -522,6 +632,92 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
                 Err(e) => storage_error(e),
             }
         }
+        "/api/v1/working/derivation" => {
+            let input: api::DocumentRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.working_derivation(input.document) {
+                Ok(event) => json(&event),
+                Err(e) => storage_error(e),
+            }
+        }
+        "/api/v1/working/reference" => {
+            let input: WorkingReferenceRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.working_reference(input.entry) {
+                Ok(entry) => json(&entry),
+                Err(e) => storage_error(e),
+            }
+        }
+        "/api/v1/working/clipboard" => {
+            let input: ClipboardRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.working_clipboard_page(input.generation, input.offset, input.limit) {
+                Ok(page) => json(&page),
+                Err(e) => storage_error(e),
+            }
+        }
+        "/api/v1/working/source" => {
+            let input: hypergraph_storage::working::Source = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.working_source(input) {
+                Ok(view) => json(&view),
+                Err(e) => storage_error(e),
+            }
+        }
+        "/api/v1/branches" => {
+            let input: BranchListRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.branch_page(input.document, input.next, input.limit) {
+                Ok(page) => json(&page),
+                Err(e) => storage_error(e),
+            }
+        }
+        "/api/v1/branches/editor" => {
+            let input: api::BranchRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.open_branch(input.document, input.branch) {
+                Ok(editor) => json(&editor),
+                Err(e) => storage_error(e),
+            }
+        }
+        "/api/v1/branches/history/page" => {
+            let input: BranchHistoryPageRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.branch_history_page(
+                input.document,
+                input.branch,
+                input.snapshot,
+                input.cursor.as_deref(),
+                input.limit,
+            ) {
+                Ok(page) => json(&page),
+                Err(e) => storage_error(e),
+            }
+        }
+        "/api/v1/branches/history" => {
+            let input: BranchHistoryRequest = match decode(&r) {
+                Ok(v) => v,
+                Err(e) => return e,
+            };
+            match workspace.branch_history(input.document, input.branch, input.next, input.limit) {
+                Ok(page) => json(&serde_json::json!({"branch":input.branch.0,"page":page})),
+                Err(e) => storage_error(e),
+            }
+        }
         "/api/v1/history" => {
             let input: HistoryRequest = match decode(&r) {
                 Ok(v) => v,
@@ -533,31 +729,35 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
             }
         }
         "/api/v1/keychain/enroll" => {
-            if let Err(e) = decode::<Empty>(&r) {
+            if let Err(e) = decode::<api::EmptyRequest>(&r) {
                 return e;
             }
             match workspace.enroll_keychain(&mut state.provider) {
-                Ok(enrollment) => json(
-                    &serde_json::json!({"enrolled":true,"backup_created":enrollment.backup.is_some()}),
-                ),
+                Ok(enrollment) => json(&api::KeychainEnrollmentResponse {
+                    backup_created: enrollment.backup.is_some(),
+                    enrolled: true,
+                }),
                 Err(e) => storage_error(e),
             }
         }
         "/api/v1/keychain/remove" => {
-            if let Err(e) = decode::<Empty>(&r) {
+            if let Err(e) = decode::<api::EmptyRequest>(&r) {
                 return e;
             }
             match workspace.remove_keychain(&mut state.provider) {
-                Ok(()) => json(&serde_json::json!({"enrolled":false,"cleanup_pending":false})),
+                Ok(()) => json(&api::KeychainRemovalResponse {
+                    cleanup_pending: false,
+                    enrolled: false,
+                }),
                 Err(e) => storage_error(e),
             }
         }
         "/api/v1/documents" => match workspace.list_documents() {
-            Ok(v) => json(&v),
+            Ok(v) => json(&api::DocumentsResponse(v)),
             Err(e) => storage_error(e),
         },
         "/api/v1/editor" => {
-            let input: DocumentRequest = match decode(&r) {
+            let input: api::DocumentRequest = match decode(&r) {
                 Ok(v) => v,
                 Err(e) => return e,
             };
@@ -567,11 +767,23 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
             }
         }
         "/api/v1/commands" => {
-            let input: Execute = match decode(&r) {
-                Ok(v) => v,
-                Err(e) => return e,
+            // Borrow raw command bytes until dispatch so duplicate fields and
+            // exact source survive; do not round-trip requests through Value.
+            let input: api::Execute<&serde_json::value::RawValue> =
+                match serde_json::from_slice(&r.body) {
+                    Ok(v) => v,
+                    Err(_) => return error(400, "invalid_request"),
+                };
+            let command = match api_transport::decode_command(input.request) {
+                Ok(command) => command,
+                Err(_) => return error(400, "invalid_request"),
             };
-            match workspace.execute(input.operation, input.request) {
+            let fork = matches!(&command, Command::Fork { .. });
+            match workspace.execute(OperationId(input.operation.0), command) {
+                Ok(v) if fork => match api_transport::fork_receipt(v) {
+                    Ok(receipt) => json(&receipt),
+                    Err(e) => storage_error(e),
+                },
                 Ok(v) => json(&v),
                 Err(e) => storage_error(e),
             }
@@ -587,12 +799,12 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
             }
         }
         "/api/v1/snapshot" => {
-            let input: SnapshotRequest = match decode(&r) {
+            let input: api::SnapshotRequest = match decode(&r) {
                 Ok(v) => v,
                 Err(e) => return e,
             };
             match workspace.reconstruct_snapshot(input.document, input.snapshot) {
-                Ok(text) => json(&serde_json::json!({"text":text})),
+                Ok(text) => json(&api::SnapshotResponse { text }),
                 Err(e) => storage_error(e),
             }
         }
@@ -885,7 +1097,326 @@ mod tests {
             .unwrap()
             .open_document(document)
             .unwrap();
+        let branch_request = |path: &str, body| {
+            let mut r = request(body);
+            r.path = format!("/api/v1/{path}");
+            r
+        };
+        let audit_input = serde_json::json!({"document":document.0,"max_bytes":16777216});
+        let mut denied = branch_request("audit/document", audit_input.clone());
+        denied.headers.remove("cookie");
+        assert_eq!(route(denied, &mut state, "127.0.0.1:8388").status, 401);
+        let response = route(
+            branch_request("audit/document", audit_input.clone()),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let report: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+        assert_eq!(report["document"], serde_json::json!(document.0));
+        assert_eq!(report["scope"], hypergraph_storage::audit::SCOPE);
+        assert_eq!(report["authenticated_records"], 8);
+        assert!(report["finding"].is_null());
+        assert!(!String::from_utf8_lossy(&response.bytes).contains("Exact"));
+        for invalid in [
+            serde_json::json!({"document":document.0,"max_bytes":0}),
+            serde_json::json!({"document":document.0,"max_bytes":16777217}),
+            serde_json::json!({"document":document.0,"max_bytes":-1}),
+            serde_json::json!({"document":document.0,"max_bytes":1.5}),
+            serde_json::json!({"document":[1],"max_bytes":16777216}),
+            serde_json::json!({"document":document.0,"max_bytes":16777216,"repair":true}),
+        ] {
+            assert_eq!(
+                route(
+                    branch_request("audit/document", invalid),
+                    &mut state,
+                    "127.0.0.1:8388"
+                )
+                .status,
+                400
+            );
+        }
+        assert_eq!(
+            route(
+                branch_request(
+                    "audit/document",
+                    serde_json::json!({"document":vec![99;32],"max_bytes":16777216})
+                ),
+                &mut state,
+                "127.0.0.1:8388"
+            )
+            .status,
+            404
+        );
+        assert_eq!(
+            route(
+                branch_request(
+                    "audit/document",
+                    serde_json::json!({"document":document.0,"max_bytes":1})
+                ),
+                &mut state,
+                "127.0.0.1:8388"
+            )
+            .status,
+            413
+        );
+        let branch_list = serde_json::json!({"document":document.0,"next":null,"limit":16});
+        let mut denied = branch_request("branches", branch_list.clone());
+        denied.headers.remove("cookie");
+        assert_eq!(route(denied, &mut state, "127.0.0.1:8388").status, 401);
+        for invalid in [
+            serde_json::json!({"document":document.0,"next":null,"limit":0}),
+            serde_json::json!({"document":document.0,"next":null,"limit":17}),
+            serde_json::json!({"document":document.0,"next":[1],"limit":16}),
+            serde_json::json!({"document":document.0,"next":null,"limit":16,"owner":"forbidden"}),
+        ] {
+            assert_eq!(
+                route(
+                    branch_request("branches", invalid),
+                    &mut state,
+                    "127.0.0.1:8388"
+                )
+                .status,
+                400
+            );
+        }
+        let creation = serde_json::json!({"operation":vec![201;32],"request":{"command":"branch","mutation":{"action":"create","document":document.0,"parent":editor.branch.0,"revision":editor.base.0,"snapshot":editor.snapshot.0,"name":"Alternative"}}});
+        let response = route(
+            branch_request("commands", creation),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let receipt: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+        let branch = receipt["outcome"]["state"]["branch"].clone();
+        let comparison_input = serde_json::json!({"document":document.0,"branch":branch});
+        let mut denied = branch_request("branches/comparison", comparison_input.clone());
+        denied.headers.remove("cookie");
+        assert_eq!(route(denied, &mut state, "127.0.0.1:8388").status, 401);
+        let response = route(
+            branch_request("branches/comparison", comparison_input.clone()),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let comparison: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+        assert_eq!(comparison["branch"], branch);
+        assert_eq!(comparison["parent"], serde_json::json!(editor.branch.0));
+        assert_eq!(
+            comparison["source_snapshot"],
+            serde_json::json!(editor.snapshot.0)
+        );
+        assert_eq!(
+            comparison["parent_snapshot"],
+            serde_json::json!(editor.snapshot.0)
+        );
+        for invalid in [
+            serde_json::json!({"document":document.0,"branch":editor.branch.0}),
+            serde_json::json!({"document":document.0,"branch":[1]}),
+            serde_json::json!({"document":document.0,"branch":branch,"merge":true}),
+        ] {
+            assert_eq!(
+                route(
+                    branch_request("branches/comparison", invalid),
+                    &mut state,
+                    "127.0.0.1:8388"
+                )
+                .status,
+                400
+            );
+        }
+        let response = route(
+            branch_request("branches", branch_list),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let page: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+        assert_eq!(page["entries"].as_array().unwrap().len(), 1);
+        assert_eq!(page["original_branch"], serde_json::json!(editor.branch.0));
+        assert_eq!(page["entries"][0]["branch"], branch);
+        let response = route(
+            branch_request(
+                "branches/editor",
+                serde_json::json!({"document":document.0,"branch":branch}),
+            ),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let child: hypergraph_storage::EditorState =
+            serde_json::from_slice(&response.bytes).unwrap();
+        assert_eq!(child.node, editor.node);
+        assert_eq!(child.base, editor.base);
+        assert_eq!(child.text, editor.text);
+        let response = route(
+            branch_request(
+                "branches/history",
+                serde_json::json!({"document":document.0,"branch":branch,"next":null,"limit":1}),
+            ),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let page: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+        assert_eq!(page["branch"], branch);
+        assert_eq!(
+            page["page"]["entries"][0]["revision"],
+            serde_json::json!(editor.base.0)
+        );
+        for (path, body) in [
+            (
+                "branches/editor",
+                serde_json::json!({"document":document.0,"branch":[1]}),
+            ),
+            (
+                "branches/editor",
+                serde_json::json!({"document":document.0,"branch":branch,"owner":"forbidden"}),
+            ),
+            (
+                "branches/history",
+                serde_json::json!({"document":document.0,"branch":branch,"next":null,"limit":0}),
+            ),
+        ] {
+            assert_eq!(
+                route(branch_request(path, body), &mut state, "127.0.0.1:8388").status,
+                400
+            );
+        }
+        let capture = serde_json::json!({"operation":vec![202;32],"request":{"command":"checkpoint","plan":{"document":document.0,"branch":editor.branch.0,"generation":editor.generation,"base":editor.base.0,"sequence":editor.acknowledged_sequence,"text":editor.text,"start_byte":5,"end_byte":11,"quote":"😀\r\n"}}});
+        let response = route(
+            branch_request("commands", capture),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let receipt: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+        let checkpoint = receipt["outcome"]["state"]["checkpoint"].clone();
+        let working = receipt["outcome"]["state"]["working_branch"].clone();
+        let source = serde_json::json!({"kind":"working_checkpoint","document":document.0,"node":editor.node.0,"branch":editor.branch.0,"working_branch":working,"checkpoint":checkpoint,"occurrence_path":[editor.occurrence.0],"start_byte":5,"end_byte":11});
+        let mut denied = branch_request("working/source", source.clone());
+        denied.headers.remove("cookie");
+        assert_eq!(route(denied, &mut state, "127.0.0.1:8388").status, 401);
+        let response = route(
+            branch_request("working/source", source.clone()),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let view: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+        assert_eq!(view["text"], editor.text);
+        assert_eq!(view["publication"], "private_working_checkpoint");
+        assert!(view["promotion"].is_null());
+        for field in ["kind", "checkpoint", "extra"] {
+            let mut invalid = source.clone();
+            invalid[field] = match field {
+                "kind" => serde_json::json!("committed"),
+                "checkpoint" => serde_json::json!([1]),
+                _ => serde_json::json!(true),
+            };
+            assert_eq!(
+                route(
+                    branch_request("working/source", invalid),
+                    &mut state,
+                    "127.0.0.1:8388"
+                )
+                .status,
+                400
+            );
+        }
+        let copy = serde_json::json!({"operation":vec![203;32],"request":{"command":"working_copy","generation":0,"plan":{"document":document.0,"branch":editor.branch.0,"generation":editor.generation,"base":editor.base.0,"sequence":editor.acknowledged_sequence,"text":editor.text,"start_byte":5,"end_byte":11,"quote":"😀\r\n"}}});
+        let response = route(
+            branch_request("commands", copy),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let copied: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+        let working_list = serde_json::json!({"generation":null,"offset":0,"limit":16});
+        let mut denied = branch_request("working/clipboard", working_list.clone());
+        denied.headers.remove("cookie");
+        assert_eq!(route(denied, &mut state, "127.0.0.1:8388").status, 401);
+        let response = route(
+            branch_request("working/clipboard", working_list),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        let page: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+        assert_eq!(page["total"], 1);
+        assert_eq!(
+            page["entries"][0]["id"],
+            copied["outcome"]["state"]["entry"]
+        );
+        assert_eq!(page["entries"][0]["target"]["kind"], "working");
+        let response = route(
+            branch_request(
+                "working/reference",
+                serde_json::json!({"entry":page["entries"][0]["id"]}),
+            ),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(response.status, 200);
+        for invalid in [
+            serde_json::json!({"generation":null,"offset":0,"limit":17}),
+            serde_json::json!({"generation":null,"offset":0,"limit":1,"extra":true}),
+        ] {
+            assert_eq!(
+                route(
+                    branch_request("working/clipboard", invalid),
+                    &mut state,
+                    "127.0.0.1:8388"
+                )
+                .status,
+                400
+            );
+        }
         let anchor = serde_json::json!({"document":document.0,"snapshot":editor.snapshot.0,"revision":editor.base.0,"occurrence_path":[editor.occurrence.0],"start_byte":5,"end_byte":11});
+        let comments_request = |body| {
+            let mut r = request(body);
+            r.path = "/api/v1/comments".into();
+            r
+        };
+        let comments_input = serde_json::json!({"document":document.0,"snapshot":editor.snapshot.0,"next":null,"limit":8});
+        let mut denied = comments_request(comments_input.clone());
+        denied.headers.remove("cookie");
+        assert_eq!(route(denied, &mut state, "127.0.0.1:8388").status, 401);
+        for invalid in [
+            serde_json::json!({"document":document.0,"snapshot":editor.snapshot.0,"next":null,"limit":9}),
+            serde_json::json!({"document":document.0,"snapshot":editor.snapshot.0,"next":[1],"limit":8}),
+            serde_json::json!({"document":document.0,"snapshot":editor.snapshot.0,"next":null,"limit":8,"owner":"forbidden"}),
+        ] {
+            assert_eq!(
+                route(comments_request(invalid), &mut state, "127.0.0.1:8388").status,
+                400
+            );
+        }
+        let mut comment = request(
+            serde_json::json!({"operation":vec![95;32],"request":{"command":"comment","plan":{"source":{"document":document.0,"node":editor.node.0,"snapshot":editor.snapshot.0,"revision":editor.base.0,"occurrence_path":[editor.occurrence.0],"start_byte":5,"end_byte":11},"expected_draft":null,"quote":"😀\r\n","body":"Exact comment\r\n😀"}}}),
+        );
+        comment.path = "/api/v1/commands".into();
+        assert_eq!(route(comment, &mut state, "127.0.0.1:8388").status, 200);
+        let comment_page = route(
+            comments_request(comments_input.clone()),
+            &mut state,
+            "127.0.0.1:8388",
+        );
+        assert_eq!(comment_page.status, 200);
+        let comment_page: serde_json::Value = serde_json::from_slice(&comment_page.bytes).unwrap();
+        assert_eq!(comment_page["entries"][0]["body"], "Exact comment\r\n😀");
+        assert_eq!(comment_page["text_snapshot_scope"], "comments_excluded");
+        let workspace = state.workspace.take();
+        assert_eq!(
+            route(
+                comments_request(comments_input),
+                &mut state,
+                "127.0.0.1:8388"
+            )
+            .status,
+            423
+        );
+        state.workspace = workspace;
         let anchor_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/anchor/resolve".into();
@@ -1250,6 +1781,24 @@ mod tests {
         );
         assert_eq!(route(review_history_request(serde_json::json!({"node":assertion_node,"revision":overlay["entries"][0]["revision"],"use_current_if_missing":true})),&mut state,"127.0.0.1:8388").status,400);
         state.workspace = None;
+        assert_eq!(
+            route(
+                branch_request("audit/document", audit_input),
+                &mut state,
+                "127.0.0.1:8388"
+            )
+            .status,
+            423
+        );
+        assert_eq!(
+            route(
+                branch_request("branches/comparison", comparison_input),
+                &mut state,
+                "127.0.0.1:8388"
+            )
+            .status,
+            423
+        );
         assert_eq!(
             route(
                 review_history_request(review_history_input),
@@ -1628,6 +2177,57 @@ mod tests {
         }
         let r=read_request(&mut b"POST /api/v1/commands HTTP/1.1\r\nHost: 127.0.0.1:8388\r\nContent-Length: 2\r\n\r\n{}".as_slice()).unwrap();
         assert_eq!(&r.body[..], b"{}");
+    }
+    #[test]
+    fn problem_details_are_opt_in_and_preserve_status_and_stable_codes() {
+        let mut state = State {
+            workspace: None,
+            path: PathBuf::new(),
+            create: false,
+            launch: "launch".into(),
+            cookie: "session".into(),
+            last_unlock: None,
+            provider: Native,
+        };
+        for (host, cookie, status, code) in [
+            ("evil", "__Host-hpx=session", 403, "host_rejected"),
+            ("127.0.0.1:8388", "", 401, "unauthorized"),
+            ("127.0.0.1:8388", "__Host-hpx=session", 423, "locked"),
+        ] {
+            for accept in [
+                "application/json",
+                "application/problem+json;q=0",
+                "application/problem+json",
+            ] {
+                let request = Request {
+                    method: "POST".into(),
+                    path: "/api/v1/documents".into(),
+                    headers: BTreeMap::from([
+                        ("host".into(), host.into()),
+                        ("origin".into(), "https://127.0.0.1:8388".into()),
+                        ("content-type".into(), "application/json".into()),
+                        ("cookie".into(), cookie.into()),
+                        ("accept".into(), accept.into()),
+                    ]),
+                    body: Zeroizing::new(b"{}".to_vec()),
+                };
+                let response = route(request, &mut state, "127.0.0.1:8388");
+                assert_eq!(response.status, status);
+                let value: serde_json::Value = serde_json::from_slice(&response.bytes).unwrap();
+                assert_eq!(value["error"], code);
+                if accept == "application/problem+json" {
+                    assert_eq!(response.mime, "application/problem+json");
+                    assert_eq!(value["status"], status);
+                    assert_eq!(value["type"], "about:blank");
+                } else {
+                    assert_eq!(response.mime, "application/json; charset=utf-8");
+                    assert_eq!(
+                        response.bytes,
+                        serde_json::to_vec(&serde_json::json!({"error":code})).unwrap()
+                    );
+                }
+            }
+        }
     }
     #[test]
     fn host_origin_cookie_and_locked_gates_are_independent() {

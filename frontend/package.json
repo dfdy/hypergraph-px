@@ -8,19 +8,24 @@
     "dev": "node build.mjs && node server.mjs",
     "build": "node build.mjs",
     "test": "node --test tests/*.test.js",
-    "test:ui": "playwright test",
-    "screenshot": "node scripts/capture-readme.mjs"
+    "test:ui": "node scripts/run-ui.mjs",
+    "screenshot": "node scripts/capture-readme.mjs",
+    "api:generate": "node scripts/generate-contract.mjs",
+    "api:check": "node scripts/generate-contract.mjs --check && tsc --noEmit --strict --noUncheckedIndexedAccess --target ES2022 --module ESNext --moduleResolution Bundler src/api-client.ts"
   },
   "dependencies": {
-    "@codemirror/state": "6.7.6",
-    "@codemirror/view": "6.43.15",
     "@codemirror/commands": "6.11.1",
     "@codemirror/lang-markdown": "6.5.2",
+    "@codemirror/language": "6.13.1",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.15",
     "katex": "0.19.1",
-    "@codemirror/language": "6.13.1"
+    "openapi-fetch": "0.17.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.64.1",
     "esbuild": "0.25.12",
-    "@playwright/test": "1.64.1"
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
   }
 }

@@ -13,19 +13,10 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-10-30
 
 Recorded checks retain original source/toolchain/time scope. No new software validation claim follows from documentation assembly.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
-
-## Context and problem
-
-Build/release procedures, SemVer and publication hold. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Scope and exclusions
-
-Build/release procedures, SemVer and publication hold. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Normative content
 
@@ -48,22 +39,11 @@ Pre-release labels and build metadata may extend this format. Reset subordinate 
 The public contract comprises exported Rust APIs and documented behavior, and subsequently the supported CLI/HTTP/MCP interfaces and durable/import formats as each is implemented. Documentation/build/proof-only maintenance introduces no new feature or API break by itself; if published independently under the milestone increment policy, use PATCH and identify its maintenance-only scope. A version bump alone does not establish feature completeness or formal verification; readiness and assurance must be documented separately.
 
 
-## Examples and counterexamples
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
-## Dependencies and consequences
-
-Build/release procedures, SemVer and publication hold. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
-
-## Open questions and conflicts
-
-Retain the scoped limits above and [open questions/conflicts](<../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
-
-## Acceptance and verification
-
-Use the source-grounded examples/evidence above and [acceptance gates](<../03-requirements/acceptance-criteria.md>). Where the source supplies no fixture, platform or quantitative threshold, it remains unspecified; do not fabricate a passing result.
-
 ## Source provenance
 
 - `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 94–107; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+
+## Release qualification
+
+State platform libraries and static-link limits accurately for each release target. A diagram-owned deployment boundary does not establish a fully static build or production acceptance.
