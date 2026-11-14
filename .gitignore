@@ -58,3 +58,8 @@
 
 # Classified private local evidence,credentials,workspaces,tools and compiler outputs.
 /.local/
+
+# Local editor and agent settings.
+/.vscode/
+/.codex/
+/.zed/
