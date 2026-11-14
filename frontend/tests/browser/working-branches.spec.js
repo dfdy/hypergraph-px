@@ -16,7 +16,7 @@ test('branch review is bounded at desktop widths and explicitly excludes pending
   await page.setViewportSize({width,height:1000});await page.evaluate(theme=>{document.body.classList.toggle('light',theme==='light');window.__workingPanels.openBranches(window.__adapter,'synthetic',{select:branch=>{window.__selected.push(branch);},notify:()=>{}});},theme);
   const popup=page.getByRole('dialog',{name:'Document branches'});await expect(popup.getByRole('button',{name:'Original branch · current'})).toBeDisabled();await expect(popup.getByRole('button',{name:'Alternative interpretation'})).toBeVisible();await expect(popup).toContainText('pending edits are excluded');await expect(popup.locator('pre')).toContainText('Exact 😀中');
   const box=await popup.boundingBox();expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(width);expect(box.height).toBeLessThanOrEqual(1000);
-  await page.screenshot({path:resolve(frontend,`../artifacts/branch-review-${theme}-${width}.png`)});await popup.getByRole('button',{name:'Close',exact:true}).click();await expect(popup).toHaveCount(0);
+  await page.screenshot({path:resolve(frontend,`../.local/artifacts/branch-review-${theme}-${width}.png`)});await popup.getByRole('button',{name:'Close',exact:true}).click();await expect(popup).toHaveCount(0);
  }
 });
 test('child creation publishes the reviewed context while Cancel creates no branch',async({page})=>{
@@ -27,6 +27,6 @@ test('child creation publishes the reviewed context while Cancel creates no bran
 test('working-source inspection stays inert and is labelled as an unpublished checkpoint',async({page})=>{
  await open(page);await page.evaluate(()=>{const mount=document.createElement('div');mount.id='working-component';document.body.append(mount);window.__workingPanels.appendWorkingClipboard(mount,window.__adapter,{busy:false,change:fn=>fn(),notify:()=>{}});});
  await page.locator('#working-component').getByRole('button',{name:/Working checkpoint/}).click();const popup=page.getByRole('dialog',{name:'Retained working source'});await expect(popup).toContainText('It has not been promoted');expect(await popup.locator('pre').textContent()).toBe('<script>😀\r\n中');expect(await popup.locator('script').count()).toBe(0);
- for(const theme of ['light','dark']){await page.evaluate(t=>document.body.classList.toggle('light',t==='light'),theme);await page.setViewportSize({width:1280,height:1000});await page.screenshot({path:resolve(frontend,`../artifacts/working-inspection-${theme}-1280.png`)});}
+ for(const theme of ['light','dark']){await page.evaluate(t=>document.body.classList.toggle('light',t==='light'),theme);await page.setViewportSize({width:1280,height:1000});await page.screenshot({path:resolve(frontend,`../.local/artifacts/working-inspection-${theme}-1280.png`)});}
  await popup.getByRole('button',{name:'Close source'}).click();await expect(popup).toHaveCount(0);
 });

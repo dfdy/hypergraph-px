@@ -13,11 +13,11 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-11-01
+- **Last reviewed:** 2026-11-03
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -27,7 +27,11 @@ Browser and MCP callers share the user command/query API and actor-specific perm
 
 ## Creation context — HPX-RQ-039
 
-Creation operations through either adapter must establish the [canonical creation-origin precondition](../../../architecture/Conceptual/identity-closure.c4) under the [precise context contract](../../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048). Human UI/caret context or explicit machine-equivalent context identifies the intended parent/position before creation; backend validation and current workspace-user permissions remain mandatory. Missing, stale or ambiguous context cannot silently choose a location. A selected node alone does not necessarily determine the new node's position. No new wire fields, endpoint, placement/identity encoding or permission mechanism is specified here; existing query sketches and implementations keep their scope.
+Creation operations through either adapter must establish the [canonical creation-origin precondition](../../architecture/Conceptual/identity-closure.c4) under the [precise context contract](../../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048). Human UI/caret context or explicit machine-equivalent context identifies the intended parent/position before creation; backend validation and current workspace-user permissions remain mandatory. Missing, stale or ambiguous context cannot silently choose a location. A selected node alone does not necessarily determine the new node's position. No new wire fields, endpoint, placement/identity encoding or permission mechanism is specified here; existing query sketches and implementations keep their scope.
+
+## Current implementation paths — 2026-11-13
+
+Existing Rust crate names and logical domain/navigation contracts are unchanged; their physical source root is now `backend/crates/`. [Relocation hashes](../../../backend/relocation-manifest.json) retain original/current paths. The sole generated wire document is [shared/openapi.json](../../../shared/openapi.json), sourced from adapter DTOs, not domain serialization. Historical source quotations below retain their original context; current implementation links resolve the relocated files. This reorganisation does not implement general composition, multi-user permissions or proposed closure mechanisms.
 
 ## Messages and type schemas
 
@@ -83,7 +87,7 @@ The [workspace interface contract](<../document-engine.md>) adds unimplemented r
 
 ## Initial immutable history and anchor queries, 2026-10-25
 
-The one-owner storage adapter now implements `Workspace::history_page` in [history.rs](../../../crates/storage/src/history.rs) and `Workspace::resolve_anchor` in [anchors.rs](../../../crates/storage/src/anchors.rs). Each query uses one consistent SQLite read transaction and checks the current authenticated catalog principal/device and document membership before returning protected data. This is the current sole-owner model, not selective multi-user historical disclosure or a capability grant.
+The one-owner storage adapter now implements `Workspace::history_page` in [history.rs](../../../backend/crates/storage/src/history.rs) and `Workspace::resolve_anchor` in [anchors.rs](../../../backend/crates/storage/src/anchors.rs). Each query uses one consistent SQLite read transaction and checks the current authenticated catalog principal/device and document membership before returning protected data. This is the current sole-owner model, not selective multi-user historical disclosure or a capability grant.
 
 History follows exact immutable revision parents through existing primary-key lookups and verifies each event, snapshot and occurrence/revision binding. A page accepts 1–32 entries and has a 16 MiB encrypted-object read budget after the bounded catalog/head slots. A byte-limited partial page returns the next unconsumed revision; an entry that cannot fit an empty page fails explicitly. Pages have no revision-count retention cap, do not scan all retained history, and do not sort by fabricated timestamps. Cursors are inclusive immutable revision IDs, validated against the requested document on each read; newly appended commits cannot shift an older page. No new index, stored record kind, database/envelope version, revision or snapshot is created by browsing.
 
@@ -93,7 +97,7 @@ Anchor resolution requires an exact document, snapshot, revision, full occurrenc
 
 ## Bounded publication-contributor adapter query
 
-`Workspace::publication_contributors` derives publisher evidence from the same validated immutable ancestry used by `history_page`. It is an adapter query in [contributors.rs](../../../crates/storage/src/contributors.rs), not a new pure-domain identity or authoritative index. The requested snapshot binds the first event; encrypted continuation tokens bind every later page to that document/snapshot lineage while current permission is rechecked. The [runtime contract](browser-runtime.md#snapshot-bound-publication-contributors) specifies its incomplete family coverage, resource bounds, current-context pins and nonpersistent cursor representation. No new durable record or source write is performed.
+`Workspace::publication_contributors` derives publisher evidence from the same validated immutable ancestry used by `history_page`. It is an adapter query in [contributors.rs](../../../backend/crates/storage/src/contributors.rs), not a new pure-domain identity or authoritative index. The requested snapshot binds the first event; encrypted continuation tokens bind every later page to that document/snapshot lineage while current permission is rechecked. The [runtime contract](browser-runtime.md#snapshot-bound-publication-contributors) specifies its incomplete family coverage, resource bounds, current-context pins and nonpersistent cursor representation. No new durable record or source write is performed.
 
 ## Initial immutable comment paging
 
@@ -113,7 +117,7 @@ The preceding capability hold is superseded by HPX-TEST-040: actual branch creat
 
 ## Adapter-only immediate-record audit and current scope
 
-`Workspace::audit_document(document,max_bytes)` in [audit.rs](../../../crates/storage/src/audit.rs) implements the [bounded original-branch slice](../../08-assurance/recovery.md#initial-bounded-read-only-audit-slice). It returns source-free immediate-record findings from one authorized SQLite view, with no runtime endpoint, repair, guessed head or wider closure claim. Its resource guard and explicit exclusions do not change pure-domain navigation or durable formats. [authority.rs](../../../crates/storage/src/authority.rs) rechecks current catalog ownership/membership for legacy list/editor/snapshot/receipt reads and input/result scope before frozen receipt replay, preserving valid authorized historical retries without reevaluating their mutable generation preconditions.
+`Workspace::audit_document(document,max_bytes)` in [audit.rs](../../../backend/crates/storage/src/audit.rs) implements the [bounded original-branch slice](../../08-assurance/recovery.md#initial-bounded-read-only-audit-slice). It returns source-free immediate-record findings from one authorized SQLite view, with no runtime endpoint, repair, guessed head or wider closure claim. Its resource guard and explicit exclusions do not change pure-domain navigation or durable formats. [authority.rs](../../../backend/crates/storage/src/authority.rs) rechecks current catalog ownership/membership for legacy list/editor/snapshot/receipt reads and input/result scope before frozen receipt replay, preserving valid authorized historical retries without reevaluating their mutable generation preconditions.
 
 ## Bounded audit consumer, 2026-10-27
 
@@ -155,4 +159,28 @@ HPX-ALGO-002's ancestry component now finds a unique maximal common base of two 
 
 ## Autosaved composition, update discovery and branch capture — OWNER049/050
 
-[M1](../../../architecture/Conceptual/identity-closure.c4) and the [composition supplement](../../05-domain/document-semantics.md#retained-autosaved-selections-and-branch-preservation--owner049050) require exact last-acknowledged-autosave reconstruction with full nested/repeated selections. Current draft/text/snapshot queries do not establish that general capability. Discovery of a newer authorised version is a separate source-neutral query result, not a replacement selection, conflict-resolution action or grant. Branch capture preserves exact constructed composition under the same logical document/content identity and normal known-origin/permission/expected-state/recovery rules. The future universal autosave/Commit relationship, version-retention events, branch capture publication and main designation/construction remain unselected; no new query name, wire format or cache authority is adopted.
+[M1](../../architecture/Conceptual/identity-closure.c4) and the [composition supplement](../../05-domain/document-semantics.md#retained-autosaved-selections-and-branch-preservation--owner049050) require exact last-acknowledged-autosave reconstruction with full nested/repeated selections. Current draft/text/snapshot queries do not establish that general capability. Discovery of a newer authorised version is a separate source-neutral query result, not a replacement selection, conflict-resolution action or grant. Branch capture preserves exact constructed composition under the same logical document/content identity and normal known-origin/permission/expected-state/recovery rules. The future universal autosave/Commit relationship, version-retention events, branch capture publication and main designation/construction remain unselected; no new query name, wire format or cache authority is adopted.
+
+## Structural reconstruction refinement — OWNER051
+
+Read-only reconstruction follows [M1's accepted structural/no-notation contribution rules](../../architecture/Conceptual/identity-closure.c4), with [bounded approval scope](../../02-governance/OWNER_DECISIONS.md#structural-inclusion-contributions-and-no-notation-cycle-stops--2026-11-02). This changes no query payload or implemented resolver. The acquisition/validation relation, working recovery, endpoint representation, permissions and no-notation model correspondence remain unresolved; ordinary exact historical source slices keep their existing scope.
+
+## Structural selection admission — OWNER053
+
+[Canonical M1](../../architecture/Conceptual/identity-closure.c4) and the [precise source/selection contract](../../05-domain/text-and-anchors.md#structural-membership-and-exact-partial-fragments--owner053) distinguish owned-source ranges from graph-preserving composition selections, including coincident/zero-byte membership and partial fragments. These accepted meanings define no new API payload or runtime endpoint. The [proposed preparation contract](../../architecture/proposals/reconstruction-input-preparation.md) traces admission to exact coherent sources/structure/current authority and separates original-operation reconciliation from independently validated normal reopening. Supplier,format and implementation/model correspondence remain unfinished;query sketches retain their proposed status.
+
+## Operational reconstruction admission — OWNER054
+
+The [canonical M1 policy](../../architecture/Conceptual/identity-closure.c4), recorded in [OWNER054](../../02-governance/OWNER_DECISIONS.md#operational-limit-failure-and-engineering-managed-budgets--2026-11-03), is elaborated by the [complete item2 accounting contract](../../architecture/proposals/reconstruction-operational-limits.md). It applies conditionally to the [item1 supplier results](../../architecture/proposals/reconstruction-input-preparation.md#completed-supplier-result-contract) through acquisition, validation, expansion, emission, metadata and adapter presentation. One operation allowance cannot reset at an internal phase, retry, cache or transport boundary; charge or reserve before costly work. Empty/zero-byte contributions and repeated uses still cost structural/comparison/path/metadata work. Logical work/output bounds do not establish physical or aggregate protection.
+
+The historical navigation table's `O(expanded occurrences + emitted bytes)` traversal sketch is not an operational complexity guarantee: actual descriptor/table equality, index/collision behaviour, full-source validation, path copies, source-map/warning and browser/render costs must also be bounded. The [failure/recovery contract](../../architecture/proposals/reconstruction-operational-limits.md#failure-and-explicit-recovery) and [bounded exact-target navigation](../../architecture/proposals/reconstruction-operational-limits.md#bounded-cycle-navigation-and-budget-independence) govern the proposed general reconstruction boundary. Existing bounded query APIs retain their own contracts; this adds no cursor, endpoint, wire field, persistent profile or implementation. Item2 definition is complete; numeric measurement, concrete suppliers and executable OL1–OL13 conformance remain unperformed.
+
+## Concrete selected-state and source-map design — OWNER055
+
+[M1](../../architecture/Conceptual/identity-closure.c4) now owns the approved item3 representation choices. The [complete concrete contract](../../architecture/proposals/exact-closure-source-map.md) specifies authoritative selected bundles, tagged committed/checkpoint/retained-working source bindings, local parent/occurrence use context and one typed copied-byte/structural event map. Exact zero-byte/partial/discontiguous membership and full-source UTF8 offsets are retained; browser UTF16/display relations bind exact identified buffers. Derived maps/trees do not grant authority or substitute for required recovery evidence.
+
+The [effective compatibility design](../../architecture/proposals/exact-closure-source-map.md#7-effective-incompatible-workspace-gate--choice8a) requires a separately authorised backed-up schema4 upgrade,authenticated feature/catalog guard and cold/stale unsupported-reader refusal. These are concrete DTO/codec and storage design contracts, not implemented navigation/wire/API changes or real-data format acceptance. Actual source/acknowledgement suppliers and permission/result correspondence remain item5 dependencies; unsupported evidence must fail explicitly. Timestamp/conflict item4 remains unchanged.
+
+## Conflict review overlay and recovery — OWNER056
+
+[M1](../../architecture/Conceptual/identity-closure.c4),the [Editor scope](../../architecture/C3/browser-organisation.c4) and [conflict-state contract](../../architecture/proposals/conflict-state.md) define exact per-issue anchors,explicit outcomes/current shared history and verified versus uncertain carry-forward. Historical source reconstruction remains frozen;current review status is a separate authorised metadata overlay,not a byte-affecting dependency. Zero-byte/repeated/partial contexts use item3's exact positions and source bindings,not guessed text relocation. Browser/MCP share ordinary backend permission and stale/original-operation recovery requirements;no public API or new wire schema is added. Concrete clock/authority/source/receipt suppliers and item5 correspondence remain required before implementation claims.

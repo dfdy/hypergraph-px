@@ -13,11 +13,11 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-30
+- **Last reviewed:** 2026-11-03
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -30,7 +30,7 @@ Fixture controls and future contracts are not durable service implementations. C
 
 ## Functional organisation (owner direction, 2026-10-30)
 
-The browser organisation and its displayed inputs/outputs are canonical in [C3 / Browser interface](../../architecture/C3/browser-interface.c4) and its [UI/functions expansions](../../architecture/C3/browser-organisation.c4), HPX-CAN-004. Grouping and implementation-path tables are removed from this document.
+The browser organisation and its displayed inputs/outputs are canonical in [C3 / Browser interface](../architecture/C3/browser-interface.c4) and its [UI/functions expansions](../architecture/C3/browser-organisation.c4), HPX-CAN-004. Grouping and implementation-path tables are removed from this document.
 
 ### User interface — visible regions
 
@@ -38,7 +38,7 @@ The User interface view owns spatial groups/nesting and planned Graph-tab placem
 
 ### Interface functions — retained logical responsibilities
 
-The Interface functions view owns the displayed responsibility decomposition. [Workspace and contents navigation C4](../../architecture/C4/workspace-navigation.c4) owns its source-symbol mapping; detailed editor behaviour, exact-source ownership, API state and error rules remain in this document and linked contracts.
+The Interface functions view owns the displayed responsibility decomposition. [Workspace and contents navigation C4](../architecture/C4/workspace-navigation.c4) owns its source-symbol mapping; detailed editor behaviour, exact-source ownership, API state and error rules remain in this document and linked contracts.
 
 ## Selected-node Graph tab (owner direction, 2026-10-30)
 
@@ -60,15 +60,15 @@ HPX-OWNER-026 refines HPX-RQ-029: move graph visualisation from a separate dialo
 
 ### Changed-source conflict handling — HPX-OWNER-043
 
-The [existing Editor region](../../architecture/C3/browser-organisation.c4) owns the accepted control scope. For conflicts encountered while resolving changed followed sources before Commit, provide a setting that toggles between **Ask** (request a choice) and **Automatic latest timestamp** (choose the version with the latest timestamp). In automatic mode, visually mark the affected sentence, paragraph or section as having a **potential conflict**. The marker has a link opening a modal for comparing changes. This is accepted future behaviour, not an implemented setting or a general adoption of last-write-wins branch merging.
+The [existing Editor region](../architecture/C3/browser-organisation.c4) owns the accepted control scope. For conflicts encountered while resolving changed followed sources before Commit, provide a setting that toggles between **Ask** (request a choice) and **Automatic latest timestamp** (choose the version with the latest timestamp). In automatic mode, visually mark the affected sentence, paragraph or section as having a **potential conflict**. The marker has a link opening a modal for comparing changes. This is accepted future behaviour, not an implemented setting or a general adoption of last-write-wins branch merging.
 
 Automatic choice does not prove the conflict resolved, confer permission or trigger Commit by itself. The chosen exact version must still be reflected in the committed snapshot; retained alternatives/history are not erased. Compare only authorised exact versions, preserve source bytes/selection/Undo and distinguish repeated occurrence contexts; sentence/paragraph/section display regions do not automatically become new persistent nodes. Normal current-authority, exact-state, uncertain-outcome and atomic publication requirements remain; this setting cannot change an already-submitted frozen operation or its receipt.
 
 **Follow-up choices (HPX-OWNER-044):** latest means the time **HPX recorded the version as committed**, not a writer-supplied device timestamp. Equal competing Commit timestamps require asking, even in automatic mode. The preference belongs to each workspace-local user;changing one user's mode does not change another's. **Ask is the default**;automatic selection is an explicit user choice.
 
-The potential-conflict marker is shared evidence about the affected committed version,not a private consequence of a viewer's preference. Every authorised viewer of that version sees the marker regardless of mode. A private unpublished draft and its markers do not thereby become shared. Keep the shared marker until someone authorised explicitly resolves the conflict;merely opening or reading the comparison modal cannot clear it. Retain resolution/history evidence rather than rewriting historical source bytes. Exact marker/resolution records and UI transitions still require design;no new permission vocabulary is adopted.
+The potential-conflict marker is shared evidence about the affected committed version,not a private consequence of a viewer's preference. Every authorised viewer of that version sees the marker regardless of mode. A private unpublished draft and its markers do not thereby become shared. Keep the shared marker until someone authorised explicitly resolves the conflict;merely opening or reading the comparison modal cannot clear it. Retain resolution/history evidence rather than rewriting historical source bytes. OWNER056 now completes marker/resolution records and UI-state design in the linked contract;actual implementation and permission enforcement remain downstream,with no new permission vocabulary.
 
-Timestamp precision/encoding,missing or incomparable values,exact marker granularity/representation and modal/resolution mechanics remain open. Recorded Commit time is a selection heuristic,not proof of causal precedence,correctness or semantic agreement. Existing storage/wire versions and current UI capabilities are unchanged.
+**OWNER056 completes the seven-choice conflict design:** millisecond HPX Commit records;ties/missing/unreliable/incomparable values Ask;explicit accept-selected/choose-existing/edited-result resolution;independent issue identities and named batches;verified carry or reported correspondence uncertainty;current shared historical status with review history;actual resolver/outcome and optional explanation. The [precise conflict-state contract](../architecture/proposals/conflict-state.md) defines comparison,anchors,states,concurrency,recovery and versioned record design. An ordinary Ask choice is not resolution unless explicitly requested;regional summaries cannot clear unlisted issues. Recorded Commit time remains a heuristic,not causal precedence,correctness or semantic proof. Current UI/storage/wire versions remain unchanged;F1–F12 and actual enforcement are unimplemented/unexecuted.
 
 ### Cycle warnings and deliberate navigation — HPX-OWNER-041
 
@@ -440,6 +440,6 @@ The current partial working-tree implementation uses full-tree presentation meta
 
 ### Retained inclusion state and newer-version indication — HPX-RQ-040
 
-The [canonical editor notes](../../architecture/C3/browser-organisation.c4) and [M1](../../architecture/Conceptual/identity-closure.c4) require retained A to show its retained selected B versions from the last successful acknowledged autosave, including nested/repeated contexts. Indicate an available newer authorised version separately, without editing source, retargeting selections, revealing inaccessible identities/counts or creating/clearing a shared conflict marker. OWNER043/044's Ask/Automatic Commit-conflict selection rules keep their own scope. The hint's comparison rule and exact UI mapping remain undesigned; no global newest timestamp or background update is selected. OWNER050 reopens universal future autosave/Commit separation while forbidding historical-version accumulation merely from routine autosaves; no current draft publication or departure-Commit revocation follows.
+The [canonical editor notes](../architecture/C3/browser-organisation.c4) and [M1](../architecture/Conceptual/identity-closure.c4) require retained A to show its retained selected B versions from the last successful acknowledged autosave, including nested/repeated contexts. Indicate an available newer authorised version separately, without editing source, retargeting selections, revealing inaccessible identities/counts or creating/clearing a shared conflict marker. OWNER043/044's Ask/Automatic Commit-conflict selection rules keep their own scope. The hint's comparison rule and exact UI mapping remain undesigned; no global newest timestamp or background update is selected. OWNER050 reopens universal future autosave/Commit separation while forbidding historical-version accumulation merely from routine autosaves; no current draft publication or departure-Commit revocation follows.
 
-HPX-RQ-041 additionally requires the option to preserve an authorised constructed current-document version as a specific branch, retaining exact composition and logical identity. This is not a claim of branchless ordinary editing or existing single-node branch-creation delivery of arbitrary composition capture. [The reconciliation](../../architecture/proposals/branch-selection-reconciliation.md) retains the precise unresolved capture/main questions. No control or storage mechanism is implemented by this specification change.
+HPX-RQ-041 additionally requires the option to preserve an authorised constructed current-document version as a specific branch, retaining exact composition and logical identity. This is not a claim of branchless ordinary editing or existing single-node branch-creation delivery of arbitrary composition capture. [The reconciliation](../architecture/proposals/branch-selection-reconciliation.md) retains the precise unresolved capture/main questions. No control or storage mechanism is implemented by this specification change.

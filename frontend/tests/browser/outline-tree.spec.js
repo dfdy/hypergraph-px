@@ -18,19 +18,19 @@ test('follow editor reveals the current section, scrolls the tree, persists its 
  await page.getByRole('button',{name:'Close all',exact:true}).click();await expect(page.locator('#navigation .chapter')).toHaveCount(6);await expect(page.locator('#navigation .outline')).toHaveCount(0);await editor.focus();await page.keyboard.press('ControlOrMeta+Home');await expect(page.locator('#navigation [aria-current="location"]')).toHaveText('1. Introduction');await expect(page.locator('#navigation .chapter')).toHaveCount(6);
  await page.locator('.cm-scroller').evaluate(element=>{element.scrollTop=element.scrollHeight;});await expect(page.locator('#navigation [aria-current="location"]')).toHaveText(/^Note [0-9]+$/);const frozen=await page.locator('#navigation [aria-current="location"]').innerText();
  await follow.uncheck();await editor.focus();await page.keyboard.press('ControlOrMeta+Home');await expect(page.locator('#navigation [aria-current="location"]')).toHaveText(frozen);
- await follow.check();await page.getByRole('tab',{name:'Document',exact:true}).click();await expect(page.locator('#navigation [aria-current="location"]')).toHaveText('1. Introduction');await page.reload();await expect(follow).toBeChecked();await expect(page.locator('#navigation [aria-current="location"]')).toHaveText('1. Introduction');expect(errors).toEqual([]);await page.screenshot({path:'../artifacts/ui/follow-outline.png'});
+ await follow.check();await page.getByRole('tab',{name:'Document',exact:true}).click();await expect(page.locator('#navigation [aria-current="location"]')).toHaveText('1. Introduction');await page.reload();await expect(follow).toBeChecked();await expect(page.locator('#navigation [aria-current="location"]')).toHaveText('1. Introduction');expect(errors).toEqual([]);await page.screenshot({path:'../.local/artifacts/ui/follow-outline.png'});
 });
 
 test('Explorer title and Relations-first investigation order are displayed',async({page})=>{
  await expect(page.locator('.explorer-heading')).toHaveText('EXPLORER');await expect(page.locator('.explorer-heading')).not.toContainText('⌕');await expect(page.locator('#navigation > .chapter')).toHaveCount(6);await expect(page.locator('#navigation .collection-toggle')).toHaveCount(0);
  expect(await page.getByRole('tablist',{name:'Investigation tabs'}).getByRole('tab').allTextContents()).toEqual(['Relations','Concepts','Sources','Provenance','History']);await expect(page.getByRole('tab',{name:'Relations',exact:true})).toHaveAttribute('aria-selected','true');
- await page.screenshot({path:'../artifacts/ui/explorer-uniform-guides.png'});
+ await page.screenshot({path:'../.local/artifacts/ui/explorer-uniform-guides.png'});
 });
 
 test('Explorer highlights have gaps and text entries have no tooltips while disclosure tips remain',async({page})=>{
  await page.getByRole('checkbox',{name:'Follow editor',exact:true}).check();const root=page.locator('#navigation .heading-open').filter({hasText:'1. Introduction',exact:true}),child=page.locator('#navigation .heading-open').filter({hasText:'A workspace for connected writing',exact:true});await expect(root).toHaveAttribute('aria-current','location');
  const chapter=await page.locator('#navigation .chapter.active').boundingBox(),heading=await root.boundingBox(),next=await child.boundingBox();expect(heading.y-chapter.y-chapter.height).toBeGreaterThan(0);expect(next.y-heading.y-heading.height).toBeGreaterThan(0);
- await child.hover();await page.waitForTimeout(3300);await expect(page.getByRole('tooltip')).toBeHidden();await page.screenshot({path:'../artifacts/ui/explorer-separated-highlights.png'});
+ await child.hover();await page.waitForTimeout(3300);await expect(page.getByRole('tooltip')).toBeHidden();await page.screenshot({path:'../.local/artifacts/ui/explorer-separated-highlights.png'});
  await page.getByRole('button',{name:'Introduction',exact:true}).hover();await page.waitForTimeout(3300);await expect(page.getByRole('tooltip')).toBeHidden();
  await page.getByRole('button',{name:'Collapse Introduction headings',exact:true}).hover();await expect(page.getByRole('tooltip')).toHaveText('Collapse Introduction headings',{timeout:5000});
 });

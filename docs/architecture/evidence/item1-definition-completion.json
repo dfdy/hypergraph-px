@@ -1,0 +1,187 @@
+{
+  "protocol_version": "1.1.0",
+  "record_version": 1,
+  "id": "HPX-VER-20261102-item1-definition-completion",
+  "kind": "verification_result",
+  "subject": "Checklist item1 logical input-definition completion",
+  "summary": "Item1 input definition completed and coverage audited;runtime,format,resource and proof delivery remain downstream and unclaimed.",
+  "status": "reported",
+  "authority": {
+    "basis": "agent_report"
+  },
+  "source_refs": [
+    {
+      "ref": "Direct owner instruction finish item1 then stop",
+      "role": "context"
+    },
+    {
+      "ref": "item1-resume-correction-027",
+      "role": "context"
+    },
+    {
+      "ref": "docs/02-governance/OWNER_DECISIONS.md",
+      "role": "normative"
+    }
+  ],
+  "relations": [
+    {
+      "type": "verifies",
+      "target": "HPX-RQ-004"
+    },
+    {
+      "type": "verifies",
+      "target": "HPX-RQ-040"
+    }
+  ],
+  "actor": "hpx-input-design",
+  "created_on": "2026-11-02",
+  "content": {
+    "target": "Completed supplier-result definition and coverage table;current checklist/planning status",
+    "outcome": "partial",
+    "method": "Definition/coverage review;bounded final model/navigation/manual-layout,affected-link/register/preservation checks;unaffected evidence reused",
+    "evidence": {
+      "definition_review": {
+        "outcome": "pass",
+        "scope": "Manual accepted-obligation and coverage/discharge review;all nine supplier results define acquisition,validation and successful invariants;failure conjunction and item1 subject mapping explicit",
+        "not_a_product_test": true
+      },
+      "no_layout_validation": {
+        "command": [
+          "node",
+          "architecture/node_modules/likec4/bin/likec4.mjs",
+          "validate",
+          "--json",
+          "--no-layout",
+          "architecture"
+        ],
+        "exit_code": 0,
+        "files": 26,
+        "errors": 0
+      },
+      "scoped_layout": {
+        "syntaxErrors": [],
+        "elements": 204,
+        "relations": 408,
+        "views": 45,
+        "navigationLinks": 216,
+        "allNavigationMappingsPreserved": true,
+        "unaffectedComputedViewsIdentical": true,
+        "affectedServed": {
+          "concept_identity_closure": {
+            "layout": "manual",
+            "drifts": 0,
+            "nodes": 8,
+            "edges": 8,
+            "geometryLabelsPathsPreserved": true,
+            "item1DefinitionServed": true
+          }
+        },
+        "snapshotMetadataUpdated": [
+          "hpx.native.domain.exact.concept_snapshot.notes"
+        ],
+        "renderedVisualInspection": false,
+        "comparisonNote": "Computed elements and relationships remain exactly equal to pre-edit model. Saved/served geometry comparison rebases the old workspace absolute link prefix in memory and excludes regenerated relationship-ID lists and absent-versus-null optional links/tags/navigation; all edge IDs, endpoints, labels, bounds, positions and paths remain compared.",
+        "fullLayoutSweep": "not_run:one bounded view-note refinement only;unchanged topology and other computed views;no global impact"
+      },
+      "affected_links": {
+        "outcome": "pass",
+        "checked": 431,
+        "files": [
+          "architecture/Conceptual/identity-closure.c4",
+          "architecture/proposals/trustworthy-reconstruction-inputs.md",
+          "architecture/proposals/reconstruction-input-preparation.md",
+          "architecture/audits/dom001-current-coverage.md",
+          "architecture/audits/specification-migration-status.md",
+          "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+          "checklist.md"
+        ]
+      },
+      "registers": {
+        "requirements.csv": 41,
+        "tests.csv": 164,
+        "open-questions.csv": 29,
+        "traceability.csv": 598,
+        "decisions.csv": 19
+      },
+      "test_identifier": "HPX-TEST-165;TEST164 intentionally not allocated here for item2 coordination",
+      "current_state_metadata": "pass",
+      "migration_counts": {
+        "Fully migrated": 1,
+        "Partially migrated": 24,
+        "Not migrated — subject specifications": 13,
+        "Not migrated — supporting records": 33
+      },
+      "checklist": {
+        "item1": "checked for definition only",
+        "all_other_lines": "byte/text content preserved from baseline",
+        "local_exclusion": "preserved"
+      },
+      "preservation": {
+        "baseline_files": 576,
+        "unchanged_files": 566,
+        "changed_existing_files": [
+          "architecture/.likec4/concept_identity_closure.likec4.snap",
+          "architecture/Conceptual/identity-closure.c4",
+          "architecture/audits/dom001-current-coverage.md",
+          "architecture/audits/specification-migration-status.md",
+          "architecture/proposals/trustworthy-reconstruction-inputs.md",
+          "checklist.md",
+          "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+          "docs/registers/open-questions.csv",
+          "docs/registers/tests.csv",
+          "architecture/proposals/reconstruction-input-preparation.md"
+        ],
+        "baseline_path": ".verification/item1-definition-completion/baseline.json",
+        "baseline_sha256": "c5e10c78fed85c802eea136071c257c136a3a80b06c3067e1915d357a0dbbe29",
+        "prior_revisions": [
+          {
+            "revision": 8,
+            "local_path": ".verification/item1-definition-completion/trustworthy-reconstruction-inputs.md",
+            "sha256": "bfc99aa9afb9870acc624bc32fdf34810133779d90c62482d88380776c0adfd5"
+          },
+          {
+            "revision": 1,
+            "local_path": ".verification/item1-definition-completion/reconstruction-input-preparation.md",
+            "sha256": "7f23fe550f282097d7f4239b3063efb54d4eb9df78594e8339c2c64c4a31e116"
+          }
+        ],
+        "historical_test_exact_prefix": true,
+        "owner_decisions_requirements_and_ownership_index_unchanged": true,
+        "application_proof_and_prior_evidence_unchanged": true,
+        "unaffected_saved_snapshots": 31,
+        "item2": "No item2 file/owner approval integration or checklist change"
+      },
+      "reused_evidence": {
+        "ref": "architecture/evidence/acknowledged-input-design.json",
+        "sha256": "942bf6905992e5791e31fb84f819dfe271f244ff4f8b96937a299d594b6e438e",
+        "scope": "Prior archive/source checks reused;no full archive/link/source-body sweep repeated;known30 findings remain unresolved"
+      }
+    },
+    "source_sha256": {
+      "architecture/.likec4/concept_identity_closure.likec4.snap": "d5b7be1dd5f33c0ed82ea7ac63fbd6d3271b550b65a836bf051bc18707d92386",
+      "architecture/Conceptual/identity-closure.c4": "a65f267be4a2a7de04d62cacff1a76fd6bd620c4656980c2f39ae4c781b7e588",
+      "architecture/audits/dom001-current-coverage.md": "6c78777481e3105606f480253426481e2caa64fb0cb1042dc6beee54c30f3429",
+      "architecture/audits/specification-migration-status.md": "20b46b6fb74710f969a1d2a343b7f97bd72dd24d3bcbdef7f3033cf61268e413",
+      "architecture/proposals/trustworthy-reconstruction-inputs.md": "ac722ea129936501df24f4e008d860c9d4a26ee26420e83c11068cbaddb773be",
+      "checklist.md": "e5236c4713cdca9ec6984c39a8e509d62cc1c9b759fe710b620fa432f4c6a548",
+      "docs/09-guides/reference/DEVELOPMENT_STATE.md": "966dea27040b394c51a3e9d4abc58cdf3584f18958c88c9475fbb8c8b84f4d6d",
+      "docs/registers/open-questions.csv": "971986bbc1b4c39636eaebdd9fee2dbf44e77cf3810a6718d6b1c51a13474e24",
+      "docs/registers/tests.csv": "50528916ed0a22c24c7bfb3f80ad628c94a2a4cbb2f0189f01e3afd632ac955f",
+      "architecture/proposals/reconstruction-input-preparation.md": "0ecba4bacec34a57f1ea0a2927d947b089000a1df0a6ceccc962a76d21c46f8b"
+    },
+    "new_file": "architecture/evidence/item1-definition-completion.json",
+    "completed_scope": "Definition of exact trusted inputs and failure boundary under existing OWNER048–053;not whole HPX-GAP-004 or general reconstruction implementation",
+    "not_run": [
+      "Application/build/integration/Lean/P1–P7 tests;no implementation/proof inputs changed.",
+      "Full layout/rendered inspection;single bounded note-only M1 view with unchanged geometry.",
+      "Full documentation/archive/source-body sweeps or Git/environment retry;prior evidence reused and known30 findings retained."
+    ],
+    "limitations": [
+      "Supplier realisations remain proposed/unimplemented;no new parser,endpoint/record/source-map format,permission/cleanup or publication mechanism adopted.",
+      "Operational admission,physical representation and model/Rust/UI correspondence remain downstream;no integrated delivery or new theorem claimed.",
+      "No item2 work,additional agents,branches,commits,pushes,releases,trust/provider/manual-runtime actions.",
+      "Baseline excludes generated/cache/unlisted private/runtime files."
+    ],
+    "stop_boundary": "Source edits and validation complete;coordinator will be informed no writes/processes remain in flight;owner instructed stop."
+  }
+}

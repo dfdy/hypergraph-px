@@ -13,11 +13,11 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-30
+- **Last reviewed:** 2026-11-03
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -30,7 +30,7 @@ Describes local code, not proof of a complete data model. Domain serialization s
 
 ## Exact types and fields
 
-Current local code is [storage/src/lib.rs](../../../crates/storage/src/lib.rs); this is implementation evidence, not a newly frozen schema.
+Current local code is [storage/src/lib.rs](../../../backend/crates/storage/src/lib.rs); this is implementation evidence, not a newly frozen schema.
 
 The table below describes the original nine families. Later sections specify additive kinds10–27, with branch/working kinds20–27 still gated. Wrapper coverage is not equivalent to actual older-reader compatibility or delivery. For recovery, [HPX-ASSUR-006](../../08-assurance/recovery.md#authoritative-state-and-repair-boundary) distinguishes authoritative slots from reconstructible views; protected list order/current membership cannot be discarded merely because its record is called an index.
 
@@ -58,7 +58,7 @@ Database schema 1, envelope format and HTTP contract 1 are unchanged. Unversione
 
 ## Optional keychain wrapper in database schema 2
 
-The accepted [ADR014](../../04-architecture/decisions/0014-keychain-unlock-policy.md) is implemented in [storage/keychain.rs](../../../crates/storage/src/keychain.rs). Schema 1 remains the creation format. Only explicit enrollment creates this additional strict table and sets `user_version=2` in one transaction:
+The accepted [ADR014](../../04-architecture/decisions/0014-keychain-unlock-policy.md) is implemented in [storage/keychain.rs](../../../backend/crates/storage/src/keychain.rs). Schema 1 remains the creation format. Only explicit enrollment creates this additional strict table and sets `user_version=2` in one transaction:
 
 ```sql
 CREATE TABLE keychain_unlock(
@@ -254,3 +254,15 @@ HPX-TEST-069 adds a separate experimental3/feature32 reference-replacement drive
 ## Experimental capacity ceilings and result readability
 
 HPX-TEST-070 supersedes the initial temporal/origin read/work budgets while retaining every persisted shape/version and the normal1/2 boundary. The origin reader caps128MiB charged encrypted records,64 retained revisions and32Mi logical work units; temporal Commit caps160Mi work units split over five phases and two128MiB temporal/history read phases (256MiB aggregate). Catalog/branch/checkpoint metadata retains separate preexisting bounds. Changed publication reserves one result record in the64-record chain allowance and performs an ordinary exact result-map reconstruction before COMMIT. Failed post-write capacity/readback rolls back every write. No-op at an exact64-record current history remains eligible; no implicit truncation or unknown seed is created. Strict2MiB raw-source and16MiB plaintext-record/envelope bounds are unchanged. See the test register for actual escaped-source and boundary evidence; public opening/upgrade and real-data/performance acceptance remain outstanding.
+
+## Item3 concrete closure adapter design — OWNER055, not implemented
+
+The [canonical representation choices](../../architecture/Conceptual/identity-closure.c4) and [exact adapter layout contract](../../architecture/proposals/exact-closure-source-map.md#6-persistent-adapter-records-and-reference-decomposition) reserve candidate kinds38–44/wrapper1 for feature,bundle,source material,recovery binding,derived cache,interpretation and immutable anchor. Candidate schema4 and Catalog kind1/wrapper2 provide an explicit incompatible-reader gate; existing kinds/records and HGOB/HGWK/API versions remain unchanged. No Rust/SQL/codec implementation or actual migration is made here.
+
+The [compatibility design](../../architecture/proposals/exact-closure-source-map.md#7-effective-incompatible-workspace-gate--choice8a) is based on static inspection of current bootstrap,command,temporal,authority and wrapper decoders. It requires exclusive quiescence,verified durable backup,atomic feature/catalog/schema agreement and later cold/stale older-reader tests; preservation of unknown optional ciphertext is insufficient. Schema3/kinds31–37 remain experimental and are not repurposed. Normal opening stays1/2; actual schema4 upgrade/use and real-data format acceptance remain separately gated. TEST169 is specification/source-inspection evidence only; C1–C12 runtime/format/upgrade cases are unexecuted.
+
+## Item4 conflict-state record design — OWNER056, not implemented
+
+[Canonical M1/Editor](../../architecture/Conceptual/identity-closure.c4) and the [exact conflict-state layouts](../../architecture/proposals/conflict-state.md#6-explicit-versioned-adapter-design-and-compatibility) specify candidate kinds45–54/wrapper1:CommitStamp,ClockBasis,ConflictIssue,VersionAttachment,Resolution,IssueHead,ResolutionReceipt,ReviewPreference,CarryEvidence and PendingReviewIntent. The combined candidate schema4 profile requires feature38/wrapper2 with explicit commit-time/conflict versions and Catalog2's exact feature ref;feature1 cannot silently enable these writes. Item3's source/bundle/map formats and existing normal/experimental record bytes remain unchanged.
+
+No timestamp is added to old revisions/events or backfilled;current code has no such Commit-time field. Actual format/profile activation still requires separate authority and item3's backed-up/quiesced atomic upgrade and cold/stale-reader checks. Shared current resolution overlays do not rewrite immutable source;private pending/result evidence retains its actual visibility. TEST170 records static design/source/model/document checks only;F1–F12 and actual codecs/transactions/recovery are unexecuted.

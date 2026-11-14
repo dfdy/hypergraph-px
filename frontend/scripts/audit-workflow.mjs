@@ -25,7 +25,7 @@ export async function exerciseDocumentAudit({page,ok,api,root,checks,database,un
  for(const theme of ['dark','light'])for(const width of [1280,1600,2000]){
   await page.setViewportSize({width,height:1000});await page.evaluate(t=>document.body.classList.toggle('light',t==='light'),theme);await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   check(await dialog.evaluate(d=>{const r=d.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight;}),'Audit dialog exceeds desktop viewport');
-  await page.screenshot({path:resolve(root,`artifacts/runtime-audit-${theme}-${width}.png`),animations:'disabled'});
+  await page.screenshot({path:resolve(root,`.local/artifacts/runtime-audit-${theme}-${width}.png`),animations:'disabled'});
  }
  await dialog.getByRole('button',{name:'Close',exact:true}).click();await expect(dialog).toHaveCount(0);check(await selection()===selected,'Audit changed exact editor selection');check(commands===0,'Audit emitted a mutation command');check(persisted()===before,'Audit changed protected persisted records');check(JSON.stringify(await ok('editor',{document}))===JSON.stringify(state),'Audit changed acknowledged editor state');
  // Explicit pending typing is not saved by Run; Undo remains the editor's own history.

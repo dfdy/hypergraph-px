@@ -17,7 +17,7 @@
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -40,7 +40,7 @@ Requirements must trace to their real code/test/proof scope. Security, privacy, 
 
 Source `HPX-SRC-0024`, original lines 74–78. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-The adapter's Rust tests cover round-trips, independent encryption of equal content, tampering/context substitution, malformed/resource limits and passphrase rewrap preserving access to existing ciphertext. Dependency versions/checksums/licenses are recorded in [the runtime inventory](<../../legal/RUST_DEPENDENCIES.json>). No crypto function is Lean verified. Primitive correctness, OS entropy, client integrity, process memory and future I/O remain explicit trust assumptions. Formal-assurance evidence stays in the [Lean validation digest](<../07-implementation/formal-invariants.md>), separate from these requirements.
+The adapter's Rust tests cover round-trips, independent encryption of equal content, tampering/context substitution, malformed/resource limits and passphrase rewrap preserving access to existing ciphertext. Dependency versions/checksums/licenses are recorded in [the runtime inventory](<../../shared/legal/RUST_DEPENDENCIES.json>). No crypto function is Lean verified. Primitive correctness, OS entropy, client integrity, process memory and future I/O remain explicit trust assumptions. Formal-assurance evidence stays in the [Lean validation digest](<../07-implementation/formal-invariants.md>), separate from these requirements.
 
 
 ## Pass/fail or measurement thresholds

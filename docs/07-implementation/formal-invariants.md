@@ -20,7 +20,7 @@ Four historical DAG model theorems and one separately retained extracted spend-h
 
 ## Formal property
 
-The [human-readable validation digest](../08-assurance/formal-validation-digest.md) retains historical archive/source-ID evidence and the current cycle-aware model results;its proof sources remain active in [proofs](../../proofs/lean/Hypergraph/Expansion.lean).
+The [human-readable validation digest](../08-assurance/formal-validation-digest.md) retains historical archive/source-ID evidence and the current cycle-aware model results;its proof sources remain active in [proofs](../../backend/proofs/lean/Hypergraph/Expansion.lean).
 
 | Property identity | Checked declaration | Existing recorded assurance |
 |---|---|---|
@@ -44,7 +44,7 @@ The owner requires the following Lean work for the [accepted cycle-aware inclusi
 
 Prove model results first and record exact definitions, assumptions, source/toolchain hashes and axiom reports in the [full digest](../08-assurance/formal-validation-digest.md). Establish correspondence for the actual selected Rust traversal/navigation logic where supported; explicitly document remaining bridges. Lean state-machine proofs alone cannot prove that browser pixels, keyboard/screen-reader behaviour, transport permission checks or UI event handlers match the model: require targeted implementation, accessibility and recovery tests as separate evidence. The four existing DAG model proofs and extracted `spend_spec` retain their original scope and cannot be relabelled as these proofs.
 
-The [finite-state candidate](../../architecture/proposals/finite-cycle-closure-state.md) and [Lean proof plan](../../architecture/proposals/finite-cycle-lean-plan.md) now propose definitions, key-soundness/coverage invariants and proof dependencies for these identities. OWNER045 adopts the finite-state/structural-key/boundary semantic basis; 31 named finite-state model theorems/33 guards are checked under HPX-TEST-153; OWNER047 adds19 source-emission theorems/18 guards under HPX-TEST-155 with explicit input premises in the digest. [Exact definitions,axioms and remaining proof limits](../08-assurance/formal-validation-digest.md#finite-cycle-state-model--2026-10-31) prevent treating those results as complete emitted-source,Rust/UI or operational-resource proofs.
+The [finite-state candidate](../architecture/proposals/finite-cycle-closure-state.md) and [Lean proof plan](../architecture/proposals/finite-cycle-lean-plan.md) now propose definitions, key-soundness/coverage invariants and proof dependencies for these identities. OWNER045 adopts the finite-state/structural-key/boundary semantic basis; 31 named finite-state model theorems/33 guards are checked under HPX-TEST-153; OWNER047 adds19 source-emission theorems/18 guards under HPX-TEST-155 with explicit input premises in the digest. [Exact definitions,axioms and remaining proof limits](../08-assurance/formal-validation-digest.md#finite-cycle-state-model--2026-10-31) prevent treating those results as complete emitted-source,Rust/UI or operational-resource proofs.
 
 ### 6. Formal validation
 

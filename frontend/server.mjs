@@ -1,7 +1,7 @@
 // Development server only. Never serves source, inbox, runtime data or a backend API.
 import http from 'node:http';import {readFile,stat} from 'node:fs/promises';import {resolve,extname} from 'node:path';
 const root=resolve(process.env.HPX_PREVIEW_ROOT||'dist'),port=Number(process.env.HYPERGRAPH_PREVIEW_PORT??5173);if(!Number.isInteger(port)||port!==0&&(port<1024||port>65535))throw new Error('Invalid preview port');
-const generatedCache=resolve(import.meta.dirname,'../.verification/frontend-assets');
+const generatedCache=resolve(import.meta.dirname,'../.local/verification/frontend-assets');
 if(root!==resolve(import.meta.dirname,'dist')&&!new RegExp('^'+generatedCache.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'/[a-f0-9]{64}/assets$').test(root))throw new Error('Preview root must be generated frontend assets');
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.woff2':'font/woff2','.woff':'font/woff','.ttf':'font/ttf','.txt':'text/plain; charset=utf-8'};
 const server=http.createServer(async(req,res)=>{res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Content-Security-Policy',"default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");

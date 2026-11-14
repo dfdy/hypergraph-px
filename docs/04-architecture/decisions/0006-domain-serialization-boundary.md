@@ -15,7 +15,7 @@
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
 - **Last reviewed:** 2026-10-25
 
-Implementation update, 2026-10-25: domain Serde/dependencies have been removed. The [adapter codecs](../../../crates/storage/src/encoding.rs) preserve identifier/command encodings; [current evidence](../../09-guides/reference/implementation-resumption.md) distinguishes ordinary tests and proof replay.
+Implementation update, 2026-10-25: domain Serde/dependencies have been removed. The [adapter codecs](../../../backend/crates/storage/src/encoding.rs) preserve identifier/command encodings; [current evidence](../../09-guides/reference/implementation-resumption.md) distinguishes ordinary tests and proof replay.
 
 Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
 

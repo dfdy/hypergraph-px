@@ -47,3 +47,5 @@ The public contract comprises exported Rust APIs and documented behavior, and su
 ## Release qualification
 
 State platform libraries and static-link limits accurately for each release target. A diagram-owned deployment boundary does not establish a fully static build or production acceptance.
+
+Current release-history location: [CHANGELOG.md](../releases/CHANGELOG.md). Retained source wording above keeps its historical basename.

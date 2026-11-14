@@ -17,7 +17,7 @@
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -156,8 +156,8 @@ HPX-OWNER-009 requires required persistent application/recovery evidence to rema
 
 ## Known node-creation origin — HPX-RQ-039
 
-Accepted under HPX-OWNER-048: [M1](../../architecture/Conceptual/identity-closure.c4) defines the universal known-origin and determinable-parent/position precondition for every node kind; [O2](../../architecture/Conceptual/placement-effects.c4) applies it before creation effects. [Context and shared-API constraints](../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048) distinguish reusable identity, occurrence placement, root context, ancestry, derivation and machine-equivalent creation context. Creation must not succeed with missing/ambiguous context or a silently selected position. This is specification acceptance, not implementation or a new format.
+Accepted under HPX-OWNER-048: [M1](../architecture/Conceptual/identity-closure.c4) defines the universal known-origin and determinable-parent/position precondition for every node kind; [O2](../architecture/Conceptual/placement-effects.c4) applies it before creation effects. [Context and shared-API constraints](../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048) distinguish reusable identity, occurrence placement, root context, ancestry, derivation and machine-equivalent creation context. Creation must not succeed with missing/ambiguous context or a silently selected position. This is specification acceptance, not implementation or a new format.
 
 ## Retained selections and constructed-version branches — RQ040–041
 
-Under OWNER049/050, [M1](../../architecture/Conceptual/identity-closure.c4) and [editor notes](../../architecture/C3/browser-organisation.c4) require exact last-successful-autosave composition restoration with nested/repeated inclusion selections, a separate newer-authorised-version indication, and saving an authorised constructed current-document version as a specific branch while retaining logical identity. Routine autosaves must not accumulate historical versions merely because they occur; universal future autosave/Commit separation remains open. [Current scope and unresolved mechanisms](../../architecture/proposals/branch-selection-reconciliation.md) preserve original ADR/departure-Commit/history/authority boundaries and distinguish owning branch, constituent selections, private working state, committed snapshots and read-only projections. No unnamed editable-branch premise, main algorithm, cache or storage format is adopted.
+Under OWNER049/050, [M1](../architecture/Conceptual/identity-closure.c4) and [editor notes](../architecture/C3/browser-organisation.c4) require exact last-successful-autosave composition restoration with nested/repeated inclusion selections, a separate newer-authorised-version indication, and saving an authorised constructed current-document version as a specific branch while retaining logical identity. Routine autosaves must not accumulate historical versions merely because they occur; universal future autosave/Commit separation remains open. [Current scope and unresolved mechanisms](../architecture/proposals/branch-selection-reconciliation.md) preserve original ADR/departure-Commit/history/authority boundaries and distinguish owning branch, constituent selections, private working state, committed snapshots and read-only projections. No unnamed editable-branch premise, main algorithm, cache or storage format is adopted.

@@ -1,10 +1,10 @@
 # Hypergraph PX documentation
 
-**Start with the [LikeC4 specification](../architecture/SPECIFICATION.md).** Diagrams own the scopes in the [ownership index](../architecture/specification-ownership.csv). Supporting prose supplies details not yet sufficiently modelled; do not maintain parallel definitions. HPX-OWNER-032 changes definition ownership, not the status of proposed designs or implementation evidence.
+**Start with the [LikeC4 specification](architecture/SPECIFICATION.md).** Diagrams own the scopes in the [ownership index](architecture/specification-ownership.csv). Supporting prose supplies details not yet sufficiently modelled; do not maintain parallel definitions. HPX-OWNER-032 changes definition ownership, not the status of proposed designs or implementation evidence.
 
 ## Authority and status
 
-[Owner decisions](02-governance/OWNER_DECISIONS.md) and accepted obligations retain authority. Diagram-first ownership does not promote planned features to implemented ones. Current users are workspace-local, with one machine user per provider per workspace; see [canonical actor definitions](../architecture/context.c4) and the [supplemental chat/MCP contract](06-subsystems/ai-collaboration.md). No public API, new code or publication is authorised by documentation changes.
+[Owner decisions](02-governance/OWNER_DECISIONS.md) and accepted obligations retain authority. Diagram-first ownership does not promote planned features to implemented ones. Current users are workspace-local, with one machine user per provider per workspace; see [canonical actor definitions](architecture/context.c4) and the [supplemental chat/MCP contract](06-subsystems/ai-collaboration.md). No public API, new code or publication is authorised by documentation changes.
 
 ## Nine abstraction levels
 
@@ -22,7 +22,7 @@ These organise supporting documents; they do not duplicate the C1–C4 model:
 
 ## Architectural review integration
 
-Past review and migration records are provenance, not routine reading. Consult [implementation dispositions](09-guides/reference/implementation-resumption.md#architecture-review-integration-2026-10-26) or the authorised [public historical snapshot](../docproject/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d/README.md) only when needed. Private `.oldspecs` originals remain ignored; hashes/locations are retained in the registers.
+Past review and migration records are provenance, not routine reading. Consult [implementation dispositions](09-guides/reference/implementation-resumption.md#architecture-review-integration-2026-10-26) or the authorised [public historical snapshot](../.provenance/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d/README.md) only when needed. All provenance archives now live under [`.provenance/`](../.provenance/README.md). Private `.provenance/oldspecs/` originals and unredacted masters remain selectively ignored; original/current locations and byte hashes are retained in the registers.
 
 ## Constitution
 
@@ -34,7 +34,7 @@ Read [current execution status](09-guides/reference/DEVELOPMENT_STATE.md#current
 
 ## Current specification reconciliation
 
-[The scoped audit](../architecture/audits/specification-reconciliation-audit.md) records obsolete-requirement corrections. [Diagram ownership migration](../architecture/audits/diagram-canonicalization.md) records removed duplication and measured reduction. Exact source/claim identities remain in [registers](registers/README.md); no source archive or as-run test/proof record was deleted.
+[The scoped audit](architecture/audits/specification-reconciliation-audit.md) records obsolete-requirement corrections. [Diagram ownership migration](architecture/audits/diagram-canonicalization.md) records removed duplication and measured reduction. Exact source/claim identities remain in [registers](registers/README.md); no source archive or as-run test/proof record was deleted.
 
 
-[Complete migration status](../architecture/audits/specification-migration-status.md): fully/partially/not migrated, with intentionally retained supporting records separated.
+[Complete migration status](architecture/audits/specification-migration-status.md): fully/partially/not migrated, with intentionally retained supporting records separated.

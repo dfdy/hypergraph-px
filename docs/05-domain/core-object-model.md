@@ -13,16 +13,16 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-11-01
+- **Last reviewed:** 2026-11-02
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
 
-Container responsibility for the shared API, workspace-local users and the distinction between identity, unlock and permission is canonical in [C2 / HPX containers](../../architecture/C2/containers.c4), HPX-CAN-008. The [accepted shared API contract](../06-subsystems/interfaces/browser-runtime.md) retains precise enforcement obligations (HPX-OWNER-029–033; HPX-RQ-037–038).
+Container responsibility for the shared API, workspace-local users and the distinction between identity, unlock and permission is canonical in [C2 / HPX containers](../architecture/C2/containers.c4), HPX-CAN-008. The [accepted shared API contract](../06-subsystems/interfaces/browser-runtime.md) retains precise enforcement obligations (HPX-OWNER-029–033; HPX-RQ-037–038).
 
 
 Formal meanings do not imply every type or operation is implemented. See implementation discrepancies and requirement evidence separately.
@@ -30,7 +30,7 @@ Formal meanings do not imply every type or operation is implemented. See impleme
 
 ## C1/C2 and C3 overview migration boundary
 
-The actor-facing [C1 view and output](../../architecture/context.c4), HPX-CAN-007, remain unchanged. Container-level meanings now delegate to [C2 / HPX containers](../../architecture/C2/containers.c4), HPX-CAN-008. The [C2 clause mapping and deferments](../../architecture/audits/dom001-c2-migration.md) identify exactly what transferred and what remains. The definitions below stay authoritative within their recorded scope; container responsibilities do not replace object relationships, operation effects or precise invariants. [C3 executable-overview notes](../../architecture/C3/executable.c4), HPX-CAN-009, now own responsibility allocation only. [All five gap dispositions](../../architecture/audits/dom001-c2-migration.md#c3-executable-overview-allocation--hpx-owner-037) remain tracked. No object definition below is removed. The existing [Pure domain expansion](../../architecture/C3/pure-domain.c4) now owns five responsibility-allocation notes only (HPX-CAN-010); [its five gap dispositions](../../architecture/audits/dom001-c2-migration.md#c3-pure-domain-allocation--hpx-owner-038) retain full conceptual and mechanism work. Further existing responsibility allocations are tracked in the [successive-stage record](../../architecture/audits/dom001-c2-migration.md#successive-responsibility-allocations--hpx-owner-039), under HPX-OWNER-039. Precise definitions below remain; no C4, conceptual-view or sequence migration has occurred.
+The actor-facing [C1 view and output](../architecture/context.c4), HPX-CAN-007, remain unchanged. Container-level meanings now delegate to [C2 / HPX containers](../architecture/C2/containers.c4), HPX-CAN-008. The [C2 clause mapping and deferments](../architecture/audits/dom001-c2-migration.md) identify exactly what transferred and what remains. The definitions below stay authoritative within their recorded scope; container responsibilities do not replace object relationships, operation effects or precise invariants. [C3 executable-overview notes](../architecture/C3/executable.c4), HPX-CAN-009, now own responsibility allocation only. [All five gap dispositions](../architecture/audits/dom001-c2-migration.md#c3-executable-overview-allocation--hpx-owner-037) remain tracked. No object definition below is removed. The existing [Pure domain expansion](../architecture/C3/pure-domain.c4) now owns five responsibility-allocation notes only (HPX-CAN-010); [its five gap dispositions](../architecture/audits/dom001-c2-migration.md#c3-pure-domain-allocation--hpx-owner-038) retain full conceptual and mechanism work. Further existing responsibility allocations are tracked in the [successive-stage record](../architecture/audits/dom001-c2-migration.md#successive-responsibility-allocations--hpx-owner-039), under HPX-OWNER-039. Precise definitions below remain; no C4, conceptual-view or sequence migration has occurred.
 
 ## Entities and identities
 
@@ -45,17 +45,17 @@ Status: accepted local implementation design, 2026-10-25. Implementation evidenc
 
 Source `HPX-SRC-0023`, original lines 5–16. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-Workspace's storage/key-boundary meaning is defined on the existing encrypted workspace in [C2 / HPX containers](../../architecture/C2/containers.c4), HPX-CAN-008. Principal, device and group identities are distinct from authentication sessions and grants. A principal may represent a human, agent or organisation; display names are mutable labels, not identifiers or authority. Actor kinds and required multi-user scope are defined in [C1 / System context](../../architecture/context.c4), HPX-CAN-007. The current catalog records one owner/device and lacks the required multi-user/AI mutation mechanisms; that is development evidence, not an identity cardinality rule. Chat prompts/context/responses are nodes under ordinary graph/version/history semantics; their record representation remains to be designed. Remote access remains gated. See [baseline contract](../06-subsystems/ai-collaboration.md).
+Workspace's storage/key-boundary meaning is defined on the existing encrypted workspace in [C2 / HPX containers](../architecture/C2/containers.c4), HPX-CAN-008. Principal, device and group identities are distinct from authentication sessions and grants. A principal may represent a human, agent or organisation; display names are mutable labels, not identifiers or authority. Actor kinds and required multi-user scope are defined in [C1 / System context](../architecture/context.c4), HPX-CAN-007. The current catalog records one owner/device and lacks the required multi-user/AI mutation mechanisms; that is development evidence, not an identity cardinality rule. Chat prompts/context/responses are nodes under ordinary graph/version/history semantics; their record representation remains to be designed. Remote access remains gated. See [baseline contract](../06-subsystems/ai-collaboration.md).
 
 The source-era generic principal wording above does not introduce an organisation/group user container or cross-workspace identity reuse. HPX-OWNER-030/031/033 govern current workspace-local human/machine users; device/group/organisation record and authority mechanisms remain undefined here.
 
-[M1 conceptual identities](../../architecture/Conceptual/identity-closure.c4) now define Node and its immutable same-node Revision (HPX-CAN-018). Document is a named composition identity, not a plaintext file. Branch is an independently identified evolving selection. Occurrence is a placement, distinct from content and preserved on moves. Manifest is immutable ordered structure. Snapshot closes an exact manifest plus occurrence-path-specific revision bindings; it must never resolve using current heads. Repeated nested uses require distinct full occurrence paths.
+[M1 conceptual identities](../architecture/Conceptual/identity-closure.c4) now define Node and its immutable same-node Revision (HPX-CAN-018). Document is a named composition identity, not a plaintext file. Branch is an independently identified evolving selection. Occurrence is a placement, distinct from content and preserved on moves. Manifest is immutable ordered structure. Snapshot closes an exact manifest plus occurrence-path-specific revision bindings; it must never resolve using current heads. Repeated nested uses require distinct full occurrence paths.
 
 Hyperedges are identifiable revisioned relationships with ordered, role-labelled participants; participants may reference content, exact revisions, anchors or other relationships. Binary UI arrows are a subset, not a storage restriction. Predicate identity and definition are independent of overlapping browsing tags. Assertion is an attributed claim using such a predicate with negation, certainty, attribution and context; it is not a truth judgement or authority grant.
 
 Event records an attributable semantic operation and causal inputs/results. Commit is its atomic publication boundary. Transformation events describe cross-identity fork/split/merge/extraction; same-identity revision parents must never be used for these origins. Interaction records observable human/agent exchanges independently of resulting contributions. Observed, declared and inferred provenance remain distinct. Adoption is not verification, authorship or endorsement.
 
-The derived-presentation meaning of View is defined on the C1 system-to-human output (HPX-CAN-007); browser responsibility and permission-checked projections are defined in [C2 / HPX containers](../../architecture/C2/containers.c4), HPX-CAN-008. Concepts, questions, arguments, comments and external sources are specialised entities rather than new storage engines.
+The derived-presentation meaning of View is defined on the C1 system-to-human output (HPX-CAN-007); browser responsibility and permission-checked projections are defined in [C2 / HPX containers](../architecture/C2/containers.c4), HPX-CAN-008. Concepts, questions, arguments, comments and external sources are specialised entities rather than new storage engines.
 
 ### Local vertical slice
 
@@ -97,7 +97,7 @@ Source `HPX-SRC-0026`, original lines 13–30. Preserved contract/evidence wordi
 
 Identifier algorithms and serialization must be selected together with canonical signing/encryption rules. No domain identifier generation algorithm has been selected yet. Content equality is neither identity equality nor permission to disclose cross-domain existence.
 
-The no-algorithm-selected sentence retains the proposed source's scope; it does not revoke the separately recorded local OS-random implementation above or select future signing/encryption rules. Container-level logical identity versus physical ciphertext addressing/disclosure is canonical in [C2 / HPX containers](../../architecture/C2/containers.c4), HPX-CAN-008; the typed records and exact rules in this section remain supplemental.
+The no-algorithm-selected sentence retains the proposed source's scope; it does not revoke the separately recorded local OS-random implementation above or select future signing/encryption rules. Container-level logical identity versus physical ciphertext addressing/disclosure is canonical in [C2 / HPX containers](../architecture/C2/containers.c4), HPX-CAN-008; the typed records and exact rules in this section remain supplemental.
 
 
 ## Source provenance
@@ -115,11 +115,11 @@ The owner requested designing pending edits as private working branches and subs
 
 ### Current conceptual migration coverage
 
-[O3 retained evidence and interaction effects](../../architecture/Conceptual/evidence-effects.c4), HPX-CAN-024, is the latest bounded conceptual stage; [current inventory](../../architecture/audits/specification-migration-status.md) includes prior concepts and remaining coverage. Precise source-scoped definitions and unadopted mechanisms remain authoritative; no implementation or format acceptance follows.
+[O3 retained evidence and interaction effects](../architecture/Conceptual/evidence-effects.c4), HPX-CAN-024, is the latest bounded conceptual stage; [current inventory](../architecture/audits/specification-migration-status.md) includes prior concepts and remaining coverage. Precise source-scoped definitions and unadopted mechanisms remain authoritative; no implementation or format acceptance follows.
 
 ## Creation origin and placement — HPX-OWNER-048
 
-The universal accepted creation precondition is defined in [M1 identity/closure](../../architecture/Conceptual/identity-closure.c4) and applied before creation effects in [O2](../../architecture/Conceptual/placement-effects.c4), HPX-RQ-039. [Owner provenance](../02-governance/OWNER_DECISIONS.md#known-creation-origin-and-contextual-placement--2026-11-01) records the explicit instruction. These supporting distinctions constrain its interpretation:
+The universal accepted creation precondition is defined in [M1 identity/closure](../architecture/Conceptual/identity-closure.c4) and applied before creation effects in [O2](../architecture/Conceptual/placement-effects.c4), HPX-RQ-039. [Owner provenance](../02-governance/OWNER_DECISIONS.md#known-creation-origin-and-contextual-placement--2026-11-01) records the explicit instruction. These supporting distinctions constrain its interpretation:
 
 | Context | Meaning and boundary |
 | --- | --- |
@@ -130,4 +130,4 @@ The universal accepted creation precondition is defined in [M1 identity/closure]
 | Actor and authorship | The creating operation's actor/context is not evidence of original authorship of imported/reused text. Existing attribution and permission distinctions remain. |
 | UI, caret and machine context | UI actions must bind their initiating view/position or exact caret/source context as applicable; machine/other shared-API requests provide an explicit equivalent creation context. Backend validation checks determinacy, exact state and current authority without depending on a literal browser caret. Missing/stale/ambiguous context is not repaired by guessing. The context payload and validation mechanism remain undesigned. |
 
-Known origin does not imply inline textual inclusion syntax. Structural placement may be known while its textual projection remains unresolved; no originless graph-node case is inferred. Preserve exact UTF8/UTF16 mappings whenever caret coordinates are used. Ordinary draft acknowledgement, Commit, history, recovery, current workspace-user permissions and source-only reconstruction scope continue; this requirement selects no record format or general creation API.
+Known origin does not imply inline textual inclusion syntax. Structural placement may be known without a written token; [M1](../architecture/Conceptual/identity-closure.c4) now owns OWNER051's accepted reconstruction contribution/stop rules, OWNER053 now owns selection meaning in the [precise selection contract](text-and-anchors.md#structural-membership-and-exact-partial-fragments--owner053), while exact structural/source acquisition, endpoint representation and physical encoding remain unresolved. No originless graph-node case is inferred. Preserve exact UTF8/UTF16 mappings whenever caret coordinates are used. Ordinary draft acknowledgement, Commit, history, recovery, current workspace-user permissions and source-only reconstruction scope continue; this requirement selects no record format or general creation API.

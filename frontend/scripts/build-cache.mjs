@@ -15,15 +15,21 @@ export async function hashFiles(files){
 export async function assetDigest(directory){
  const hash=createHash('sha256');for(const file of await filesUnder(directory)){hash.update(relative(directory,file));hash.update('\0');hash.update(createHash('sha256').update(await readFile(file)).digest());}return hash.digest('hex');
 }
+export function isSharedBrowserInput(name){return typeof name==='string'&&/^(openapi\.json|predicate-catalog-v1\.json|legal\/upstream-notices\/[^/]+-LICENSE)$/.test(name.replaceAll('\\','/'));}
+export async function sharedBrowserInputFiles(repository=root){
+ const notices=join(repository,'shared/legal/upstream-notices'),files=['shared/openapi.json','shared/predicate-catalog-v1.json'].map(p=>join(repository,p));
+ for(const entry of await readdir(notices,{withFileTypes:true})){if(!entry.name.endsWith('-LICENSE'))continue;if(!entry.isFile())throw Error('Legal notice input must be a regular file: '+entry.name);files.push(join(notices,entry.name));}
+ return files.sort();
+}
 export async function inputIdentity(){
- const files=[...await filesUnder(join(frontend,'src')),...await filesUnder(join(root,'legal/upstream-notices')),...await filesUnder(join(frontend,'node_modules')),...['frontend/index.html','frontend/styles.css','frontend/package.json','frontend/package-lock.json','frontend/build.mjs','frontend/scripts/build-cache.mjs','docs/assets/logo.png','LICENSE'].map(p=>join(root,p))];
+ const files=[...await filesUnder(join(frontend,'src')),...await sharedBrowserInputFiles(),...await filesUnder(join(frontend,'node_modules')),...['frontend/index.html','frontend/styles.css','frontend/package.json','frontend/package-lock.json','frontend/build.mjs','frontend/scripts/build-cache.mjs','docs/assets/logo.png','LICENSE'].map(p=>join(root,p))];
  return createHash('sha256').update(process.version+'\0'+process.platform+'\0'+process.arch+'\0'+await hashFiles(files)).digest('hex');
 }
 export async function validEntry(directory,source){
  try{const record=JSON.parse(await readFile(join(directory,'manifest.json'),'utf8'));return record.source===source&&record.assets===await assetDigest(join(directory,'assets'))?record:null;}catch{return null;}
 }
 export async function cachedBuild(build){
- const start=performance.now(),source=await inputIdentity(),cache=join(root,'.verification/frontend-assets');await mkdir(cache,{recursive:true});const entry=join(cache,source);
+ const start=performance.now(),source=await inputIdentity(),cache=join(root,'.local/verification/frontend-assets');await mkdir(cache,{recursive:true});const entry=join(cache,source);
  let record=await validEntry(entry,source),cached=!!record;
  if(!record){
   const temporary=await mkdtemp(join(cache,'.building-'));
@@ -41,6 +47,6 @@ export async function cachedBuild(build){
 }
 export async function installDist(snapshot){
  const dist=join(frontend,'dist');try{if(await assetDigest(dist)===snapshot.assets)return false;}catch{}
- const lock=join(root,'.verification/frontend-dist.lock');await mkdir(lock).catch(error=>{if(error.code==='EEXIST')throw Error('Another frontend dist update is active; serialize shared-output builds');throw error;});
+ const lock=join(root,'.local/verification/frontend-dist.lock');await mkdir(lock).catch(error=>{if(error.code==='EEXIST')throw Error('Another frontend dist update is active; serialize shared-output builds');throw error;});
  try{await rm(dist,{recursive:true,force:true});await cp(snapshot.directory,dist,{recursive:true});if(await assetDigest(dist)!==snapshot.assets)throw Error('Installed frontend assets failed content verification');}finally{await rm(lock,{recursive:true,force:true});}return true;
 }

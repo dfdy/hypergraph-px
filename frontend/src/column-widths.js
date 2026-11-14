@@ -1,9 +1,10 @@
 // Presentation-only sizes: Navigator always remains 90 CSS pixels wide.
-export function installColumnWidths(workspace,{onLayout=()=>{},onSave=()=>{}}={}){
+export function installColumnWidths(workspace,{onLayout=()=>{},onSave=()=>{},sizing}={}){
  const widths={outline:226,sidebar:348},handles={};
  function limits(){const map=workspace.classList.contains('navigator-hidden')?0:90;return {available:workspace.clientWidth-map,minimumEditor:320};}
  function apply(changed){
-  const {available,minimumEditor}=limits();
+  if(!changed&&sizing)Object.assign(widths,sizing.values());
+    const {available,minimumEditor}=limits();
   widths.outline=Math.max(160,Math.min(450,widths.outline));
   widths.sidebar=Math.max(260,Math.min(600,widths.sidebar));
   const excess=widths.outline+widths.sidebar+minimumEditor-available;
@@ -12,10 +13,18 @@ export function installColumnWidths(workspace,{onLayout=()=>{},onSave=()=>{}}={}
    const minimum={outline:160,sidebar:260};let remaining=excess;
    for(const key of [first,second]){const reduction=Math.min(remaining,widths[key]-minimum[key]);widths[key]-=reduction;remaining-=reduction;}
   }
-  workspace.style.setProperty('--outline-width',widths.outline+'px');
+  if(changed)sizing?.resize(widths,changed);
+    workspace.style.setProperty('--outline-width',widths.outline+'px');
   workspace.style.setProperty('--sidebar-width',widths.sidebar+'px');
   const root=workspace.getBoundingClientRect(),outline=workspace.querySelector('.navigator').getBoundingClientRect(),sidebar=workspace.querySelector('.right-sidebar').getBoundingClientRect();
-  if(handles.outline){handles.outline.style.left=outline.right-root.left-4+'px';handles.sidebar.style.left=sidebar.left-root.left-4+'px';}
+  if(handles.outline){
+     const editor=workspace.querySelector('.editor-pane').getBoundingClientRect();
+     if(!document.body.classList.contains('resizing-columns')){
+      handles.outline.hidden=!!sizing&&(outline.left>=editor.left||Math.abs(outline.top-editor.top)>1||Math.abs(outline.bottom-root.bottom)>1);
+      handles.sidebar.hidden=!!sizing&&(sidebar.left<editor.left||Math.abs(sidebar.top-editor.top)>1||Math.abs(sidebar.bottom-root.bottom)>1);
+     }
+     handles.outline.style.left=outline.right-root.left-4+'px';handles.sidebar.style.left=sidebar.left-root.left-4+'px';
+    }
   for(const [key,handle] of Object.entries(handles)){handle.setAttribute('aria-valuenow',Math.round(widths[key]));}
   onLayout();
  }
@@ -28,12 +37,13 @@ export function installColumnWidths(workspace,{onLayout=()=>{},onSave=()=>{}}={}
    const initial={...widths},origin=event.clientX;let active=true;document.body.classList.add('resizing-columns');
    const move=e=>{widths[key]=initial[key]+(e.clientX-origin)*(key==='sidebar'?-1:1);apply(key);};
    const finish=()=>{if(!active)return;active=false;handle.removeEventListener('pointermove',move);handle.removeEventListener('pointerup',finish);handle.removeEventListener('pointercancel',cancel);handle.removeEventListener('lostpointercapture',finish);document.removeEventListener('keydown',escape);document.body.classList.remove('resizing-columns');if(handle.hasPointerCapture(event.pointerId))handle.releasePointerCapture(event.pointerId);onSave();};
-   const cancel=()=>{Object.assign(widths,initial);apply();finish();};
+   const cancel=()=>{Object.assign(widths,initial);apply('restore');finish();};
    const escape=e=>{if(e.key==='Escape'){e.preventDefault();cancel();}};
    handle.addEventListener('pointermove',move);handle.addEventListener('pointerup',finish);handle.addEventListener('pointercancel',cancel);handle.addEventListener('lostpointercapture',finish);document.addEventListener('keydown',escape);
   });
  }
- new ResizeObserver(()=>apply()).observe(workspace);
+ const observer=new ResizeObserver(()=>apply());observer.observe(workspace);
+  if(sizing)for(const element of workspace.querySelectorAll('.navigator,.editor-pane,.right-sidebar'))observer.observe(element);
  apply();
- return {apply,values:()=>({...widths}),restore(value){if(value&&typeof value==='object'){for(const key of ['outline','sidebar'])if(Number.isFinite(value[key]))widths[key]=value[key];}apply();}};
+ return {apply,values:()=>({...widths,...sizing?.values()}),restore(value){if(value&&typeof value==='object'){for(const key of ['outline','sidebar'])if(Number.isFinite(value[key]))widths[key]=value[key];}apply('restore');}};
 }

@@ -1,0 +1,37 @@
+[package]
+name = "hypergraph-runtime"
+default-run = "hypergraph"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+build = "build.rs"
+
+[[bin]]
+name = "hypergraph"
+path = "src/main.rs"
+
+[[bin]]
+name = "hypergraph-api"
+path = "src/export_api.rs"
+required-features = ["api-export"]
+
+[features]
+api-export = []
+# Development API process only; release builds leave this disabled.
+dev-backend = []
+
+[dependencies]
+hypergraph-keychain = { path = "../keychain" }
+hypergraph-storage = { path = "../storage", features = ["api-schema"] }
+hypergraph-domain = { path = "../domain" }
+serde = { version = "=1.0.228", features = ["derive"] }
+serde_json = { version = "=1.0.154", features = ["raw_value"] }
+rustls = { version = "=0.23.46", default-features = false, features = ["std", "ring", "tls12"] }
+rustls-pemfile = "=2.2.0"
+httparse = "=1.10.1"
+zeroize = { version = "=1.9.1", features = ["alloc"] }
+utoipa = { version = "=6.0.0", default-features = false, features = ["macros"] }
+
+[lints]
+workspace = true

@@ -1,0 +1,121 @@
+// Flat conceptual restatement under an existing responsibility;not software or a persistent schema.
+model {
+  extend hpx.native.domain.source_plans {
+    concept_input = domain_concept "Exact input revision role" {
+      description "Ordered source/range/context reference;not another revision type."
+      metadata { scope "conceptual only" source "HPX-SRC-0025:L28-L33" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_output = domain_concept "Exact output revision role" {
+      description "Ordered result and contribution mapping;not a foreign same-node parent."
+      metadata { scope "conceptual only" source "HPX-SRC-0025:L28-L33" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_transformation = domain_concept "Transformation event" {
+      description "Cross-identity derivation with exact input/output mappings."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L13;HPX-SRC-0025:L28-L33" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "Every revision parent belongs to the same logical identity. Divergent history remains retained;restore appends. Cross-identity origins use transformation evidence. These exact invariants remain prose because type-self arrows are unsupported;no extra fake revision type or protocol is introduced." }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_event = domain_concept "Semantic event" {
+      description "Attributable operation and causal inputs/results."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L13;HPX-CLAIM-00107" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_commit = domain_concept "Commit boundary" {
+      description "Atomic publication boundary;not a draft acknowledgement."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L13,L21" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_interaction = domain_concept "Observable interaction" {
+      description "Exact supplied/observed exchange,including partial or failed results."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L13;HPX-RQ-035" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "Retain supplied prompts,instructions/context and observed responses as workspace nodes with exact historical references. Unavailable provider-internal instructions/thoughts are not claimed captured. Inference remains machine-side;interaction nodes grant no permission or automatic content edits." }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_contribution = domain_concept "Contribution role" {
+      description "Resulting intellectual contribution,distinct from the exchange."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L13" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_evidence = domain_concept "Provenance evidence qualification" {
+      description "Observed,declared and inferred remain distinct."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L13" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "Adoption is not verification,authorship or endorsement. Importer,last editor,proposer,approver and original contributor are different roles. This conceptual qualification chooses no new evidence schema." }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_working_branch = domain_concept "Private working branch" {
+      description "Distinct typed editing state for one content branch."
+      metadata { scope "conceptual only" source "HPX-ADR-019" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_draft = domain_concept "Recoverable draft / working buffer" {
+      description "Mutable exact source,base,generation and acknowledged sequence."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L21;HPX-ADR-019" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_checkpoint = domain_concept "Immutable working checkpoint" {
+      description "Exact unpublished source evidence captured when needed."
+      metadata { scope "conceptual only" source "HPX-ADR-019" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "Ordinary autosave acknowledges mutable state,not a text revision or Commit. A checkpoint is unpublished evidence with a distinct typed source identity;newer recoverable buffer bytes may exist after it." }
+      link ../../05-domain/core-object-model.md
+    }
+    concept_promotion = domain_concept "Immutable promotion evidence" {
+      description "Exact checkpoint-to-committed-result correspondence."
+      metadata { scope "conceptual only" source "HPX-ADR-019" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "Promotion does not mutate old links or infer relocation. Authorised replacement is separate. Named child creation retains ADR018 reviewed committed-snapshot policy;no storage/transport encoding is selected." }
+      link ../../05-domain/core-object-model.md
+    }
+  }
+  hpx.native.domain.source_plans.concept_input -[conceptual_relation]-> hpx.native.domain.exact.concept_revision "References exact retained input revision/range" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_output -[conceptual_relation]-> hpx.native.domain.exact.concept_revision "References exact output revision/mapping" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_transformation -[conceptual_relation]-> hpx.native.domain.source_plans.concept_input "Ordered inputs with exact source context" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_transformation -[conceptual_relation]-> hpx.native.domain.source_plans.concept_output "Ordered outputs and contributions" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_transformation -[conceptual_relation]-> hpx.native.domain.source_plans.concept_event "Derivation is an attributable semantic operation" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_commit -[conceptual_relation]-> hpx.native.domain.source_plans.concept_event "Atomic semantic publication boundary" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_interaction -[conceptual_relation]-> hpx.native.domain.exact.concept_node "Supplied context and observed messages are nodes" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_interaction -[conceptual_relation]-> hpx.native.domain.source_plans.concept_contribution "Possible resulting contribution;not identical to exchange" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_evidence -[conceptual_relation]-> hpx.native.domain.source_plans.concept_interaction "Qualifies exchange evidence;does not verify it" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_evidence -[conceptual_relation]-> hpx.native.domain.source_plans.concept_transformation "Qualifies provenance;not automatic authorship" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_working_branch -[conceptual_relation]-> hpx.native.domain.exact.concept_branch "Associated with one selected content branch" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_working_branch -[conceptual_relation]-> hpx.native.domain.source_plans.concept_draft "Owns recoverable exact editing state" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_checkpoint -[conceptual_relation]-> hpx.native.domain.source_plans.concept_draft "Captures an exact acknowledged source sequence" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_promotion -[conceptual_relation]-> hpx.native.domain.source_plans.concept_checkpoint "Retains exact unpublished source" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_promotion -[conceptual_relation]-> hpx.native.domain.exact.concept_revision "Records exact committed correspondence" { metadata { scope "dom001_m3" } }
+  hpx.native.domain.source_plans.concept_commit -[conceptual_relation]-> hpx.native.domain.exact.concept_snapshot "Publishes complete exact closed result" { metadata { scope "dom001_m3" } }
+}
+views {
+  view concept_provenance_working of hpx.native.domain.source_plans {
+    title "Conceptual / M3 provenance and working state"
+    description "M3 / HPX-CAN-020. One-level conceptual roles,not twelve new storage types. Same-node ancestry is an immutable DAG of exact retained revisions of one identity;restore appends and timestamps do not establish ancestry. Cross-identity Fork/extraction/synthesis use ordered exact transformation inputs/outputs,ranges,parameters and contribution mappings,never foreign revision parents. Observable exchanges and evidence roles do not establish authorship/verification/endorsement. ADR019 working branches/checkpoints/promotion are adopted design,not a claim of full implementation or chosen bytes. Authorised publication is atomic;save acknowledgement and private capture are not Commit."
+    link ../C3/pure-domain.c4
+    link ../../05-domain/core-object-model.md
+    link ../../05-domain/provenance-model.md
+    link ../../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md
+    link ../../06-subsystems/ai-collaboration.md
+    link ../../07-implementation/protocols/draft-publication.md
+    group "Conceptual subject: M3 provenance and working state" {
+      include hpx.native.domain.source_plans.concept_input
+      include hpx.native.domain.source_plans.concept_output
+      include hpx.native.domain.source_plans.concept_transformation with { notes "Every revision parent belongs to the same logical identity. Divergent history remains retained;restore appends. Cross-identity origins use transformation evidence. These exact invariants remain prose because type-self arrows are unsupported;no extra fake revision type or protocol is introduced." }
+      include hpx.native.domain.source_plans.concept_event
+      include hpx.native.domain.source_plans.concept_commit
+      include hpx.native.domain.source_plans.concept_interaction with { notes "Retain supplied prompts,instructions/context and observed responses as workspace nodes with exact historical references. Unavailable provider-internal instructions/thoughts are not claimed captured. Inference remains machine-side;interaction nodes grant no permission or automatic content edits." }
+      include hpx.native.domain.source_plans.concept_contribution
+      include hpx.native.domain.source_plans.concept_evidence with { notes "Adoption is not verification,authorship or endorsement. Importer,last editor,proposer,approver and original contributor are different roles. This conceptual qualification chooses no new evidence schema." }
+      include hpx.native.domain.source_plans.concept_working_branch
+      include hpx.native.domain.source_plans.concept_draft
+      include hpx.native.domain.source_plans.concept_checkpoint with { notes "Ordinary autosave acknowledges mutable state,not a text revision or Commit. A checkpoint is unpublished evidence with a distinct typed source identity;newer recoverable buffer bytes may exist after it." }
+      include hpx.native.domain.source_plans.concept_promotion with { notes "Promotion does not mutate old links or infer relocation. Authorised replacement is separate. Named child creation retains ADR018 reviewed committed-snapshot policy;no storage/transport encoding is selected." }
+    }
+    group "Retained conceptual context (not software)" {
+      include hpx.native.domain.exact.concept_branch
+      include hpx.native.domain.exact.concept_node
+      include hpx.native.domain.exact.concept_revision
+      include hpx.native.domain.exact.concept_snapshot
+    }
+    exclude * -> *
+    include * -> * where metadata.scope is "dom001_m3"
+    autoLayout LeftRight 110 90 spline
+  }
+}

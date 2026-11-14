@@ -4,7 +4,7 @@ import {mkdtemp,mkdir,writeFile,rm,utimes} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {assetDigest,hashFiles,validEntry,filesUnder} from '../scripts/build-cache.mjs';
-import {planChanges} from '../../scripts/verify-change.mjs';
+import {planChanges} from '../../shared/tooling/verify-change.mjs';
 import {handoffRequested,verifyTestedFingerprint} from '../scripts/manual-runtime-update.mjs';
 test('milestone opt-in never removes tested-binary identity validation',()=>{
  assert.equal(handoffRequested([]),false);assert.equal(handoffRequested(['--handoff']),true);assert.doesNotThrow(()=>verifyTestedFingerprint('a'.repeat(64),'a'.repeat(64)));assert.throws(()=>verifyTestedFingerprint('a'.repeat(64),'b'.repeat(64)));assert.throws(()=>verifyTestedFingerprint('invalid','invalid'));
@@ -18,7 +18,7 @@ test('cache validation detects changed bytes with restored timestamps, corrupt o
  }finally{await rm(directory,{recursive:true,force:true});}
 });
 test('documentation plan runs archive checks without claiming new application evidence',()=>{
- const plan=planChanges(['docs/README.md']);assert.equal(plan.classification,'documentation');assert.equal(plan.tiers.A[0].command[1],'scripts/verify_documentation.py');assert.equal(plan.tiers.B.length,0);assert.match(plan.omittedBroadEvidence,/no new application acceptance/);
+ const plan=planChanges(['docs/README.md']);assert.equal(plan.classification,'documentation');assert.equal(plan.tiers.A[0].command[1],'shared/tooling/verify_documentation.py');assert.equal(plan.tiers.B.length,0);assert.match(plan.omittedBroadEvidence,/no new application acceptance/);
 });
 test('frontend feedback never automatically compiles or deploys Rust; full browser and integration review stay required',()=>{
  const plan=planChanges(['frontend/styles.css']);assert.equal(plan.classification,'frontend');assert.equal(plan.tiers.A.length,2);assert.ok(plan.tiers.C.some(item=>item.command.includes('test:ui')));assert.ok(!plan.tiers.A.some(item=>item.command.includes('cargo')));assert.match(plan.requiredReview.join(' '),/actual HTTPS/);assert.match(plan.status,/not integration/);
@@ -30,3 +30,5 @@ test('sensitive storage, handoff, unknown and proof changes cannot acquire a bro
 test('tooling plans do not turn their own checks into application integration',()=>{
  const plan=planChanges(['frontend/scripts/run-ui.mjs','frontend/build.mjs']);assert.equal(plan.classification,'tooling');assert.equal(plan.tiers.A.length,1);assert.match(plan.requiredReview[0],/cache invalidation/);assert.match(plan.status,/plan only/);
 });
+
+test('relocated model and tooling paths do not acquire a documentation-only regression waiver',()=>{for(const p of ['docs/architecture/C3/executable.c4','backend/proofs/lean/Hypergraph/Expansion.lean','shared/tooling/unknown.py','shared/legal/RUST_DEPENDENCIES.json'])assert.equal(planChanges([p]).classification,'broad-or-sensitive',p);assert.ok(planChanges(['frontend/styles.css']).tiers.A.some(t=>t.command.includes('tests/browser/markdown-presentation.spec.js')));});

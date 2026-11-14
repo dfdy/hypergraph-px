@@ -29,6 +29,6 @@ export async function measureRuntimeWorkload({ok,page,database,root,checks}){
  if(snapshot.text!==text)throw Error('Measured Commit/reconstruction lost exact bytes');
  const after=stats();if(after.count-before.count!==6)throw Error('Measured workload receipt growth differs from six acknowledged operations');
  const report={synthetic:true,acceptedTargets:false,scope:'one create; three serial Saves/reads; one concurrent Save plus history read; one Commit/reconstruction',source_utf8_bytes:textBytes,samples,concurrent_save_history_ms:concurrentMs,commit_ms:commitMs,snapshot_ms:snapshotMs,receipts:{before,after,added_count:after.count-before.count,added_encrypted_bytes:after.encrypted_bytes-before.encrypted_bytes},limits:'Single local run with warm process and synthetic source. Timings include browser evaluation/transport/serialization/KDF-independent runtime/SQLite work and harness overhead; no percentile, benchmark target, hostile-host or accessibility-conformance claim. No pruning/cache/mutex redesign.'};
- await writeFile(resolve(root,'artifacts/runtime-workload-observations.json'),JSON.stringify(report,null,2));
+ await writeFile(resolve(root,'.local/artifacts/runtime-workload-observations.json'),JSON.stringify(report,null,2));
  checks.push('measured synthetic large-source serialization/Save/read/Commit/reconstruction, concurrent Save/history and exact six-receipt growth without changing accepted targets');
 }

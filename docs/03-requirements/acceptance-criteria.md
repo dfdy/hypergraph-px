@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-11-01
+- **Last reviewed:** 2026-11-02
 
 ## Reconstruction and changed-source choices — HPX-OWNER-043
 
@@ -33,7 +33,7 @@ Require the [HPX-PROP-006–008 Lean obligations](../07-implementation/formal-in
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -164,10 +164,22 @@ Required future checks: both human and machine users belong to one workspace; a 
 
 ## Node-creation origin acceptance — HPX-RQ-039
 
-Future acceptance must verify [M1/O2's creation precondition](../../architecture/Conceptual/identity-closure.c4) through human and machine/shared-API paths for every supported node kind and every operation that creates one, including creation outside the editor and chat/context/result creation. With exact authorised UI/caret or explicit equivalent machine context, parent/position is determinable; missing, ambiguous, stale or unauthorised context prevents successful creation without choosing a default or producing partial committed state. Test root creation with known contextual position but no fabricated structural parent, repeated placement of reusable content, move/reuse after creation, and distinct same-node ancestry versus cross-identity derivation. No original-author claim follows from creation context. Known structural placement without inline notation must not be classified as unknown origin; textual reconstruction/projection is a separate gate. Preserve bytes, exact history, draft versus Commit, original-operation recovery and current permissions. These are required future checks, not checks executed by this specification change; concrete context/revocation/format mechanisms remain unadopted.
+Future acceptance must verify [M1/O2's creation precondition](../architecture/Conceptual/identity-closure.c4) through human and machine/shared-API paths for every supported node kind and every operation that creates one, including creation outside the editor and chat/context/result creation. With exact authorised UI/caret or explicit equivalent machine context, parent/position is determinable; missing, ambiguous, stale or unauthorised context prevents successful creation without choosing a default or producing partial committed state. Test root creation with known contextual position but no fabricated structural parent, repeated placement of reusable content, move/reuse after creation, and distinct same-node ancestry versus cross-identity derivation. No original-author claim follows from creation context. Known structural placement without inline notation must not be classified as unknown origin; textual reconstruction/projection is a separate gate. Preserve bytes, exact history, draft versus Commit, original-operation recovery and current permissions. These are required future checks, not checks executed by this specification change; concrete context/revocation/format mechanisms remain unadopted.
 
 ## Retained composition and branch capture acceptance — RQ040–041
 
 Future checks must restore A's exact nested/repeated selected B versions from its last successful acknowledged autosave after edits/restart, retaining private/current-authority scope and not treating unacknowledged typing as durable. Advancing B must not mutate retained A; a source-neutral newer-authorised-version indication must disclose no inaccessible version existence/counts and must remain separate from OWNER043/044 selection and shared review markers. Verify routine autosaves do not accumulate historical versions merely by cadence; test the eventual adopted autosave/Commit/retention policy without overwriting immutable history. No such future universal relationship is selected here.
 
 Exercise save-as of exact constructed compositions under current document/content identity, all ordered selections/positions/cycle context, owning-branch versus constituent versions, stale/denied/partial captures and original-operation recovery. Distinguish ordinary known-branch editing from read-only multi-branch projections; do not require hypothetical orphan branches or silently turn branch capture into Fork. Test actual designated-main selection and equivalent cold/cache reconstruction only after their mechanisms exist; a global latest-all-nodes rule or authoritative cache is not assumed. Existing departure Commit and earlier branch evidence retain their scope. These are future acceptance obligations, not executed application/proof tests.
+
+## Structural no-notation reconstruction — OWNER051
+
+Planned RQ004–005 acceptance must cover [M1](../architecture/Conceptual/identity-closure.c4) and [R4/R6](../architecture/proposals/trustworthy-reconstruction-inputs.md): exact child source follows its retained structural position without requiring an authored marker; at a no-notation cycle stop no authored text is invented, while the exact stopped relationship/target/ancestor and separate visible warning/navigation remain; an existing original notation span is copied byte-for-byte. Missing structural order is never inferred from absent markers. These product acceptance cases are unexecuted; TEST160 verifies specification integration only. No adoption of subrange/retention/permission/format mechanisms or proof of the zero-byte boundary case follows.
+
+## Recovery purpose versus permanent capture — OWNER052
+
+Planned RQ004/006/040 checks must establish [the canonical distinction](../architecture/Conceptual/identity-closure.c4) under [its exact scope](../05-domain/document-semantics.md#recovery-purpose-and-immutable-reference-evidence--owner052): acknowledge A selecting exact unpublished B and nested context; advance B's draft; reopen A with the retained selections. Repeated ordinary autosaves must not themselves create permanent historical checkpoints. Existing immutable reference evidence and dependencies needed by another composition or unresolved operation remain intact. Do not test this by evicting recovery data or assuming an unapproved deletion/capture policy. These product cases are unexecuted; TEST162 verifies specification integration only.
+
+## Composition membership and partial fragments — OWNER053
+
+Planned RQ002/004/005 acceptance follows [M1](../architecture/Conceptual/identity-closure.c4) and the [selection contract](../05-domain/text-and-anchors.md#structural-membership-and-exact-partial-fragments--owner053): select only B between its structural endpoints when B/C share a source cut;cross a zero-byte stop retaining its exact selected relationship/context and separate warning/navigation;identical structural endpoints select nothing. A partial repeated-child or notation selection preserves exact bytes/full context without becoming the whole inclusion,expanding silently or banning arbitrary owned-source ranges. These product cases and [input-preparation P1–P7](../architecture/proposals/reconstruction-input-preparation.md) are unexecuted. TEST163 checks specification/design integration,not UI,storage or model correspondence.

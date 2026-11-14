@@ -11,15 +11,33 @@
 - **Applies to:** current finite cycle-state/source-emission model evidence and separately preserved 2026-10-24 DAG/extraction evidence
 - **Upstream authority:** [formal obligations](../07-implementation/formal-invariants.md)
 - **Downstream dependencies:** pinned proof library plus separately retained extraction scripts
-- **Verification:** current pinned build/model/examples/environment/axiom checks under HPX-TEST-153/155;historical checks retain their original provenance
+- **Verification:** current pinned build/model/examples/environment/axiom checks under HPX-TEST-153/155;historical checks retain their original provenance;2026-11-14 unchanged-source replay under HPX-TEST-176/178
 - **Decision/history:** `HPX-SRC-0116`; original `proofs/VALIDATION_DIGEST.md` SHA-256 `69452ea0278fd29685e133c33ed6357c0d281efad623e6b53ba6208a1386c550`
-- **Last reviewed:** 2026-11-01
+- **Last reviewed:** 2026-11-14
+
+## Current pinned replay — 2026-11-14
+
+[TEST176/178](../registers/tests.csv) record successful unchanged-source replay after the repository relocations;the [current formal guide](../09-guides/developers/formal-validation.md) supplies invocation and environment details. Actual pinned Lean4.35.0 `lake build`,direct warnings-as-errors checks of Expansion/CycleState/SourceEmission,and `lake env leanchecker Hypergraph` passed. The direct model axiom reports comprise **54 declarations:4 rank/DAG +31 finite cycle-state +19 source-emission**;the original theorem statements and axiom distinctions below are unchanged.
+
+`python3 shared/tooling/check_rust_proof.py` also passed fresh Charon/Aeneas extraction of the unchanged private `expansion::spend` helper,exact generated-Lean byte comparison,locked dependency/theorem/axiom checks and environment rechecking. Source/generated/proof hashes and existing Rust nightly-2026-09-17,Aeneas/Charon and Lean pins remain unchanged;`spend_spec` retains `[propext, Classical.choice, Quot.sound]`. TEST178's exact commands,exit results and logs are retained in ignored `.local/artifacts/stage3/summary.json` and `lean-*.log` / `leanchecker.log` / `rust-proof.log`;TEST176's earlier successful replay remains separate as-run evidence.
+
+The 2026-11-13 missing-tool attempt immediately below is **historical,not a current replay blocker**. This later success does not rewrite that failed attempt or extend the proof boundary:authenticated source acquisition,parser/loader and UTF8/browser correspondence,operational resource bounds,storage/authorization/recovery/UI bridges and whole-product correctness remain unproved as detailed below. No frozen proof,protocol,license or source payload changed for this record update.
+
+## Repository relocation — 2026-11-13
+
+The domain now lives at `backend/crates/domain`; [pre-move hashes](../../backend/relocation-manifest.json) retain the original paths. All 13 inventoried domain files are byte-identical, including the selected expansion source. Frozen `proofs/rust/extraction.json`, generated Lean and proof files remain unchanged. The replay helper resolves current source through `backend/` but recreates the original `crates/domain` path in its isolated extraction workspace, preserving translator comments and exact-byte comparison.
+
+This migration attempted `python3 scripts/check_rust_proof.py`; it stopped before extraction because the reviewed Aeneas bundle is not installed in `.verification`. No new extraction, Lean replay or implementation-correspondence result is claimed. Historical theorem/toolchain/axiom evidence below retains its original scope. Ordinary relocated Rust and actual browser/storage regressions are recorded separately under HPX-TEST-172; they are not proofs.
 
 ## Current cycle-aware evidence and preserved history
 
 ## Bounded source-emission model — 2026-11-01
 
-HPX-OWNER-047 selects original including-source notation at a stopped cycle, with warning/navigation metadata separate. [SourceEmission.lean](../../proofs/lean/Hypergraph/SourceEmission.lean) adds **19 checked model theorems** and [SourceEmissionExamples.lean](../../proofs/lean/Hypergraph/SourceEmissionExamples.lean) adds **18 synthetic guards**. HPX-TEST-155/[machine evidence](../../architecture/evidence/source-emission-lean.json) records exact final sources, commands and axiom reports; TEST153 remains unchanged historical evidence.
+**OWNER053 selection scope:** accepted structural endpoints,zero-byte membership and exact partial-source fragments in [M1](../architecture/Conceptual/identity-closure.c4) are not new checked selection theorems. No Lean/Rust endpoint or adapter-input correspondence is claimed;historical supplied-notation sources/results below remain unchanged.
+
+**Later semantic refinement, OWNER051:** [M1](../architecture/Conceptual/identity-closure.c4) now also accepts no-notation structural contributions and no invented authored text at their cycle stops. This acceptance does not extend the checked model: a graph-only contribution is not justified by inventing an empty notation span. No new Lean execution or no-notation/zero-byte boundary correspondence theorem is claimed; the historical TEST155 sources/results and supplied-notation premises below are unchanged.
+
+HPX-OWNER-047 selects original including-source notation at a stopped cycle, with warning/navigation metadata separate. [SourceEmission.lean](../../backend/proofs/lean/Hypergraph/SourceEmission.lean) adds **19 checked model theorems** and [SourceEmissionExamples.lean](../../backend/proofs/lean/Hypergraph/SourceEmissionExamples.lean) adds **18 synthetic guards**. HPX-TEST-155/[machine evidence](../architecture/evidence/source-emission-lean.json) records exact final sources, commands and axiom reports; TEST153 remains unchanged historical evidence.
 
 `Span` bounds ranges relative to selected byte lists; `PlanOK` checks contiguous literal/notation partitions and ordered occurrence/role tags against row slots. The interpretation is a function of the whole exact row, held fixed between reconstructions. Source-faithful notation recognition, authenticated bytes, complete dependencies and UTF8 scalar boundaries are **external premises**: satisfying structural partition checks alone does not establish them. Synthetic fixture notation selects no HPX grammar. Graph-only inclusions without available authored notation need explicit treatment, not invented empty syntax.
 
@@ -50,7 +68,7 @@ No parser/loader, UTF8/browser UTF16 correspondence, early CPU/byte/I/O/stack bo
 
 ## Finite cycle-state model — 2026-10-31
 
-[CycleState.lean](../../proofs/lean/Hypergraph/CycleState.lean) implements the OWNER045-selected finite selected-state table and finite occurrence-use semantics; [CycleExamples.lean](../../proofs/lean/Hypergraph/CycleExamples.lean) executes 33 model guards. HPX-TEST-153 and [machine evidence](../../architecture/evidence/finite-cycle-lean.json) bind the source/toolchain hashes, actual commands, axiom reports and preservation checks. These are **31 new checked model theorems**, in addition to the four historical DAG theorems and the separately recorded extracted spend-helper proof. No new extracted-Rust correspondence is claimed.
+[CycleState.lean](../../backend/proofs/lean/Hypergraph/CycleState.lean) implements the OWNER045-selected finite selected-state table and finite occurrence-use semantics; [CycleExamples.lean](../../backend/proofs/lean/Hypergraph/CycleExamples.lean) executes 33 model guards. HPX-TEST-153 and [machine evidence](../architecture/evidence/finite-cycle-lean.json) bind the source/toolchain hashes, actual commands, axiom reports and preservation checks. These are **31 new checked model theorems**, in addition to the four historical DAG theorems and the separately recorded extracted spend-helper proof. No new extracted-Rust correspondence is claimed.
 
 ### Definitions and exact boundary
 
@@ -126,7 +144,7 @@ The following historical digest is retained in full with relative links rebased.
 
 **Evidence date:** 2026-10-24. **Toolchain:** Lean/Lake 4.35.0. **Current inventory:** four checked Lean model theorems and one checked theorem about an Aeneas-extracted real Rust helper. The full Rust graph validator remains unproved. This is a maintained evaluation record for developers and mathematicians, not a claim that the application or Rust graph algorithm is formally verified.
 
-The word “checked” below means Lean accepted a proof term for the stated proposition, and the compiled project environment was also checked with `leanchecker`. This differs from executing examples or passing a Rust test suite. The checked source is [Expansion.lean](../../proofs/lean/Hypergraph/Expansion.lean); the package entry imports it through [Hypergraph.lean](../../proofs/lean/Hypergraph.lean).
+The word “checked” below means Lean accepted a proof term for the stated proposition, and the compiled project environment was also checked with `leanchecker`. This differs from executing examples or passing a Rust test suite. The checked source is [Expansion.lean](../../backend/proofs/lean/Hypergraph/Expansion.lean); the package entry imports it through [Hypergraph.lean](../../backend/proofs/lean/Hypergraph.lean).
 
 ## 1. Inventory and implementation connection
 
@@ -141,7 +159,7 @@ Rust implementation status:
 
 | Rust function | Existing evidence | Lean validation status |
 |---|---|---|
-| [`hypergraph_domain::expansion::validate`](../../crates/domain/src/expansion.rs) | Five Rust tests, including exhaustive comparison of all 512 directed three-vertex graphs against a separate reachability oracle; formatting/Clippy/CI evidence in the foundation record | **Not formally verified.** Its Kahn elimination, declared-vertex checks, multiedges, maps/queue, work budgets and machine arithmetic have not been translated/proved in Lean. |
+| [`hypergraph_domain::expansion::validate`](../../backend/crates/domain/src/expansion.rs) | Five Rust tests, including exhaustive comparison of all 512 directed three-vertex graphs against a separate reachability oracle; formatting/Clippy/CI evidence in the foundation record | **Not formally verified.** Its Kahn elimination, declared-vertex checks, multiedges, maps/queue, work budgets and machine arithmetic have not been translated/proved in Lean. |
 | Internal `expansion::spend` | Charon extraction from unchanged Rust, Aeneas translation, exact generated-source replay and `spend_spec` theorem | **Extracted semantics checked.** Exhaustion preserves the counter; successful accounting increments once without overflow/panic. This trusts the extraction/translation/backend boundary; see §7. |
 
 The four graph results concern mathematical relations/rank witnesses. A separate extracted-helper proof is detailed in §7. None proves the compiled application binary, filesystem, authorization or complete graph catalogue.
@@ -195,7 +213,7 @@ Parallel edges collapse to the same binary relation in this model. Their multipl
 
 ## 4. Actual checking procedure and provenance
 
-The project pins [lean-toolchain](../../proofs/lean/lean-toolchain) to `leanprover/lean4:v4.35.0`. The local compiler reports commit `eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Darwin arm64. The project imports `Init`, with no Mathlib or Aeneas package dependency. The Lake manifest has an empty external-package list.
+The project pins [lean-toolchain](../../backend/proofs/lean/lean-toolchain) to `leanprover/lean4:v4.35.0`. The local compiler reports commit `eb6cafb7290e8bd5f2937522d8d804f58f02bafc`, Darwin arm64. The project imports `Init`, with no Mathlib or Aeneas package dependency. The Lake manifest has an empty external-package list.
 
 Executed successfully in `proofs/lean`:
 
@@ -205,7 +223,7 @@ lake env lean Hypergraph/Expansion.lean
 lake env leanchecker Hypergraph
 ```
 
-`lake build` uses `-DwarningAsError=true` from [lakefile.toml](../../proofs/lean/lakefile.toml). It builds both the proof module and the package entry module. `leanchecker` returned exit 0 for the compiled project environment. Four `#print axioms` commands in the model reported:
+`lake build` uses `-DwarningAsError=true` from [lakefile.toml](../../backend/proofs/lean/lakefile.toml). It builds both the proof module and the package entry module. `leanchecker` returned exit 0 for the compiled project environment. Four `#print axioms` commands in the model reported:
 
 ```text
 'Hypergraph.path_increases' does not depend on any axioms
@@ -252,7 +270,7 @@ Never promote an ordinary test, a proposed proof, a failed build, or a model-onl
 
 ## 7. Actual Rust helper: `expansion::spend`
 
-**Checked symbol:** `spend_spec` in [SpendProof.lean](../../proofs/rust/SpendProof.lean), about `hypergraph_domain.expansion.spend` in [generated Spend.lean](../../proofs/rust/Spend.lean). **Original Rust:** the private helper in [expansion.rs](../../crates/domain/src/expansion.rs). This source was extracted by Charon; the Lean body was not manually rewritten.
+**Checked symbol:** `spend_spec` in [SpendProof.lean](../../backend/proofs/rust/SpendProof.lean), about `hypergraph_domain.expansion.spend` in [generated Spend.lean](../../backend/proofs/rust/Spend.lean). **Original Rust:** the private helper in [expansion.rs](../../backend/crates/domain/src/expansion.rs). This source was extracted by Charon; the Lean body was not manually rewritten.
 
 The Rust function receives mutable machine-sized `work` and a `budget`, returning Rust `Result<(), Error>`. The generated Lean function receives two `Usize` values and returns an outer Aeneas result containing both the ordinary Rust result and the post-mutation counter. The outer result models successful execution versus panic/divergence; a returned Rust `Err(Budget)` is an ordinary successful execution of that function.
 
@@ -263,13 +281,13 @@ The theorem quantifies over every represented pair of machine-sized inputs. Its 
 
 **Technical proof:** unfold the automatically generated function and split its guard. Simplification proves the exhausted branch. In the available-budget branch, the Aeneas `step` tactic applies the checked addition specification; `scalar_tac` discharges arithmetic obligations using work < budget and the bounded Usize representation. These facts imply work + 1 ≤ budget ≤ machine maximum, so addition cannot overflow. The total weakest-precondition specification proves outer successful return, rather than allowing panic/divergence vacuously. This proves this helper's accounting rule, not the validity of the graph, the chosen work-cost model, the surrounding loops or authorization.
 
-**Actual sequence:** pinned Charon compiled/extracted the original crate from the helper root; Aeneas translated it with warnings as errors; the generated file was byte-compared against the tracked output; pinned backend dependencies were checked; Lake built the theorem; theorem axioms were printed; `leanchecker SpendProof` rechecked the environment. The end-to-end [replay script](../../scripts/check_rust_proof.py) passed locally, including fresh extraction from the unchanged Rust source. It isolates Rust nightly/Cargo/proof caches rather than changing the normal user toolchain.
+**Actual sequence:** pinned Charon compiled/extracted the original crate from the helper root; Aeneas translated it with warnings as errors; the generated file was byte-compared against the tracked output; pinned backend dependencies were checked; Lake built the theorem; theorem axioms were printed; `leanchecker SpendProof` rechecked the environment. The end-to-end [replay script](../../shared/tooling/check_rust_proof.py) passed locally, including fresh extraction from the unchanged Rust source. It isolates Rust nightly/Cargo/proof caches rather than changing the normal user toolchain.
 
 **Axiom report:** `spend_spec` depends on `[propext, Classical.choice, Quot.sound]`. These are Lean's standard foundations used by the backend/tactics. There is no sorryAx or native-decision axiom in the theorem report. Unlike the four initial graph theorems, this theorem is not axiom-free; evaluation must retain that distinction.
 
 **Tool boundary:** Aeneas commit 74aabd52f77001cf9eaad51b4f4b867a7dc6b111; Charon 0.1.294 at 260ba2c82588291b1f9efaf4f42d7100adc9c6c2; Rust nightly-2026-09-17; Lean 4.35.0. Trust includes Rust compilation/MIR extraction, the translator, the Aeneas standard-library semantics and Lean's checking/host/artifact infrastructure. The theorem is about the translated semantics, not an independent proof of emitted machine code. The existing graph validator's BTreeMap/VecDeque/control flow remains outside this result.
 
-Reproduce with `python3 scripts/check_rust_proof.py --download` after installing the pinned Lean/Lake, Python 3.12+, GitHub CLI and rustup. See [Rust proof README](../09-guides/developers/formal-validation.md) for tool reuse and [extraction.json](../../proofs/rust/extraction.json) for exact asset/source/proof/dependency pins. A source-hash change fails until reviewed and re-extracted; no dependency or generated-source mismatch is silently accepted. Hosted replay is a separate workflow whose actual results are recorded in the work record.
+Reproduce with `python3 scripts/check_rust_proof.py --download` after installing the pinned Lean/Lake, Python 3.12+, GitHub CLI and rustup. See [Rust proof README](../09-guides/developers/formal-validation.md) for tool reuse and [extraction.json](../../backend/proofs/rust/extraction.json) for exact asset/source/proof/dependency pins. A source-hash change fails until reviewed and re-extracted; no dependency or generated-source mismatch is silently accepted. Hosted replay is a separate workflow whose actual results are recorded in the work record.
 
 Checked artifact hashes:
 
@@ -310,7 +328,7 @@ HPX-TEST-040/041/042 add actual branch/working browser evidence and ordinary Rus
 
 ## Proposed local-witness decision-table model, 2026-10-27
 
-HPX-OWNER-008 selects workspace-only restoration scope. [check_witness_proposal.py](../../scripts/check_witness_proposal.py) is a separate executable model of a **proposed, unadopted** cross-store witness protocol, not runtime/domain implementation. Python3.14.8 passes33 assertions over12 database/witness restoration pairs. Exact model source SHA-256: `cf71c79a7843589bf009ba90435694b27a3a8b8ce1ebb09ff6f5b5c1db2fe020`. The model assumes symbolic collision-free state roots, a surviving authenticated durable local witness and supplied original-receipt/current-authority predicates. It checks acknowledgement ordering and conservative missing/mismatched/prepared-state outcomes, including explicit exclusion of restoring both stores.
+HPX-OWNER-008 selects workspace-only restoration scope. [check_witness_proposal.py](../../shared/tooling/check_witness_proposal.py) is a separate executable model of a **proposed, unadopted** cross-store witness protocol, not runtime/domain implementation. Python3.14.8 passes33 assertions over12 database/witness restoration pairs. Exact model source SHA-256: `cf71c79a7843589bf009ba90435694b27a3a8b8ce1ebb09ff6f5b5c1db2fe020`. The model assumes symbolic collision-free state roots, a surviving authenticated durable local witness and supplied original-receipt/current-authority predicates. It checks acknowledgement ordering and conservative missing/mismatched/prepared-state outcomes, including explicit exclusion of restoring both stores.
 
 No Merkle/canonicalization algorithm, cryptography, SQLite/file-view binding, locks, fsync, enrollment/upgrade or actual backup/restore is implemented or verified by that model. It is not Lean checked or extracted from Rust and establishes no new storage/security/application theorem. Existing Lean/spend source, extraction hashes/toolchains and correspondence claims are unchanged; no proof replay occurred. HPX-TEST-045 and the [recovery proposal](recovery.md#workspace-only-local-witness-proposal) retain those assumptions and pending owner review.
 
@@ -397,3 +415,15 @@ HPX-TEST-070 adds two capacity cases and expanded error/process termination prob
 ## Readable Markdown partial UI checkpoint, 2026-10-27
 
 HPX-TEST-071 records152 Node tests and95 final single fresh-server isolated headless scenarios, with six desktop/theme views. Exact source/copy/download/Undo and presentation behavior have frontend evidence; no actual HTTPS/SQLite integration/final tested-binary handoff occurred for this slice before the owner stopped development. Intermediate46 predates the final source-mode correction; manual45 remains the last verified executable. Earlier shared test-output/stale-bundle failures are distinguished from final passing checks. No backend/domain/Lean/extraction/toolchain source or proof assumptions changed; no new Rust replay, formal correspondence or real-data acceptance follows.
+
+## Item2 operational specification boundary — 2026-11-03
+
+[OWNER054 / canonical M1](../architecture/Conceptual/identity-closure.c4) and the [operational-limits contract](../architecture/proposals/reconstruction-operational-limits.md) complete item2's definition/accounting/failure/navigation design. **HPX-TEST-168** records only the actual specification/model/document/preservation checks in [machine evidence](../architecture/evidence/reconstruction-operational-limits.json). The phase accounting, pre-work reservations, physical/aggregate safeguards and adequate-budget result invariance are future implementation/conformance obligations. OL1–OL13 are unexecuted; numeric capacity and cancellation/peak-memory measurements are unperformed. TEST153's post-construction output-use check and TEST155's supplied-partition emission proofs do not prove these operational properties. No Lean, extracted-Rust, runtime, UI, recovery, security or whole-product proof is added.
+
+## Item3 concrete representation and compatibility design — 2026-11-03
+
+[OWNER055 / M1](../architecture/Conceptual/identity-closure.c4) and the [concrete closure/source-map specification](../architecture/proposals/exact-closure-source-map.md) complete item3's design boundary. [TEST169 machine evidence](../architecture/evidence/concrete-closure-design.json) records actual static reader/identifier inspection,design/example review and scoped model/document/preservation checks only. Candidate schema4/kinds38–44/catalog2 are not implemented or migrated. C1–C12 conformance/older-reader/upgrade/crash cases and numeric capacity measurements are unexecuted. Existing TEST153/155 do not prove concrete tagged-source admission,local parent/event maps,zero-byte/partial selection,interpreter/UTF16 correspondence or upgrade safety. No new Lean/extracted-Rust/application or whole-product proof is claimed;item5 correspondence remains required.
+
+## Item4 conflict-state design boundary — 2026-11-03
+
+[OWNER056 / canonical M1 and Editor](../architecture/Conceptual/identity-closure.c4) and the [conflict-state specification](../architecture/proposals/conflict-state.md) complete timestamp/comparability,per-issue anchors,resolution/history/carry,concurrency/recovery and format design. [TEST170 evidence](../architecture/evidence/conflict-state-design.json) records actual scoped static/design/model/document/preservation checks only. F1–F12,actual clock sampling/health,source/authority/receipt suppliers,codecs/profile upgrades,application/MCP/browser behaviour and item5 correspondence remain unimplemented/unexecuted. Existing finite-cycle/source-emission proofs establish none of these review/time properties;no new Lean/extracted-Rust or whole-product proof is added.

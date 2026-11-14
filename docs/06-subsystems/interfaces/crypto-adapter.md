@@ -29,7 +29,7 @@ Source `HPX-SRC-0026`, original lines 139–143. Preserved contract/evidence wor
 
 Source `HPX-SRC-0038`, original lines 1–15. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-Actual API: [src/lib.rs](<../../../crates/crypto/src/lib.rs>). Accepted development format, rationale and recovery limits: [ADR 0002](<../../04-architecture/decisions/0002-trusted-server-envelopes.md>). This crate is an in-memory adapter: it performs no file, network, authorization or policy operations. It does not implement client-held mode.
+Actual API: [src/lib.rs](<../../../backend/crates/crypto/src/lib.rs>). Accepted development format, rationale and recovery limits: [ADR 0002](<../../04-architecture/decisions/0002-trusted-server-envelopes.md>). This crate is an in-memory adapter: it performs no file, network, authorization or policy operations. It does not implement client-held mode.
 
 | API/type | Contract |
 |---|---|

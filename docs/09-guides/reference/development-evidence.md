@@ -4,7 +4,7 @@
 
 - **ID:** `HPX-GUIDE-006`
 - **Title:** Development/source provenance navigation
-- **Purpose:** Source provenance, work history, proof inventory and current paused state.
+- **Purpose:** Source provenance, work history and proof inventory; current execution status is maintained in the development-state guide.
 - **Level:** `09-guides`
 - **Status:** `proposed`
 - **Maintainer:** project owner; agent-authored migration assembly
@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-30
+- **Last reviewed:** 2026-11-03
 
 
 
@@ -21,13 +21,17 @@ Inherited accepted source obligations retain their original scope. `proposed` de
 
 ## Audience and prerequisites
 
-Source provenance, work history, proof inventory and current paused state. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+Source provenance, work history and proof inventory; current execution status is maintained in the development-state guide. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Task and expected result
 
-Source provenance, work history, proof inventory and current paused state. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+Source provenance, work history and proof inventory; current execution status is maintained in the development-state guide. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Procedure
+
+Use the [current execution status](DEVELOPMENT_STATE.md#current-execution-status), [scope/evidence summary](DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) and [change-sensitive workflow](#change-sensitive-development-workflow-hpx-owner-019) for current work. The following pre-resumption checkpoint preserves its original status and is not a current development pause or publication grant.
+
+### Historical pre-resumption checkpoint
 
 Published version0.7.0: commit2ebe35b8c966ab83530174fcebc8f245238625cb. The working tree includes unfinished encrypted storage/runtime integration from before migration; do not discard it or call it delivered. Application development is paused, publication held. Current documentation migration [owner decisions](../../02-governance/OWNER_DECISIONS.md) and [historical verification](../../08-assurance/migration-verification.md) are maintained in docs; the [relocation record](../../08-assurance/documentation-records-move.md) describes current checks. Dated earlier work records, source studies, proof digest and review reports are retained byte-for-byte under ignored .oldspecs with SHA256/source IDs in registers. Public readers must not be promised access to local/private originals; hashes preserve identity, not access rights.
 
@@ -35,7 +39,7 @@ Published version0.7.0: commit2ebe35b8c966ab83530174fcebc8f245238625cb. The work
 
 Source `HPX-SRC-0032`, original lines 108–112. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-Maintain [docs/DEVELOPMENT_STATE.md](<development-evidence.md>) as the context-compaction handoff, with confirmed decisions or authoritative links, published milestone/CI evidence, active issue and uncommitted work, actual boundaries, unresolved findings and exact next steps. Update it before significant transitions or compaction; never record credentials. Bounded issue work records retain chronological implementation/verification findings; ADRs record design reasons; the data reference and Lean digest record actual APIs and assurance. A context reset must not silently convert proposed features or unobserved checks into completed work.
+Maintain [docs/DEVELOPMENT_STATE.md](<DEVELOPMENT_STATE.md>) as the context-compaction handoff, with confirmed decisions or authoritative links, published milestone/CI evidence, active issue and uncommitted work, actual boundaries, unresolved findings and exact next steps. Update it before significant transitions or compaction; never record credentials. Bounded issue work records retain chronological implementation/verification findings; ADRs record design reasons; the data reference and Lean digest record actual APIs and assurance. A context reset must not silently convert proposed features or unobserved checks into completed work.
 
 ### 10. Work order for the frontend agent
 
@@ -56,7 +60,7 @@ Retain the scoped limits above and [open questions/conflicts](<../../registers/o
 
 ## Related references
 
-Source provenance, work history, proof inventory and current paused state. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
+Source provenance, work history and proof inventory; current execution status is maintained in the development-state guide. The retained contract passages, upstream links and requirement register define this boundary; subordinate implementation details must not change its meaning.
 
 ## Source provenance
 
@@ -80,7 +84,7 @@ This section governs verification coordination; historical evidence above is unc
 ### Procedure
 
 1. Define the next complete user-visible capability and its acceptance boundary. Keep implemented/unintegrated, experimental, integrated, acceptance-verified and deployed states distinct. Declare the exact increment's files; do not treat all retained dirty work as a new change.
-2. Inspect a plan: `node scripts/verify-change.mjs --files frontend/styles.css`. `--run A` executes development feedback only. The conservative file-level advisor does not understand semantic diffs and cannot waive contract tests. Rust/storage/proof/guard/unknown inputs trigger broader review; do not classify a security change as cosmetic to obtain a smaller plan.
+2. Inspect a plan: `node shared/tooling/verify-change.mjs --files frontend/styles.css`. `--run A` executes development feedback only. The conservative file-level advisor does not understand semantic diffs and cannot waive contract tests. Rust/storage/proof/guard/unknown inputs trigger broader review; do not classify a security change as cosmetic to obtain a smaller plan.
 3. Tier A: relevant unit/component/static checks, e.g. `npm --prefix frontend test` or `npm --prefix frontend run test:ui -- tests/browser/markdown-presentation.spec.js`. Tier B: affected cross-subsystem/storage/auth/source/recovery interactions. Tier C: applicable full regression, compatibility, crash/encryption, desktop/theme/accessibility, documentation/archive and changed-assumption proof checks at a coherent milestone or immediately when risk requires. Record why omitted broad suites remain outside the declared change; old evidence keeps its old scope.
 4. Browser commands now build/reuse a content-checked snapshot without changing frontend/dist, Rust outputs or the manual app. `artifacts/ui-runs/run-*/run.json` records source/asset/test identities, selection, cache status, phase times, result and report statistics. Related screenshots/traces/report stay inside that run. Assets and declared inputs are checked again at completion; changed inputs, missing report or zero executed tests invalidate success. A failed test/fixture still needs diagnosis, not an inferred product defect or automatic retry.
 5. Run independent Node/document/static checks concurrently. Browser runs may run concurrently through the isolated runner, with source edits excluded during verification. Serialize Rust compilation against mutable dist generation and serialize actual integration/native/deployment jobs unless their resources are explicitly isolated. Do not parallelise shared runtime output, credentials or handoff state. `npm --prefix frontend run build` prepares canonical generated dist only when needed, reusing valid content and preserving unchanged mtimes. Never edit cache snapshots used by running tests; corrupt-cache recovery is not test acceptance.
@@ -105,7 +109,7 @@ Owner instruction, 2026-10-30: reduce repeated layout computation after the repo
 
 | Boundary | Required checks |
 | --- | --- |
-| Editing feedback | Use the existing `npm --prefix architecture run validate` command (`--json --no-layout`). Check relevant links and source/status mappings. Do not calculate every view merely to validate syntax or prose-only changes. |
+| Editing feedback | Use the existing `npm --prefix docs/architecture run validate` command (`--json --no-layout`). Check relevant links and source/status mappings. Do not calculate every view merely to validate syntax or prose-only changes. |
 | Completed model stage | Check model/navigation and source scope; calculate and inspect the served manual arrangement of changed views and views affected through shared elements, relationships, styles or configuration. Verify drift, snapshot metadata, labels, bounds, positions and paths. Check unaffected saved snapshots by bytes/hashes without computing their layouts. |
 | Coherent milestone or global layout change | Run complete applicable model/navigation and saved/served layout regression once against the final unchanged source. Broaden immediately when the affected set cannot be bounded, global layout settings change, or a failure suggests wider impact. |
 
@@ -120,9 +124,9 @@ Under OWNER021, application work has resumed after the process-only checkpoint. 
 
 ## Shared user API specification checkpoint, 2026-10-30
 
-HPX-TEST-114 / HPX-OWNER-029 / HPX-RQ-037–038 record documentation/model checks for common browser/MCP hypergraph access and granular per-user permissions. [Executed evidence](../../../architecture/evidence/shared-user-api.json) and [coverage/gaps](../../../architecture/audits/shared-user-api.md) distinguish accepted requirements from incomplete single-owner implementation. No application/security acceptance tests, compilation, launch, provider/trust/workspace change, commit or publication were performed.
+HPX-TEST-114 / HPX-OWNER-029 / HPX-RQ-037–038 record documentation/model checks for common browser/MCP hypergraph access and granular per-user permissions. [Executed evidence](../../architecture/evidence/shared-user-api.json) and [coverage/gaps](../../architecture/audits/shared-user-api.md) distinguish accepted requirements from incomplete single-owner implementation. No application/security acceptance tests, compilation, launch, provider/trust/workspace change, commit or publication were performed.
 
 
 ## Specification reconciliation checkpoint, 2026-10-30
 
-HPX-TEST-116 records the [scoped audit](../../../architecture/audits/specification-reconciliation-audit.md) and [actual static checks](../../../architecture/evidence/specification-reconciliation-audit.json): registered-contract coverage, superseded-claim regressions, immutable backups/public-archive/application hashes and LikeC4 source/navigation/layout preservation. No application or security acceptance/proof was executed; current code inspection and earlier executed tests remain distinct.
+HPX-TEST-116 records the [scoped audit](../../architecture/audits/specification-reconciliation-audit.md) and [actual static checks](../../architecture/evidence/specification-reconciliation-audit.json): registered-contract coverage, superseded-claim regressions, immutable backups/public-archive/application hashes and LikeC4 source/navigation/layout preservation. No application or security acceptance/proof was executed; current code inspection and earlier executed tests remain distinct.

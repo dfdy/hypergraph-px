@@ -13,11 +13,11 @@
 - **Downstream dependencies:** [component boundaries](../04-architecture/component-architecture.md), [data architecture](../04-architecture/data-architecture.md), future export adapter/profile/artifact contracts
 - **Verification:** future format/citation/permission/reconstruction checks below; documentation inclusion is not implementation evidence
 - **Decision/history:** materializes reserved HPX-SUB-008 for the bounded export topic confirmed by the owner on 2026-10-26; inherited import obligations remain in the [external integration contract](external-integrations.md)
-- **Last reviewed:** 2026-10-30
+- **Last reviewed:** 2026-11-01
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -76,4 +76,4 @@ For each target, test citations/bibliography, Unicode/newlines, mathematics, rep
 
 ### Main designation and exact construction — OWNER049/050 clarification
 
-[M1](../../architecture/Conceptual/identity-closure.c4) and [branch reconciliation](../../architecture/proposals/branch-selection-reconciliation.md) distinguish the explicitly designated main identity already required above from a general construction algorithm. Neither a name/current UI selection nor choosing latest versions of every constituent defines main. Reconstruct the chosen exact branch/snapshot or explicitly captured working composition through its retained selections and source inputs; a future cache is derived performance data and grants no identity, selection or disclosure authority. General main designation/reassignment, reconstruction/caching and working-composition formats are not selected. Default reopening from last acknowledged autosave does not change the explicitly reviewed export-source choice or silently turn a private composition into published/exported content.
+[M1](../architecture/Conceptual/identity-closure.c4) and [branch reconciliation](../architecture/proposals/branch-selection-reconciliation.md) distinguish the explicitly designated main identity already required above from a general construction algorithm. Neither a name/current UI selection nor choosing latest versions of every constituent defines main. Reconstruct the chosen exact branch/snapshot or explicitly captured working composition through its retained selections and source inputs; a future cache is derived performance data and grants no identity, selection or disclosure authority. General main designation/reassignment, reconstruction/caching and working-composition formats are not selected. Default reopening from last acknowledged autosave does not change the explicitly reviewed export-source choice or silently turn a private composition into published/exported content.

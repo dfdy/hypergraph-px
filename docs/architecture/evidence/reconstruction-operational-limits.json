@@ -1,0 +1,215 @@
+{
+  "protocol_version": "1.1.0",
+  "record_version": 1,
+  "id": "HPX-VER-20261103-operational-limits",
+  "kind": "verification_result",
+  "subject": "Checklist item2 operational-limits specification/design",
+  "summary": "Complete phase/resource accounting, explicit failure/recovery, bounded navigation and future conformance design; scoped specification checks passed, capacity and enforcement unperformed.",
+  "status": "reported",
+  "authority": {
+    "basis": "agent_report"
+  },
+  "source_refs": [
+    {
+      "ref": "sub3-item2-request-002",
+      "role": "approval"
+    },
+    {
+      "ref": "worker2-continue-item2-008",
+      "role": "context"
+    },
+    {
+      "ref": "docs/02-governance/OWNER_DECISIONS.md#operational-limit-failure-and-engineering-managed-budgets--2026-11-03",
+      "role": "normative"
+    },
+    {
+      "ref": "architecture/proposals/reconstruction-input-preparation.md#completed-supplier-result-contract",
+      "role": "normative"
+    }
+  ],
+  "relations": [
+    {
+      "type": "verifies",
+      "target": "HPX-RQ-004"
+    },
+    {
+      "type": "verifies",
+      "target": "HPX-RQ-005"
+    }
+  ],
+  "actor": "worker2",
+  "created_on": "2026-11-03",
+  "content": {
+    "target": "Item2 definition and warranted M1/contract/planning records only",
+    "outcome": "pass",
+    "method": "Manual full accounting/accepted-scope consistency review; no-layout syntax and scoped served manual layout/navigation; affected links/metadata/registers; bounded exact-byte preservation",
+    "evidence": {
+      "design_review": {
+        "outcome": "pass",
+        "scope": "Reviewed all nine supplier result obligations against nine accounting phases,one operation lifetime,pre-work reservations/checked arithmetic,logical versus physical/aggregate safeguards,failures/recovery,exact bounded navigation,adequate-budget invariance and item3 measurement dependencies.",
+        "future_cases": 13,
+        "product_conformance": "not_run",
+        "numeric_capacity": "unmeasured",
+        "engineering_realisation": "proposed/unimplemented"
+      },
+      "no_layout_validation": {
+        "command": [
+          "/opt/homebrew/bin/node",
+          "architecture/node_modules/likec4/bin/likec4.mjs",
+          "validate",
+          "--json",
+          "--no-layout",
+          "architecture"
+        ],
+        "exit_code": 0,
+        "files": 26,
+        "errors": 0
+      },
+      "scoped_layout": {
+        "syntaxErrors": [],
+        "elements": 204,
+        "relations": 408,
+        "views": 45,
+        "navigationLinks": 216,
+        "allNavigationMappingsPreserved": true,
+        "unaffectedComputedViewsIdentical": true,
+        "affectedServed": {
+          "concept_identity_closure": {
+            "layout": "manual",
+            "drifts": 0,
+            "nodes": 8,
+            "edges": 8,
+            "geometryLabelsPathsPreserved": true,
+            "item2DefinitionServed": true
+          }
+        },
+        "snapshotMetadataUpdated": [
+          "hpx.native.domain.exact.concept_snapshot.notes"
+        ],
+        "renderedVisualInspection": false,
+        "comparisonNote": "Computed elements and relationships remain exactly equal to pre-edit model. Saved/served geometry comparison rebases the old workspace absolute link prefix in memory and excludes regenerated relationship-ID lists and absent-versus-null optional links/tags/navigation; all edge IDs, endpoints, labels, bounds, positions and paths remain compared.",
+        "fullLayoutSweep": "not_run:one bounded view-note refinement only;unchanged topology and other computed views;no global impact"
+      },
+      "affected_links": {
+        "outcome": "pass",
+        "checked": 519,
+        "files": [
+          "architecture/Conceptual/identity-closure.c4",
+          "architecture/audits/dom001-current-coverage.md",
+          "architecture/audits/specification-migration-status.md",
+          "architecture/proposals/reconstruction-operational-limits.md",
+          "checklist.md",
+          "docs/02-governance/OWNER_DECISIONS.md",
+          "docs/05-domain/hypergraph-mathematics.md",
+          "docs/06-subsystems/interfaces/domain-navigation.md",
+          "docs/08-assurance/formal-validation-digest.md",
+          "docs/09-guides/reference/DEVELOPMENT_STATE.md"
+        ]
+      },
+      "affected_registered_metadata": {
+        "outcome": "pass",
+        "files": [
+          "docs/05-domain/hypergraph-mathematics.md",
+          "docs/06-subsystems/interfaces/domain-navigation.md",
+          "docs/08-assurance/formal-validation-digest.md",
+          "docs/09-guides/reference/DEVELOPMENT_STATE.md"
+        ]
+      },
+      "registers": {
+        "requirements.csv": 41,
+        "tests.csv": 166,
+        "open-questions.csv": 29,
+        "traceability.csv": 598,
+        "decisions.csv": 19
+      },
+      "migration_counts": {
+        "Fully migrated": 1,
+        "Partially migrated": 24,
+        "Not migrated — subject specifications": 13,
+        "Not migrated — supporting records": 33
+      },
+      "ownership_scopes": 24,
+      "checklist": {
+        "item1": "preserved checked at input-definition boundary",
+        "item2": "checked at operational-specification/design boundary",
+        "all_other_lines": "preserved",
+        "local_exclusion": "preserved"
+      },
+      "preservation": {
+        "baseline_path": ".verification/item2-operational-limits/resumed/baseline.json",
+        "baseline_sha256": "6e925526d154890ead7c1b0e009f2801c8595799b1eb48e315bbb8a083d305ba",
+        "baseline_files": 579,
+        "changed_existing_files": [
+          "architecture/.likec4/concept_identity_closure.likec4.snap",
+          "architecture/Conceptual/identity-closure.c4",
+          "architecture/audits/dom001-current-coverage.md",
+          "architecture/audits/specification-migration-status.md",
+          "architecture/proposals/reconstruction-operational-limits.md",
+          "architecture/specification-ownership.csv",
+          "checklist.md",
+          "docs/02-governance/OWNER_DECISIONS.md",
+          "docs/05-domain/hypergraph-mathematics.md",
+          "docs/06-subsystems/interfaces/domain-navigation.md",
+          "docs/08-assurance/formal-validation-digest.md",
+          "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+          "docs/registers/open-questions.csv",
+          "docs/registers/requirements.csv",
+          "docs/registers/tests.csv"
+        ],
+        "unchanged_files": 564,
+        "historical_owner_and_test_exact_prefix": true,
+        "only_requirements_004_005_updated": true,
+        "only_open_question_004_updated": true,
+        "only_CAN018_refined": true,
+        "all_application_proof_prior_evidence_source_registers_unchanged": true,
+        "unaffected_saved_snapshots": 31,
+        "reconciled_item1_and_TEST167": true,
+        "prior_proposal": {
+          "record_version": 1,
+          "path": ".verification/item2-operational-limits/resumed/base/architecture/proposals/reconstruction-operational-limits.md",
+          "sha256": "68ed26fee5e549fe08dc6f835df799eb24ccfe055441aa517e7249cd4b6a3018"
+        }
+      },
+      "reused_evidence": {
+        "ref": "architecture/evidence/acknowledged-input-design.json",
+        "sha256": "942bf6905992e5791e31fb84f819dfe271f244ff4f8b96937a299d594b6e438e",
+        "scope": "Unchanged prior archive/source checks reused;known30 retained-source-body findings remain visible;no full aggregate pass asserted",
+        "known_retained_source_body_findings": 30,
+        "archive_source_coverage_registers": "unchanged;no new source/archive sweep"
+      }
+    },
+    "source_sha256": {
+      "architecture/.likec4/concept_identity_closure.likec4.snap": "84b75c886377a38bc924a252ab91dfc68ed82fbca80a8683b9c80f4eb54c542e",
+      "architecture/Conceptual/identity-closure.c4": "af904a8b6623a62026b899496a3318ae06b3e625656890f1c62e54b0b7f6f9df",
+      "architecture/audits/dom001-current-coverage.md": "46bf021a2638b6ffb2063d3518a4c714886847f765baa71b9f27b4a5b5146e48",
+      "architecture/audits/specification-migration-status.md": "c766fa891b15a1fa92ea2d26009b36ce0725f0cabbd15e8ea9ac1e1ee331480e",
+      "architecture/proposals/reconstruction-operational-limits.md": "0e667ac6432a2adcc9899384f5e48c99b49b97a94f5fa65aa1387cede5d408e2",
+      "architecture/specification-ownership.csv": "08f80658ef41fa932b81ef97dc1852732c156058e5f11028dd7348cea9889e57",
+      "checklist.md": "9d4259ba590805cda135601945c22f0cfda7d0485b8955340ccd384e7d9eb418",
+      "docs/02-governance/OWNER_DECISIONS.md": "95d2f1dd3cf36330794b0494bea93a3b8fc273371061548c903dfef1c9de1e8e",
+      "docs/05-domain/hypergraph-mathematics.md": "cbec655e3326bdc61297a1f7216f0774ab0a4c761c2ba3809d2c48dc284440b6",
+      "docs/06-subsystems/interfaces/domain-navigation.md": "fb5422662e11d293f55b29374b807117960881bf8918a991c2c04d1faa2f01ca",
+      "docs/08-assurance/formal-validation-digest.md": "de29734c12b06dd6d3e81287b8cf62315dec6defb1ebb36157712a8c0353ba9a",
+      "docs/09-guides/reference/DEVELOPMENT_STATE.md": "5b0f2a7800e960f8e4b174b440acc4852e9df558c16b159c038b8a49bb7ff280",
+      "docs/registers/open-questions.csv": "27ac93c859a9bef56018aaf06808f418844336ea7096b08a5bdd67bb653d7518",
+      "docs/registers/requirements.csv": "0f7d4160567e890038db077d72148793d3800b2e85cfd0c03fa6e9fc43b2dc24",
+      "docs/registers/tests.csv": "07be2df657105b5aeab6a9e188dd66c286cb8a392fefedd98d115b0ddec91b8c"
+    },
+    "new_file": "architecture/evidence/reconstruction-operational-limits.json",
+    "completed_scope": "Item2 phase/accounting/failure/navigation and conditional conformance definition under approved L1A/L2A;not all DOM001/GAP004 or implementation.",
+    "not_run": [
+      "OL1–OL13 product scenarios and numeric/peak-memory/CPU/I/O/cancellation/concurrency/render measurements.",
+      "Application/Lean/extracted-Rust/build/runtime integration/security/compatibility suites;no changed implementation or proof inputs.",
+      "Full layout regression or rendered visual inspection;only one M1 view note changed with preserved topology and geometry.",
+      "Full documentation/archive/source-body/Git sweeps;prior archive evidence reused and known30 findings retained."
+    ],
+    "limitations": [
+      "Safe numeric limits need item3 representation costs and actual supported-platform measurements;no arbitrary constants invented.",
+      "Suppliers and resource enforcement remain proposed/unimplemented;no end-to-end protection or operational/proof correspondence claim.",
+      "No cursor,wire/API/persistent-profile/format/version changes,privileged bypass or tuning controls.",
+      "No branches/worktrees/additional agents/commits/pushes/releases/trust/provider/manual-runtime actions.",
+      "Current canonical1.1.1 reloaded at resumption;existing peer and record interpretation remains1.1.0 with no silent migration.",
+      "Baseline excludes generated/cache/unlisted private/runtime files."
+    ]
+  }
+}

@@ -7,7 +7,7 @@
       "command": "npm",
       "args": [
         "--prefix",
-        "architecture",
+        "docs/architecture",
         "run",
         "dev"
       ],
@@ -22,7 +22,7 @@
       "command": "npm",
       "args": [
         "--prefix",
-        "architecture",
+        "docs/architecture",
         "run",
         "validate"
       ],
@@ -37,7 +37,7 @@
       "command": "npm",
       "args": [
         "--prefix",
-        "architecture",
+        "docs/architecture",
         "run",
         "build"
       ],

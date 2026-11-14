@@ -4,7 +4,7 @@ import {readFile,mkdtemp,rm} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {resolve,join} from 'node:path';
-const root=resolve(import.meta.dirname,'../..'),folder=join(root,'artifacts/local-development-signing');
+const root=resolve(import.meta.dirname,'../..'),folder=join(root,'.local/credentials/signing');
 const identifier='org.hypergraph-px.runtime.local-development';
 const hash=(algorithm,bytes)=>createHash(algorithm).update(bytes).digest('hex');
 export async function developmentIdentity(){

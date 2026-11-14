@@ -88,7 +88,7 @@ The owner supplied the specification-integration brief (HPX-OWNER-006): preserve
 
 ### Verified historical baseline
 
-Snapshot: [2026-10-26-pre-architecture-integration-a0402d90505d](../../../docproject/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d/README.md). Source commit **a0402d90505d2e667fcd00fab793eb56d279a7cb**, branch **main**, local date **2026-10-26** (UTC+02:00), dirty working tree. **327 files / 12,888,115 bytes** were copied without content/name/relative-tree changes and each compared byte-for-byte and by SHA-256 before the first active-spec edit. The archive's manifest, SHA256SUMS, separate origin metadata, initial verification and control checksums preserve recovery and provenance. Archived files are write-protected; no existing snapshot was replaced.
+Snapshot: [2026-10-26-pre-architecture-integration-a0402d90505d](../../../.provenance/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d/README.md). Source commit **a0402d90505d2e667fcd00fab793eb56d279a7cb**, branch **main**, local date **2026-10-26** (UTC+02:00), dirty working tree. **327 files / 12,888,115 bytes** were copied without content/name/relative-tree changes and each compared byte-for-byte and by SHA-256 before the first active-spec edit. The archive's manifest, SHA256SUMS, separate origin metadata, initial verification and control checksums preserve recovery and provenance. Archived files are write-protected; no existing snapshot was replaced.
 
 Included: all active docs/ content and supporting assets/registers/ADRs, legal/ provenance, root README/AGENTS/CHANGELOG/LICENSE, and the completed supporting architecture review. Excluded: ignored .oldspecs private provenance originals, private INPUT/local run guide, application/proof sources and tests, runtime workspaces/keys/credentials, Git/tool/OS caches. Existing old-source identity/hash registers remain intact. The snapshot captures documentation, not a reproducible copy of every unpublished implementation byte.
 
@@ -96,7 +96,7 @@ Publication status is **INTENDED_FOR_PUBLIC_RELEASE — NOT_YET_APPROVED**. The 
 
 ### Finding dispositions and minimal impact trace
 
-A = Integrate a supported clarification. B = Investigate before adopting a solution. C = Defer the mechanism with full requirements retained. D = Already addressed as a specification/control, while remaining implementation work stays pending. E = Reject. Review findings remain historical evidence in [the original review](../../../docproject/architecture-review/findings/README.md); exact original bytes and line context are also preserved in the snapshot.
+A = Integrate a supported clarification. B = Investigate before adopting a solution. C = Defer the mechanism with full requirements retained. D = Already addressed as a specification/control, while remaining implementation work stays pending. E = Reject. Review findings remain historical evidence in [the original review](../../../.provenance/architecture-review/findings/README.md); exact original bytes and line context are also preserved in the snapshot.
 
 | Finding | Class / rationale | Requirement or decision → authoritative refinement | Implementation consequence / verification |
 | --- | --- | --- | --- |
@@ -149,7 +149,7 @@ Executed verification: `python3 scripts/verify_documentation.py --check-local-so
 
 Whitespace was checked with `git -c core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol diff --check`, retaining existing CSV row bytes/endings rather than normalizing mixed LF/CRLF. No persistent Git configuration changed. Existing source IDs0120–0124 now resolve to the exact preserved original owner-record bytes in the snapshot, retaining their original hashes; the active record adds the separately dated integration authorization. No historical decision is retroactively rewritten. The original review's validation results remain explicitly historical; this task does not claim its old active-file hashes still match revised specifications.
 
-The combined [integration integrity results](../../../docproject/architecture-review/validation/specification-integration-results.json) record the snapshot/control checks, preserved non-status requirements and source files, original CSV row/endings, diagram hashes, supporting-browser checks and all20 dispositions. No original specification file was lost and no new authoritative document/requirement ID was introduced.
+The combined [integration integrity results](../../../.provenance/architecture-review/validation/specification-integration-results.json) record the snapshot/control checks, preserved non-status requirements and source files, original CSV row/endings, diagram hashes, supporting-browser checks and all20 dispositions. No original specification file was lost and no new authoritative document/requirement ID was introduced.
 
 ## 2026-10-26: owner resumed working-source lifecycle integration
 

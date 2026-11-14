@@ -19,7 +19,7 @@ export async function exerciseHistoryIsolation({page,root,checks}){
  }
  await panel.getByRole('button',{name:'View snapshot',exact:true}).first().click();await expect(page.getByRole('dialog',{name:'Historical snapshot · read only'})).toBeVisible();await page.keyboard.press('Escape');await expect(page.locator('dialog')).toHaveCount(0);
  await panel.getByRole('button',{name:'Compare with latest committed',exact:true}).first().click();const comparison=page.getByRole('dialog',{name:'Compare committed snapshots'});await expect(comparison).toBeVisible();
- for(const width of [1280,1600,2000]){await page.setViewportSize({width,height:1000});for(const theme of ['dark','light']){await page.evaluate(theme=>document.body.classList.toggle('light',theme==='light'),theme);await page.screenshot({path:resolve(root,`artifacts/runtime-history-isolation-${theme}-${width}.png`),animations:'disabled'});}}
+ for(const width of [1280,1600,2000]){await page.setViewportSize({width,height:1000});for(const theme of ['dark','light']){await page.evaluate(theme=>document.body.classList.toggle('light',theme==='light'),theme);await page.screenshot({path:resolve(root,`.local/artifacts/runtime-history-isolation-${theme}-${width}.png`),animations:'disabled'});}}
  await page.evaluate(()=>document.body.classList.remove('light'));await page.setViewportSize({width:1600,height:1000});await page.keyboard.press('Escape');await expect(page.locator('dialog')).toHaveCount(0);
  checks.push('history refresh invalidates delayed snapshot, comparison-head and comparison-source replies; Escape removes exact-source dialogs');
 }

@@ -22,6 +22,6 @@ test('contributor badges keep white initials and stable identity colours across 
   const badges=await page.locator('.contributor').evaluateAll(rows=>rows.map(r=>{const e=r.querySelector('.dot'),style=getComputedStyle(e);return {principal:r.dataset.principal,background:style.backgroundColor,foreground:style.color};}));
   expect(badges.slice(0,3).map(({principal,background})=>({principal,background}))).toEqual(initial);expect(new Set(badges.map(b=>b.background)).size).toBe(5);expect(badges.every(b=>b.foreground==='rgb(255, 255, 255)')).toBe(true);
   await expect(page.getByText('No current agent',{exact:true})).toBeVisible();await expect(page.getByText('Principal kind not recorded',{exact:true})).toHaveCount(4);
-  await page.locator('section').evaluate(e=>{e.scrollTop=0;});await page.screenshot({path:`../artifacts/contributor-colours-${theme}-${width}.png`,animations:'disabled'});
+  await page.locator('section').evaluate(e=>{e.scrollTop=0;});await page.screenshot({path:`../.local/artifacts/contributor-colours-${theme}-${width}.png`,animations:'disabled'});
  }}
 });

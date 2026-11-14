@@ -32,7 +32,7 @@ test('graph choices and keyboard-accessible inspection scroll independently at d
    expect(await main.evaluate(e=>e.scrollTop)).toBe(inspectionTop);await expect(dialog.getByRole('button',{name:'Close',exact:true})).toBeInViewport();
    await main.evaluate(e=>{e.scrollTop=0;});await chooser.evaluate(e=>{e.scrollTop=0;});
    const bounds=await dialog.boundingBox();expect(bounds.x).toBeGreaterThanOrEqual(0);expect(bounds.x+bounds.width).toBeLessThanOrEqual(width);expect(bounds.y+bounds.height).toBeLessThanOrEqual(1000);
-   await page.screenshot({path:`../artifacts/runtime-graph-layout-${theme}-${width}.png`,animations:'disabled'});
+   await page.screenshot({path:`../.local/artifacts/runtime-graph-layout-${theme}-${width}.png`,animations:'disabled'});
   }
  }
  expect(await page.evaluate(()=>window.__graphNotifications)).toEqual([]);

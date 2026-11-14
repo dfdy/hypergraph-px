@@ -17,7 +17,7 @@
 
 ## Implemented pure selection boundary
 
-[domain/parent_merge.rs](../../../crates/domain/src/parent_merge.rs) accepts one exact base and two same-node revision texts with **supplied base-aligned edit maps**. It does not infer a diff, discover ancestry, authenticate/allocate clocks, read snapshots, serialize DTOs or publish. The adapter must establish a unique valid common base, exact closed snapshots, current authority and lineage mapping before calling it; the browser cannot supply trusted origin/order claims directly.
+[domain/parent_merge.rs](../../../backend/crates/domain/src/parent_merge.rs) accepts one exact base and two same-node revision texts with **supplied base-aligned edit maps**. It does not infer a diff, discover ancestry, authenticate/allocate clocks, read snapshots, serialize DTOs or publish. The adapter must establish a unique valid common base, exact closed snapshots, current authority and lineage mapping before calling it; the browser cannot supply trusted origin/order claims directly.
 
 Each edit has UTF8 base-byte `start/end`, exact expected base quote, exact replacement bytes and a nonempty set of revision/order origins. A zero-width edit inserts; an empty replacement of a nonempty span deletes. A replacement equal to the common base is allowed: an actual later reversion is not an unchanged span merely because its bytes match that base. Unknown order still carries an exact origin revision. Order0 is not an allocated edit; positive u64 ordering is domain-only, with eventual adapter encoding/range checks required. One revision cannot claim different orders and two different revisions cannot claim the same known per-node order.
 

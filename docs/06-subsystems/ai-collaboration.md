@@ -17,7 +17,7 @@
 
 ## 1. Mandatory multi-user baseline — HPX-RQ-032
 
-User structure and cardinality are canonical in [C1/C2](../../architecture/context.c4), HPX-CAN-002. Development with one human does not constrain product architecture; a single SQLite writer is not a user limit. The interaction and enforcement obligations below supplement the diagrams.
+User structure and cardinality are canonical in [C1/C2](../architecture/context.c4), HPX-CAN-002. Development with one human does not constrain product architecture; a single SQLite writer is not a user limit. The interaction and enforcement obligations below supplement the diagrams.
 
 ## 2. AI agents are users — HPX-RQ-033
 
@@ -49,7 +49,7 @@ Inputs: workspace-local authenticated user, workspace permissions, selected-node
 
 ### Creation context for human and machine users — HPX-RQ-039
 
-Every created node, including chat/context/result nodes, obeys [M1's accepted creation-origin invariant](../../architecture/Conceptual/identity-closure.c4) and the [context contract](../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048). Machine requests require explicit equivalent initiating placement context, not a literal browser caret. Backend validation must determine the parent or position and reject missing/ambiguous context under ordinary permissions; inference, provider identity and node selection cannot invent placement or grant authority. This selects no chat, identity, context-payload or MCP wire format.
+Every created node, including chat/context/result nodes, obeys [M1's accepted creation-origin invariant](../architecture/Conceptual/identity-closure.c4) and the [context contract](../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048). Machine requests require explicit equivalent initiating placement context, not a literal browser caret. Backend validation must determine the parent or position and reject missing/ambiguous context under ordinary permissions; inference, provider identity and node selection cannot invent placement or grant authority. This selects no chat, identity, context-payload or MCP wire format.
 
 ## 7. Authority and implementation limits
 

@@ -1,0 +1,311 @@
+{
+  "protocol_version": "1.1.0",
+  "record_version": 1,
+  "id": "HPX-VER-20261103-conflict-state",
+  "kind": "verification_result",
+  "subject": "Checklist item4 conflict time,resolution and shared review history specification/design",
+  "summary": "Seven approved rules integrated model-first;complete comparison/anchor/state/carry/resolution/recovery and record design;scoped static checks passed without implementation or profile activation.",
+  "status": "reported",
+  "authority": {
+    "basis": "agent_report"
+  },
+  "source_refs": [
+    {
+      "ref": "worker2-item4-retry-018",
+      "role": "approval"
+    },
+    {
+      "ref": "docs/02-governance/OWNER_DECISIONS.md#conflict-time-resolution-and-shared-history-choices--2026-11-03",
+      "role": "normative"
+    },
+    {
+      "ref": "architecture/proposals/conflict-state.md",
+      "role": "observed"
+    },
+    {
+      "ref": "architecture/proposals/exact-closure-source-map.md",
+      "role": "normative"
+    }
+  ],
+  "relations": [
+    {
+      "type": "verifies",
+      "target": "HPX-RQ-004"
+    }
+  ],
+  "actor": "worker2",
+  "created_on": "2026-11-03",
+  "content": {
+    "target": "Item4 design and proportionate canonical/contract/planning records only",
+    "outcome": "pass",
+    "method": "Manual accepted-rule,state/record/compatibility review;static field/kind inspection and integer worked-example arithmetic;no-layout syntax plus M1/Editor served-layout/navigation;scoped links/metadata/registers and exact-byte preservation",
+    "evidence": {
+      "design_review": {
+        "outcome": "pass",
+        "approved_choices": [
+          "1A",
+          "2A",
+          "3A",
+          "4A",
+          "5A",
+          "6A",
+          "7A"
+        ],
+        "scope": "HPX millisecond Commit observations and Ask fallback;distinct selection/review/correspondence states;per-issue exact anchors and three explicit outcomes;named batches,current versus as-of shared history,exact carry or retained uncertainty;actual resolver/optional note;stale/CAS/idempotent/staged recovery and candidate record/profile design.",
+        "future_conformance_cases": 12,
+        "product_conformance": "not_run",
+        "implementation": "not_implemented"
+      },
+      "static_source_inspection": {
+        "outcome": "pass",
+        "files": [
+          "crates/storage/src/lib.rs",
+          "crates/storage/src/encoding.rs",
+          "crates/storage/src/keychain.rs",
+          "crates/storage/src/temporal_save.rs",
+          "crates/domain/src/records.rs"
+        ],
+        "sha256": {
+          "crates/storage/src/lib.rs": "f2e443c7f734097db3ee79619dd716f5bc2e1b87284bd97fea0f976ec824b194",
+          "crates/storage/src/encoding.rs": "655bf871ade2a9e63bc2b3a33ac7784e993b76588096749af0b0ffbf9427f138",
+          "crates/storage/src/keychain.rs": "295e98ea78c6a761d2cc0873360890ab9a969630f223660710c148a83a569de3",
+          "crates/storage/src/temporal_save.rs": "fee81b3a5be509b66528b978258b269acc0fa7da31996a65529512e6ef448af6",
+          "crates/domain/src/records.rs": "aa79542ed858d4a31d72bf7256b6391a9eedc4294113cea5254c3c5a0b2a9bdd"
+        },
+        "observations": [
+          "Current Revision/Event adapter records have no Commit timestamp field;no legacy backfill is claimed.",
+          "Current top-level numeric storage declarations do not allocate45–54;item3 reservations end44 and remain unchanged.",
+          "Feature38/version2 is a separate combined candidate profile design;all actual schema/codec/code bytes remain unchanged."
+        ],
+        "limits": "Static source/design reasoning only;no new actual timestamp sampler,format decoder,profile transition or older-reader test."
+      },
+      "worked_example_arithmetic": {
+        "outcome": "pass",
+        "scope": "Exact BigInt millisecond floor and integer ordering/duplicate arithmetic only;not runtime clock/comparison/UI tests",
+        "positive_ns": "1999000",
+        "positive_floor_ms": "1",
+        "negative_ns": "-1000",
+        "negative_floor_ms": "-1",
+        "signed64_min": "-9223372036854775808",
+        "signed64_max": "9223372036854775807"
+      },
+      "no_layout_validation": {
+        "command": [
+          "/opt/homebrew/bin/node",
+          "architecture/node_modules/likec4/bin/likec4.mjs",
+          "validate",
+          "--json",
+          "--no-layout",
+          "architecture"
+        ],
+        "exit_code": 0,
+        "files": 26,
+        "errors": 0
+      },
+      "scoped_layout": {
+        "syntaxErrors": [],
+        "elements": 204,
+        "relations": 408,
+        "views": 45,
+        "navigationLinks": 216,
+        "allNavigationMappingsPreserved": true,
+        "unaffectedComputedViewsIdentical": true,
+        "affectedServed": {
+          "concept_identity_closure": {
+            "layout": "manual",
+            "drifts": 0,
+            "nodes": 8,
+            "edges": 8,
+            "geometryLabelsPathsPreserved": true,
+            "owner056NotesServed": true
+          },
+          "c3_browser_ui": {
+            "layout": "manual",
+            "drifts": 0,
+            "nodes": 19,
+            "edges": 19,
+            "geometryLabelsPathsPreserved": true,
+            "owner056NotesServed": true
+          }
+        },
+        "snapshotMetadataUpdated": [
+          "concept_identity_closure.hpx.native.domain.exact.concept_snapshot.notes",
+          "c3_browser_ui.hpx.browser.ui.editor.notes"
+        ],
+        "renderedVisualInspection": false,
+        "preExistingServedWraps": {
+          "count": 4,
+          "evidence": ".verification/branch-selection/model-before.json",
+          "test": "HPX-TEST-158",
+          "labels": [
+            {
+              "id": "zj84vc",
+              "priorServedLabel": "Exact source projection / edits / \nselection"
+            },
+            {
+              "id": "ikdals",
+              "priorServedLabel": "Display preferences / draft status / \nfeedback"
+            },
+            {
+              "id": "1se5xup",
+              "priorServedLabel": "Inspect / select / navigate graph \n(planned)"
+            },
+            {
+              "id": "nmooct",
+              "priorServedLabel": "Selected node / authorised linkages / \ninteractions (planned)"
+            }
+          ],
+          "sourceComputedLabelsUnchanged": true,
+          "snapshotLabelsUntouched": true
+        },
+        "comparisonNote": "All elements/relations/navigation and unaffected computed views equal baseline. Geometry compares labels,bounds,positions,edge paths and endpoints after rebasing legacy file-link prefixes and excluding notes/hash/drifts/regenerated relation-ID lists and absent-versus-null optional fields. Four C3 UI served label wraps differ from the plain saved labels but exactly match prior TEST158 served labels and bounding boxes;only those baseline comparison labels are adjusted in memory;actual source/snapshot labels stay unchanged.",
+        "fullLayoutSweep": "not_run:two bounded view-note refinements only;unchanged topology and other computed views;no global impact"
+      },
+      "validation_corrections": {
+        "owner_spelling": "Initial assertion expected OWNER056 but M1 correctly uses HPX-OWNER-056;validation-only pattern corrected;source unchanged.",
+        "pre_existing_label_wraps": "Strict snapshot comparison found four C3 served line wraps. Exact labels and label boxes verified against TEST158 prior served evidence;only those expected labels adjusted in memory. Saved/source label bytes remain unchanged;no ignored semantic label changes."
+      },
+      "affected_links": {
+        "outcome": "pass",
+        "checked": 728,
+        "files": [
+          "architecture/C3/browser-organisation.c4",
+          "architecture/Conceptual/identity-closure.c4",
+          "architecture/audits/dom001-current-coverage.md",
+          "architecture/audits/specification-migration-status.md",
+          "architecture/proposals/finite-cycle-closure-state.md",
+          "checklist.md",
+          "docs/02-governance/OWNER_DECISIONS.md",
+          "docs/06-subsystems/formats/hpx-workspace.md",
+          "docs/06-subsystems/frontend-interaction.md",
+          "docs/06-subsystems/interfaces/domain-navigation.md",
+          "docs/07-implementation/data-structures/sqlite-records.md",
+          "docs/08-assurance/formal-validation-digest.md",
+          "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+          "architecture/proposals/conflict-state.md"
+        ]
+      },
+      "affected_registered_metadata": {
+        "outcome": "pass",
+        "files": [
+          "docs/06-subsystems/frontend-interaction.md",
+          "docs/06-subsystems/formats/hpx-workspace.md",
+          "docs/06-subsystems/interfaces/domain-navigation.md",
+          "docs/07-implementation/data-structures/sqlite-records.md",
+          "docs/08-assurance/formal-validation-digest.md",
+          "docs/09-guides/reference/DEVELOPMENT_STATE.md"
+        ]
+      },
+      "registers": {
+        "requirements.csv": 41,
+        "tests.csv": 168,
+        "open-questions.csv": 29,
+        "traceability.csv": 598,
+        "decisions.csv": 19,
+        "compatibility.csv": 13
+      },
+      "migration_counts": {
+        "Fully migrated": 1,
+        "Partially migrated": 24,
+        "Not migrated — subject specifications": 13,
+        "Not migrated — supporting records": 33
+      },
+      "ownership_scopes": 24,
+      "checklist": {
+        "items1_2_3": "all lines preserved checked at previous boundaries",
+        "item4": "checked at specification/design boundary only",
+        "item5_and_other_gaps": "unchanged",
+        "local_exclusion": "preserved"
+      },
+      "preservation": {
+        "baseline_path": ".verification/item4-conflict-state/baseline.json",
+        "baseline_sha256": "400df37d14ade8d930b37b6a71d13a63ec0aca41962f06c142f68385ac01d684",
+        "baseline_files": 581,
+        "changed_existing_files": [
+          "architecture/.likec4/c3_browser_ui.likec4.snap",
+          "architecture/.likec4/concept_identity_closure.likec4.snap",
+          "architecture/C3/browser-organisation.c4",
+          "architecture/Conceptual/identity-closure.c4",
+          "architecture/audits/dom001-current-coverage.md",
+          "architecture/audits/specification-migration-status.md",
+          "architecture/proposals/finite-cycle-closure-state.md",
+          "architecture/specification-ownership.csv",
+          "checklist.md",
+          "docs/02-governance/OWNER_DECISIONS.md",
+          "docs/06-subsystems/formats/hpx-workspace.md",
+          "docs/06-subsystems/frontend-interaction.md",
+          "docs/06-subsystems/interfaces/domain-navigation.md",
+          "docs/07-implementation/data-structures/sqlite-records.md",
+          "docs/08-assurance/formal-validation-digest.md",
+          "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+          "docs/registers/compatibility.csv",
+          "docs/registers/open-questions.csv",
+          "docs/registers/requirements.csv",
+          "docs/registers/tests.csv"
+        ],
+        "unchanged_files": 561,
+        "historical_owner_test_compatibility_exact_prefix": true,
+        "only_RQ004_GAP004_CAN014_CAN018_updated": true,
+        "application_proof_prior_evidence_source_archive_registers_unchanged": true,
+        "items1_2_3_documents_and_TEST165_167_168_169_unchanged": true,
+        "unaffected_saved_snapshots": 30
+      },
+      "reused_evidence": {
+        "ref": "architecture/evidence/acknowledged-input-design.json",
+        "sha256": "942bf6905992e5791e31fb84f819dfe271f244ff4f8b96937a299d594b6e438e",
+        "scope": "Unchanged prior archive/source evidence reused;known30 retained-source-body findings remain visible;no full aggregate pass.",
+        "known_retained_source_body_findings": 30
+      },
+      "prior_served_evidence": {
+        "ref": ".verification/branch-selection/model-before.json",
+        "sha256": "b0adc0bb57497ddd5c8c345865de11adc6fbf90e6096a67c6e666be5fa901156",
+        "test": "HPX-TEST-158",
+        "scope": "Four unchanged C3 UI label wraps and exact label boxes;not a new rendered visual inspection."
+      }
+    },
+    "source_sha256": {
+      "architecture/.likec4/c3_browser_ui.likec4.snap": "b58b726b0c1f074ae692c06d7ee4e25adb0403b36504a4c493bb943d749d364c",
+      "architecture/.likec4/concept_identity_closure.likec4.snap": "33bc024e236cb5cbc5cefb92f58b4ac89b1bedf6f1ea144ffaf38f1ea43d1f45",
+      "architecture/C3/browser-organisation.c4": "caf4385df306e904fa0325818b0a330b5e134f300806a24481fd3904e2b66e28",
+      "architecture/Conceptual/identity-closure.c4": "ff606eb640c68880827f4e465b34c78ccce086f2c9d4cfe099b13363a7cbf487",
+      "architecture/audits/dom001-current-coverage.md": "f38a4285f69b93873ca952b8eb9846e501686f88692872eb02135a238cc6f0de",
+      "architecture/audits/specification-migration-status.md": "eec8bf022bc37e0d44c1825ba5ad89a8a1c0e8df85936bef74f5201e9a2f1bb9",
+      "architecture/proposals/finite-cycle-closure-state.md": "5cff5c3facb5cfc5f35ae69aa84fcb9eabbd351b476fa6bbb9f0f870f2e26b54",
+      "architecture/specification-ownership.csv": "2ae4293ac3536f6eae1f97e7af961f10d2fdd91d3f6e2fb09e3280ea4c8415ca",
+      "checklist.md": "f65da3dc2e3d48028f4132df6ee4e8bb28405c4d9abc1bc23f121579427f09e4",
+      "docs/02-governance/OWNER_DECISIONS.md": "53cbad2be343bfeba4f3256cb2cedaa9e07e0b4f457c45197b67e0a6cd2cdff6",
+      "docs/06-subsystems/formats/hpx-workspace.md": "0c2956e8b787962242af07c8def8768695b8b9559cb4838880e61be25252211e",
+      "docs/06-subsystems/frontend-interaction.md": "a1bf5c14538a5ccc65f3f5fb8bdea59105d2e9a5bad7873d66e283249caae539",
+      "docs/06-subsystems/interfaces/domain-navigation.md": "ebb2508bec8fd02e06b41c16d1597a7c1c37bde78d88c9d4a3fb1b24bb884bc9",
+      "docs/07-implementation/data-structures/sqlite-records.md": "e852eb8e31255980531d59f04077924355538ca4a21faf7365606f392b34b655",
+      "docs/08-assurance/formal-validation-digest.md": "d48a3428264bffcb70a3dd9a314861117ed34f91409060408a2a19067408531a",
+      "docs/09-guides/reference/DEVELOPMENT_STATE.md": "fff5a2c2080062bae2820c366ee047f7520aac0b9ec32f282305eaf138cb6ee5",
+      "docs/registers/compatibility.csv": "da948f18e19ab45e07fd2a00f61a5ba77994518418e30452278527cedc017804",
+      "docs/registers/open-questions.csv": "10c2561d5b32e892169243ffab380120d22f690556d44b2abf3791856fa18b6b",
+      "docs/registers/requirements.csv": "1c1ad6ba221893b3c11b578b157cf16fa6beaa1ab774dd9313955f2b7ce3172e",
+      "docs/registers/tests.csv": "72daa3d281bed238b3a5560ec35b212cdb22844f90e084acce9babb5d6752b34",
+      "architecture/proposals/conflict-state.md": "5fe6fa4c943b9a01c71a61b1d852514243669658b3a329718c5c00beb14fe964"
+    },
+    "new_files": [
+      "architecture/proposals/conflict-state.md",
+      "architecture/evidence/conflict-state-design.json"
+    ],
+    "completed_scope": "Item4 timestamp/comparability,per-issue state/anchors,resolution/history/carry,recovery and adapter/profile design under OWNER056;not item5 implementation/proof or full GAP004 closure.",
+    "not_run": [
+      "F1–F12 ordinary product/clock-health/codec/permission/receipt/concurrent/crash/restart/browser/MCP scenarios.",
+      "Actual timestamp sampling,capacity and resource measurements,profile upgrade/older-reader/migration/real-data acceptance.",
+      "Unchanged application/build/runtime/security/compatibility/Lean/extraction categories;no implementation/proof inputs changed.",
+      "Full layout regression/rendered visual inspection;only two bounded view notes changed with preserved geometry/navigation.",
+      "Full documentation/archive/source-body/Git sweeps;prior evidence reused and known30 findings retained."
+    ],
+    "limitations": [
+      "Approved semantic/format design only;actual clock/authority/acknowledgement/result/correspondence suppliers and transactional enforcement remain unimplemented.",
+      "Candidate45–54 and feature38/version2 are design allocations;current normal1/2,experimental3 and actual API/envelope/protocol versions unchanged.",
+      "No new permission/admin regime,automatic Commit,source/history rewriting or universal future Save/Commit coupling.",
+      "Items1–3 remain complete;item5 and additional gaps remain separately bounded.",
+      "No additional agents,branches,worktrees,commits,pushes,releases,cleanup,provider/trust/manual-runtime or application/proof/format implementation.",
+      "Canonical main1.2.0 read;existing peer and record interpretation remains1.1.0 without silent adoption.",
+      "Baseline excludes generated/cache/unlisted private/runtime files."
+    ]
+  }
+}

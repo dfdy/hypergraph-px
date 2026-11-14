@@ -1,5 +1,7 @@
 > Current installation: **v0.6.0**, activated by explicit owner instruction; see [upgrade and use](UPGRADE_0.6.0.md). The v0.5.0 account below is historical.
 
+Current Stage1 tooling location: `shared/tooling/`; literal `scripts/` commands below are retained historical installation/adoption evidence. Current project coordination follows the unchanged `shared/tooling/protocol/PROTOCOL.md` and AGENTS instructions, not a silent return to an earlier HPX-SCP agreement.
+
 # Local adoption of HPX-SCP v0.5.0
 
 **Accepted by the project owner on 2026-10-31.** The explicit instruction was “accept the hpx-scp.” [HPX-OWNER-042](../../02-governance/OWNER_DECISIONS.md#hpx-scp-v050-local-adoption-2026-10-31) and [HPX-DEC-20261031-scp-adoption](records/HPX-DEC-20261031-scp-adoption.json) record that authority. The agent records the decision; passing verification is not its approval basis.

@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {assertCompatible,validateReferences,schemaCacheValid} from '../scripts/generate-contract.mjs';
 import {runtimeRequest,forkExecution,bootstrapRequest} from '../src/api-client.ts';
-const spec=JSON.parse(await readFile(new URL('../src/generated/openapi.json',import.meta.url)));
+const spec=JSON.parse(await readFile(new URL('../../shared/openapi.json',import.meta.url)));
 test('generated contract references resolve; existing fields, constraints and operations cannot silently break',()=>{
  validateReferences(spec);
  for(const mutate of [s=>delete s.paths['/api/v1/commands'],s=>delete s.components.schemas.ForkPlan.properties.title,s=>s.components.schemas.Id.maxItems=33,s=>s.components.schemas.ForkPlan.required=[],s=>s.security=[],s=>s.components.securitySchemes.session.name='other']){const next=structuredClone(spec);mutate(next);assert.throws(()=>assertCompatible(spec,next),/changed/);}

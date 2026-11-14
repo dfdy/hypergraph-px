@@ -1,3 +1,4 @@
+import {cargoExecutable} from '../../shared/tooling/cargo-path.mjs';
 import {typedBindings,assertBoundPayload} from './assert-api-schema.mjs';
 import {binaryFingerprint,refreshManualRuntime} from './manual-runtime-update.mjs';
 // SPDX-License-Identifier: AGPL-3.0-only
@@ -11,8 +12,8 @@ import {connect} from 'node:tls';
 
 const native=process.argv.includes('--native-keychain');
 if(!native&&!process.argv.includes('--history-only'))throw Error('Choose --history-only or --native-keychain (unique synthetic item; OS consent may be requested).');
-const root=resolve(import.meta.dirname,'../..'),binary=join(root,'target/debug/hypergraph');
-const cert=join(root,'artifacts/local-tls/localhost.pem'),key=join(root,'artifacts/local-tls/localhost-key.pem');
+const root=resolve(import.meta.dirname,'../..'),binary=cargoExecutable();
+const cert=join(root,'.local/credentials/tls/localhost.pem'),key=join(root,'.local/credentials/tls/localhost-key.pem');
 const approved='05865badace97aad0cb8abf4460e12f6a1574b812759780052e8ffb486bf8428';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const ensure=(value,message)=>{if(!value)throw Error(message);};
@@ -65,7 +66,7 @@ async function api(path,body){
 async function command(request){return api('commands',{operation:operation(),request});}
 try{
  leaf=await readFile(cert);ensure(digest(execFileSync('/usr/bin/openssl',['x509','-in',cert,'-outform','DER']))===approved,'Certificate differs from approved leaf');
- directory=await mkdtemp(join(root,'artifacts/keychain-workflow-'));workspace=join(directory,'synthetic.hpx');
+ directory=await mkdtemp(join(root,'.local/artifacts/keychain-workflow-'));workspace=join(directory,'synthetic.hpx');
  await start(true);
  ensure((await api('runtime')).locked,'Startup was not locked');
  ensure(!(await api('keychain/status',{})).enrolled,'Fresh workspace unexpectedly enrolled');
@@ -102,7 +103,7 @@ try{
  ensure(!(await api('keychain/status',{})).enrolled,'Removal retained wrapper');
  await stop();await start();await api('unlock',{passphrase});ensure((await api('editor',{document})).text===source,'Recovery after removal changed exact source');
  ensure((await api('snapshot',{document,snapshot})).text===source,'Recovery after removal changed snapshot');checks.push(native?'native removal and restarted passphrase recovery':'independent restart preserves source and committed snapshot');
- await writeFile(join(root,native?'artifacts/keychain-workflow-native.json':'artifacts/history-workflow-tls.json'),JSON.stringify({synthetic:true,browser:false,nativeKeychain:native,manualRuntimeTouched:false,checks},null,2));
+ await writeFile(join(root,native?'.local/artifacts/keychain-workflow-native.json':'.local/artifacts/history-workflow-tls.json'),JSON.stringify({synthetic:true,browser:false,nativeKeychain:native,manualRuntimeTouched:false,checks},null,2));
  passed=true;console.log(`PASS: ${checks.length} synthetic HTTPS storage/history workflow checks`);
 }catch(error){console.error('FAIL: '+error.message);process.exitCode=1;}
 finally{
@@ -115,7 +116,7 @@ finally{
    // the only workspace identity that can support scoped orphan inspection.
    if(!enrollmentConfirmed&&!status.enrolled&&!status.cleanup_pending)throw Error('Native creation outcome requires inspection');
    await api('keychain/remove',{});enrolled=false;
-  }catch{console.error('Synthetic native cleanup needs attention; retained test workspace under artifacts/keychain-workflow-* for explicit recovery.');}
+  }catch{console.error('Synthetic native cleanup needs attention; retained test workspace under .local/artifacts/keychain-workflow-* for explicit recovery.');}
  }
  await stop();if(directory&&!enrolled)await rm(directory,{recursive:true,force:true});
 }

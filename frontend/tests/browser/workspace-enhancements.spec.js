@@ -33,19 +33,19 @@ test('workspace/document totals follow edits, undo and independent forks; reques
 });
 
 test('column separators drag and resize by keyboard while Navigator stays fixed',async({page})=>{
- const original=await source(page),map=page.locator('#documentNavigator'),initial=(await map.boundingBox()).width,outline=page.locator('.workspace > .navigator');
+ const original=await source(page),map=page.locator('#documentNavigator'),initial=(await map.boundingBox()).width,outline=page.locator('.workspace .navigator');
  const before=(await outline.boundingBox()).width,handle=page.getByRole('separator',{name:'Resize workspace column',exact:true}),box=await handle.boundingBox();
  await drag(page,{x:box.x+4,y:box.y+150},{x:box.x+64,y:box.y+150});expect((await outline.boundingBox()).width).toBeCloseTo(before+60,0);expect((await map.boundingBox()).width).toBe(initial);
  const side=page.getByRole('separator',{name:'Resize interaction and investigation column',exact:true});await side.focus();await page.keyboard.press('ArrowLeft');expect((await map.boundingBox()).width).toBe(initial);
  await page.getByRole('button',{name:'Move navigator to left',exact:true}).click();expect((await map.boundingBox()).width).toBe(initial);expect(await source(page)).toBe(original);
- const width=(await outline.boundingBox()).width,again=await handle.boundingBox();await page.mouse.move(again.x+4,again.y+150);await page.mouse.down();await page.mouse.move(again.x+44,again.y+150);await page.keyboard.press('Escape');await page.mouse.up();expect((await outline.boundingBox()).width).toBeCloseTo(width,0);await page.reload();expect((await outline.boundingBox()).width).toBeCloseTo(width,0);
+ const width=(await outline.boundingBox()).width,again=await handle.boundingBox();await page.mouse.move(again.x+4,again.y+150);await page.mouse.down();await page.mouse.move(again.x+44,again.y+150);await page.keyboard.press('Escape');await page.mouse.up();await expect.poll(async()=>(await outline.boundingBox()).width).toBeCloseTo(width,0);await page.reload();await expect.poll(async()=>(await outline.boundingBox()).width).toBeCloseTo(width,0);
 });
 
 test('Navigator content stays stable across scrolling with full table and formula rendering',async({page})=>{
  await page.getByLabel('Maths display').selectOption('rendered');await expect(page.locator('#mapText .rendered-table-block')).toHaveCount(1);await expect(page.locator('#mapText .math-rendered')).toHaveCount(2);await page.evaluate(async()=>{await document.fonts.ready;});
  const initial=await page.locator('#mapText').innerHTML();const total=Number(await page.locator('#mapTrack').getAttribute('data-total-height'));
  for(const fraction of [0,.2,.65,1,.4,0]){await page.locator('.cm-scroller').evaluate((e,f)=>{e.scrollTop=f*(e.scrollHeight-e.clientHeight);},fraction);await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));expect(await page.locator('#mapText').innerHTML()).toBe(initial);expect(Number(await page.locator('#mapTrack').getAttribute('data-total-height'))).toBeCloseTo(total,0);}
- await page.locator('#documentNavigator').screenshot({path:'../artifacts/ui/navigator-stable.png'});
+ await page.locator('#documentNavigator').screenshot({path:'../.local/artifacts/ui/navigator-stable.png'});
 });
 
 test('one through five repeated clicks select caret, word, sentence, paragraph, section',async({page})=>{
@@ -91,7 +91,7 @@ test('sidebar halves share divider insets and tab spacing at default and resized
  }
  await check();await handle.focus();await page.keyboard.press('Home');for(let i=0;i<9;i++)await page.keyboard.press('ArrowRight');await check();
  const history=page.getByRole('tablist',{name:'Investigation tabs'}).getByRole('tab',{name:'History',exact:true});await history.focus();await expect(history).toBeInViewport();
- await handle.focus();await page.keyboard.press('Home');for(let i=0;i<5;i++)await page.keyboard.press('Shift+ArrowLeft');await check();await page.keyboard.press('Home');await check();await page.screenshot({path:'../artifacts/ui/sidebar-consistent-spacing.png'});
+ await handle.focus();await page.keyboard.press('Home');for(let i=0;i<5;i++)await page.keyboard.press('Shift+ArrowLeft');await check();await page.keyboard.press('Home');await check();await page.screenshot({path:'../.local/artifacts/ui/sidebar-consistent-spacing.png'});
 });
 
 test('drag selection follows moves through blank gaps and can restart inside an existing selection',async({page})=>{

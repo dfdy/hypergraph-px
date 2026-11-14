@@ -17,7 +17,7 @@
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -42,7 +42,7 @@ The former prose inventory is replaced by the canonical views linked below. Appl
 
 ### Responsibility boundaries
 
-Names, boundaries, dependencies and implementation-path mappings are canonical in [the Rust executable overview](../../architecture/C3/executable.c4) and its focused C3/C4 expansions (HPX-CAN-003). The [ownership index](../../architecture/specification-ownership.csv) specifies this scope; implementation and proposal statuses remain distinct. The prose component inventory is removed.
+Names, boundaries, dependencies and implementation-path mappings are canonical in [the Rust executable overview](../architecture/C3/executable.c4) and its focused C3/C4 expansions (HPX-CAN-003). The [ownership index](../architecture/specification-ownership.csv) specifies this scope; implementation and proposal statuses remain distinct. The prose component inventory is removed.
 
 ### Decisions required before dependent implementation
 

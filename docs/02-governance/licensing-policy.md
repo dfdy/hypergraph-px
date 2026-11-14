@@ -25,7 +25,7 @@ Keep root/upstream licenses unchanged. This document does not relicense supplied
 
 Source `HPX-SRC-0114`, original lines 1–20. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-Reviewed 2026-10-24. Development/CI tools are not linked into the application. Runtime crypto dependencies are now listed with exact versions, registry checksums and reviewed license alternatives in [RUST_DEPENDENCIES.json](<../../legal/RUST_DEPENDENCIES.json>); the domain crate remains dependency-free. No upstream application or proof example was copied; the graph model/proofs are original code.
+Reviewed 2026-10-24. Development/CI tools are not linked into the application. Runtime crypto dependencies are now listed with exact versions, registry checksums and reviewed license alternatives in [RUST_DEPENDENCIES.json](<../../shared/legal/RUST_DEPENDENCIES.json>); the domain crate remains dependency-free. No upstream application or proof example was copied; the graph model/proofs are original code.
 
 | Item | Version / origin | License / use |
 |---|---|---|
@@ -47,7 +47,7 @@ The extracted proof backend adds nine development-only Lean packages, with exact
 
 Source `HPX-SRC-0114`, original lines 21–26. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-Reviewed all 28 resolved external package manifests before compilation. Each offers MIT; select that license, including the target-specific r-efi package (also offers Apache-2.0/LGPL alternatives). Exact source/checksum/license/repository data is in [RUST_DEPENDENCIES.json](<../../legal/RUST_DEPENDENCIES.json>). Dependencies are registry-linked packages, not copied application/proof code. Future release packaging must include required third-party license notices; this source-only milestone does not claim a completed binary distribution/SBOM.
+Reviewed all 28 resolved external package manifests before compilation. Each offers MIT; select that license, including the target-specific r-efi package (also offers Apache-2.0/LGPL alternatives). Exact source/checksum/license/repository data is in [RUST_DEPENDENCIES.json](<../../shared/legal/RUST_DEPENDENCIES.json>). Dependencies are registry-linked packages, not copied application/proof code. Future release packaging must include required third-party license notices; this source-only milestone does not claim a completed binary distribution/SBOM.
 
 Direct packages: [chacha20poly1305 0.11.0](https://docs.rs/chacha20poly1305/0.11.0/chacha20poly1305/), [argon2 0.6.0](https://docs.rs/argon2/0.6.0/argon2/), [getrandom 0.4.3](https://docs.rs/getrandom/0.4.3/getrandom/), [sha2 0.11.1](https://docs.rs/sha2/0.11.1/sha2/), [zeroize 1.9.1](https://docs.rs/zeroize/1.9.1/zeroize/). Selection uses their primary API/license documentation and actual fetched source review. The convenience Argon2 allocation does not clear its work memory; our adapter explicitly owns a zeroizing Block vector and uses hash_password_into_with_memory. This is not an audit or proof of cryptographic primitives.
 
@@ -55,7 +55,7 @@ Direct packages: [chacha20poly1305 0.11.0](https://docs.rs/chacha20poly1305/0.11
 
 Source `HPX-SRC-0114`, original lines 27–29. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-CodeMirror 6, KaTeX and esbuild dependencies are pinned with their resolved versions, integrity and reviewed SPDX metadata in [FRONTEND_DEPENDENCIES.json](<../../legal/FRONTEND_DEPENDENCIES.json>). Runtime/editor/renderer packages use MIT; Playwright browser tooling uses Apache-2.0. Node/Chromium/esbuild/Playwright are development tools, not Rust release runtime services. Browser binaries are installed by Playwright for testing and are not redistributed with app assets. The frontend build generates installed dependency license notices and includes the application license. Selected owner-provided AGPL source helpers/widgets have individual input digests and adaptation notes in [frontend provenance](<../../frontend/SOURCE_PROVENANCE.json>); manuscript/private fixtures and original built bundles were not adopted. No new Rust dependency or theorem is introduced by the frontend. Frontend CI reuses checkout and adds actions/setup-node (MIT) as build tooling.
+CodeMirror 6, KaTeX and esbuild dependencies are pinned with their resolved versions, integrity and reviewed SPDX metadata in [FRONTEND_DEPENDENCIES.json](<../../shared/legal/FRONTEND_DEPENDENCIES.json>). Runtime/editor/renderer packages use MIT; Playwright browser tooling uses Apache-2.0. Node/Chromium/esbuild/Playwright are development tools, not Rust release runtime services. Browser binaries are installed by Playwright for testing and are not redistributed with app assets. The frontend build generates installed dependency license notices and includes the application license. Selected owner-provided AGPL source helpers/widgets have individual input digests and adaptation notes in [frontend provenance](<../../frontend/SOURCE_PROVENANCE.json>); manuscript/private fixtures and original built bundles were not adopted. No new Rust dependency or theorem is introduced by the frontend. Frontend CI reuses checkout and adds actions/setup-node (MIT) as build tooling.
 
 
 ## Source provenance

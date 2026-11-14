@@ -1,0 +1,314 @@
+// Source-derived workflows. No new API behavior is adopted.
+views {
+  dynamic view seq_save {
+    variant sequence
+    title "Sequence / Application coordination — Save draft"
+    description "Current ordinary schema1/2 owned-buffer Save. Branch wrappers use branches::apply in the same transaction. Pending requests settle first; current resource authority precedes replay. Message loss recovery is a separate sequence. This is not multi-owner editing or immutable Commit. Shared writer setup,staging/commit failure and after-COMMIT ambiguity are detailed in seq_application_transaction."
+    link ../../07-implementation/protocols/draft-publication.md
+    link ../../../frontend/src/runtime-adapter.js
+    link ../../../backend/crates/runtime/src/main.rs
+    link ../../../backend/crates/storage/src/lib.rs
+    link ../../../backend/crates/storage/src/branches.rs
+    hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Capture exact owned text/sequence; serialize by document; settle pending request" { navigateTo seq_uncertain }
+    hpx.browser.c4_protocol -> hpx.browser.c4_protocol "If already acknowledged, no Save is sent; otherwise freeze one operation/payload"
+    hpx.browser.c4_protocol -> hpx.native.transport.security.c4_gates "Send frozen Save (branch wrapper for a selected child)"
+    alt "Transport/session/workspace and decoding" {
+      when "Transport/session rejected or locked" {
+        hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Safe error; keep pending/source"
+      }
+      else "Authenticated and unlocked" {
+        hpx.native.transport.security.c4_gates -> hpx.native.transport.api.c4_publication "Select existing command branch"
+        hpx.native.transport.api.c4_publication -> hpx.native.transport.api.c4_command_codec "decode_command: existing Save codec"
+        alt "Wire conversion" {
+          when "Invalid DTO or command" {
+            hpx.native.transport.api.c4_publication <- hpx.native.transport.api.c4_command_codec "Decode error"
+            hpx.browser.c4_protocol <- hpx.native.transport.api.c4_publication "Invalid request; no writer invoked"
+          }
+          else "Valid command" {
+            hpx.native.transport.api.c4_publication <- hpx.native.transport.api.c4_command_codec "Command without lossy payload round-trip"
+            hpx.native.transport.api.c4_publication -> hpx.native.storage.c4_publication "Workspace::execute(frozen operation, command)"
+    hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "validate_command; exact command digest; BEGIN IMMEDIATE"
+    hpx.native.storage.c4_publication -> hpx.native.authority.c4_checks "Current owner/source/branch authority before protected replay"
+    alt "Current resource authority" {
+      when "Denied" {
+        hpx.native.storage.c4_publication <- hpx.native.authority.c4_checks "Denied; do not grant retained outcome"
+        hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Denied/error; transaction rolls back" { line dashed color gray }
+        hpx.native.transport.security.c4_gates <- hpx.native.transport.api.c4_publication "Shared response/error path"
+        hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Denied/error; transaction rolls back"
+        hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Retain source and frozen pending request; no success inferred"
+      }
+      else "Authorized" {
+        hpx.native.storage.c4_publication <- hpx.native.authority.c4_checks "Current scope allowed"
+        hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Read original receipt/digest; only if absent check exact draft preconditions"
+        alt "Original operation and expected state" {
+          when "Matching original receipt; outcome still authorized" {
+            hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Original Saved receipt; no new write" { line dashed color gray }
+            hpx.native.transport.security.c4_gates <- hpx.native.transport.api.c4_publication "Shared response/error path"
+            hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Original Saved receipt; no new write"
+            hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Validate operation/context/generation/sequence; advance ACK only; retain newer typing"
+          }
+          when "No receipt; generation/base/sequence checks match" {
+            hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "write_draft / branches::apply: encrypted mutable draft only; no revision or snapshot"
+            hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Store original receipt in the same transaction; tx.commit()"
+            hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Saved receipt with acknowledged draft generation/sequence" { line dashed color gray }
+            hpx.native.transport.security.c4_gates <- hpx.native.transport.api.c4_publication "Shared response/error path"
+            hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Saved receipt with acknowledged draft generation/sequence"
+            hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Validate operation/context/generation/sequence; advance ACK only; retain newer typing"
+          }
+          else "Changed operation payload, stale draft or invalid state" {
+            hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Conflict/error; no partial publication" { line dashed color gray }
+            hpx.native.transport.security.c4_gates <- hpx.native.transport.api.c4_publication "Shared response/error path"
+            hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Conflict/error; no partial publication"
+            hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Retain source and frozen pending request; no success inferred"
+          }
+        }
+      }
+    }
+          }
+        }
+      }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    include hpx.browser.c4_protocol with { navigateTo c4_api_routes }
+    include hpx.native.transport.security.c4_gates with { navigateTo c4_api_routes }
+    include hpx.native.transport.api.c4_publication with { navigateTo c4_api_routes }
+    include hpx.native.storage.c4_publication with { navigateTo c4_application_transaction }
+    include hpx.native.authority.c4_checks with { navigateTo c4_api_routes }
+    include hpx.native.transport.api.c4_command_codec with { navigateTo c4_api_routes }
+  }
+  dynamic view seq_commit {
+    variant sequence
+    title "Sequence / Application coordination — Commit captured draft"
+    description "Explicit Commit path, not DOM blur or Save. Logical departure additionally skips unchanged captured text after exact snapshot comparison. A matching pending Commit is replayed; otherwise the captured draft is acknowledged before a new Commit. Normal single-parent publication only; no two-parent Merge acceptance. Shared writer failure/replay details are in seq_application_transaction."
+    link ../../07-implementation/protocols/draft-publication.md
+    link ../../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md
+    link ../../../frontend/src/runtime-adapter.js
+    link ../../../backend/crates/storage/src/lib.rs
+    link ../../../backend/crates/storage/src/branches.rs
+    hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Capture intended buffer; serialize within its exact document/branch context"
+    alt "Pending publication" {
+      when "Matching captured Commit is pending" {
+        hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Reuse original operation and payload" { navigateTo seq_uncertain }
+      }
+      else "New explicit Commit" {
+        hpx.browser.c4_protocol -> hpx.browser.c4_protocol "saveCaptured: settle pending and acknowledge captured bytes first" { navigateTo seq_save }
+        break "If Save fails or remains unknown: stop this Commit call" {
+          hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Keep pending/source; do not send a Commit"
+        }
+        hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Freeze Commit with exact acknowledged generation/base/sequence"
+      }
+    }
+    hpx.browser.c4_protocol -> hpx.native.transport.security.c4_gates "Send captured Commit; retain later typing"
+    alt "Transport and wire guards" {
+      when "Rejected or locked" {
+        hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Error; captured source remains intact"
+      }
+      else "Allowed and decodable" {
+        hpx.native.transport.security.c4_gates -> hpx.native.transport.api.c4_publication "Command branch"
+        hpx.native.transport.api.c4_publication -> hpx.native.transport.api.c4_command_codec "Decode existing Commit or branch command"
+        alt "Wire conversion" {
+          when "Invalid DTO or command" {
+            hpx.native.transport.api.c4_publication <- hpx.native.transport.api.c4_command_codec "Decode error"
+            hpx.browser.c4_protocol <- hpx.native.transport.api.c4_publication "Invalid request; no writer invoked"
+          }
+          else "Valid command" {
+            hpx.native.transport.api.c4_publication <- hpx.native.transport.api.c4_command_codec "Exact command"
+            hpx.native.transport.api.c4_publication -> hpx.native.storage.c4_publication "Workspace::execute"
+    hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "validate_command; exact command digest; BEGIN IMMEDIATE"
+    hpx.native.storage.c4_publication -> hpx.native.authority.c4_checks "Current owner/source/branch authority before protected replay"
+    alt "Current resource authority" {
+      when "Denied" {
+        hpx.native.storage.c4_publication <- hpx.native.authority.c4_checks "Denied; do not grant retained outcome"
+        hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Denied/error; transaction rolls back" { line dashed color gray }
+        hpx.native.transport.security.c4_gates <- hpx.native.transport.api.c4_publication "Shared response/error path"
+        hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Denied/error; transaction rolls back"
+        hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Retain source and frozen pending request; no success inferred"
+      }
+      else "Authorized" {
+        hpx.native.storage.c4_publication <- hpx.native.authority.c4_checks "Current scope allowed"
+        hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Read original receipt/digest; only if absent check exact draft preconditions"
+        alt "Original operation and expected state" {
+          when "Matching original receipt; outcome still authorized" {
+            hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Original Committed receipt; no new write" { line dashed color gray }
+            hpx.native.transport.security.c4_gates <- hpx.native.transport.api.c4_publication "Shared response/error path"
+            hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Original Committed receipt; no new write"
+            hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Validate operation/context/generation/sequence; revision/snapshot bindings; advance ACK only; retain newer typing"
+            hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Post-Commit clipboard replacement is separate; errors retain committed text"
+          }
+          when "No receipt; generation/base/sequence checks match" {
+            hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "write_draft / branches::apply: immutable revision + snapshot + head CAS + draft rebase + retained promotions"
+            hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Store original receipt in the same transaction; tx.commit()"
+            hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Committed receipt with revision/snapshot" { line dashed color gray }
+            hpx.native.transport.security.c4_gates <- hpx.native.transport.api.c4_publication "Shared response/error path"
+            hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Committed receipt with revision/snapshot"
+            hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Validate operation/context/generation/sequence; revision/snapshot bindings; advance ACK only; retain newer typing"
+            hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Post-Commit clipboard replacement is separate; errors retain committed text"
+          }
+          else "Changed operation payload, stale draft or invalid state" {
+            hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Conflict/error; no partial publication" { line dashed color gray }
+            hpx.native.transport.security.c4_gates <- hpx.native.transport.api.c4_publication "Shared response/error path"
+            hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Conflict/error; no partial publication"
+            hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Retain source and frozen pending request; no success inferred"
+          }
+        }
+      }
+    }
+          }
+        }
+      }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    include hpx.browser.c4_protocol with { navigateTo c4_api_routes }
+    include hpx.native.transport.security.c4_gates with { navigateTo c4_api_routes }
+    include hpx.native.transport.api.c4_publication with { navigateTo c4_api_routes }
+    include hpx.native.storage.c4_publication with { navigateTo c4_application_transaction }
+    include hpx.native.authority.c4_checks with { navigateTo c4_api_routes }
+    include hpx.native.transport.api.c4_command_codec with { navigateTo c4_api_routes }
+  }
+  dynamic view seq_unlock {
+    variant sequence
+    title "Sequence / Runtime and API — Unlock workspace"
+    description "Existing-workspace unlock. Optional launch bootstrap establishes a session, not storage access. Default passphrase and explicitly selected enrolled keychain paths remain distinct. Invalid input/provider/crypto failures return immediately; subsequent success steps are skipped. Lost unlock acknowledgement has no mutation receipt and remains an identified reconciliation gap."
+    link ../../04-architecture/decisions/0004-local-https-bootstrap.md
+    link ../../04-architecture/decisions/0014-keychain-unlock-policy.md
+    link ../../../frontend/src/runtime-adapter.js
+    link ../../../backend/crates/runtime/src/main.rs
+    link ../../../backend/crates/storage/src/keychain.rs
+    link ../../../backend/crates/storage/src/lib.rs
+    opt "Launch fragment present" {
+      hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Remove fragment from URL before exchange"
+      hpx.browser.c4_protocol -> hpx.native.transport.security.c4_gates "Same-origin bootstrap request"
+      hpx.native.transport.security.c4_gates -> hpx.native.transport.security.c4_bootstrap "Bootstrap exception to cookie requirement"
+      hpx.native.transport.security.c4_bootstrap -> hpx.native.transport.security.c4_compare "secure_equal launch token"
+      hpx.native.transport.security.c4_bootstrap <- hpx.native.transport.security.c4_compare "Token comparison result"
+      alt "Launch capability" {
+        when "Valid token" {
+          hpx.browser.c4_protocol <- hpx.native.transport.security.c4_bootstrap "Separate Secure/HttpOnly/SameSite cookie; workspace stays locked"
+        }
+        else "Invalid token" {
+          break "Initialization stops" {
+            hpx.browser.c4_protocol <- hpx.native.transport.security.c4_bootstrap "Safe denial; no session or workspace granted"
+          }
+        }
+      }
+    }
+    hpx.browser.c4_protocol -> hpx.native.transport.security.c4_gates "Authenticated runtime/status and explicit selected unlock"
+    hpx.native.transport.security.c4_gates -> hpx.native.transport.lifecycle.c4_lifecycle "Session valid; lifecycle routes may run while workspace locked"
+    alt "Lifecycle admission" {
+      when "Already unlocked, throttled or invalid input" {
+        hpx.browser.c4_protocol <- hpx.native.transport.lifecycle.c4_lifecycle "Conflict/rate-limit/error; no automatic recovery grant"
+      }
+      else "Valid existing workspace, allowed explicit attempt" {
+        hpx.native.transport.lifecycle.c4_lifecycle -> hpx.native.storage.c4_lifecycle "Workspace::open or open_keychain; shared attempt throttle"
+        hpx.native.storage.c4_lifecycle -> hpx.native.storage.c4_lifecycle "Read/validate bootstrap schema and selected wrapper"
+        alt "Selected method" {
+          when "Passphrase: default" {
+            hpx.native.storage.c4_lifecycle -> hpx.native.crypto.c4_primitives "SecretKey::unlock with expected workspace/epoch"
+            hpx.native.storage.c4_lifecycle <- hpx.native.crypto.c4_primitives "Managed key or authentication error"
+          }
+          else "Explicit enrolled keychain" {
+            hpx.native.storage.c4_lifecycle -> hpx.native.keychain.c4_provider "Provider::load for this workspace; OS approval may deny"
+            hpx.native.storage.c4_lifecycle <- hpx.native.keychain.c4_provider "Device secret or explicit provider error"
+            opt "Valid device secret returned" {
+              hpx.native.storage.c4_lifecycle -> hpx.native.crypto.c4_primitives "Unlock device wrapper for the same workspace key"
+              hpx.native.storage.c4_lifecycle <- hpx.native.crypto.c4_primitives "Managed key or authentication error"
+            }
+          }
+        }
+        alt "Result" {
+          when "Key and authenticated catalog valid" {
+            hpx.native.storage.c4_lifecycle -> hpx.native.storage.c4_lifecycle "Workspace::from_key validates catalog; key remains Rust-only"
+            hpx.native.transport.lifecycle.c4_lifecycle <- hpx.native.storage.c4_lifecycle "Unlocked Workspace"
+            hpx.native.transport.lifecycle.c4_lifecycle -> hpx.native.transport.lifecycle.c4_lifecycle "State.workspace = Some(workspace)"
+            hpx.browser.c4_protocol <- hpx.native.transport.lifecycle.c4_lifecycle "locked=false; normal protected document reads may proceed"
+          }
+          else "Format, provider or authentication failure" {
+            hpx.native.transport.lifecycle.c4_lifecycle <- hpx.native.storage.c4_lifecycle "Safe error; no Workspace installed"
+            hpx.browser.c4_protocol <- hpx.native.transport.lifecycle.c4_lifecycle "Remain locked; explicit passphrase alternative stays available"
+          }
+        }
+      }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    include hpx.browser.c4_protocol with { navigateTo c4_api_routes }
+    include hpx.native.transport.security.c4_gates with { navigateTo c4_api_routes }
+    include hpx.native.transport.lifecycle.c4_lifecycle with { navigateTo c4_api_routes }
+    include hpx.native.storage.c4_lifecycle with { navigateTo c4_api_routes }
+    include hpx.native.crypto.c4_primitives with { navigateTo c4_api_routes }
+    include hpx.native.keychain.c4_provider with { navigateTo c4_api_routes }
+    include hpx.native.transport.security.c4_bootstrap with { navigateTo c4_api_routes }
+    include hpx.native.transport.security.c4_compare with { navigateTo c4_api_routes }
+  }
+  dynamic view seq_uncertain {
+    variant sequence
+    title "Sequence / Application coordination — Recover uncertain command outcome"
+    description "Current same-tab Save/Commit recovery, not unlock reconciliation. retryTransport makes at most two attempts per invocation and only auto-retries a status-less error. Pending operation/payload live in memory; no reload-safe journal or automatic receipt polling. Authorized receipt lookup exists separately, but this adapter replays commands."
+    link ../../07-implementation/protocols/draft-publication.md
+    link ../../../frontend/src/runtime-adapter.js
+    link ../../../frontend/tests/runtime-adapter.test.js
+    link ../../../backend/crates/storage/src/lib.rs
+    link ../../../backend/crates/storage/src/authority.rs
+    hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Freeze operation, payload and owner context before first send"
+    hpx.browser.c4_protocol -> hpx.native.transport.security.c4_gates "Send original command"
+    hpx.native.transport.security.c4_gates -> hpx.native.transport.api.c4_publication "Current transport/session/unlock checks"
+    hpx.native.transport.api.c4_publication -> hpx.native.storage.c4_publication "Execute original operation"
+    hpx.native.storage.c4_publication -> hpx.native.authority.c4_checks "Initial execute enforces current authority before writes/replay"
+    hpx.native.storage.c4_publication <- hpx.native.authority.c4_checks "Current scope or error"
+    alt "Server-side outcome before reply is lost" {
+      when "Transaction committed" {
+        hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Result and receipt committed atomically"
+      }
+      else "No committed publication" {
+        hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "No committed original result; rollback/no execution"
+      }
+    }
+    hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Status-less failure: retry original once; if both fail retain pending unchanged"
+    hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Known HTTP errors are not auto-retried; mismatched replies never advance ACK"
+    hpx.browser.c4_protocol -> hpx.native.transport.security.c4_gates "Later retry: original frozen request before newer intent"
+    alt "Current transport/session/unlock admission" {
+      when "Rejected or locked" {
+        hpx.browser.c4_protocol <- hpx.native.transport.security.c4_gates "Safe error; no writer invoked; keep frozen pending"
+      }
+      else "Current gate allows request" {
+    hpx.native.transport.security.c4_gates -> hpx.native.transport.api.c4_publication "Current session/unlock valid"
+    hpx.native.transport.api.c4_publication -> hpx.native.storage.c4_publication "Same operation ID and identical command bytes"
+    hpx.native.storage.c4_publication -> hpx.native.authority.c4_checks "Reauthorize current command/source/branch scope before replay"
+    alt "Current access" {
+      when "Resource scope denied" {
+        hpx.browser.c4_protocol <- hpx.native.storage.c4_publication "No retained outcome disclosed; keep local source"
+      }
+      else "Current scope allowed" {
+        hpx.native.storage.c4_publication <- hpx.native.authority.c4_checks "Current authority valid"
+        hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Lookup original receipt and compare command digest"
+        alt "Original result" {
+          when "Matching authorized receipt" {
+            hpx.browser.c4_protocol <- hpx.native.storage.c4_publication "Original result; no second revision or duplicate mutation"
+          }
+          when "No receipt; expected state still valid" {
+            hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Apply once and store receipt in one transaction"
+            hpx.browser.c4_protocol <- hpx.native.storage.c4_publication "Newly committed original result"
+          }
+          else "Changed payload or stale state" {
+            hpx.browser.c4_protocol <- hpx.native.storage.c4_publication "Conflict; no fresh operation inferred safe"
+          }
+        }
+        opt "Receipt bindings validate" {
+          hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Clear pending; advance captured ACK only; preserve newer typing"
+          hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Only then process separately frozen newer intent" { navigateTo seq_save }
+        }
+      }
+    }
+      }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    include hpx.browser.c4_protocol with { navigateTo c4_api_routes }
+    include hpx.native.transport.security.c4_gates with { navigateTo c4_api_routes }
+    include hpx.native.transport.api.c4_publication with { navigateTo c4_api_routes }
+    include hpx.native.storage.c4_publication with { navigateTo c4_application_transaction }
+    include hpx.native.authority.c4_checks with { navigateTo c4_api_routes }
+  }
+}

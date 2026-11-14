@@ -1,4 +1,4 @@
-# Local runtime and reference material. Current specifications live in Specifications.
+# Local runtime and reference material. Current specifications start at docs/architecture/SPECIFICATION.md.
 .DS_Store
 /target/
 /node_modules/
@@ -19,13 +19,13 @@
 *.sqlite-*
 *.db
 *.db-*
-/proofs/.lake/
-/proofs/lean/.lake/
+/backend/proofs/.lake/
+/backend/proofs/lean/.lake/
 
 # Isolated proof translators, nightly/cache files and extraction output.
 /.verification/
-/scripts/__pycache__/
-/tests/__pycache__/
+/shared/tooling/__pycache__/
+/shared/tooling/tests/__pycache__/
 
 # Local source/reference material excluded from publication.
 /SPECS/
@@ -40,8 +40,21 @@
 /frontend/test-results/
 /frontend/playwright-report/
 
-# Previous project documentation, preserved locally by owner instruction.
-/.oldspecs/
+# Provenance archives: private originals/masters stay local; public history remains trackable.
+/.provenance/oldspecs/
+/.provenance/archive/
+/.provenance/public-record/specification-snapshots/
 
-# Immutable unredacted specification masters remain local.
+# Defensive exclusions for obsolete archive locations; payloads now live under .provenance/.
+/.oldspecs/
+/.archive/
 /docproject/public-record/specification-snapshots/
+
+# Private per-file source checkpoints for authorized relocation; never publish.
+/.provenance/local-reorganisation-checkpoints/
+
+# Relocated locally private owner request dispositions (formerly INPUT.md).
+/docs/02-governance/requests.md
+
+# Classified private local evidence,credentials,workspaces,tools and compiler outputs.
+/.local/

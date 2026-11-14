@@ -72,3 +72,5 @@ The owner explicitly instructed “Don't push to github unless I ask you.” Do 
 - `HPX-SRC-0026` — `docs/06-subsystems/interfaces/domain-navigation.md`, lines 126–130; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0002` — `AGENTS.md`, lines 1–2; SHA-256 `395aadaad5ede26c3e7091502e8266720e4d229fc40c7734ed810906f7aebac1`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
 - `HPX-SRC-0002` — `AGENTS.md`, lines 3–26; SHA-256 `395aadaad5ede26c3e7091502e8266720e4d229fc40c7734ed810906f7aebac1`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+
+Current release-history location: [CHANGELOG.md](../releases/CHANGELOG.md). Retained source wording above keeps its historical basename.

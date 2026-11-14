@@ -2,7 +2,7 @@
 // Not application validation or a general JSON Schema implementation. Unknown
 // schema keywords fail the test instead of silently claiming conformance.
 import {readFile} from 'node:fs/promises';
-const spec=JSON.parse(await readFile(new URL('../src/generated/openapi.json',import.meta.url)));
+const spec=JSON.parse(await readFile(new URL('../../shared/openapi.json',import.meta.url)));
 const supported=new Set(['$ref','type','oneOf','properties','required','additionalProperties','items','minItems','maxItems','minimum','maximum','enum','format','description','writeOnly']);
 export function assertComponent(name,value){
  function matches(schema,value){

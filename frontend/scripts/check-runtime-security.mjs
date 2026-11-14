@@ -1,3 +1,4 @@
+import {cargoExecutable} from '../../shared/tooling/cargo-path.mjs';
 import {binaryFingerprint,refreshManualRuntime} from './manual-runtime-update.mjs';
 // SPDX-License-Identifier: AGPL-3.0-only
 // Real local transport rejection tests. No trust changes or certificate bypass.
@@ -10,9 +11,9 @@ import {createServer,connect as plainConnect} from 'node:net';
 import {connect as tlsConnect} from 'node:tls';
 
 const root=resolve(import.meta.dirname,'../..');
-const binary=resolve(root,'target/debug/hypergraph');
-const cert=resolve(root,'artifacts/local-tls/localhost.pem');
-const key=resolve(root,'artifacts/local-tls/localhost-key.pem');
+const binary=cargoExecutable();
+const cert=resolve(root,'.local/credentials/tls/localhost.pem');
+const key=resolve(root,'.local/credentials/tls/localhost-key.pem');
 const approved='05865badace97aad0cb8abf4460e12f6a1574b812759780052e8ffb486bf8428';
 const checks=[],useBrowser=!process.argv.includes('--no-browser');
 let temporary,browser,context,foreground,guard,untrusted,leaf,passed=false;
@@ -58,7 +59,7 @@ async function browserRejects(url,expected,label){
 }
 async function run(){
  leaf=await readFile(cert);ensure(digest(execFileSync('/usr/bin/openssl',['x509','-in',cert,'-outform','DER']))===approved,'Current certificate differs from approved fingerprint');
- temporary=await mkdtemp(resolve(root,'artifacts/runtime-security-'));
+ temporary=await mkdtemp(resolve(root,'.local/artifacts/runtime-security-'));
  const fakeCert=join(temporary,'untrusted.pem'),fakeKey=join(temporary,'untrusted-key.pem');
  execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',fakeKey,'-out',fakeCert,'-days','1','-subj','/CN=127.0.0.1','-addext','subjectAltName=IP:127.0.0.1'],{stdio:'ignore'});await chmod(fakeKey,0o600);
  const startup=async(certificate,privateKey,expected,label)=>{
@@ -116,7 +117,7 @@ async function run(){
   ensure(['DEPTH_ZERO_SELF_SIGNED_CERT','SELF_SIGNED_CERT_IN_CHAIN','UNABLE_TO_VERIFY_LEAF_SIGNATURE'].includes(unknown),'TLS client did not reject the untrusted certificate: '+unknown);checks.push('verified TLS client rejects untrusted certificate');
  }
  let exists=true;try{await access(guard.workspace);}catch{exists=false;}ensure(!exists,'Security probes unexpectedly created a workspace');checks.push('rejection tests created or unlocked no workspace');
- await writeFile(resolve(root,'artifacts/runtime-security-' + (useBrowser?'chromium':'tls-client') + '.json'),JSON.stringify({checks,synthetic:true,browser:useBrowser?'isolated headless Chromium':'not used; verified Node TLS client',trustChanged:false},null,2));passed=true;console.log('PASS: '+checks.length+' real runtime security rejection checks');
+ await writeFile(resolve(root,'.local/artifacts/runtime-security-' + (useBrowser?'chromium':'tls-client') + '.json'),JSON.stringify({checks,synthetic:true,browser:useBrowser?'isolated headless Chromium':'not used; verified Node TLS client',trustChanged:false},null,2));passed=true;console.log('PASS: '+checks.length+' real runtime security rejection checks');
 }
 try{await run();}catch(error){console.error('FAIL: '+String(error.message).replace(/#launch=[a-f0-9]+/g,'#launch=[redacted]'));process.exitCode=1;}finally{await context?.close();await browser?.close();await stop(guard);await stop(untrusted);if(temporary)await rm(temporary,{recursive:true,force:true});await foreground?.bringToFront().catch(()=>{});}
 

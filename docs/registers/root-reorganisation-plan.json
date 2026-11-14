@@ -1,0 +1,1130 @@
+{
+  "plan_version": 1,
+  "id": "HPX-ROOT-REORGANISATION-PREPARATION-1",
+  "status": "all-stages-executed-verified-manual-handoff-blocked",
+  "prepared_on": "2026-11-14",
+  "request_refs": [
+    "coordinator:root-reorganisation-preparation-1",
+    "coordinator:root-reorganisation-preparation-resume-2",
+    "coordinator:root-reorganisation-stage1-execute-4",
+    "coordinator:stage1-close-gates-5",
+    "coordinator:root-reorganisation-stage2-execute-7",
+    "coordinator:root-reorganisation-stage3-execute-9",
+    "coordinator:root-reorganisation-final-review-11",
+    "coordinator:root-reorganisation-records-final-13"
+  ],
+  "authority": {
+    "authorized": "Owner complete-all-stages instruction and coordinator Stage3 assignment",
+    "execution_authorized": true,
+    "canonical_entry_now": "docs/architecture/SPECIFICATION.md",
+    "active_protocol_now": "shared/tooling/protocol/PROTOCOL.md",
+    "protocol_sha256": "a36b882c56c2355c42945fe8be93eab416cfcd8ead084fb9c066514a05717632",
+    "extensions": [],
+    "forbidden_now": [
+      "Unsafe lifecycle actions and recreation/redirection of missing owner workspace",
+      "unsafe user-data operations",
+      "manual-runtime/personal-browser mutation",
+      "Git index writes/branches/commits/push/publication",
+      "trust/provider/keychain actions"
+    ],
+    "execution_scope": "All three authorized stages executed;no publication or manual-workspace recreation"
+  },
+  "guide": "docs/09-guides/developers/root-reorganisation.md",
+  "current_command_guide": "docs/09-guides/developers/repository-development.md",
+  "test_record": "HPX-TEST-178",
+  "unchanged_contracts": {
+    "scopes": 24,
+    "views": 45,
+    "owner_saved_snapshots": 32,
+    "document_status_counts": {
+      "fully": 1,
+      "partially": 24,
+      "not_migrated": 46
+    },
+    "principles": [
+      "Stable IDs and C1/C2/C3 overview/C3 expansion/C4 hierarchy",
+      "Exact protocol/proof/license pins",
+      "Immutable provenance and as-run evidence; historical original_path stays historical",
+      "Current location/register updates only at execution",
+      "Required recovery evidence and immutable history are not evictable cache",
+      "Existing staged/unstaged owner work preserved"
+    ]
+  },
+  "preflight": {
+    "local_evidence": "artifacts/root-reorganisation-preflight.json",
+    "collector": "artifacts/root-reorganisation-preflight.py",
+    "captured_at": "2026-11-14T01:13:45.904401+00:00",
+    "evidence_privacy": "Raw status/index/diff fingerprints, private identifiers/paths and process/handle metadata stay in ignored local evidence; never publish wholesale.",
+    "fresh_execution_recheck_required": true,
+    "public_files_scanned": 599,
+    "candidate_dependency_counts": {
+      "stage1": {
+        "files": 269,
+        "matching_lines": 4278
+      },
+      "stage2": {
+        "files": 58,
+        "matching_lines": 250
+      },
+      "stage3": {
+        "files": 165,
+        "matching_lines": 1190
+      }
+    },
+    "count_limits": "Overlapping broad textual candidate groups, not semantic edit counts. Excludes frozen provenance, caches, dependencies, private runtime trees and generated assets.",
+    "archive_manifest_entries": 1019,
+    "target_observations": [
+      {
+        "path": "docs/09-guides/developers/repository-development.md",
+        "observation": "Exists; intentional unique-content merge, not overwrite"
+      },
+      {
+        "path": "dist",
+        "observation": "Exists, untracked, non-empty with two immediate entries; removal no-go"
+      }
+    ],
+    "liveness": "No candidate argv containing checkout root found; not exhaustive cwd/open-file/SQLite/executable quiescence proof. No processes stopped or payloads opened."
+  },
+  "stages": [
+    {
+      "id": "stage1",
+      "status": "verified",
+      "depends_on": [],
+      "mappings": [
+        {
+          "from": "architecture",
+          "to": "docs/architecture",
+          "kind": "source-tree",
+          "preserve": "Owner .likec4 bytes, package lock, IDs, canonical statuses and hierarchy"
+        },
+        {
+          "from": "proofs",
+          "to": "backend/proofs",
+          "kind": "proof-tree",
+          "preserve": "Frozen extraction/Lean bytes and pins; separately classify .lake caches"
+        },
+        {
+          "from": "legal",
+          "to": "shared/legal",
+          "kind": "legal-tree",
+          "preserve": "License/notice bytes; root LICENSE stays"
+        },
+        {
+          "from": "scripts",
+          "to": "shared/tooling",
+          "kind": "tooling-tree",
+          "preserve": "Entry-point semantics after root/import repair"
+        },
+        {
+          "from": "tests",
+          "to": "shared/tooling/tests",
+          "kind": "tooling-tests",
+          "preserve": "Discovery/import/subprocess coverage; frontend tests stay frontend-owned"
+        }
+      ],
+      "dependency_groups": [
+        "root-discovery",
+        "frontend-cache-notices",
+        "api-typed-services",
+        "model-navigation",
+        "proof-ci",
+        "tooling-ci"
+      ],
+      "ordered_substeps": [
+        "Fresh base/index/hash/collision/liveness review and explicit execution scope; checkpoint/inverse ledger before mutations",
+        "Bound whole-shared frontend hash/watch input set before moving legal/tooling into shared; test excluded private/runtime/tooling inputs",
+        "Move owned groups in bounded transactions; scripts before nested tooling/tests; repair root discovery/imports/invocations and relocation-relative current links",
+        "Preserve frozen proof extraction path while rebasing external proof driver/CI roots",
+        "Move canonical architecture with snapshots and rebase active links/source metadata/ownership index; no structural/status promotion",
+        "Run required source/import/cache/legal/API/proof/model acceptance; stop before next stage on required failure"
+      ],
+      "future_gate_commands": [
+        "python3 shared/tooling/verify_documentation.py",
+        "python3 shared/tooling/verify_archive.py",
+        "python3 shared/tooling/verify_archive.py --check-local",
+        "python3 -m unittest discover -s shared/tooling/tests -p 'test_*.py'",
+        "npm --prefix docs/architecture run validate",
+        "npm --prefix frontend test",
+        "npm run api:check",
+        "npm --prefix frontend run build",
+        "cargo fmt --all -- --check",
+        "lake -d backend/proofs/lean build",
+        "lake env lean -DwarningAsError=true Hypergraph/Expansion.lean",
+        "lake env leanchecker Hypergraph",
+        "python3 shared/tooling/check_rust_proof.py"
+      ],
+      "additional_gates": [
+        "Alternate-cwd Node/Python root discovery",
+        "Exact generated OpenAPI/types/routes/constraints and notice completeness",
+        "CI trigger/cache/risk-classification coverage",
+        "Serialized affected served layouts/navigation and owner snapshot hash preservation; no false index snapshot baseline"
+      ],
+      "rollback": "Reverse exact ledgered moves; restore owned preimages only for unchanged postimages. Preserve conflicts/new edits and generated evidence. Never Git reset/revert/index rewrite or proof-pin edits.",
+      "execution_request": "coordinator:root-reorganisation-stage1-execute-4",
+      "gate_closure_request": "coordinator:stage1-close-gates-5",
+      "future_gate_command_cwd_overrides": {
+        "lake env lean -DwarningAsError=true Hypergraph/Expansion.lean": "backend/proofs/lean",
+        "lake env leanchecker Hypergraph": "backend/proofs/lean"
+      },
+      "proof_environment_recipe": "Use project-local tool PATH/CARGO_HOME/RUSTUP_HOME/RUSTUP_TOOLCHAIN from artifacts/stage1-proof-replay.py;no normal user environment mutation."
+    },
+    {
+      "id": "stage2",
+      "status": "verified",
+      "depends_on": [
+        "stage1"
+      ],
+      "mappings": [
+        {
+          "from": "CHANGELOG.md",
+          "to": "docs/releases/CHANGELOG.md",
+          "kind": "document-move"
+        },
+        {
+          "from": "INPUT.md",
+          "to": "docs/02-governance/requests.md",
+          "kind": "document-move",
+          "preserve": "Accepted/deferred dispositions"
+        },
+        {
+          "from": "checklist.md",
+          "to": "docs/09-guides/reference/dom001-checklist.md",
+          "kind": "document-move",
+          "preserve": "Scoped completion versus implementation"
+        },
+        {
+          "from": "LOCAL_BUILD_AND_RUN.md",
+          "to": "docs/09-guides/developers/repository-development.md",
+          "kind": "reviewed-unique-content-merge",
+          "retire_only_after": "Section coverage and active link/fragment checks"
+        },
+        {
+          "from": "PROTOCOL.md",
+          "to": "shared/tooling/protocol/PROTOCOL.md",
+          "kind": "byte-identical-protocol-move",
+          "preserve": "Exact canonical pin; historical protocol references; existing peer agreements"
+        },
+        {
+          "from": "launch-latest.sh",
+          "to": null,
+          "kind": "behavior-consolidation-not-deletion",
+          "proposed_root_command": "npm run start:self-build",
+          "retire_only_after": "Explicit command implementation, fixture refusal/signal tests, unique-behavior and authorized lifecycle equivalence; command not present now"
+        },
+        {
+          "from": "Hypergraph PX.code-workspace",
+          "to": ".vscode/Hypergraph PX.code-workspace",
+          "kind": "workspace-config-move",
+          "proposed_folder_path": ".."
+        }
+      ],
+      "dependency_groups": [
+        "root-navigation-protocol-launcher",
+        "root-discovery",
+        "tooling-ci"
+      ],
+      "ordered_substeps": [
+        "Reconfirm Stage1 acceptance and fresh base/collisions; enumerate current links and protocol readers",
+        "Move history/requests/checklist without rewriting historical claims; rebase current links",
+        "Merge local-run unique content with coverage review before retiring page",
+        "Move active protocol bytes and update pointers/root discovery without silently changing session contract",
+        "Verify launcher equivalence before replacement by proposed root command; retain missing-workspace refusal and no-create behavior",
+        "Move editor workspace file and resolve .. to same repository; no editor/process restart"
+      ],
+      "future_gate_commands": [
+        "python3 shared/tooling/verify_documentation.py",
+        "python3 shared/tooling/verify_archive.py --check-local",
+        "python3 -m unittest discover -s shared/tooling/tests -p 'test_*.py'",
+        "shasum -a 256 shared/tooling/protocol/PROTOCOL.md"
+      ],
+      "additional_gates": [
+        "Protocol pin equals unchanged authority.protocol_sha256",
+        "Section/fragment coverage and old/current path routing",
+        "Actual loader/bootstrap tests from alternate cwd",
+        "Proposed root launcher refusal, foreground exec/signal/cwd/quoting and failure propagation; no auto dependency install/tests/handoff/browser/trust/enrollment",
+        "Static moved editor workspace resolves same root"
+      ],
+      "rollback": "Reverse document/protocol/workspace mappings and owned preimages; preserve merged/new content on both sides. Runtime change requires separate authority; never reconstruct protocol or replace a workspace from stale backup.",
+      "execution_request": "coordinator:root-reorganisation-stage2-execute-7"
+    },
+    {
+      "id": "stage3",
+      "status": "verified",
+      "depends_on": [
+        "stage1",
+        "stage2"
+      ],
+      "mappings": [
+        {
+          "from": "artifacts",
+          "to": ".local/artifacts",
+          "kind": "classified-split",
+          "exceptions": [
+            "Credentials -> .local/credentials by private per-item ledger",
+            "Manual records/binaries/shortcuts -> .local/manual-runtime by private per-item ledger",
+            "Workspace-bearing items -> .local/workspaces preserving identities",
+            "Durable compile counter is retained evidence, never a cache"
+          ]
+        },
+        {
+          "from": ".verification",
+          "to": ".local/verification",
+          "kind": "cache-tools-locks",
+          "preserve": "Exact inputs/toolchain identities and no active lock bypass"
+        },
+        {
+          "from": "runtime",
+          "to": ".local/workspaces",
+          "kind": "persistent-workspaces",
+          "preserve": "Quiescent consistent main/WAL/SHM, acknowledged recovery and immutable history; never --create replacement"
+        },
+        {
+          "from": "target",
+          "to": ".local/target",
+          "kind": "cargo-config-relocation",
+          "configuration_at_execution": ".cargo/config.toml",
+          "preserve": "Effective Cargo target directory and exact tested binaries; no live executable/cwd move"
+        },
+        {
+          "from": "test-results",
+          "to": ".local/test-results",
+          "kind": "test-evidence"
+        },
+        {
+          "from": "dist",
+          "to": null,
+          "kind": "conditional-removal",
+          "go_only_if": "Fresh empty/untracked/unreferenced/unused check",
+          "current_gate": "completed:recursively empty,untracked,symlink-free and unused;four directories removed only with rmdir",
+          "excluded": "frontend/dist"
+        }
+      ],
+      "dependency_groups": [
+        "local-lifecycle",
+        "frontend-cache-notices",
+        "api-typed-services",
+        "cargo-counter-target",
+        "proof-ci",
+        "tooling-ci"
+      ],
+      "ordered_substeps": [
+        "Obtain explicit per-item credential/manual/workspace mapping and required lifecycle authority; inspect cwd/executable/open SQLite/TLS handles and locks",
+        "Await acknowledged state/Lock where applicable; stop only authorized owned processes; verify quiescence and recoverable consistent state, never hot-move main/WAL/SHM",
+        "Record private identities/hashes/modes and inverse operations; migrate persistent items separately from caches without blanket artifacts move/delete",
+        "Update exact PID/argv/TLS/workspace/binary guards and stopped-record migration, rejecting stale or missing workspace records",
+        "Rebase mandatory durable build counter/sentinel/locks atomically with consumers; serialize compilers; preserve append high-water/fsync behavior",
+        "Set reviewed Cargo target-dir and resolve effective metadata including environment/cross-target overrides; update all binary consumers and preserve exact tested snapshots",
+        "Rebase caches/runners/CI/ignore rules; reject blanket cleanup and private material in frontend input/notice trees",
+        "Run final source/proof/UI/runtime/compatibility acceptance against exact final binary; manual handoff only via separately authorized guarded milestone",
+        "Reinspect root dist immediately before any removal; currently blocked; keep frontend/dist subsystem-owned"
+      ],
+      "future_gate_commands": [
+        "cargo metadata --format-version 1 --no-deps --locked --offline",
+        "python3 shared/tooling/verify_documentation.py",
+        "python3 shared/tooling/verify_archive.py",
+        "python3 shared/tooling/verify_archive.py --check-local",
+        "python3 -m unittest discover -s shared/tooling/tests -p 'test_*.py'",
+        "npm run test:frontend",
+        "npm run api:check",
+        "cargo fmt --all -- --check",
+        "cargo clippy --workspace --all-targets --locked --features hypergraph-runtime/dev-backend -- -D warnings",
+        "npm run test:backend",
+        "npm run test:ui",
+        "npm run test:development",
+        "npm run build -- --build-number 1",
+        "python3 shared/tooling/check_rust_proof.py"
+      ],
+      "additional_gates": [
+        "Quiescence and consistent SQLite main/WAL/SHM recovery evidence",
+        "Counter continuity/parallel lock and fsync checks",
+        "Effective target metadata and output identity, not hardcoded paths",
+        "Approved isolated HTTPS/transport/crash/restart/acknowledgement/recovery/Commit and compatible older-reader workflow on explicit final SHA",
+        "Pinned Lean replay and byte-identical frozen extraction fixtures",
+        "Approved credentials and exact stopped manual record migration; locked startup and no new enrollment/trust/provider action",
+        "Private/public ignores and no required evidence eviction"
+      ],
+      "rollback": "Quiesce again with authority; reverse paths of latest consistent workspace set, credentials and records. Never restore older data over acknowledged new state, stale PID claims or truncate counter. Retain old/new tested binaries and preserve evidence; no blanket .local cleanup.",
+      "execution_request": "coordinator:root-reorganisation-stage3-execute-9"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "root-discovery",
+      "sources": [
+        "shared/tooling/hpx.mjs",
+        "shared/tooling/verify_archive.py",
+        "shared/tooling/verify_documentation.py",
+        "shared/tooling/bootstrap_semantic_protocol.py",
+        "shared/tooling/tests/test_archive.py",
+        "package.json"
+      ],
+      "issue": "new URL('..') / parents[1] / root scripts imports must change at execution; test alternate cwd and imported/subprocess entry points",
+      "original_sources": [
+        "scripts/hpx.mjs",
+        "scripts/verify_archive.py",
+        "scripts/verify_documentation.py",
+        "scripts/bootstrap_semantic_protocol.py",
+        "tests/test_archive.py",
+        "package.json"
+      ]
+    },
+    {
+      "id": "frontend-cache-notices",
+      "sources": [
+        "frontend/scripts/build-cache.mjs",
+        "frontend/scripts/dev.mjs",
+        "frontend/build.mjs",
+        "shared/legal/ASSETS.md"
+      ],
+      "issue": "Whole shared hashing/watch scope would grow after tooling/legal moves. Bound explicit public inputs first; update legal/upstream-notices paths and preserve notice coverage and root LICENSE.",
+      "original_sources": [
+        "frontend/scripts/build-cache.mjs",
+        "frontend/scripts/dev.mjs",
+        "frontend/build.mjs",
+        "legal/ASSETS.md"
+      ]
+    },
+    {
+      "id": "api-typed-services",
+      "sources": [
+        "frontend/scripts/generate-contract.mjs",
+        "frontend/src/api-client.ts",
+        "frontend/src/runtime-adapter.js",
+        "frontend/tests/api-contract.test.js",
+        "shared/openapi.json",
+        "backend/crates/runtime/src/export_api.rs"
+      ],
+      "issue": "Keep Rust-derived schema/client service boundary and exact output bytes; review cache identity/config/toolchain/target inputs, offline exporter and before/after identity checks.",
+      "original_sources": [
+        "frontend/scripts/generate-contract.mjs",
+        "frontend/src/api-client.ts",
+        "frontend/src/runtime-adapter.js",
+        "frontend/tests/api-contract.test.js",
+        "shared/openapi.json",
+        "backend/crates/runtime/src/export_api.rs"
+      ]
+    },
+    {
+      "id": "model-navigation",
+      "sources": [
+        "docs/architecture/SPECIFICATION.md",
+        "docs/architecture/specification-ownership.csv",
+        "docs/architecture/navigation.md",
+        "docs/architecture/likec4.config.json",
+        ".vscode/settings.json",
+        "AGENTS.md",
+        "docs/README.md"
+      ],
+      "issue": "Rebase model/code/current documentation links and editor exclusions; preserve IDs/statuses/snapshot bytes and served hierarchy/geometry; frozen provenance untouched.",
+      "original_sources": [
+        "architecture/SPECIFICATION.md",
+        "architecture/specification-ownership.csv",
+        "architecture/navigation.md",
+        "architecture/likec4.config.json",
+        ".vscode/settings.json",
+        "AGENTS.md",
+        "docs/README.md"
+      ]
+    },
+    {
+      "id": "proof-ci",
+      "sources": [
+        "shared/tooling/check_rust_proof.py",
+        "backend/proofs/rust/extraction.json",
+        "backend/proofs/rust/Spend.lean",
+        "backend/proofs/rust/SpendProof.lean",
+        ".github/workflows/rust-proof.yml",
+        ".github/workflows/lean.yml",
+        "docs/09-guides/developers/formal-validation.md"
+      ],
+      "issue": "Rebase external proofs and verification-cache paths/CI keys; keep internal frozen crates/domain source layout, exact pins/theorems/axioms and actual backend source hashes.",
+      "original_sources": [
+        "scripts/check_rust_proof.py",
+        "proofs/rust/extraction.json",
+        "proofs/rust/Spend.lean",
+        "proofs/rust/SpendProof.lean",
+        ".github/workflows/rust-proof.yml",
+        ".github/workflows/lean.yml",
+        "docs/09-guides/developers/formal-validation.md"
+      ]
+    },
+    {
+      "id": "tooling-ci",
+      "sources": [
+        "shared/tooling/verify-change.mjs",
+        "shared/tooling/review_rust_dependencies.py",
+        ".github/workflows/validate-semantic-records.yml",
+        ".github/workflows/frontend.yml",
+        ".github/workflows/rust.yml"
+      ],
+      "issue": "Update invocations/imports/triggers/cache keys/risk classifiers without weakening acceptance/security/proof checks.",
+      "original_sources": [
+        "scripts/verify-change.mjs",
+        "scripts/review_rust_dependencies.py",
+        ".github/workflows/validate-semantic-records.yml",
+        ".github/workflows/frontend.yml",
+        ".github/workflows/rust.yml"
+      ]
+    },
+    {
+      "id": "root-navigation-protocol-launcher",
+      "sources": [
+        "AGENTS.md",
+        "README.md",
+        "shared/tooling/protocol/PROTOCOL.md",
+        "docs/02-governance/requests.md",
+        "docs/09-guides/reference/dom001-checklist.md",
+        "docs/releases/CHANGELOG.md",
+        "docs/09-guides/developers/repository-development.md",
+        "shared/tooling/start-self-build.sh",
+        ".vscode/Hypergraph PX.code-workspace",
+        "shared/tooling/vernaculum_protocol.py",
+        "shared/tooling/tests/test_stage2.py"
+      ],
+      "issue": "Unique content/behavior coverage before retirement; exact protocol and request dispositions; workspace folder becomes ..; no existing shortcut/process mutation.",
+      "original_sources": [
+        "AGENTS.md",
+        "README.md",
+        "PROTOCOL.md",
+        "INPUT.md",
+        "checklist.md",
+        "CHANGELOG.md",
+        "LOCAL_BUILD_AND_RUN.md",
+        "launch-latest.sh",
+        "Hypergraph PX.code-workspace"
+      ]
+    },
+    {
+      "id": "local-lifecycle",
+      "sources": [
+        "frontend/scripts/refresh-manual-runtime.mjs",
+        "frontend/scripts/manual-runtime-update.mjs",
+        "frontend/scripts/check-runtime-workflow.mjs",
+        "frontend/scripts/check-development.mjs",
+        "frontend/scripts/run-ui.mjs"
+      ],
+      "issue": "Private per-item mapping and approved stop required; PID/argv/TLS/binary/workspace ownership guards cannot be blindly rewritten. Missing recorded manual workspace remains blocked.",
+      "original_sources": [
+        "frontend/scripts/refresh-manual-runtime.mjs",
+        "frontend/scripts/manual-runtime-update.mjs",
+        "frontend/scripts/check-runtime-workflow.mjs",
+        "frontend/scripts/check-development.mjs",
+        "frontend/scripts/run-ui.mjs"
+      ]
+    },
+    {
+      "id": "cargo-counter-target",
+      "sources": [
+        "Cargo.toml",
+        "backend/crates/runtime/build.rs",
+        "shared/tooling/hpx.mjs",
+        "frontend/scripts/generate-contract.mjs",
+        "frontend/scripts/refresh-manual-runtime.mjs"
+      ],
+      "issue": "Mandatory durable append-only counter/lock/sentinel and effective target-directory lookup including environment overrides; exact tested binaries separate from disposable outputs; frontend/dist remains embedded production input.",
+      "original_sources": [
+        "Cargo.toml",
+        "backend/crates/runtime/build.rs",
+        "scripts/hpx.mjs",
+        "frontend/scripts/generate-contract.mjs",
+        "frontend/scripts/refresh-manual-runtime.mjs"
+      ]
+    }
+  ],
+  "global_execution_blockers": [
+    "Root reorganisation safe moves and scoped verification complete;manual exact-binary handoff blocked by missing recorded workspace,which must not be recreated or redirected",
+    "30 historical optional source-body findings remain separate from mechanical documentation/archive pass"
+  ],
+  "rollback_policy": {
+    "git_reset_or_revert": false,
+    "index_mutation": false,
+    "preimage_postimage_ledger_required": true,
+    "unknown_or_changed_base": "stop and reconcile without affected mutation",
+    "private_checkpoint_proposal": ".provenance/local-reorganisation-checkpoints/ only after selective ignore review; no checkpoint created now"
+  },
+  "checks_now": [
+    {
+      "target": "Fresh read-only Git/source/dependency/collision/liveness preflight",
+      "method": "python3 artifacts/root-reorganisation-preflight.py",
+      "outcome": "pass",
+      "evidence": "Ignored evidence records actual status/index/diff fingerprints;599 public files scanned;stage candidate counts269/58/165;root dist non-empty;process scan explicitly not quiescence proof"
+    },
+    {
+      "target": "Preparation consistency and preservation",
+      "method": "python3 artifacts/check-root-reorganisation-preparation.py",
+      "outcome": "pass",
+      "evidence": "18 exact mappings;9 dependency groups resolve;ordered stages/gates/rollback;unchanged protected protocol/proof/license/snapshot bytes and raw index;24 scopes/45 views and1/24/46 classifications"
+    },
+    {
+      "target": "Current documentation",
+      "method": "python3 scripts/verify_documentation.py",
+      "outcome": "pass",
+      "evidence": "Metadata/IDs/source-location coverage and current local Markdown links pass"
+    },
+    {
+      "target": "Public/default archive boundary",
+      "method": "python3 scripts/verify_archive.py",
+      "outcome": "pass",
+      "evidence": "549 files checked;470 local/private files explicitly skipped;selective private/public Git boundary verified"
+    },
+    {
+      "target": "Complete local archive/source identity",
+      "method": "python3 scripts/verify_archive.py --check-local",
+      "outcome": "pass",
+      "evidence": "1019 payloads and138 source-register rows/ZIP members verified exactly"
+    },
+    {
+      "target": "Scoped whitespace check",
+      "method": "git --no-pager diff --check -- preparation document/register/navigation/state paths",
+      "outcome": "fail",
+      "evidence": "14 pre-existing CRLF record warnings in TEST158-173 retained unchanged;new TEST174 uses LF;new plan files have no trailing whitespace;no unrelated register normalization"
+    },
+    {
+      "target": "Project CRLF-aware whitespace convention",
+      "method": "git --no-pager -c core.whitespace=cr-at-eol diff --check -- preparation document/register/navigation/state paths",
+      "outcome": "pass",
+      "evidence": "Exit0;no findings. Separate from the retained raw default whitespace observation;no CSV byte or line-ending normalization performed."
+    },
+    {
+      "target": "Historical retained-body comparisons",
+      "method": "python3 scripts/verify_documentation.py --check-local-sources",
+      "outcome": "fail",
+      "evidence": "Exactly30 pre-existing retained-body findings;no other findings;not resolved or counted as passing by preparation"
+    }
+  ],
+  "future_acceptance_status": "All three scoped relocation stages executed and checked;manual operational handoff remains blocked. No full-product correctness,release publication or real-document acceptance.",
+  "checks_now_scope": "Retained preparation observations;fresh Stage1 results are stage1_verification",
+  "stage1_verification": {
+    "request": "coordinator:root-reorganisation-stage1-execute-4",
+    "status": "stage1-executed-verification-blocked",
+    "scope": "Only five Stage1 moves;return to coordinator before Stage2.",
+    "moves": {
+      "architecture": "docs/architecture",
+      "proofs": "backend/proofs",
+      "legal": "shared/legal",
+      "scripts": "shared/tooling",
+      "tests": "shared/tooling/tests"
+    },
+    "checkpoint": ".provenance/local-reorganisation-checkpoints/stage1-2026-11-14",
+    "ledger_entries": 7950,
+    "checks": [
+      {
+        "target": "Frontend input boundary",
+        "outcome": "pass",
+        "evidence": "Three focused tests passed before moves;final Node suite includes public schema/catalogue/notice invalidation,tooling/private/runtime exclusion and symlink rejection."
+      },
+      {
+        "target": "Python tooling/imports",
+        "outcome": "pass",
+        "command": ".verification/semantic-protocol-venv/bin/python -m unittest discover -s shared/tooling/tests -p test_*.py",
+        "evidence": "108 tests;existing reviewed venv reused because bare Python lacks PyYAML/jsonschema."
+      },
+      {
+        "target": "Node/typed service/cache/root discovery",
+        "outcome": "pass",
+        "command": "npm --prefix frontend test",
+        "evidence": "183 tests;alternate-cwd root wrapper checked with fake npm/Cargo,not a runtime/build launch."
+      },
+      {
+        "target": "API/export identity and strict client typing",
+        "outcome": "pass",
+        "command": "npm run api:check",
+        "evidence": "36 inventoried paths match;wire/generated artifacts unchanged;no new wire design."
+      },
+      {
+        "target": "Frontend build/legal notice generation",
+        "outcome": "pass",
+        "command": "npm --prefix frontend run build",
+        "evidence": "Build succeeds with explicit public shared/legal inputs;no dependency/lockfile changes."
+      },
+      {
+        "target": "Rust formatting",
+        "outcome": "pass",
+        "command": "cargo fmt --all -- --check"
+      },
+      {
+        "target": "Warnings-denied Rust analysis",
+        "outcome": "pass",
+        "command": "cargo clippy --workspace --all-targets --locked --features hypergraph-runtime/dev-backend -- -D warnings",
+        "evidence": "81 locked registry package versions/checksums match reviewed legal inventory before compilation."
+      },
+      {
+        "target": "No-layout model",
+        "outcome": "pass",
+        "command": "npm --prefix docs/architecture run validate",
+        "evidence": "26 source files;zero errors."
+      },
+      {
+        "target": "Served model/navigation",
+        "outcome": "pass",
+        "command": "node artifacts/stage1-model-check.mjs",
+        "evidence": "45 views computed sequentially per baseline/current side;all45 served geometries identical;navigation unchanged;24 scopes and32 saved snapshot bytes preserved;no rendered visual claim."
+      },
+      {
+        "target": "Alternate-cwd tooling/MCP binary",
+        "outcome": "pass",
+        "evidence": "Archive verifier and advisory plan run from frontend cwd;relocated LikeC4 binary reports1.60.0;Codex MCP and VSCode task paths repaired;no editor process killed."
+      },
+      {
+        "target": "Extracted Rust replay",
+        "outcome": "blocked",
+        "command": "python3 shared/tooling/check_rust_proof.py --download",
+        "evidence": "Reviewed pinned Aeneas bundle passes its hash/version preconditions;driver stops with rustup required before extraction/proof. No proof completion."
+      },
+      {
+        "target": "Lean replay",
+        "outcome": "blocked",
+        "command": "lake -d backend/proofs/lean build",
+        "evidence": "Exit127: lake command not found. Frozen Lean/proof/pin bytes remain exact."
+      },
+      {
+        "target": "Index preservation",
+        "outcome": "partial",
+        "evidence": "Exact staged entries match checkpoint;raw index fingerprint differs. No index-writing/restoration command executed;cause not established,do not claim raw bytes unchanged."
+      },
+      {
+        "target": "Application/UI/real runtime delivery",
+        "outcome": "not_run",
+        "evidence": "No domain/backend semantics or UI feature change;source consumers checked. No browser/manual-runtime/workspace restart,real-data acceptance,Stage2/3 or publication."
+      },
+      {
+        "target": "Final current documentation",
+        "outcome": "pass",
+        "command": "python3 shared/tooling/verify_documentation.py",
+        "evidence": "Current links,registered IDs/metadata and source-location coverage pass after Stage1 records."
+      },
+      {
+        "target": "Final archive identity and boundaries",
+        "outcome": "pass",
+        "command": "python3 shared/tooling/verify_archive.py --check-local",
+        "evidence": "1019 payloads/138 source rows exact;default549 checked/470 skipped;selective private/public and checkpoint ignore rules retained."
+      },
+      {
+        "target": "Historical retained-body comparison",
+        "outcome": "fail",
+        "command": "python3 shared/tooling/verify_documentation.py --check-local-sources",
+        "evidence": "Exactly30 pre-existing retained-body findings,no other findings;not reclassified as passing."
+      },
+      {
+        "target": "CRLF-aware tracked diff whitespace",
+        "outcome": "pass",
+        "evidence": "Exit0;no findings;old CSV line endings retained."
+      }
+    ],
+    "blocking_gates": [
+      "rustup missing for extracted Rust replay",
+      "lake missing for Lean replay",
+      "raw index fingerprint differs despite identical staged entries;review discrepancy without index restoration"
+    ],
+    "historical_failures": "Early rebase/import/link failures and one zero-test npm invocation were diagnosed and corrected;zero tests never counted as pass. Prior saved label-size differences retain baseline/current equality. Optional30 retained-body comparison remains separate.",
+    "safe_next": "Review Stage1 source/ledger and index discrepancy;provision reviewed pinned proof prerequisites and replay before claiming complete Stage1 gates or proceeding to Stage2. No automatic Stage2/3.",
+    "historical_as_run": true,
+    "superseded_for_gate_status_by": "coordinator:stage1-close-gates-5"
+  },
+  "stage1_gate_closure": {
+    "request": "coordinator:stage1-close-gates-5",
+    "status": "verified",
+    "test_record": "HPX-TEST-176",
+    "proof_evidence": "artifacts/stage1-proof-replay.json",
+    "tool_provenance": "artifacts/stage1-proof-provisioning.json",
+    "index_evidence": "artifacts/stage1-index-diagnosis.json",
+    "isolated_environment": {
+      "CARGO_HOME": ".verification/cargo",
+      "RUSTUP_HOME": ".verification/rustup",
+      "Lean_bin": ".verification/lean-v4.35.0/bin",
+      "RUSTUP_TOOLCHAIN": "nightly-2026-09-17",
+      "global_shell_or_user_toolchain_mutation": false
+    },
+    "actual_proof_commands": [
+      {
+        "name": "lean-build",
+        "command": [
+          "lake",
+          "build"
+        ],
+        "cwd": "backend/proofs/lean",
+        "timeout_seconds": 180,
+        "seconds": 0.466,
+        "exit_code": 0,
+        "timed_out": false,
+        "outcome": "pass",
+        "log": "artifacts/stage1-close-lean-build.log"
+      },
+      {
+        "name": "lean-axioms-expansion",
+        "command": [
+          "lake",
+          "env",
+          "lean",
+          "-DwarningAsError=true",
+          "Hypergraph/Expansion.lean"
+        ],
+        "cwd": "backend/proofs/lean",
+        "timeout_seconds": 120,
+        "seconds": 1.936,
+        "exit_code": 0,
+        "timed_out": false,
+        "outcome": "pass",
+        "log": "artifacts/stage1-close-lean-axioms-expansion.log",
+        "axiom_report_lines": [
+          "'Hypergraph.path_increases' does not depend on any axioms",
+          "'Hypergraph.rank_implies_acyclic' does not depend on any axioms",
+          "'Hypergraph.forward_insertion_preserves_rank' does not depend on any axioms",
+          "'Hypergraph.forward_insertion_preserves_acyclic' does not depend on any axioms"
+        ]
+      },
+      {
+        "name": "lean-axioms-cycle",
+        "command": [
+          "lake",
+          "env",
+          "lean",
+          "-DwarningAsError=true",
+          "Hypergraph/CycleState.lean"
+        ],
+        "cwd": "backend/proofs/lean",
+        "timeout_seconds": 120,
+        "seconds": 0.668,
+        "exit_code": 0,
+        "timed_out": false,
+        "outcome": "pass",
+        "log": "artifacts/stage1-close-lean-axioms-cycle.log",
+        "axiom_report_lines": [
+          "'Hypergraph.CycleState.sameState_equivalence' does not depend on any axioms",
+          "'Hypergraph.CycleState.key_sound' does not depend on any axioms",
+          "'Hypergraph.CycleState.sameState_iff' does not depend on any axioms",
+          "'Hypergraph.CycleState.different_selection' does not depend on any axioms",
+          "'Hypergraph.CycleState.coversSlots_map' does not depend on any axioms",
+          "'Hypergraph.CycleState.nearest_witness' depends on axioms: [propext]",
+          "'Hypergraph.CycleState.nearest_none' depends on axioms: [propext, Quot.sound]",
+          "'Hypergraph.CycleState.available_descend' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.complete_covers' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.active_descend' depends on axioms: [propext, Quot.sound]",
+          "'Hypergraph.CycleState.rename_roundtrip' depends on axioms: [propext, Quot.sound]",
+          "'Hypergraph.CycleState.renamed_descriptor_equality' depends on axioms: [propext, Quot.sound]",
+          "'Hypergraph.CycleState.covers_unique' does not depend on any axioms",
+          "'Hypergraph.CycleState.coversSlots_unique' does not depend on any axioms",
+          "'Hypergraph.CycleState.ordered_length' does not depend on any axioms",
+          "'Hypergraph.CycleState.boundary_justified' depends on axioms: [propext]",
+          "'Hypergraph.CycleState.preflight_failure' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.successful_coverage' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.adequate_budget' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.output_deterministic' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.warnings_visible' depends on axioms: [propext, Quot.sound]",
+          "'Hypergraph.CycleState.every_boundary_warned' depends on axioms: [propext, Quot.sound]",
+          "'Hypergraph.CycleState.no_automatic_open' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.authorized_click' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.denied_click' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.comparison_keeps_marker' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.click_keeps_marker' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.covered_target_path' does not depend on any axioms",
+          "'Hypergraph.CycleState.ordered_targets_paths' does not depend on any axioms",
+          "'Hypergraph.CycleState.only_resolution_clears' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.CycleState.no_click_trace' depends on axioms: [propext, Classical.choice, Quot.sound]"
+        ]
+      },
+      {
+        "name": "lean-axioms-emission",
+        "command": [
+          "lake",
+          "env",
+          "lean",
+          "-DwarningAsError=true",
+          "Hypergraph/SourceEmission.lean"
+        ],
+        "cwd": "backend/proofs/lean",
+        "timeout_seconds": 120,
+        "seconds": 0.578,
+        "exit_code": 0,
+        "timed_out": false,
+        "outcome": "pass",
+        "log": "artifacts/stage1-close-lean-axioms-emission.log",
+        "axiom_report_lines": [
+          "'Hypergraph.SourceEmission.plan_arity' depends on axioms: [propext]",
+          "'Hypergraph.SourceEmission.copy_length' depends on axioms: [propext]",
+          "'Hypergraph.SourceEmission.copy_index' depends on axioms: [propext]",
+          "'Hypergraph.SourceEmission.boundary_copies_exact' does not depend on any axioms",
+          "'Hypergraph.SourceEmission.boundary_bytes_exact' depends on axioms: [propext]",
+          "'Hypergraph.SourceEmission.stopped_owner_and_target' does not depend on any axioms",
+          "'Hypergraph.SourceEmission.parts_arity' does not depend on any axioms",
+          "'Hypergraph.SourceEmission.emission_complete' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.SourceEmission.root_emission_complete' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.SourceEmission.reconstruction_deterministic' depends on axioms: [propext, Classical.choice, Quot.sound]",
+          "'Hypergraph.SourceEmission.presentation_separate' does not depend on any axioms",
+          "'Hypergraph.SourceEmission.map_count' depends on axioms: [propext]",
+          "'Hypergraph.SourceEmission.map_end_exact' depends on axioms: [propext, Quot.sound]",
+          "'Hypergraph.SourceEmission.segment_slice_exact' depends on axioms: [propext]",
+          "'Hypergraph.SourceEmission.map_segment_origin' depends on axioms: [propext, Quot.sound]",
+          "'Hypergraph.SourceEmission.mapped_slice_exact' depends on axioms: [propext, Quot.sound]",
+          "'Hypergraph.SourceEmission.interpretation_alias_consistent' does not depend on any axioms",
+          "'Hypergraph.SourceEmission.interpretation_alias_exact' does not depend on any axioms",
+          "'Hypergraph.SourceEmission.absolute_copy_index' depends on axioms: [propext, Quot.sound]"
+        ]
+      },
+      {
+        "name": "leanchecker",
+        "command": [
+          "lake",
+          "env",
+          "leanchecker",
+          "Hypergraph"
+        ],
+        "cwd": "backend/proofs/lean",
+        "timeout_seconds": 180,
+        "seconds": 1.927,
+        "exit_code": 0,
+        "timed_out": false,
+        "outcome": "pass",
+        "log": "artifacts/stage1-close-leanchecker.log"
+      },
+      {
+        "name": "rust-extraction",
+        "command": [
+          "python3",
+          "shared/tooling/check_rust_proof.py"
+        ],
+        "cwd": ".",
+        "timeout_seconds": 600,
+        "seconds": 195.324,
+        "exit_code": 0,
+        "timed_out": false,
+        "outcome": "pass",
+        "log": "artifacts/stage1-close-rust-extraction.log",
+        "exact_replay_pass_marker": true
+      }
+    ],
+    "proof_scope": {
+      "model_theorem_axiom_reports": 54,
+      "rank": 4,
+      "finite_cycle": 31,
+      "source_emission": 19,
+      "extracted_rust_helper": "expansion::spend only",
+      "extracted_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "frozen_source_sha256": "74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad",
+      "source_generated_proof_dependency_pins_unchanged": true,
+      "whole_application_or_ui_correspondence_claim": false
+    },
+    "index_scope": {
+      "entries": 1129,
+      "exact_staged_object_path_mode_stage_matches_checkpoint": true,
+      "all_referenced_objects_present": true,
+      "current_assume_valid_skip_worktree_intent_to_add_counts": [
+        0,
+        0,
+        0
+      ],
+      "real_index_bytes_identical_during_diagnosis": true,
+      "pre_stage1_raw_index_identical": false,
+      "baseline_raw_bytes_flags_extensions_unavailable": true,
+      "cause": "Not provable from the saved baseline;cache/stat changes are observed but not asserted as sole cause.",
+      "disposition": "Staged-content-loss gate closed by exact independent preservation;raw-cause uncertainty is a limitation,not a permanent execution blocker. No real-index restoration."
+    },
+    "initial_failures_retained": [
+      "Original missing rustup/lake observations under TEST175",
+      "artifacts/stage1-proof-replay-initial-cwd-error.json:lake -d project selection does not chdir lean env input;corrected local replay cwd,not frozen source"
+    ],
+    "remaining_stage1_blockers": [],
+    "stage2_stage3": "not executed;return for coordinator review",
+    "limits": [
+      "Existing Lean model and extracted-helper correspondence limits unchanged;no whole-product proof.",
+      "No global profile/toolchain,trust/provider/keychain,manual runtime,workspace,Git-index restoration,branch or publication action.",
+      "30 historical retained-body findings remain separate."
+    ]
+  },
+  "preparation_execution_gates": [
+    "Preparation is not stage execution authority",
+    "Fresh base/index/collision/liveness verification required",
+    "Bound whole-shared cache/watch scope before Stage1",
+    "Root discovery/import/CI path fixes not implemented",
+    "Pinned replay tools/compatible reader must be available for acceptance",
+    "Unique-content and launcher equivalence not yet verified",
+    "Private per-item credential/manual/workspace split and missing manual workspace disposition unresolved",
+    "Root dist is non-empty",
+    "No proof of quiescence; no hot moves or blanket .local cleanup"
+  ],
+  "stage2_verification": {
+    "request": "coordinator:root-reorganisation-stage2-execute-7",
+    "status": "verified",
+    "test_record": "HPX-TEST-177",
+    "checkpoint": ".provenance/local-reorganisation-checkpoints/stage2-2026-11-14",
+    "mappings": {
+      "CHANGELOG.md": "docs/releases/CHANGELOG.md",
+      "INPUT.md": "docs/02-governance/requests.md",
+      "checklist.md": "docs/09-guides/reference/dom001-checklist.md",
+      "PROTOCOL.md": "shared/tooling/protocol/PROTOCOL.md",
+      "Hypergraph PX.code-workspace": ".vscode/Hypergraph PX.code-workspace"
+    },
+    "consolidations": {
+      "LOCAL_BUILD_AND_RUN.md": "docs/09-guides/developers/repository-development.md",
+      "launch-latest.sh": "npm run start:self-build -> bash shared/tooling/start-self-build.sh"
+    },
+    "section_coverage": [
+      {
+        "source_heading": "Enter the repository and check prerequisites",
+        "destination_heading": "Enter the repository and check prerequisites",
+        "method": "exact section body retained",
+        "body_sha256": "5c241421e8ed93c9234d78b1d3ef38adb2a4951b0a1f88effdd20ce9ab854fe1"
+      },
+      {
+        "source_heading": "Use existing approved HTTPS files",
+        "destination_heading": "Use existing approved HTTPS files",
+        "method": "exact section body retained",
+        "body_sha256": "cd900642a4a54108d5855c69ff073d8754252c8217985594fd7b1cb46ab82a7e"
+      },
+      {
+        "source_heading": "Start a separate synthetic workspace",
+        "destination_heading": "Start a separate synthetic workspace",
+        "method": "exact section body retained",
+        "body_sha256": "cdf0e4ed6672dacf741bf82e0595c563bd8972270d72dc4d242e5bd4add748b5"
+      },
+      {
+        "source_heading": "Stop, reopen and rebuild",
+        "destination_heading": "Stop, reopen and rebuild",
+        "method": "exact section body retained",
+        "body_sha256": "56adbe23574dc77959e2a3b616f949a63487651df9971890295275934a17e75b"
+      },
+      {
+        "source_heading": "Fast independent frontend development",
+        "destination_heading": "Synthetic frontend only",
+        "method": "existing command/options/safety coverage retained"
+      },
+      {
+        "source_heading": "One production build command",
+        "destination_heading": "One-command production build",
+        "method": "existing command/options/safety coverage retained"
+      },
+      {
+        "source_heading": "Tests and troubleshooting",
+        "destination_heading": "Tests and generated contracts",
+        "method": "existing procedure covers shared commands;unique troubleshooting table and manual-refresh guard retained below"
+      }
+    ],
+    "checks": [
+      {
+        "target": "Python tooling/protocol/launcher fixtures",
+        "command": ".verification/semantic-protocol-venv/bin/python -m unittest discover -s shared/tooling/tests -p 'test_*.py'",
+        "outcome": "pass",
+        "evidence": "116 tests;artifacts/stage2-python.log"
+      },
+      {
+        "target": "Original launcher equivalence",
+        "command": ".verification/semantic-protocol-venv/bin/python artifacts/stage2-original-equivalence.py",
+        "outcome": "pass",
+        "evidence": "Same five fixture contracts on exact original preimage;artifacts/stage2-original-equivalence.log"
+      },
+      {
+        "target": "Frontend/tooling Node suite",
+        "command": "npm --prefix frontend test",
+        "outcome": "pass",
+        "evidence": "183 tests;artifacts/stage2-node.log"
+      },
+      {
+        "target": "LikeC4 no-layout/source/navigation/affected served layout",
+        "outcome": "pass",
+        "evidence": "26 model files;24 scopes/45 views;all navigation unchanged;only c3_executable computed;32 snapshots exact;1239 local DSL links resolve;artifacts/stage2-model.json"
+      }
+    ],
+    "protocol_sha256": "a36b882c56c2355c42945fe8be93eab416cfcd8ead084fb9c066514a05717632",
+    "stage3": "not-executed",
+    "limits": [
+      "No real self-build/manual workspace launch or mutation;fixture lifecycle only.",
+      "No new app build/browser/proof replay;unchanged source/proof/license/wire bytes retain Stage1 evidence.",
+      "Original pre-Stage1 raw-index cause remains unknown;Stage2 has an exact copied-index baseline.",
+      "30 historical optional retained-body findings remain separate."
+    ],
+    "initial_failures": [
+      "artifacts/stage2-initial-merge-error.json:section regex failure before guide write;only unfinished steps resumed",
+      "Initial fixture shebang used space-containing Python executable;exit126 corrected in fixture shell exec wrapper,not product launcher."
+    ]
+  },
+  "stage3_verification": {
+    "request": "coordinator:root-reorganisation-stage3-execute-9",
+    "status": "verified-with-manual-handoff-blocked",
+    "test_record": "HPX-TEST-178",
+    "checkpoint": ".provenance/local-reorganisation-checkpoints/stage3-2026-11-14",
+    "classification_items": 499,
+    "checkpoint_files": 287606,
+    "relocated_bytes_modes_owners_verified": 279786,
+    "local_roots": {
+      "ordinary_evidence": ".local/artifacts",
+      "credentials": ".local/credentials",
+      "manual_records_and_binaries": ".local/manual-runtime",
+      "workspaces": ".local/workspaces",
+      "verification": ".local/verification",
+      "cargo_default": ".local/target",
+      "test_results": ".local/test-results"
+    },
+    "dist": "Four recursively empty untracked symlink-free directories removed using rmdir only;frontend/dist retained",
+    "counts": {
+      "node": 189,
+      "python": 118,
+      "rust": 213,
+      "headless_ui": 108,
+      "transport_rejection": 29,
+      "independent_cli_lifecycle": 4,
+      "embedded_workflow": 48,
+      "secure_proxy_workflow": 48,
+      "isolated_production_workflow": 48,
+      "retained_older_reader_workflow": 50,
+      "model_views": 45,
+      "model_scopes": 24,
+      "saved_owner_snapshots": 32,
+      "model_axiom_reports": 54
+    },
+    "production_reproducibility": {
+      "status": "pass",
+      "sha256": "df916c5c3bac6d0da812ec1e72040f7c1d273a0b1b662dd1568bdc5512d0f111",
+      "build_number": 1,
+      "scope": "Same source/toolchain/platform/location;two one-command builds"
+    },
+    "manual_handoff": {
+      "status": "blocked",
+      "reason": "Original recorded workspace missing;legacy PID/argv/origin/workspace facts and shortcuts retained byte-identically;no recreate/redirect/start/refresh attempted"
+    },
+    "older_reader": {
+      "status": "pass",
+      "evidence": ".local/artifacts/stage3/compatibility-oldest-workflow.json",
+      "scope": "Genuine retained SHA-named executable;current/older/current synthetic reads,writes,protected optional-record and branch retention checks;not every historical version"
+    },
+    "visual_review": {
+      "status": "performed",
+      "scope": "Four actual integration screenshots:dark/light1600 below table/math working widgets;dark1280 andlight2000 application layouts. No frontend rendering source changed by Stage3;no LikeC4 rendered inspection claimed."
+    },
+    "historical_failures_retained": [
+      "Initial Rust workspace run timed out240s;360s-bounded retry passed213 tests",
+      "Recorded manual binary candidate already implemented clipboard and failed legacy-reader precondition;earliest genuine retained binary passed50 checks",
+      "Historical executable has no --version flag;that probe failed without opening a workspace"
+    ],
+    "limits": [
+      "Manual handoff blocked by missing original workspace,not safe relocation.",
+      "30 historical optional source-body findings remain separate.",
+      "Pinned proof remains finite models and extracted spend helper,not whole application/UI correctness.",
+      "Original pre-Stage1 raw-index cause remains unknown;Stage2/3 raw and semantic preservation are independently checked.",
+      "No branches,index restoration,commits,push,release,trust/provider/keychain/personal-browser/editor restart or owner data mutation."
+    ],
+    "executed_check_evidence": ".local/artifacts/stage3/summary.json"
+  },
+  "post_review": {
+    "request": "coordinator:root-reorganisation-final-review-11",
+    "records_reconciliation_request": "coordinator:root-reorganisation-records-final-13",
+    "status": "verified",
+    "original_as_run_node_tests": 189,
+    "final_post_review_node_tests": 191,
+    "review_consistency_checks": 15,
+    "review_evidence": ".local/artifacts/stage3/review-check.json",
+    "original_execution_summary": ".local/artifacts/stage3/summary.json",
+    "original_execution_summary_bytes_retained": true,
+    "current_formal_replay_digest": "docs/08-assurance/formal-validation-digest.md",
+    "formal_replay_test_records": [
+      "HPX-TEST-176",
+      "HPX-TEST-178"
+    ],
+    "scope": "Post-review lookup/environment fix and documentation corrections;original migration/integration/proof execution counts unchanged;this record reconciliation repeats no build or integration",
+    "records_reconciliation_evidence": ".local/artifacts/stage3/records-final-check.json",
+    "live_workspace_gate": "Not re-attested during records-only reconciliation:concurrent runtime and changed sidecar presence observed;no lifecycle or data action"
+  }
+}

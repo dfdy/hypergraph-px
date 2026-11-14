@@ -15,7 +15,7 @@ Underlying the project is a commitment to **intellectual autonomy, transparency,
 
 ### How it's being built
 
-HPX has a back-end written in [Rust](https://en.wikipedia.org/wiki/Rust_(programming_language)) and a browser-based front-end built using HTML, CSS, and JavaScript, with [CodeMirror 6](https://codemirror.net/) providing the editing framework and [KaTeX](https://katex.org/) rendering mathematical notation. The front-end is bundled into the Rust executable, allowing HPX to run as a standalone application without requiring a separate web server or JavaScript runtime. The mathematical properties of its hypergraph operations are formally specified and verified using the [Lean](https://en.wikipedia.org/wiki/Lean_(proof_assistant)) programming language and proof assistant. My intention is to make its foundations not only flexible but also precise, inspectable, and, wherever possible, mathematically demonstrable. Formal proofs establish particular properties of specified operations, not the correctness of the entire application.
+HPX has a back-end written in [Rust](https://en.wikipedia.org/wiki/Rust_(programming_language)) and a browser-based front-end built using HTML, CSS, and JavaScript, with [CodeMirror 6](https://codemirror.net/) providing the editing framework, [KaTeX](https://katex.org/) rendering mathematical notation, Dockview managing the desktop panel layout, and locally bundled Web Awesome components providing layout controls. The front-end is bundled into the Rust executable, allowing HPX to run as a standalone application without requiring a separate web server or JavaScript runtime. The mathematical properties of its hypergraph operations are formally specified and verified using the [Lean](https://en.wikipedia.org/wiki/Lean_(proof_assistant)) programming language and proof assistant. My intention is to make its foundations not only flexible but also precise, inspectable, and, wherever possible, mathematically demonstrable. Formal proofs establish particular properties of specified operations, not the correctness of the entire application.
 
 HPX is being developed in collaboration with the [Codex](https://openai.com/codex/) AI agent, working primarily through the [VS Code](https://en.wikipedia.org/wiki/Visual_Studio_Code) IDE. This makes the development process itself an experiment in transparent human–AI collaboration, reflecting one of HPX's central ambitions: to make contributions, decisions, and their histories visible, attributable, and open to critical examination.
 
@@ -41,9 +41,9 @@ For more, see the [project purpose](docs/01-purpose/project-purpose.md), [docume
 
 ## Current status
 
-Source version **1.0.0** includes the integrated one-owner HTTPS/SQLite workflow, exact source and immutable history, opt-in macOS Keychain unlock with retained passphrase recovery, protected provenance captures, independent Fork and reviewed synthesis, retrospective assertions and selected-node graphs. Publication contributors are an explicitly incomplete evidence view. Synthetic integration checks pass; real-document acceptance and broader feature/platform coverage remain pending. The major version records incompatible domain API and experimental-record decoding changes, not completion of the product. See the [implementation handoff](docs/09-guides/reference/DEVELOPMENT_STATE.md) and [publication record](docs/09-guides/reference/source-publication-1.0.0.md).
+Source version **1.0.0** includes the integrated one-owner HTTPS/SQLite workflow, exact source and immutable history, opt-in macOS Keychain unlock with retained passphrase recovery, protected provenance captures, independent Fork and reviewed synthesis, retrospective assertions and selected-node graphs. Publication contributors are an explicitly incomplete evidence view. Previously recorded synthetic integration checks have bounded scope; current checkout/release verification is tracked separately. Real-document acceptance and broader feature/platform coverage remain pending. The major version records incompatible domain API and experimental-record decoding changes, not completion of the product. See the [implementation handoff](docs/09-guides/reference/DEVELOPMENT_STATE.md) and [publication record](docs/09-guides/reference/source-publication-1.0.0.md).
 
-For the synthetic browser preview, run `npm --prefix frontend run dev` and open [http://127.0.0.1:5173/](http://127.0.0.1:5173/). Its content is tab-local and resets on reload. See the [developer guide](docs/09-guides/developers/getting-started.md) for build/check boundaries. The unfinished integrated runtime is not yet accepted for real documents.
+For independent synthetic frontend development, install the locked frontend dependencies, run `npm run dev:mock` from the repository root, and open [http://127.0.0.1:3000/](http://127.0.0.1:3000/). Its content is tab-local and resets on reload. Connected development uses a separate HTTPS frontend on port 3000 and Rust backend on port 8000, with an approved certificate/trust setup and the private launch fragment; it never falls back to HTTP or fixtures for workspace data. See the [repository development guide](docs/09-guides/developers/repository-development.md) for independent/combined commands, configurable ports, debugging and test boundaries. The unfinished integrated runtime is not yet accepted for real documents.
 
 ## Future design aims
 
@@ -57,11 +57,17 @@ Repository: [dfdy/hypergraph-px](https://github.com/dfdy/hypergraph-px), public.
 
 ## Developer setup
 
-Use Rust stable with a native compiler/linker and Node.js 26/npm to prepare the frontend:
+Use Rust stable with a native compiler/linker and Node.js 26/npm. From the repository root:
 
 ```sh
 npm --prefix frontend ci --ignore-scripts
-npm --prefix frontend run build
-cargo +stable build --workspace --locked
-cargo +stable test --workspace --locked -- --test-threads=1
+npm run dev:mock
 ```
+
+Source changes rebuild frontend assets; reload deliberately so an owned editing buffer is not discarded. For a single production build, stop development processes as appropriate and run:
+
+```sh
+npm run build -- --build-number 1
+```
+
+This prepares/checks the frontend and builds `.local/target/release/hypergraph` with embedded assets; it does not run acceptance suites or publish anything. Rust crates live under `backend/crates/`, shared inputs under `shared/`, and the root Cargo workspace remains the command entry point. The [repository development guide](docs/09-guides/developers/repository-development.md) documents `dev:frontend`, `dev:backend`, connected `dev`, and tests. [Local build/run instructions](docs/09-guides/developers/repository-development.md) cover launching a separate synthetic workspace with existing approved TLS files. OpenAPI typing and the one-owner implementation remain bounded; neither development tooling nor a successful build establishes full product or release acceptance.

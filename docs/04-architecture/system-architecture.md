@@ -17,7 +17,7 @@
 
 ## Canonical architecture
 
-Deployment and container structure is defined in [C1 / System context](../../architecture/context.c4) and [C2 / HPX containers](../../architecture/C2/containers.c4), HPX-CAN-001/002. Responsibility decomposition continues in [C3 / HPX Rust executable](../../architecture/C3/executable.c4). These definitions are not repeated here.
+Deployment and container structure is defined in [C1 / System context](../architecture/context.c4) and [C2 / HPX containers](../architecture/C2/containers.c4), HPX-CAN-001/002. Responsibility decomposition continues in [C3 / HPX Rust executable](../architecture/C3/executable.c4). These definitions are not repeated here.
 
 ## Retained contracts
 
@@ -25,7 +25,7 @@ Deployment and container structure is defined in [C1 / System context](../../arc
 - [Security](../06-subsystems/security-cryptography.md), [ADR004](decisions/0004-local-https-bootstrap.md) and [workspace format](../06-subsystems/formats/hpx-workspace.md) retain transport, custody, storage and compatibility rules.
 - [Development state](../09-guides/reference/DEVELOPMENT_STATE.md#current-execution-status) records current evidence/limits. [Release qualification](../08-assurance/build-and-release.md) remains a separate contract.
 
-See [ownership and editing rules](../../architecture/SPECIFICATION.md). Other proposed designs remain proposed.
+See [ownership and editing rules](../architecture/SPECIFICATION.md). Other proposed designs remain proposed.
 
 ## Source provenance
 

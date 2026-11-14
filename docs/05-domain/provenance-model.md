@@ -17,7 +17,7 @@
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -74,4 +74,4 @@ The initial durable Fork records an exact committed input range and the new iden
 [ADR019](../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md) designs exact private working checkpoints for provenance-bearing copy/paste at the owner's request. References retain their captured source; a later exact Commit may publish promotion and replacement evidence without mutating original links or inferring an anchor relocation. Semantic assertion/comment/derivation participant changes require new authorized entity revisions. No draft-reference or replacement mechanism is delivered.
 
 
-The preceding delivery statement retains its original development checkpoint scope. ADR019 was subsequently explicitly adopted; acceptance is distinct from the bounded implementation/compatibility evidence in [current development state](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary). [M3 conceptual provenance/working-state roles](../../architecture/Conceptual/provenance-working.c4) select no new record format and do not imply that every adopted mechanism is delivered.
+The preceding delivery statement retains its original development checkpoint scope. ADR019 was subsequently explicitly adopted; acceptance is distinct from the bounded implementation/compatibility evidence in [current development state](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary). [M3 conceptual provenance/working-state roles](../architecture/Conceptual/provenance-working.c4) select no new record format and do not imply that every adopted mechanism is delivered.

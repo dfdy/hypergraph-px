@@ -22,13 +22,13 @@ Only the spend helper has an extracted-Rust proof. Graph examples/oracle tests a
 
 ## Mathematical definition
 
-Actual source: [expansion.rs](../../../crates/domain/src/expansion.rs). The validator bounds vertices, edges and charged work, rejects undeclared/duplicate vertices/endpoints and cycles, and computes an elimination order with Kahn's algorithm. Parallel edges and disconnected isolated vertices remain valid where acyclic. Five original tests include exhaustive comparison of all512 three-vertex directed graphs with a separate reachability oracle. Exact error/work rules belong to the source API and preserved data reference; no inferred federation ordering or new algorithm is adopted. Only the private spend helper has extracted-Rust assurance.
+Actual source: [expansion.rs](../../../backend/crates/domain/src/expansion.rs). The validator bounds vertices, edges and charged work, rejects undeclared/duplicate vertices/endpoints and cycles, and computes an elimination order with Kahn's algorithm. Parallel edges and disconnected isolated vertices remain valid where acyclic. Five original tests include exhaustive comparison of all512 three-vertex directed graphs with a separate reachability oracle. Exact error/work rules belong to the source API and preserved data reference; no inferred federation ordering or new algorithm is adopted. Only the private spend helper has extracted-Rust assurance.
 
 ### 9. Implemented initial Rust API
 
 Source `HPX-SRC-0026`, original lines 131–138. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
 
-[`hypergraph_domain::expansion::validate`](<../../../crates/domain/src/expansion.rs>) accepts an explicit vertex list, directed expansion edges and a `Budget { vertices, edges, work }`. IDs are opaque ordered values supplied by the caller; no persistent ID or wire format is chosen. It returns `Validated { vertices, edges, work }` or `Error::{Budget, DuplicateVertex, UnknownVertex, Cycle}`.
+[`hypergraph_domain::expansion::validate`](<../../../backend/crates/domain/src/expansion.rs>) accepts an explicit vertex list, directed expansion edges and a `Budget { vertices, edges, work }`. IDs are opaque ordered values supplied by the caller; no persistent ID or wire format is chosen. It returns `Validated { vertices, edges, work }` or `Error::{Budget, DuplicateVertex, UnknownVertex, Cycle}`.
 
 The implementation uses iterative Kahn validation and ordered maps. Parallel edges and repeated dependencies are valid. A successful run spends exactly 2V + 2E defined work units, stores O(V + E) data and performs O((V + E) log V) ordered-map work (with a constant empty case). It mutates no input and does not require storage, network, keys or a principal. Its caller must supply the complete correct projection and authorize any records used to build it. It is not a renderer, forest-owner validator, durable commit or permission grant.
 

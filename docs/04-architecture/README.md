@@ -1,6 +1,6 @@
 # Architecture
 
-Structural definitions now live in the [LikeC4 specification](../../architecture/SPECIFICATION.md). This folder retains linked contracts and ADRs; architecture summaries delegate to diagram-owned scopes rather than reproduce them.
+Structural definitions now live in the [LikeC4 specification](../architecture/SPECIFICATION.md). This folder retains linked contracts and ADRs; architecture summaries delegate to diagram-owned scopes rather than reproduce them.
 
 - [Component and Module Architecture](<component-architecture.md>) — `HPX-ARCH-002`; proposed.
 - [Data and Storage Architecture](<data-architecture.md>) — `HPX-ARCH-003`; proposed.

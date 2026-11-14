@@ -1,3 +1,4 @@
+import {cargoExecutable} from '../../shared/tooling/cargo-path.mjs';
 // SPDX-License-Identifier: AGPL-3.0-only
 // Capture the current embedded runtime with disposable synthetic content only.
 import {spawn,execFileSync} from 'node:child_process';
@@ -9,7 +10,7 @@ import {expect} from '@playwright/test';
 import {testBrowser} from './browser-session.mjs';
 import {binaryFingerprint,refreshManualRuntime} from './manual-runtime-update.mjs';
 
-const root=resolve(import.meta.dirname,'../..'),cert=join(root,'artifacts/local-tls/localhost.pem'),key=join(root,'artifacts/local-tls/localhost-key.pem');
+const root=resolve(import.meta.dirname,'../..'),cert=join(root,'.local/credentials/tls/localhost.pem'),key=join(root,'.local/credentials/tls/localhost-key.pem');
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex'),testedSha=await binaryFingerprint();
 const approved='05865badace97aad0cb8abf4460e12f6a1574b812759780052e8ffb486bf8428';
 const samples=[
@@ -53,9 +54,9 @@ Which assumptions support this interpretation? What evidence would challenge it?
 let directory,runtime,browser,passed=false;
 try{
  if(sha(execFileSync('/usr/bin/openssl',['x509','-in',cert,'-outform','DER']))!==approved)throw Error('Certificate differs from approved leaf');
- directory=await mkdtemp(join(root,'artifacts/readme-runtime-'));
+ directory=await mkdtemp(join(root,'.local/artifacts/readme-runtime-'));
  const probe=createServer();await new Promise((yes,no)=>{probe.once('error',no);probe.listen(0,'127.0.0.1',yes);});const port=probe.address().port;await new Promise((yes,no)=>probe.close(error=>error?no(error):yes()));
- runtime=spawn(join(root,'target/debug/hypergraph'),['--workspace',join(directory,'synthetic.hpx'),'--create','--cert',cert,'--key',key,'--port',String(port)],{stdio:['ignore','pipe','pipe']});
+ runtime=spawn(cargoExecutable(),['--workspace',join(directory,'synthetic.hpx'),'--create','--cert',cert,'--key',key,'--port',String(port)],{stdio:['ignore','pipe','pipe']});
  const launch=await new Promise((yes,no)=>{let output='';const timeout=setTimeout(()=>no(Error('Synthetic capture runtime startup timed out')),10000);runtime.once('error',()=>{clearTimeout(timeout);no(Error('Capture runtime could not start'));});runtime.once('exit',()=>{clearTimeout(timeout);no(Error('Capture runtime exited'));});runtime.stdout.on('data',bytes=>{output+=bytes;const match=output.match(/https:\/\/127\.0\.0\.1:\d+\/#launch=[a-f0-9]+/);if(match){clearTimeout(timeout);yes(match[0]);}});});
  browser=await testBrowser();const page=await browser.contexts()[0].newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));await page.setViewportSize({width:1600,height:1000});
  await page.goto(launch,{waitUntil:'networkidle'});await page.getByLabel('Workspace passphrase',{exact:true}).fill('SYNTHETIC-ONLY-readme-'+randomBytes(16).toString('hex'));await page.getByRole('button',{name:'Create workspace',exact:true}).click();await expect(page.getByLabel('Document name',{exact:true})).toBeVisible();

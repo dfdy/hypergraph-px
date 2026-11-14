@@ -1,3 +1,5 @@
+import {requireCurrentManualRecord} from '../../shared/tooling/manual-record.mjs';
+import {cargoExecutable} from '../../shared/tooling/cargo-path.mjs';
 // SPDX-License-Identifier: AGPL-3.0-only
 // Explicitly authorized handoff of a successfully tested binary to the manual copy.
 import {spawn,execFileSync} from 'node:child_process';
@@ -6,8 +8,8 @@ import {resolve,join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {createServer} from 'node:net';
 import https from 'node:https';
-const root=resolve(import.meta.dirname,'../..'),artifacts=join(root,'artifacts');
-const built=join(root,'target/debug/hypergraph'),cert=join(artifacts,'local-tls/localhost.pem'),key=join(artifacts,'local-tls/localhost-key.pem');
+const root=resolve(import.meta.dirname,'../..'),artifacts=join(root,'.local/manual-runtime');
+const built=cargoExecutable(),cert=join(root,'.local/credentials/tls/localhost.pem'),key=join(root,'.local/credentials/tls/localhost-key.pem');
 const record=join(artifacts,'manual-runtime-session.json'),lockPath=join(artifacts,'manual-runtime-update.lock');
 const argument=name=>{const i=process.argv.indexOf(name);return i<0?undefined:process.argv[i+1];};
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -56,7 +58,7 @@ async function privateWrite(path,bytes){
 try{
  lock=await acquire();
  const manual=JSON.parse(await readFile(record,'utf8')),origin=new URL(manual.origin);
- if(manual.synthetic!==true||origin.protocol!=='https:'||origin.hostname!=='127.0.0.1'||!Number.isSafeInteger(manual.pid)||!manual.workspace.startsWith(artifacts+'/'))throw Error('Unexpected manual runtime record');
+ requireCurrentManualRecord(root,manual);
  await access(manual.workspace);
  const expected=argument('--tested-sha');if(!/^[a-f0-9]{64}$/.test(expected??''))throw Error('Updating requires the successful synthetic test binary SHA-256');
  const bytes=await readFile(built);if(digest(bytes)!==expected)throw Error('Built binary changed after the successful test; manual runtime was not updated');
@@ -76,7 +78,7 @@ try{
   replacement.child.stdout.destroy();replacement.child.stderr.destroy();replacement.child.unref();runtime=null;
   console.log('Manual HTTPS runtime updated to the tested build at '+new URL(launch).origin);console.log('Same workspace preserved; runtime starts locked.');
  }
- console.log('Private launch shortcut: artifacts/manual-runtime-launch.webloc');
+ console.log('Private launch shortcut: .local/manual-runtime/manual-runtime-launch.webloc');
 }finally{
  if(runtime&&runtime.exitCode===null)runtime.kill('SIGTERM');
  if(lock){await lock.close();await unlink(lockPath);}

@@ -1,0 +1,182 @@
+{
+  "protocol_version": "1.1.0",
+  "record_version": 1,
+  "id": "HPX-VER-20261102-acknowledged-input-design",
+  "kind": "verification_result",
+  "subject": "HPX-DOM-001 / HPX-GAP-004 proposal revision6",
+  "summary": "Coherent acknowledged-input,working-dependency retention and structural selection design prepared;mechanisms remain proposed.",
+  "status": "reported",
+  "authority": {
+    "basis": "agent_report"
+  },
+  "source_refs": [
+    {
+      "ref": "reconstruction-continue-013",
+      "role": "context"
+    },
+    {
+      "ref": "architecture/proposals/trustworthy-reconstruction-inputs.md",
+      "role": "observed"
+    },
+    {
+      "ref": "docs/02-governance/OWNER_DECISIONS.md",
+      "role": "normative"
+    }
+  ],
+  "relations": [
+    {
+      "type": "verifies",
+      "target": "HPX-PROP-20261101-reconstruction-inputs"
+    }
+  ],
+  "actor": "hpx-input-design",
+  "created_on": "2026-11-02",
+  "content": {
+    "target": "Proposal revision6 and proportionate planning/evidence records",
+    "outcome": "partial",
+    "method": "Source/contract review;ordinary documentation verifier;architecture links/anchors;registers;archive/source hashes;baseline preservation;independent retained-source-body comparison",
+    "evidence": {
+      "documentation": {
+        "outcome": "pass",
+        "checks": [
+          "Metadata/status/ID registry checked: 71 materialized contracts; 27 reserved",
+          "Source/map IDs and current-location register consistency checked",
+          "Coverage: 116 canonical sections; 169 retained canonical/policy/evidence sections; 138 sources; 509 claim units; 41 requirement seeds",
+          "Current Markdown local file links checked; original archive links not rewritten"
+        ],
+        "log": ".verification/acknowledged-input-design/documentation.log"
+      },
+      "architecture_local_links": {
+        "outcome": "pass",
+        "checked": 1111
+      },
+      "registers": {
+        "requirements.csv": 41,
+        "tests.csv": 161,
+        "traceability.csv": 598,
+        "open-questions.csv": 29,
+        "decisions.csv": 19
+      },
+      "archives_and_sources": {
+        "outcome": "pass",
+        "archived_originals": 133,
+        "registered_sources": 138
+      },
+      "retained_source_body_comparison": {
+        "outcome": "partial",
+        "method": "Independent registered-source-span/body comparison without Git; exact finding-list comparison to TEST160 evidence",
+        "count": 30,
+        "findings": [
+          "HPX-SRC-0032-S002",
+          "HPX-SRC-0002-S002",
+          "HPX-SRC-0001-S011",
+          "HPX-SRC-0032-S003",
+          "HPX-SRC-0032-S004",
+          "HPX-SRC-0032-S005",
+          "HPX-SRC-0032-S006",
+          "HPX-SRC-0021-S001",
+          "HPX-SRC-0021-S002",
+          "HPX-SRC-0021-S003",
+          "HPX-SRC-0021-S006",
+          "HPX-SRC-0021-S008",
+          "HPX-SRC-0021-S004",
+          "HPX-SRC-0023-S002",
+          "HPX-SRC-0037-S005",
+          "HPX-SRC-0037-S001",
+          "HPX-SRC-0037-S009",
+          "HPX-SRC-0028-S010",
+          "HPX-SRC-0028-S012",
+          "HPX-SRC-0028-S009",
+          "HPX-SRC-0024-S002",
+          "HPX-SRC-0024-S007",
+          "HPX-SRC-0024-S009",
+          "HPX-SRC-0035-S001",
+          "HPX-SRC-0035-S003",
+          "HPX-SRC-0028-S001",
+          "HPX-SRC-0028-S002",
+          "HPX-SRC-0028-S007",
+          "HPX-SRC-0024-S003",
+          "HPX-SRC-0028-S017"
+        ],
+        "same_findings_as_test160": true,
+        "scope": "Source-span hashes pass;30 existing retained-source-body findings persist,not repaired. Full Git-dependent aggregate not claimed."
+      },
+      "preservation": {
+        "baseline_files": 572,
+        "unchanged_files": 564,
+        "changed_existing_files": [
+          "architecture/audits/dom001-current-coverage.md",
+          "architecture/audits/specification-migration-status.md",
+          "architecture/proposals/branch-selection-reconciliation.md",
+          "architecture/proposals/trustworthy-reconstruction-inputs.md",
+          "checklist.md",
+          "docs/09-guides/reference/DEVELOPMENT_STATE.md",
+          "docs/registers/open-questions.csv",
+          "docs/registers/tests.csv"
+        ],
+        "baseline_path": ".verification/acknowledged-input-design/baseline.json",
+        "baseline_sha256": "dcdad4e5548198d686bae59f60fa17739319c73bc3d836dee459b1e2c84bdaee",
+        "proposal_revision5": {
+          "local_path": ".verification/acknowledged-input-design/trustworthy-reconstruction-inputs.md",
+          "sha256": "b3d043aa4b2eedbb26111c9bd53da292da38643a07109e76349fefe55be91d52"
+        },
+        "old_test_register_exact_prefix": true,
+        "canonical_model_saved_layouts_and_prior_evidence_unchanged": true,
+        "application_and_proof_sources_unchanged": true
+      },
+      "migration_counts": {
+        "Fully migrated": 1,
+        "Partially migrated": 24,
+        "Not migrated — subject specifications": 13,
+        "Not migrated — supporting records": 33
+      },
+      "scopes": 24,
+      "views": 45,
+      "item1": "unchecked;existing local exclusion preserved",
+      "proposal_review": {
+        "outcome": "pass",
+        "method": "Manual source/accepted-contract consistency review;retention thought experiment and S1–S5 presence checked",
+        "limitations": "Design review only;no executed product cases or semantic/model proof"
+      }
+    },
+    "source_sha256": {
+      "architecture/audits/dom001-current-coverage.md": "67b268e917fa35c5a66b3146d7077ba988716a5842e8ffbd194d1e4bd19bd3b9",
+      "architecture/audits/specification-migration-status.md": "dc49e2dd40b8420fde945343dea25f9d81ac9f054627192a8ec129d7273cc03d",
+      "architecture/proposals/branch-selection-reconciliation.md": "b1bf763d0cf0575c55c690dc712a83c179deb16c257108a1990e1d89492532c2",
+      "architecture/proposals/trustworthy-reconstruction-inputs.md": "497aaae3bd590219458a7edf00ff19a99320404cccc838bdf53d7e30125a837d",
+      "checklist.md": "9d511bff8ab50458a57c1bc5fd3777ef5020185e78c1161ebd9805aac73afc05",
+      "docs/09-guides/reference/DEVELOPMENT_STATE.md": "af9ecfc8247c769c7d4043a1f21d00b2b399c9b713edf46e4e97465da9d2a1c2",
+      "docs/registers/open-questions.csv": "009753c6fb8e481e45c73f85ae417d8be483878209018ffcf7796feee08d60fc",
+      "docs/registers/tests.csv": "75e431d520629e1eaecc4e3453e4b7091d563a82acc07a5fb3d763756fe0e00d"
+    },
+    "inspected_input_sha256": {
+      "architecture/SPECIFICATION.md": "7b4ccb5eda272f0c0d33d8cdce5ec21fa9f1fba24cc4ea75cd40877f13ce1a65",
+      "docs/README.md": "765a5a3d2b3ee6fb667379c2a66953ab9e81a8b70a616f7fdc5aad3d75d57282",
+      "docs/02-governance/OWNER_DECISIONS.md": "1a3bf1687a1b30b51f714fab8823a0768fa4272ad7874550d2160130659fd674",
+      "architecture/Conceptual/identity-closure.c4": "40daec3e20cf05f7253441ffe13552a985a509bd5c58c3309d7a25fe0fa7c7d7",
+      "docs/05-domain/text-and-anchors.md": "e2a16436a4102fa71220070422a8d233906853fab261be0856558612379c068e",
+      "docs/05-domain/document-semantics.md": "363f485f97586dd70aff2eae734c6f5fea55e67a4ba7d5b425c4dc6e16c4d1a8",
+      "docs/07-implementation/protocols/draft-publication.md": "b8629d1a4fb18ff8f1d873257f02ce26c36a1ef73b5faed901b47dae5548c02e",
+      "docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md": "93cb437dc4aec78fa6028e2922bb7e9af8ed1d118184033dc9ed5b8a928d0c56",
+      "crates/storage/src/lib.rs": "f2e443c7f734097db3ee79619dd716f5bc2e1b87284bd97fea0f976ec824b194",
+      "crates/storage/src/working.rs": "4d8ccbd6fd4282fadedda452b375b98230fc5d463d3b71a9fe7b6731394cb8dd",
+      "frontend/src/runtime-adapter.js": "8ee28708e372aa40822fb18b0539143617da7a4c8ff09d9c09603143bac8ea25"
+    },
+    "new_file": "architecture/evidence/acknowledged-input-design.json",
+    "recommended_next_owner_decision": "Whether ordinary acknowledged composition dependencies use recoverable working material without automatic permanent private checkpoints,or establish immutable historical checkpoints on dependency-selection events. Recommend recovery-only ordinary reopening plus explicit immutable capture for separately defined durable-reference events.",
+    "independent_pending_proposal": "Explicit structural endpoints and half-open membership over ordered contributions,including coincident/zero-byte stops and partial source fragments;S1–S5 are unadopted future cases.",
+    "not_run": [
+      "Git status/diff/check-ignore or full Git-dependent local-source aggregate;system Git unavailable due missing command-line tools.",
+      "No-layout or served-layout computation:no model edits;baseline canonical .c4 and saved snapshots exact bytes preserved.",
+      "Application/Node/Rust/integration tests or builds;existing Save/checkpoint test source inspected but not rerun.",
+      "Lean/extraction replay:no changed proof assumptions;no new model or implementation correspondence claim."
+    ],
+    "limitations": [
+      "OWNER051 remains accepted only within its recorded three reconstruction rules;all new revision6 mechanisms remain proposed.",
+      "No retention/release/deletion,publication,universal autosave/Commit,permission/wire/format or physical source-map mechanism adopted.",
+      "Receipts reconcile original success but do not recover overwritten source bytes;general nested private recovery is not implemented by inspected helpers.",
+      "Scope-limited baseline excludes generated/cache/unlisted private/runtime files.",
+      "No branches,additional agents,commits,pushes,releases,trust/provider or manual-runtime actions."
+    ]
+  }
+}

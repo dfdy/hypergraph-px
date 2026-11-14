@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-30
+- **Last reviewed:** 2026-11-03
 
 Formal meanings do not imply every type or operation is implemented. See implementation discrepancies and requirement evidence separately.
 
@@ -85,3 +85,21 @@ The local read-only runtime now resolves the existing `Anchor` against an exact 
 ## Committed comment anchors
 
 Accepted HPX-ADR-017 uses one exact committed passage per immutable comment. The dependency-free `comment::plan` validates revision/path, scalar-safe nonempty UTF-8 range, exact quote and nonblank bounded body, preserving source/comment newline bytes. Current authorization, draft preconditions and persisted versions remain adapters. Retained comments continue to reference their historical passage after source edits; no quote matching or current-head substitution relocates them. Document paging links between distinct comments are not same-node ancestry.
+
+## Structural membership and exact partial fragments — OWNER053
+
+[Canonical M1](../architecture/Conceptual/identity-closure.c4) owns the accepted composition-selection meanings; [decision provenance](../02-governance/OWNER_DECISIONS.md#structural-selection-membership-and-exact-partial-fragments--2026-11-02) records choices1A/2A together. Distinguish an exact owned-source text range from a graph-preserving composition selection. Composition membership follows the exact selected structural contribution order and full occurrence/source context; numeric parent-source or flattened byte offsets alone do not establish it.
+
+| Selection/context | Accepted meaning; no UI/codec inferred |
+| --- | --- |
+| Before p→B to after p→B, with q→C at the same parent-source byte cut | Select p/B alone under that exact contribution order, not q/C; retain full occurrence context. |
+| Across a zero-byte stopped inclusion p | Select its exact stopped relationship/target/ancestor and separate warning/navigation despite empty authored-byte contribution. No source placeholder is invented. |
+| Identical structural start and end positions | Select nothing. Equal numeric byte offsets do not prove identical structural positions. |
+| Only the emoji within one occurrence's `A😀B` | Preserve its exact selected bytes and full source/occurrence context; distinguish the partial fragment from the whole selected inclusion and every other reuse. Existing checked UTF16/source conversion still applies. |
+| Part of the exact original including-source notation | Preserve the exact selected owned bytes/context; clipped notation does not become an executable whole inclusion. Do not silently expand selection or forbid arbitrary owned-source ranges. |
+
+A fragment's necessary source/ancestor context is not a claim that its entire enclosing inclusion was selected. Missing/stale/ambiguous structural mapping must not be guessed from text or merged solely because byte cuts coincide. Exact endpoint representation, UI/wiring and physical source maps remain engineering designs; this approval supplies no model/implementation correspondence proof. Existing ownership, authority, newline/Unicode and immutable-history obligations remain.
+
+## Concrete closure map representation — OWNER055
+
+The [canonical item3 choices](../architecture/Conceptual/identity-closure.c4) are realised in the [typed source-map design](../architecture/proposals/exact-closure-source-map.md#4-one-typed-ordered-map--choice4a). Copied spans use exact full-source UTF8 ranges; structural/site/stop entries preserve zero-byte distinctions and nesting without source characters. Before/after endpoints retain occurrence/contribution context at coincident byte cuts; partial notation stays a fragment. [UTF16/display conversion](../architecture/proposals/exact-closure-source-map.md#exact-utf8--browser-utf16--display-relation) is checked against exact identified buffers with no normalization or nearest-owner inference. This completes representation design only; browser/source correspondence,composite mutation and new-format acceptance are not delivered.

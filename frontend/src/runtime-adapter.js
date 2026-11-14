@@ -392,6 +392,7 @@ export class RuntimeAdapter {
 function element(tag,text){const e=document.createElement(tag);if(text)e.textContent=text;return e;}
 export async function initializeRuntime(){
  if(location.protocol!=='https:')return null;
+  if(document.querySelector('meta[name="hpx-development-mode"]')?.content==='mock')return null;
  const cover=element('div');cover.className='runtime-unlock';const form=element('form'),heading=element('h1','Hypergraph PX'),status=element('p','Connecting to local runtime…'),label=element('label','Workspace passphrase'),input=element('input'),submit=element('button','Unlock workspace'),keychain=element('button','Unlock with macOS Keychain');
  const logo=element('img');logo.src='/assets/logo.png';logo.alt='';logo.width=36;logo.height=36;heading.prepend(logo);
  keychain.type='button';keychain.hidden=true;

@@ -1,3 +1,4 @@
+import {cargoExecutable} from '../../shared/tooling/cargo-path.mjs';
 import {binaryFingerprint,refreshManualRuntime} from './manual-runtime-update.mjs';
 import {testBrowser} from './browser-session.mjs';
 // SPDX-License-Identifier: AGPL-3.0-only
@@ -14,7 +15,7 @@ let runtime,browser,passed=false;
 const testedSha=await binaryFingerprint();
 try{
  const probe=createServer();await new Promise((yes,no)=>{probe.once('error',no);probe.listen(0,'127.0.0.1',yes);});const port=probe.address().port;await new Promise((yes,no)=>probe.close(error=>error?no(error):yes()));
- runtime=spawn(resolve(root,'target/debug/hypergraph'),['--workspace',join(temporary,'synthetic.hpx'),'--create','--cert',resolve(root,'artifacts/local-tls/localhost.pem'),'--key',resolve(root,'artifacts/local-tls/localhost-key.pem'),'--port',String(port)],{stdio:['ignore','pipe','pipe']});
+ runtime=spawn(cargoExecutable(),['--workspace',join(temporary,'synthetic.hpx'),'--create','--cert',resolve(root,'.local/credentials/tls/localhost.pem'),'--key',resolve(root,'.local/credentials/tls/localhost-key.pem'),'--port',String(port)],{stdio:['ignore','pipe','pipe']});
  const url=await new Promise((yes,no)=>{let output='';const timer=setTimeout(()=>no(Error('Runtime TLS preflight startup timed out')),10000);runtime.once('error',()=>{clearTimeout(timer);no(Error('Runtime binary could not start'));});runtime.once('exit',()=>{clearTimeout(timer);no(Error('Runtime TLS preflight exited'));});runtime.stdout.on('data',bytes=>{output+=bytes.toString();const match=output.match(/https:\/\/127\.0\.0\.1:\d+\/#launch=[a-f0-9]+/);if(match){clearTimeout(timer);yes(match[0]);}});});
  browser=engine==='chromium'?await testBrowser():await webkit.launch({headless:true});const context=browser.contexts()[0]??await browser.newContext();const page=await context.newPage();
  // Explicitly retain default certificate verification. Never log the launch URL.

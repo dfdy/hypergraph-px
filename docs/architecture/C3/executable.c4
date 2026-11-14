@@ -1,0 +1,616 @@
+// Canonical definition location: HPX-CAN-003 (HPX-OWNER-032). Existing design/implementation statuses retain their authority; see docs/architecture/SPECIFICATION.md.
+// Specification-derived C3 responsibility model. Proposed for owner review.
+// Co-located functions are not new crates or independently deployed services.
+specification {
+  element executable
+  element component
+  // Status badges have fixed semantic colours, independent of block fills.
+  tag planned { color muted }
+  tag implemented { color green }
+  tag partial { color amber }
+  relationship native_call { line solid; color slate }
+}
+
+model {
+  extend hpx {
+    native = executable "HPX Rust executable" {
+    technology "Rust; embedded frontend; bundled SQLite"
+    description "Specification-based responsibility boundaries for review. Components are not separate processes or necessarily separate crates. Startup consumes an explicit workspace path and separately provisioned TLS certificate/private-key files; transport keys are distinct from workspace encryption keys and the optional keychain device secret. No trust installation, external witness or provider connection occurs by implication. Node, Lean, a database server and user-installed Pandoc are not release prerequisites. Future Pandoc binding/helper packaging and independently trusted client delivery remain unselected design gates."
+    link ../../04-architecture/system-architecture.md
+    link ../../04-architecture/decisions/0004-local-https-bootstrap.md
+    link ../../04-architecture/component-architecture.md
+      domain = component "Pure domain" {
+        #partial
+        summary "Deterministic identities, exact ranges and bounded plans."
+        description "Dependency-free typed identities and byte/UTF16 validation; bounded supplied expansion, assertion/comment, independent Fork/Synthesis and supplied-map parent-Merge planning. No serialization, entropy, authorization or I/O. Full nested-closure and multi-owner plans remain incomplete."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/domain/src/lib.rs", "backend/crates/domain/src/records.rs", "backend/crates/domain/src/expansion.rs", "backend/crates/domain/src/fork.rs", "backend/crates/domain/src/merge.rs", "backend/crates/domain/src/parent_merge.rs", "backend/crates/domain/src/working.rs"] }
+        link ../../05-domain/core-object-model.md
+        link ../../05-domain/hypergraph-mathematics.md
+        link ../../06-subsystems/interfaces/domain-navigation.md
+        link ../../07-implementation/algorithms/parent-merge.md
+        link ../../../backend/crates/domain/src/lib.rs
+        link ../../../backend/crates/domain/src/records.rs
+        link ../../../backend/crates/domain/src/expansion.rs
+        link ../../../backend/crates/domain/src/fork.rs
+        link ../../../backend/crates/domain/src/merge.rs
+        link ../../../backend/crates/domain/src/parent_merge.rs
+        link ../../../backend/crates/domain/src/working.rs
+      }
+      application = component "Command and publication coordinator" {
+        #implemented
+        summary "Authorize, plan, recheck and publish one atomic result."
+        description "Logical application coordinator currently hosted in Workspace::execute/execute_inner in backend/crates/storage. Validates frozen commands, checks current sole-owner authority before protected receipt replay, rechecks expected state, and atomically publishes bounded local results and receipts. Changed operation reuse conflicts; unknown outcomes reconcile the original request. Not a separate crate, process or general distributed transaction service."
+        metadata { authority "proposed architectural grouping" implementation "implemented" paths ["backend/crates/storage/src/lib.rs", "backend/crates/storage/src/authority.rs"] }
+        link ../../04-architecture/component-architecture.md
+        link ../../07-implementation/protocols/draft-publication.md
+        link ../../../backend/crates/storage/src/lib.rs
+        link ../../../backend/crates/storage/src/authority.rs
+      }
+      authority = component "Authority and confidentiality policy" {
+        #partial
+        summary "Current owner scope; broader rights and egress gates remain planned."
+        description "Current one-owner catalog/device and source/result checks are independent of IDs,session authentication and receipts. Mandatory multi-user/AI principal membership,grants and isolation remain implementation gaps (HPX-OWNER-027). Workspace-user permissions at the shared user API are mandatory (HPX-OWNER-029), not UI-only checks. Workspace permission administration/revocation and client-held core egress checks remain unimplemented; no mandatory node ACL is selected. Every future provider/file/clipboard/print/job sink must enforce the adopted mode policy below its UI. No new policy engine, identity provider or permission scheme is selected."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/storage/src/authority.rs", "backend/crates/storage/src/lib.rs"] }
+        link ../../06-subsystems/security-cryptography.md
+        link ../../03-requirements/system-requirements.md
+        link ../../02-governance/OWNER_DECISIONS.md
+        link ../../../backend/crates/storage/src/authority.rs
+        link ../../../backend/crates/storage/src/lib.rs
+      }
+      documents = component "Documents, branches and working edits" {
+        #partial
+        summary "Create, Save, Commit, branch, Fork and reviewed Synthesis."
+        description "Owns bounded local document/branch drafts, exact generation/base/sequence checks, departure Commit, immutable checkpoints and distinct cross-identity derivation versus same-node history. Existing independent Synthesis is not parent-branch Merge. Pure supplied-map parent-Merge and disposable schema3 single-parent temporal foundations do not deliver production two-parent publication, upgrade or normal opening."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/storage/src/lib.rs", "backend/crates/storage/src/branches.rs", "backend/crates/storage/src/branches/merge_base.rs", "backend/crates/storage/src/working.rs", "backend/crates/storage/src/forks.rs", "backend/crates/storage/src/merges.rs", "backend/crates/storage/src/working_forks.rs", "backend/crates/storage/src/temporal_commit.rs", "backend/crates/storage/src/temporal_save.rs"] }
+        link ../../06-subsystems/document-engine.md
+        link ../../05-domain/document-semantics.md
+        link ../../04-architecture/decisions/0015-initial-merge-workflow.md
+        link ../../04-architecture/decisions/0018-initial-local-branches.md
+        link ../../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md
+        link ../../07-implementation/algorithms/parent-merge.md
+        link ../../../backend/crates/storage/src/lib.rs
+        link ../../../backend/crates/storage/src/branches.rs
+        link ../../../backend/crates/storage/src/branches/merge_base.rs
+        link ../../../backend/crates/storage/src/working.rs
+        link ../../../backend/crates/storage/src/forks.rs
+        link ../../../backend/crates/storage/src/merges.rs
+        link ../../../backend/crates/storage/src/working_forks.rs
+        link ../../../backend/crates/storage/src/temporal_commit.rs
+        link ../../../backend/crates/storage/src/temporal_save.rs
+      }
+      composition = component "Composition and source ownership" {
+        #partial
+        summary "Single-occurrence foundation; general composition remains gated."
+        description "Manifests and exact owned context exist for the current one-owner whole-document slice. General chapter collections, ordered repeated/nested occurrences, promotion/split, multi-owner edit plans, Move/Fork/Embed, pinned/live transclusion and complete cycle/permission revalidation remain target responsibilities, not enabled services. No new entity schema, CRDT, closure cache or resolver algorithm is selected."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/storage/src/lib.rs", "backend/crates/domain/src/records.rs", "backend/crates/domain/src/expansion.rs"] }
+        link ../../05-domain/document-semantics.md
+        link ../../05-domain/text-and-anchors.md
+        link ../../06-subsystems/document-engine.md
+        link ../../06-subsystems/interfaces/domain-navigation.md
+        link ../../../backend/crates/storage/src/lib.rs
+        link ../../../backend/crates/domain/src/records.rs
+        link ../../../backend/crates/domain/src/expansion.rs
+      }
+      queries = component "Graph navigation and read projections" {
+        #partial
+        summary "Bounded, authorized graph views; general queries remain planned."
+        description "Current induced document/Fork, assertion incidence and transformation projections retain roles, direction, exact selected context, outside-selection counts and work limits. General nodes/references/backlinks/occurrences, impact/search/index families and concept/assertion-to-assertion navigation remain unimplemented or unspecified. No separate graph database or authoritative semantic store is introduced."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/storage/src/graph.rs", "backend/crates/storage/src/overlay_graph.rs"] }
+        link ../../06-subsystems/graph-engine.md
+        link ../../06-subsystems/interfaces/domain-navigation.md
+        link ../../../backend/crates/storage/src/graph.rs
+        link ../../../backend/crates/storage/src/overlay_graph.rs
+      }
+      history = component "Snapshots, history and exact anchors" {
+        #partial
+        summary "Read retained exact states without following newer heads."
+        description "One-occurrence snapshot reconstruction, immutable history/branch paging, exact historical byte-range reads and bounded common-base inspection exist. Complete nested closure/source maps, general reconstruction compiler resources and all-history navigation remain separate requirements. Reference cycles differ from recursive expansion cycles; inspection cannot mutate snapshots or publish history."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/storage/src/lib.rs", "backend/crates/storage/src/history.rs", "backend/crates/storage/src/anchors.rs", "backend/crates/storage/src/branches/merge_base.rs"] }
+        link ../../05-domain/document-semantics.md
+        link ../../05-domain/text-and-anchors.md
+        link ../../06-subsystems/interfaces/domain-navigation.md
+        link ../../../backend/crates/storage/src/lib.rs
+        link ../../../backend/crates/storage/src/history.rs
+        link ../../../backend/crates/storage/src/anchors.rs
+        link ../../../backend/crates/storage/src/branches/merge_base.rs
+      }
+      provenance = component "Derivation and contributor evidence" {
+        #partial
+        summary "Pinned derivation and publisher facts, not inferred authorship."
+        description "Current immutable Fork/Synthesis/working-source derivations and bounded snapshot-bound publication contributors preserve exact source identities and original-authorship uncertainty. Full observed/declared/inferred authorship, influence, interaction capture, adoption, rights attribution and verification remain distinct future requirements. No authenticated-peer or complete contributor-index claim."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/storage/src/forks.rs", "backend/crates/storage/src/merges.rs", "backend/crates/storage/src/working_forks.rs", "backend/crates/storage/src/contributors.rs"] }
+        link ../../05-domain/provenance-model.md
+        link ../../06-subsystems/interfaces/browser-runtime.md
+        link ../../03-requirements/user-needs.md
+        link ../../../backend/crates/storage/src/forks.rs
+        link ../../../backend/crates/storage/src/merges.rs
+        link ../../../backend/crates/storage/src/working_forks.rs
+        link ../../../backend/crates/storage/src/contributors.rs
+      }
+      assertions = component "Semantic assertions and predicate catalogue" {
+        #partial
+        summary "Versioned, role-labelled claims and retrospective review."
+        description "Current predicates, exact participant captures, n-ary roles, negation/certainty/attribution/scope and revisioned review overlays are separate from text snapshots and browsing categories. Manual contextual equivalence is not automatic discovery, a checked proof or identity equality. General semantic entities and structured evidence remain future scope; owner-deferred statement-to-Lean conversion is not enabled."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/domain/src/assertion.rs", "backend/crates/storage/src/assertions.rs", "backend/crates/storage/src/predicates.rs", "shared/predicate-catalog-v1.json"] }
+        link ../../05-domain/assertions-and-predicates.md
+        link ../../06-subsystems/graph-engine.md
+        link ../../04-architecture/decisions/0010-semantic-annotation-snapshots.md
+        link ../../02-governance/requests.md
+        link ../../../backend/crates/domain/src/assertion.rs
+        link ../../../backend/crates/storage/src/assertions.rs
+        link ../../../backend/crates/storage/src/predicates.rs
+        link ../../../shared/predicate-catalog-v1.json
+      }
+      comments = component "Anchored document comments" {
+        #partial
+        summary "Immutable retrospective comments on committed passages."
+        description "Current exact committed-source comments and bounded append-only paging preserve historical anchors. Draft anchors, replies, editing, resolution, shared-user lifecycle and imported Word threads remain future scope. Comments are user annotations, not agent conversation or changes to earlier text snapshots."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/domain/src/comment.rs", "backend/crates/storage/src/comments.rs"] }
+        link ../../04-architecture/decisions/0017-initial-durable-comments.md
+        link ../../06-subsystems/interfaces/browser-runtime.md
+        link ../../../backend/crates/domain/src/comment.rs
+        link ../../../backend/crates/storage/src/comments.rs
+      }
+      clipboard = component "Private provenance clipboard" {
+        #partial
+        summary "Encrypted references, working checkpoints and retained promotions."
+        description "Current principal/workspace-isolated committed and working references, immutable exact checkpoints, independent working-source Fork, promotion and separately acknowledged replacements retain originals. Capture is not Commit or derivation. Full atomic Paste All, multi-component selections and general entity replacement remain gated. Ordinary OS copy/paste executes in the browser and is a separate egress sink."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/storage/src/clipboard.rs", "backend/crates/storage/src/working.rs", "backend/crates/storage/src/working_clipboard.rs", "backend/crates/storage/src/working_forks.rs"] }
+        link ../../06-subsystems/document-engine.md
+        link ../../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md
+        link ../../../backend/crates/storage/src/clipboard.rs
+        link ../../../backend/crates/storage/src/working.rs
+        link ../../../backend/crates/storage/src/working_clipboard.rs
+        link ../../../backend/crates/storage/src/working_forks.rs
+      }
+      storage = component "Workspace persistence and record codecs" {
+        #implemented
+        summary "Versioned encrypted records, slots and atomic SQLite transactions."
+        description "Current adapter-owned typed records and explicit version/kind wrappers; bundled SQLite objects/slots and authoritative receipts; generation/head checks, bounded consistent read views and WAL/FULL publication. Schema1/2 ordinary opening remains separate from disposable experimental schema3 records. Not every index is reconstructible. No new schema/envelope/API version, pruning or real-data format acceptance follows from this diagram."
+        metadata { authority "proposed architectural grouping" implementation "implemented" paths ["backend/crates/storage/src/lib.rs", "backend/crates/storage/src/encoding.rs"] }
+        link ../../04-architecture/data-architecture.md
+        link ../../04-architecture/decisions/0006-domain-serialization-boundary.md
+        link ../../04-architecture/decisions/0007-explicit-record-versions.md
+        link ../../07-implementation/data-structures/sqlite-records.md
+        link ../../../backend/crates/storage/src/lib.rs
+        link ../../../backend/crates/storage/src/encoding.rs
+      }
+      recovery = component "Integrity audit and recovery boundaries" {
+        #partial
+        summary "Read-only bounded audit and backed-up enrollment; wider repair is planned."
+        description "Current original-branch immediate-record audit, fail-closed decoding, durable draft/receipt recovery and verified backup before explicit keychain upgrade have bounded implementation evidence. Full repair/rebuild/portable restore, power-loss coverage and long-history temporal upgrade remain separate gates. OWNER-009 keeps required persistent application/recovery evidence in the workspace; complete authentic rollback is undetectable and no external witness is introduced."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/storage/src/audit.rs", "backend/crates/storage/src/lib.rs", "backend/crates/storage/src/keychain.rs"] }
+        link ../../08-assurance/recovery.md
+        link ../../08-assurance/security-threat-model.md
+        link ../../02-governance/OWNER_DECISIONS.md
+        link ../../../backend/crates/storage/src/audit.rs
+        link ../../../backend/crates/storage/src/lib.rs
+        link ../../../backend/crates/storage/src/keychain.rs
+      }
+      crypto = component "Authenticated envelopes and managed keys" {
+        #implemented
+        summary "Context-bound encryption, entropy and bounded key wrapping."
+        description "Current XChaCha20-Poly1305 object envelopes, Argon2id passphrase/device wrapping, OS randomness, separate ciphertext addresses and zeroizing managed buffers. Expected workspace/kind/identity/generation bindings come from the application. Key rotation, group hierarchy, signatures, selective historical key grants and hostile-host protection are not delivered by byte encryption. Crypto decides no authorization."
+        metadata { authority "proposed architectural grouping" implementation "implemented" paths ["backend/crates/crypto/src/lib.rs"] }
+        link ../../06-subsystems/interfaces/crypto-adapter.md
+        link ../../06-subsystems/formats/crypto-envelopes.md
+        link ../../06-subsystems/security-cryptography.md
+        link ../../../backend/crates/crypto/src/lib.rs
+      }
+      keychain = component "Explicit native unlock lifecycle" {
+        #partial
+        summary "Optional macOS device secret; passphrase recovery retained."
+        description "Current explicit status/enroll/unlock/remove, verified schema2 upgrade and checked native-provider cleanup. Device secret, workspace key, human passphrase and TLS key are distinct. No startup enrollment, plaintext fallback or user workspace mutation as a test effect. Non-macOS provider support, rotation and broader lifecycle remain unavailable or gated."
+        metadata { authority "proposed architectural grouping" implementation "partial" paths ["backend/crates/keychain/src/lib.rs", "backend/crates/storage/src/keychain.rs"] }
+        link ../../04-architecture/decisions/0014-keychain-unlock-policy.md
+        link ../../../backend/crates/keychain/src/lib.rs
+        link ../../../backend/crates/storage/src/keychain.rs
+      }
+      transport = component "Startup, HTTPS and API adapters" {
+        #implemented
+        summary "Loopback TLS, sessions, bounded routing and API1 DTOs."
+        description "Current supplied TLS certificate/key, numeric loopback Host, same-origin requests, bounded headers/body/workers/deadlines, launch capability exchange, secure cookie, locked startup, passphrase unlock and command/read routing. Generated OpenAPI3.1 coverage is progressive; route-only bodies remain untyped. The feature-gated schema exporter is development tooling. HPX-OWNER-029 requires one common human/AI command/query API behind browser HTTPS and AI MCP adapters, with per-user-per-workspace authority. These multi-user/MCP mechanisms are incomplete; remote listeners, WSS and general login are not inferred."
+        metadata { authority "proposed architectural grouping" implementation "implemented" paths ["backend/crates/runtime/src/main.rs", "backend/crates/runtime/src/api.rs", "backend/crates/runtime/src/api_transport.rs"] }
+        link ../../04-architecture/decisions/0004-local-https-bootstrap.md
+        link ../../06-subsystems/interfaces/browser-runtime.md
+        link ../../../backend/crates/runtime/src/main.rs
+        link ../../../backend/crates/runtime/src/api.rs
+        link ../../../backend/crates/runtime/src/api_transport.rs
+      }
+      frontend_assets = component "Embedded frontend resources" {
+        #implemented
+        summary "Static browser assets served from the executable."
+        description "Generated immutable asset map embeds HTML/CSS/JavaScript and reviewed notices. CodeMirror, KaTeX, editing, Navigator, graph drawing and source/selection/Undo presentation execute in the browser, not as Rust components. Node/esbuild and Lean are build/assurance tools. Planned local spell checking must follow approved packaging and privacy; its native/browser allocation is unselected."
+        metadata { authority "proposed architectural grouping" implementation "implemented" paths ["backend/crates/runtime/build.rs", "frontend/build.mjs", "frontend/src/app.js"] }
+        link ../../01-purpose/scope-and-non-goals.md
+        link ../../06-subsystems/frontend-interaction.md
+        link ../../../backend/crates/runtime/build.rs
+        link ../../../frontend/build.mjs
+        link ../../../frontend/src/app.js
+      }
+      integrations = component "External integration adapters (planned)" {
+        #planned
+        summary "Scoped agent, citations, import/export, GitHub and federation adapters."
+        description "Specified future integration responsibilities within the native application boundary, not selected services, vendors, endpoints, persistence formats or converter processes. Every execution rechecks current authorization and confidentiality/egress policy; client-held/non-trusted plaintext egress remains denied. C3 summarizes these planned adapters; their detailed source-linked responsibilities remain in the model."
+        metadata { authority "proposed architectural grouping" implementation "planned" }
+        link ../../06-subsystems/external-integrations.md
+        link ../../06-subsystems/import-export.md
+        link ../../06-subsystems/security-cryptography.md
+        agents = component "Machine-user chat adapter" {
+          #planned
+          summary "Required chat nodes and workspace-user permissions; no inference orchestration."
+          description "AI agents are a user kind;one machine user per provider per workspace, with workspace-local identity and permissions. Multiple providers may share a workspace. Chat prompts/all supplied context/responses must be nodes with history/provenance. MCP selected-node edits enter through user client access and common application policy,not a universal proposal-only path. Output/selection never self-grants authority. HPX records chat/context nodes and applies shared user API permissions; the machine user performs inference externally. No HPX inference endpoint or model-call service is required. Identity/chat records remain unselected."
+          metadata { authority "proposed architectural grouping" implementation "planned" }
+          link ../../03-requirements/user-needs.md
+          link ../../03-requirements/system-requirements.md
+          link ../../06-subsystems/security-cryptography.md
+        }
+        citations = component "Zotero citation adapters" {
+          #planned
+          summary "Separate desktop-local and cloud read-only access."
+          description "Separately selected/authenticated desktop REST and cloud Web API interfaces. Capture exact bibliographic metadata and style resources for reconstruction; no write-back, live historical refresh or automatic fallback. Credentials/origins/contracts remain open."
+          metadata { authority "proposed architectural grouping" implementation "planned" }
+          link ../../06-subsystems/document-engine.md
+          link ../../06-subsystems/import-export.md
+        }
+        word_import = component "Document and Word-review import" {
+          #planned
+          summary "Bound untrusted parsing and produce a reviewed exact import plan."
+          description "Exact base/target, source-file digest, change/comment mappings and ambiguity diagnostics precede authorization/publication. Retain Word Revision attribution and separate importing/approving humans. No macro execution, remote resource fetching, guessed matching, parser package or portable format selected."
+          metadata { authority "proposed architectural grouping" implementation "planned" }
+          link ../../06-subsystems/external-integrations.md
+        }
+        export = component "Frozen export and academic compilation" {
+          #planned
+          summary "Authorized exact content, citations, supplements and rights reports."
+          description "Freeze branch/snapshot or acknowledged draft, complete permitted closure, overlays/roles, bibliographic/style resources and target profile. Preserve Markdown/PDF/HTML obligations and RQ-030 docx/odt/rtf/html/tex/typ/xml/json targets, with declared fallbacks and permitted unresolved-rights appendix. Bundled/embedded Pandoc mechanism is open; no standalone runtime helper is selected. Exact temporary Markdown download remains a browser function."
+          metadata { authority "proposed architectural grouping" implementation "planned" }
+          link ../../06-subsystems/import-export.md
+          link ../../03-requirements/user-needs.md
+          link ../../06-subsystems/external-integrations.md
+        }
+        github_jobs = component "GitHub jobs, backup and update adapter" {
+          #planned
+          summary "Separate reviewed publication, encrypted backup and release discovery."
+          description "Frozen approved inputs, exact remote concurrency conditions and durable encrypted job/outbox outcomes must reconcile unknown results without promising exactly-once writes. Create-only encrypted backup/restore and release authenticity, installation origin, explicit install/restart approval remain separately gated. No provider connection, remote format, automatic updater or artifact-signing protocol is selected."
+          metadata { authority "proposed architectural grouping" implementation "planned" }
+          link ../../06-subsystems/external-integrations.md
+        }
+        federation = component "Peer exchange and synchronization adapter" {
+          #planned
+          summary "Future authorized offline exchange and coediting interfaces."
+          description "Future cross-instance operation validation, exact context, membership/revocation, causal ordering and deterministic conflict handling must preserve common application semantics and retained history. TLS/SQLite/CRDT alone establish none of these. No MLS, network topology, replication protocol or client-held executor is adopted."
+          metadata { authority "proposed architectural grouping" implementation "planned" }
+          link ../../03-requirements/system-requirements.md
+          link ../../06-subsystems/security-cryptography.md
+          link ../../02-governance/roadmap.md
+        }
+      }
+    }
+  }
+  hpx.native.transport -[native_call]-> hpx.native.application "Frozen commands" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.documents "Open documents / branches" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.queries "Bounded graph reads" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.history "Exact history / snapshots" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.assertions "Read semantic overlays" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.comments "Read anchored comments" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.provenance "Read derivation / contributors" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.clipboard "Read private references" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.recovery "Read-only audit" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.keychain "Explicit unlock lifecycle" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.frontend_assets "Serve embedded bytes" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.application -[native_call]-> hpx.native.authority "Current scope before replay" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.application -[native_call]-> hpx.native.domain "Validate deterministic plans" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.application -[native_call]-> hpx.native.documents "Edit / branch / derive" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.application -[native_call]-> hpx.native.composition "Single-occurrence foundation" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.application -[native_call]-> hpx.native.assertions "Publish / review claims" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.application -[native_call]-> hpx.native.comments "Publish anchored comment" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.application -[native_call]-> hpx.native.clipboard "Capture / promote references" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.application -[native_call]-> hpx.native.provenance "Retain publication evidence" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.application -[native_call]-> hpx.native.storage "Atomic result and receipt" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.documents -[native_call]-> hpx.native.storage "Read / write exact records" { metadata { evidence "backend/crates/storage/src/branches.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/branches.rs
+  }
+  hpx.native.composition -[native_call]-> hpx.native.storage "Read / write exact records" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.queries -[native_call]-> hpx.native.storage "Consistent protected reads" { metadata { evidence "backend/crates/storage/src/graph.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/graph.rs
+  }
+  hpx.native.history -[native_call]-> hpx.native.storage "Consistent protected reads" { metadata { evidence "backend/crates/storage/src/history.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/history.rs
+  }
+  hpx.native.provenance -[native_call]-> hpx.native.storage "Consistent protected reads" { metadata { evidence "backend/crates/storage/src/contributors.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/contributors.rs
+  }
+  hpx.native.assertions -[native_call]-> hpx.native.storage "Read / write exact records" { metadata { evidence "backend/crates/storage/src/assertions.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/assertions.rs
+  }
+  hpx.native.comments -[native_call]-> hpx.native.storage "Read / write exact records" { metadata { evidence "backend/crates/storage/src/comments.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/comments.rs
+  }
+  hpx.native.clipboard -[native_call]-> hpx.native.storage "Read / write exact records" { metadata { evidence "backend/crates/storage/src/working_clipboard.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/working_clipboard.rs
+  }
+  hpx.native.authority -[native_call]-> hpx.native.storage "Consistent protected reads" { metadata { evidence "backend/crates/storage/src/authority.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/authority.rs
+  }
+  hpx.native.recovery -[native_call]-> hpx.native.storage "Consistent protected reads" { metadata { evidence "backend/crates/storage/src/audit.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/audit.rs
+  }
+  hpx.native.keychain -[native_call]-> hpx.native.storage "Read / write exact records" { metadata { evidence "backend/crates/storage/src/keychain.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/keychain.rs
+  }
+  hpx.native.assertions -[native_call]-> hpx.native.domain "Pure validation" { metadata { evidence "backend/crates/storage/src/assertions.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/assertions.rs
+  }
+  hpx.native.comments -[native_call]-> hpx.native.domain "Pure validation" { metadata { evidence "backend/crates/storage/src/comments.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/comments.rs
+  }
+  hpx.native.clipboard -[native_call]-> hpx.native.domain "Pure validation" { metadata { evidence "backend/crates/storage/src/working.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/working.rs
+  }
+  hpx.native.storage -[native_call]-> hpx.native.crypto "Authenticate envelopes / wrappers" { metadata { evidence "backend/crates/storage/src/lib.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+  hpx.native.keychain -[native_call]-> hpx.native.crypto "Wrap the same workspace key" { metadata { evidence "backend/crates/storage/src/keychain.rs" scope "logical responsibility; no code refactor" }
+    link ../../../backend/crates/storage/src/keychain.rs
+  }
+  // Expand the prescribed approved-execution flow to each planned adapter.
+  hpx.native.application -[planned_flow]-> hpx.native.integrations.agents "Approved integration execution" { metadata { evidence "docs/04-architecture/component-architecture.md" scope "logical responsibility; no code refactor" }
+    link ../../04-architecture/component-architecture.md
+  }
+  hpx.native.application -[planned_flow]-> hpx.native.integrations.citations "Approved integration execution" { metadata { evidence "docs/04-architecture/component-architecture.md" scope "logical responsibility; no code refactor" }
+    link ../../04-architecture/component-architecture.md
+  }
+  hpx.native.application -[planned_flow]-> hpx.native.integrations.word_import "Approved integration execution" { metadata { evidence "docs/04-architecture/component-architecture.md" scope "logical responsibility; no code refactor" }
+    link ../../04-architecture/component-architecture.md
+  }
+  hpx.native.application -[planned_flow]-> hpx.native.integrations.export "Approved integration execution" { metadata { evidence "docs/04-architecture/component-architecture.md" scope "logical responsibility; no code refactor" }
+    link ../../04-architecture/component-architecture.md
+  }
+  hpx.native.application -[planned_flow]-> hpx.native.integrations.github_jobs "Approved integration execution" { metadata { evidence "docs/04-architecture/component-architecture.md" scope "logical responsibility; no code refactor" }
+    link ../../04-architecture/component-architecture.md
+  }
+  hpx.native.application -[planned_flow]-> hpx.native.integrations.federation "Approved integration execution" { metadata { evidence "docs/04-architecture/component-architecture.md" scope "logical responsibility; no code refactor" }
+    link ../../04-architecture/component-architecture.md
+  }
+  hpx.native.integrations.agents -[planned_flow]-> hpx.native.authority "Recheck disclosure / execution policy" { metadata { evidence "docs/06-subsystems/security-cryptography.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/security-cryptography.md
+  }
+  hpx.native.integrations.citations -[planned_flow]-> hpx.native.authority "Recheck disclosure / execution policy" { metadata { evidence "docs/06-subsystems/security-cryptography.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/security-cryptography.md
+  }
+  hpx.native.integrations.word_import -[planned_flow]-> hpx.native.authority "Recheck disclosure / execution policy" { metadata { evidence "docs/06-subsystems/security-cryptography.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/security-cryptography.md
+  }
+  hpx.native.integrations.export -[planned_flow]-> hpx.native.authority "Recheck disclosure / execution policy" { metadata { evidence "docs/06-subsystems/security-cryptography.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/security-cryptography.md
+  }
+  hpx.native.integrations.github_jobs -[planned_flow]-> hpx.native.authority "Recheck disclosure / execution policy" { metadata { evidence "docs/06-subsystems/security-cryptography.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/security-cryptography.md
+  }
+  hpx.native.integrations.federation -[planned_flow]-> hpx.native.authority "Recheck disclosure / execution policy" { metadata { evidence "docs/06-subsystems/security-cryptography.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/security-cryptography.md
+  }
+  hpx.native.integrations.agents -[planned_flow]-> hpx.native.application "Chat / proposal nodes" { metadata { evidence "docs/03-requirements/system-requirements.md" scope "logical responsibility; no code refactor" }
+    link ../../03-requirements/system-requirements.md
+  }
+  hpx.native.integrations.word_import -[planned_flow]-> hpx.native.application "Authorized import plan" { metadata { evidence "docs/06-subsystems/external-integrations.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/external-integrations.md
+  }
+  hpx.native.integrations.export -[planned_flow]-> hpx.native.history "Freeze exact export inputs" { metadata { evidence "docs/06-subsystems/import-export.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/import-export.md
+  }
+  hpx.native.integrations.citations -[planned_flow]-> hpx.native.storage "Capture cited metadata" { metadata { evidence "docs/06-subsystems/import-export.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/import-export.md
+  }
+  hpx.native.integrations.github_jobs -[planned_flow]-> hpx.native.storage "Retain encrypted job outcomes" { metadata { evidence "docs/06-subsystems/external-integrations.md" scope "logical responsibility; no code refactor" }
+    link ../../06-subsystems/external-integrations.md
+  }
+  hpx.native.integrations.federation -[planned_flow]-> hpx.native.application "Validate authorized peer operations" { metadata { evidence "docs/04-architecture/component-architecture.md" scope "logical responsibility; no code refactor" }
+    link ../../04-architecture/component-architecture.md
+  }
+  // Overview aggregation of already specified protected query handlers.
+  // This is not a second command path or a call through Workspace::execute.
+  hpx.native.transport -[native_call]-> hpx.native.application "Protected read services (area summary)" {
+    metadata { evidence "docs/04-architecture/component-architecture.md" scope "C3 application-area summary of existing document/graph/history/annotation/audit reads, not Workspace::execute" }
+    link ../../04-architecture/component-architecture.md
+    link ../../06-subsystems/interfaces/browser-runtime.md
+    link ../../06-subsystems/interfaces/domain-navigation.md
+    link ../../../backend/crates/runtime/src/main.rs
+    link ../../../backend/crates/storage/src/authority.rs
+  }
+  hpx.native.transport -[native_call]-> hpx.native.storage "Explicit passphrase create / unlock" {
+    metadata { evidence "docs/06-subsystems/workspace-storage.md" scope "Authenticated explicit unlock request; default passphrase route, not automatic startup enrollment" }
+    link ../../06-subsystems/workspace-storage.md
+    link ../../04-architecture/decisions/0014-keychain-unlock-policy.md
+    link ../../../backend/crates/runtime/src/main.rs
+    link ../../../backend/crates/storage/src/lib.rs
+  }
+
+}
+
+
+views {
+  view c3_executable of hpx.native {
+    title "C3 / HPX Rust executable"
+    description "Five logical responsibility areas inside one executable; proposed for V3 review, not five new modules or services. Captions summarize the detailed source-linked responsibility catalogue; principal internal dependencies and every specified Rust-to-C2 boundary relationship are shown. Direct internal read/unlock paths and feature flows remain in the model. Frontend delivery, explicit unlock and cryptographic adapters are expanded to expose specified internal boundaries. The application-area read arrow summarizes co-located protected read services, not Workspace::execute. Blocks match C2: blue for ordinary components, grey/dashed for planned components. Blue does not distinguish implemented from partial. Status badges only: green implemented within stated scope; amber partial; grey planned. Group borders express visual hierarchy, not implementation status. HPX-CAN-009 allocates HPX-DOM-001 responsibilities in overview-only notes; precise linked contracts remain authoritative. Required product obligations and proposed mechanisms are distinct from current one-owner evidence; component mentions do not complete conceptual identities, cardinalities, lifecycle or operation effects. Stop after this overview for owner review."
+    // Presentation groups only: no new module, process or storage boundary.
+    group "HPX Rust executable" {
+      color primary
+      border solid
+      include hpx.native.transport with {
+        title "Runtime and API"
+        navigateTo c3_runtime_api
+        description "Browser HTTPS / AI MCP share user API. Per-user rights required; current multi-user/MCP gaps. TLS and workspace keys differ."
+        notes "HPX-DOM-001 / HPX-CAN-009: owns human/machine admission through the shared logical command/query API via browser HTTPS and required MCP adapters; enforces authentication/session/transport gates and routes all protected operations through application policy. Authentication, workspace unlock and workspace-user resource permission remain distinct; no adapter bypass. Human and machine users are workspace-local; at most one machine user per provider per workspace; models/sessions/chats are not extra users and no separate node/edge ACL is required. Identity/permission/session/MCP mechanisms remain unadopted. Current sole-owner HTTPS is partial evidence. Machine-user inference remains outside HPX."
+        color primary
+      }
+      include hpx.native.frontend_assets with {
+        title "Frontend delivery"
+        navigateTo c3_frontend_delivery
+        description "Embedded browser assets; opens the focused Frontend delivery responsibility diagram."
+        notes "HPX-DOM-001 / HPX-CAN-009 supporting scope only: prepares/delivers embedded browser assets; browser-derived presentation remains C2 responsibility. Asset delivery does not own domain identities, grant workspace permissions or move inference into HPX. Existing delivery evidence does not complete the object model."
+        color primary
+      }
+      include hpx.native.keychain with {
+        title "Keychain adapter"
+          navigateTo c3_keychain
+        description "Explicit device-secret alternative; passphrase recovery retained. macOS only; broader support planned."
+        notes "HPX-DOM-001 / HPX-CAN-009 supporting scope only: explicit ADR014 enrollment and device-secret unlock of the same workspace key, verified pre-upgrade backup and retained passphrase recovery. Key availability is not authentication or resource permission; this adapter is not a principal/device/group directory or policy authority. Existing macOS evidence does not establish multi-user, client-held custody or other-platform delivery."
+        color primary
+      }
+      include hpx.native.crypto with {
+        title "Cryptographic adapter"
+          navigateTo c3_crypto
+        description "Authenticated envelopes and key wrapping. No authorization, file or network I/O."
+        notes "HPX-DOM-001 / HPX-CAN-009 supporting scope only: authenticated record envelopes, key wrapping and supplied workspace/kind/identity/generation/epoch context. Does not authorize operations, choose logical identities or define user/permission policy. Logical IDs, private digests and ciphertext addresses remain distinct; general commitment/signature/deduplication and security-policy epoch mechanisms remain contract/design gaps. No new primitive, custody mode or format is adopted."
+        color primary
+      }
+      include hpx.native.integrations with {
+        title "Integration adapters (planned)"
+          navigateTo c3_integrations
+        description "Agents, citations, import/export, GitHub jobs and peer exchange. Designs remain unresolved."
+        notes "HPX-DOM-001 / HPX-CAN-009 supporting scope only: authorised/rechecked external import/export, citations, publication/backup and future peer exchange through ordinary application semantics and confidentiality gates. Machine users use chat/MCP through shared API; inference stays on the machine-user side. No HPX inference endpoint/orchestrator or extra provider account/user is implied by the existing agent caption. Interaction records/external inputs do not themselves establish authorship, verification or permission. Future mechanisms remain planned/unadopted, separate from mandatory same-workspace multi-user scope."
+        color muted
+        border dashed
+      }
+      group "Hypergraph responsibilities" {
+        color primary
+        border solid
+        include hpx.native.application with {
+          title "Application coordination"
+          navigateTo c3_application
+          description "Shared user API: scoped reads/commands and per-user rights. Current owner slice only; draft ACK is not Commit; atomic result + receipt."
+        notes "HPX-DOM-001 / HPX-CAN-009: owns authorization and editing/operation coordination over domain plans; protected consistent reads, exact base/head/policy rechecks, draft acknowledgement versus Commit, and atomic publication of complete results/history/heads/receipts through persistence. Keeps newer typing, uncertain outcomes and recovery semantics distinct. Coordinates attributable events, transformations and observable interaction/chat-node capture without conflating contributions, observed/declared/inferred provenance, adoption, verification or endorsement. Human and machine operations share semantics and current workspace-user permission enforcement; pure plans, selected nodes and key possession grant no authority. Current co-located one-owner writer/read services are incomplete implementation evidence; general multi-user, interaction and complete closure remain obligations, not implemented mechanisms."
+          color primary
+        }
+        include hpx.native.domain with {
+          title "Pure domain"
+          navigateTo c3_pure_domain
+          description "Deterministic identities, exact-source rules and bounded plans. No I/O, authorization or serialization. Partial."
+        notes "HPX-DOM-001 / HPX-CAN-009: owns pure typed identities, invariants and deterministic plans for Node/Revision, Document/Branch, Occurrence/Manifest and exact closed Snapshot bindings. Owns pure validation of same-node ancestry versus cross-identity derivation, byte/anchor rules, revisioned n-ary hyperedges with ordered role-labelled participants, predicates/assertions, semantic events and provenance distinctions; application supplies complete exact context. Plans grant no authority. No serialization, entropy, storage, crypto or I/O. Full relationships/cardinalities/lifecycle and occurrence-path closure remain in HPX-DOM-001 and domain-navigation, not established by this component. Current bounded pure types/planners are partial evidence, not delivery of the complete required model."
+          color primary
+        }
+        include hpx.native.storage with {
+          title "Workspace persistence"
+          navigateTo c3_workspace_persistence
+          description "Adapter-owned codecs; encrypted transactions, exact reads, drafts/receipts and recovery. Broader repair remains planned."
+        notes "HPX-DOM-001 / HPX-CAN-009: owns adapter DTOs/codecs with explicit persistent record versions/kinds, encrypted immutable records/history and mutable drafts/heads/receipts, consistent exact reads, transaction publication and crash recovery. Persists authorised application results and exact reconstruction bindings; never repairs history using current heads. Logical IDs are distinct from private plaintext commitments and ciphertext lookup addresses. WAL recovery is not application history, authenticated provenance or federation convergence. Precise formats/epochs and retained-history rules stay in workspace/record/recovery contracts; no version, schema or address scheme is selected. Existing bounded encrypted SQLite records and recovery are evidence, not a complete general object model."
+          color primary
+        }
+      }
+    }
+    // C2 neighbours retain their existing identities and source-backed relationships.
+    include user with { description "Launches and configures the executable." }
+    include hpx.browser with { description "Browser editor; authenticated local HTTPS; embedded assets." navigateTo c2_containers }
+    include hpx.workspace with { description "Authoritative encrypted SQLite workspace; WAL/SHM while open." navigateTo c2_containers }
+    include credentials with { description "Optional explicit native keychain operations; passphrase recovery retained." }
+    include enrollment_backups with { description "Verified encrypted backup before explicit keychain enrollment." }
+    include exchange_files with { description "Future native import/export and portable backups; formats remain gated." }
+    include ai_users with { description "AI users: required selected-node MCP access; human-equivalent permissions and editing semantics." }
+    group "Future external integrations" {
+      color muted
+      border dashed
+      include zotero.desktop with { description "Planned read-only desktop-local citations." }
+      include zotero.cloud with { description "Planned read-only cloud citations." }
+      include github with { description "Planned release discovery, approved publication and encrypted backup." }
+      include peers with { description "Future authorized exchange and federation." }
+    }
+    // Block fills express structure; fixed-colour badges express status.
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    // Keep principal evidenced dependencies; omit feature-level wiring from C3.
+    exclude * -> *
+    include hpx.native.transport -> hpx.native.application where tag is not #planned with { title "Commands / protected reads" }
+    include hpx.native.application -> hpx.native.domain with { title "Validate plans" }
+    include hpx.native.application -> hpx.native.storage with { title "Consistent reads / atomic result + receipt" }
+    include hpx.native.application -> hpx.native.integrations with { title "Authorize / recheck execution (planned)" }
+    include hpx.native.integrations -> hpx.native.application with { title "Reviewed inputs / proposals (planned)" }
+    include hpx.native.transport -> hpx.native.frontend_assets with { title "Serve embedded bytes" }
+    include hpx.native.transport -> hpx.native.keychain with { title "Explicit keychain actions" }
+    include hpx.native.transport -> hpx.native.storage with { title "Passphrase create / unlock" }
+    include hpx.native.keychain -> hpx.native.storage with { title "Enrollment state / verified backup" }
+    include hpx.native.storage -> hpx.native.crypto with { title "Seal / authenticate records" }
+    include hpx.native.keychain -> hpx.native.crypto with { title "Wrap / unlock same workspace key" }
+    // Only these cross-boundary relationships are added. No new model flows.
+    include user -> hpx.native.transport with { title "Launch / configure" }
+    include hpx.browser -> hpx.native.transport with { title "Shared API / HTTPS" }
+    include hpx.native.frontend_assets -> hpx.browser with { title "Embedded frontend assets" }
+    include hpx.native.storage -> hpx.workspace with { title "Encrypted reads / writes" }
+    include hpx.native.keychain -> credentials with { title "Optional keychain unlock" }
+    include hpx.native.storage -> enrollment_backups with { title "Before keychain upgrade" }
+    include ai_users -> hpx.native.transport with { title "MCP (required; planned)" }
+    include hpx.native.integrations -> zotero.desktop with { title "Desktop citations (planned)" }
+    include hpx.native.integrations -> zotero.cloud with { title "Cloud citations (planned)" }
+    include hpx.native.integrations -> github with { title "Releases / publication / backup (planned)" }
+    include hpx.native.integrations -> peers with { title "Federation / exchange (future)" }
+    include exchange_files -> hpx.native.integrations with { title "Document / package import (planned)" }
+    include hpx.native.integrations -> exchange_files with { title "Export / portable backup (planned)" }
+    rank source { user, ai_users, hpx.browser }
+    exclude * -> * where kind is code_call
+    exclude * -> * where kind is delivery_build
+    exclude * -> * where kind is delivery_call
+    exclude * -> * where kind is delivery_code
+    exclude * -> * where kind is domain_use
+    exclude * -> * where kind is domain_call
+    exclude * -> * where kind is domain_type
+    exclude * -> * where kind is domain_test
+    exclude * -> * where kind is coverage_call
+    exclude * -> * where kind is coverage_data
+    exclude * -> * where kind is coverage_plan
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    include hpx.native.application -> hpx.native.transport where metadata.scope is "application_io_engine"
+    exclude * -> * where kind is browser_detail
+    exclude * -> * where kind is browser_organisation
+    exclude * -> * where kind is browser_presentation
+    autoLayout TopBottom 100 90 spline
+  }
+}

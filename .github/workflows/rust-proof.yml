@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: leanprover/lean-action@24581d74d674803a25a81b10b059c5c0cdd344c6
         with:
-          lake-package-directory: proofs/lean
+          lake-package-directory: backend/proofs/lean
           auto-config: 'false'
           build: 'false'
           test: 'false'
@@ -20,9 +20,9 @@ jobs:
       - name: Cache pinned verification environment
         uses: actions/cache@v4
         with:
-          path: .verification
-          key: rust-proof-linux-v1-${{ hashFiles('proofs/rust/extraction.json') }}
+          path: .local/verification
+          key: rust-proof-linux-v1-${{ hashFiles('backend/proofs/rust/extraction.json') }}
       - name: Re-extract and prove actual Rust helper
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/check_rust_proof.py --download
+        run: python3 shared/tooling/check_rust_proof.py --download

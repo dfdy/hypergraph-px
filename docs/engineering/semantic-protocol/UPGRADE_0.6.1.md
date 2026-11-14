@@ -1,5 +1,7 @@
 # HPX-SCP v0.6.1: active Hypergraph installation
 
+Current Stage1 tooling location: `shared/tooling/`; literal `scripts/` commands below are retained historical installation/adoption evidence. Current project coordination follows the unchanged `shared/tooling/protocol/PROTOCOL.md` and AGENTS instructions, not a silent return to an earlier HPX-SCP agreement.
+
 The owner-directed maintainer request `m-d03a777363e24c0886d957bf130a48a1`, received and validated on 2026-10-31 in the existing v0.6.0 session, directs installation of v0.6.1. Its relayed owner instruction is “Install, push to github, and send it to the other agents to install.” The coordinator is sole installer for this shared checkout; Hypergraph application commits, pushes, releases and runtime changes remain excluded. The independent protocol repository publication is not performed by this installation.
 
 [INSTALLATION.v0.6.1.json](INSTALLATION.v0.6.1.json) records the exact 30-file mapping from the clean supplied source commit `b0880b8841460c13a698eb652c7a84ef09f70298`, release archive/manifest provenance and installed hashes. Root package documentation is mapped into this directory; project README, changelog, dependencies and all non-SCP agent rules are preserved. Earlier manifests, upgrade evidence, owner decisions and historical JSON records retain their bytes and original versions. [v0.6.0 installation](UPGRADE_0.6.0.md) is historical, not current transport guidance.

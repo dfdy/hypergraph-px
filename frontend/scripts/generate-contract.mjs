@@ -1,3 +1,4 @@
+import {cargoTargetDirectory} from '../../shared/tooling/cargo-path.mjs';
 // SPDX-License-Identifier: AGPL-3.0-only
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {resolve} from 'node:path';
@@ -27,12 +28,13 @@ export function assertCompatible(previous,next,{reviewedRefinements=[]}={}){
 export function schemaCacheValid(record,identity){return record?.identity===identity&&record.sha256===createHash('sha256').update(JSON.stringify(record.spec)).digest('hex');}
 export async function generate({check=false,reviewedRefinements=[]}={}){
  if(check&&reviewedRefinements.length)throw Error("Check mode cannot accept refinements");
- const inputs=['crates/storage/Cargo.toml','crates/storage/src/lib.rs','crates/storage/src/encoding.rs','crates/storage/src/audit.rs','crates/runtime/src/api.rs','crates/runtime/src/export_api.rs','crates/runtime/src/main.rs','crates/runtime/Cargo.toml','crates/runtime/build.rs','Cargo.toml','Cargo.lock', 'frontend/scripts/generate-contract.mjs'];
+ const inputs=['backend/crates/storage/Cargo.toml','backend/crates/storage/src/lib.rs','backend/crates/storage/src/encoding.rs','backend/crates/storage/src/audit.rs','backend/crates/runtime/src/api.rs','backend/crates/runtime/src/export_api.rs','backend/crates/runtime/src/main.rs','backend/crates/runtime/Cargo.toml','backend/crates/runtime/build.rs','Cargo.toml','Cargo.lock', 'frontend/scripts/generate-contract.mjs','.cargo/config.toml','shared/tooling/cargo-path.mjs'];
  const toolchain=execFileSync('rustc',['--version'],{cwd:root,encoding:'utf8'});
- const sourceIdentity=async()=>{const hash=createHash('sha256').update(toolchain+'\0'+process.platform+'\0'+process.arch+'\0'+(process.env.RUSTUP_TOOLCHAIN??'')+'\0'+(process.env.CARGO_BUILD_TARGET??''));for(const path of inputs){hash.update(path+'\0');hash.update(await readFile(resolve(root,path)));}return hash.digest('hex');};
- const identity=await sourceIdentity(),cache=resolve(root,'.verification/api-contract');await mkdir(cache,{recursive:true});
+ const effectiveTarget=cargoTargetDirectory();
+ const sourceIdentity=async()=>{const hash=createHash('sha256').update(effectiveTarget+'\0'+toolchain+'\0'+process.platform+'\0'+process.arch+'\0'+(process.env.RUSTUP_TOOLCHAIN??'')+'\0'+(process.env.CARGO_BUILD_TARGET??''));for(const path of inputs){hash.update(path+'\0');hash.update(await readFile(resolve(root,path)));}return hash.digest('hex');};
+ const identity=await sourceIdentity(),cache=resolve(root,'.local/verification/api-contract');await mkdir(cache,{recursive:true});
  const cached=resolve(cache,identity+'.json');let spec;
- try{const record=JSON.parse(await readFile(cached,'utf8'));if(!schemaCacheValid(record,identity))throw Error('Invalid schema cache');spec=record.spec;}catch{spec=JSON.parse(execFileSync('cargo',['run','-p','hypergraph-runtime','--features','api-export','--bin','hypergraph-api','--offline','--locked'],{cwd:root,encoding:'utf8',stdio:['ignore','pipe','inherit']}));if(await sourceIdentity()!==identity)throw Error('Rust API inputs changed during export');await writeFile(cached,JSON.stringify({identity,sha256:createHash('sha256').update(JSON.stringify(spec)).digest('hex'),spec})+'\n');}
+ try{const record=JSON.parse(await readFile(cached,'utf8'));if(!schemaCacheValid(record,identity))throw Error('Invalid schema cache');spec=record.spec;}catch{spec=JSON.parse(execFileSync('cargo',['run','-p','hypergraph-runtime','--features','api-export,dev-backend','--bin','hypergraph-api','--offline','--locked'],{cwd:root,encoding:'utf8',stdio:['ignore','pipe','inherit']}));if(await sourceIdentity()!==identity)throw Error('Rust API inputs changed during export');await writeFile(cached,JSON.stringify({identity,sha256:createHash('sha256').update(JSON.stringify(spec)).digest('hex'),spec})+'\n');}
  validateReferences(spec);
  const schema=JSON.stringify(spec,null,2)+'\n',types='// Generated from Rust API DTOs. Do not edit.\n'+astToString(await openapiTS(spec,{alphabetize:true,arrayLength:true}));
  if(await sourceIdentity()!==identity)throw Error('API inputs changed during generation');
@@ -41,8 +43,8 @@ export async function generate({check=false,reviewedRefinements=[]}={}){
  const routes=Object.fromEntries(Object.entries(spec.paths).map(([path,methods])=>{const [method,operation]=Object.entries(methods)[0];return [path,{method:method.toUpperCase(),...(operation.requestBody?.content?{contentType:Object.keys(operation.requestBody.content)[0]}:{})}];}));
  const routeSource='// Generated from the Rust-defined OpenAPI contract. Do not edit.\nexport const runtimeRoutes='+JSON.stringify(routes)+';\n';
  const constraints='// Generated from the Rust-defined OpenAPI contract. Do not edit.\nexport const auditMaxBytes='+JSON.stringify(auditMaximum)+';\nexport const auditScope='+JSON.stringify(auditScope)+';\n';
- await mkdir(output,{recursive:true});const files={'openapi.json':schema,'api.d.ts':types,'api-constraints.js':constraints,'api-routes.js':routeSource};
- let previous;try{previous=JSON.parse(await readFile(resolve(output,'openapi.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;if(check)throw Error('Missing generated contract');}
+ await mkdir(output,{recursive:true});const files={'../../../shared/openapi.json':schema,'api.d.ts':types,'api-constraints.js':constraints,'api-routes.js':routeSource,'api-routes.d.ts':'// Generated from the Rust-defined OpenAPI contract. Do not edit.\nexport declare const runtimeRoutes: '+JSON.stringify(routes)+';\n'};
+ let previous;try{previous=JSON.parse(await readFile(resolve(root,'shared/openapi.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;if(check)throw Error('Missing generated contract');}
  if(previous)assertCompatible(previous,spec,{reviewedRefinements});
  for(const [name,value] of Object.entries(files)){let old;try{old=await readFile(resolve(output,name),'utf8');}catch{}if(check&&old!==value)throw Error('Generated API drift: '+name);if(!check&&old!==value)await writeFile(resolve(output,name),value);}
  console.log('Rust API contract '+(check?'matches':'generated')+'; '+Object.keys(spec.paths).length+' inventoried paths; typed coverage recorded per operation');

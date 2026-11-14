@@ -4,7 +4,7 @@ import {mkdir,mkdtemp,writeFile,readFile} from 'node:fs/promises';
 import {join,relative} from 'node:path';
 import {buildFrontend} from '../build.mjs';
 import {root,frontend,filesUnder,hashFiles,inputIdentity,assetDigest} from './build-cache.mjs';
-const start=performance.now(),runs=join(root,'artifacts/ui-runs');await mkdir(runs,{recursive:true});
+const start=performance.now(),runs=join(root,'.local/artifacts/ui-runs');await mkdir(runs,{recursive:true});
 const directory=await mkdtemp(join(runs,'run-'));let server,child,signalReceived=false;
 const evidence={kind:'headless-preview',started:new Date().toISOString(),arguments:process.argv.slice(2),status:'incomplete',deployment:'none; preview checks never authorize executable handoff'};
 async function stop(process){if(process&&process.exitCode===null&&process.signalCode===null){await new Promise(resolve=>{const timer=setTimeout(()=>process.kill('SIGKILL'),3000);timer.unref();process.once('exit',()=>{clearTimeout(timer);resolve();});process.kill('SIGTERM');});}}

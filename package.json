@@ -1,0 +1,22 @@
+{
+  "name": "hypergraph-px-development",
+  "version": "1.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "scripts": {
+    "dev": "node shared/tooling/hpx.mjs dev",
+    "dev:frontend": "node shared/tooling/hpx.mjs frontend",
+    "dev:backend": "node shared/tooling/hpx.mjs backend",
+    "dev:mock": "node shared/tooling/hpx.mjs frontend --mock",
+    "build": "node shared/tooling/hpx.mjs build",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:backend": "cargo build -p hypergraph-runtime --bin hypergraph --features dev-backend --locked",
+    "test:frontend": "npm --prefix frontend test",
+    "test:backend": "cargo test --workspace --features hypergraph-runtime/dev-backend --locked --offline",
+    "test:ui": "npm --prefix frontend run test:ui",
+    "test:development": "node frontend/scripts/check-development.mjs",
+    "api:check": "npm --prefix frontend run api:check",
+    "start:self-build": "bash shared/tooling/start-self-build.sh"
+  }
+}

@@ -1,5 +1,5 @@
 // Stable preview relationship registry with overlapping browsing tags. IDs are opaque, including their legacy namespace.
-import definitions from '../../crates/storage/src/predicate-catalog-v1.json' with {type:'json'};
+import definitions from '../../shared/predicate-catalog-v1.json' with {type:'json'};
 export const relationshipTypes=Object.freeze(definitions.relationships.map(type=>Object.freeze({...type,aliases:Object.freeze(type.aliases??[]),categoryIds:Object.freeze(type.categoryIds),contextFields:Object.freeze(type.contextFields),label:type.label??type.type.replaceAll('_',' ')})));
 const byId=new Map(relationshipTypes.map(type=>[type.id,type]));
 export const relationshipCategories=Object.freeze(definitions.categories.map(group=>Object.freeze({...group,types:Object.freeze(relationshipTypes.filter(type=>type.categoryIds.includes(group.id)))})));

@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: leanprover/lean-action@24581d74d674803a25a81b10b059c5c0cdd344c6 # v1, inspected 2026-10-24
         with:
-          lake-package-directory: proofs/lean
+          lake-package-directory: backend/proofs/lean
           auto-config: 'false'
           build: 'true'
           test: 'false'
@@ -18,5 +18,5 @@ jobs:
           leanchecker: 'true'
           leanchecker-args: 'Hypergraph'
       - name: Report theorem axioms
-        working-directory: proofs/lean
+        working-directory: backend/proofs/lean
         run: lake env lean -DwarningAsError=true Hypergraph/Expansion.lean

@@ -6,8 +6,9 @@
   "likec4.exclude": [
     "**/node_modules/**",
     "**/architecture/site/**",
-    "**/artifacts/**",
-    "**/.oldspecs/**"
+    "**/.local/**",
+    "**/.oldspecs/**",
+    "**/.provenance/**"
   ],
   "files.associations": {
     "*.c4": "likec4"

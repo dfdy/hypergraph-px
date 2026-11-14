@@ -13,7 +13,7 @@
 - **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
 - **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
 - **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
-- **Last reviewed:** 2026-10-30
+- **Last reviewed:** 2026-11-03
 
 OWNER-002 requires explicit per-record versions. The strict wrapper is implemented through adapter codecs; [the record contract](../../07-implementation/data-structures/sqlite-records.md) owns exact fields and current optional kinds. Legacy unversioned payload conversion and real-data acceptance remain unavailable.
 
@@ -65,3 +65,11 @@ Accepted ADR017 adds optional wrapped version1 kinds18/19 for immutable comments
 ## Local branch foundation under verification
 
 The in-progress ADR018 adapter adds optional encrypted strict wrapper1 kinds20/21 without changing saved Document/Draft/text payloads, schemas1/2 or envelope framing. See [exact local records](../../07-implementation/data-structures/sqlite-records.md#in-progress-named-branch-adapter-kinds2021). Old-reader preservation and branch editor integration have not been accepted. The owner-requested ADR019 working checkpoints remain a proposed separate typed-source design; no existing revision/source field is reinterpreted as a draft checkpoint.
+
+## Designed incompatible closure boundary — OWNER055
+
+The [canonical item3 choices](../../architecture/Conceptual/identity-closure.c4) and [concrete closure format](../../architecture/proposals/exact-closure-source-map.md) now define the proposed schema4/feature38/catalog2 boundary and kinds39–44. This is completed format **design**, not a change to this workspace's current schema1/2 opening or an executed upgrade. [Exact upgrade/refusal requirements](../../architecture/proposals/exact-closure-source-map.md#7-effective-incompatible-workspace-gate--choice8a) include verified backup,quiescence,atomic authenticated markers and cold/stale unsupported-reader checks. Existing bytes/history/key wrappers and passphrase recovery remain; an empty schema4 keychain table is not enrollment. Experimental3 is not a supported migration source. No format downgrade,provider/trust/manual-workspace action or new real-data acceptance is implied.
+
+## Designed combined conflict profile — OWNER056
+
+The [item4 conflict-state addendum](../../architecture/proposals/conflict-state.md#fit-with-item3s-incompatible-profile) specifies feature38/version2 for candidate schema4,retaining item3 bundles and adding explicit commit-time/review versions and candidate45–54 records. A future closure-only feature1 reader must refuse2 before protected operations. This is completed design,not a current schema/envelope/API change or permission to upgrade. Exact backup/quiescence/atomic marker/catalog consistency and actual older-reader evidence remain required;normal1/2 and experimental3 remain unchanged.

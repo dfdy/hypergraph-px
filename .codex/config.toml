@@ -2,6 +2,6 @@
 # Local stdio only; the shell resolves the Git root even from a subdirectory.
 [mcp_servers.hpx_likec4]
 command = "/bin/sh"
-args = ["-c", 'root=$(git rev-parse --show-toplevel) && exec "$root/architecture/node_modules/.bin/likec4" mcp --stdio "$root/architecture"']
+args = ["-c", 'root=$(git rev-parse --show-toplevel) && exec "$root/docs/architecture/node_modules/.bin/likec4" mcp --stdio "$root/docs/architecture"']
 startup_timeout_sec = 60
 tool_timeout_sec = 60
