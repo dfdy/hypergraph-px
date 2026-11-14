@@ -40,7 +40,7 @@
 /frontend/test-results/
 /frontend/playwright-report/
 
-# Provenance archives: private originals/masters stay local; public history remains trackable.
+# Provenance archives: all payloads stay local; prior publication remains in Git history.
 /.provenance/oldspecs/
 /.provenance/archive/
 /.provenance/public-record/specification-snapshots/
@@ -63,3 +63,6 @@
 /.vscode/
 /.codex/
 /.zed/
+
+# Owner instruction, 2026-11-14: keep all provenance archives local.
+/.provenance/

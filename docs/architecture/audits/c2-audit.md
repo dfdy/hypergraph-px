@@ -60,7 +60,7 @@ There are three internal C2 elements: browser execution, one native Rust executa
 | Spell checking and user dictionaries | Planned local editor capability; packaging/persistence undecided, not a selected external checking service or new container | [Frontend interaction](../../06-subsystems/frontend-interaction.md) |
 | Pandoc conversion packaging | Planned runtime adapter responsibility; no external installation or helper process selected | [Export contract](../../06-subsystems/import-export.md) |
 | Domain, rights, composition, provenance and internal indexes | Inside native/browser/workspace responsibilities; no microservices or extra authoritative stores inferred | [Component architecture](../../04-architecture/component-architecture.md), [document engine](../../06-subsystems/document-engine.md) |
-| Lean, bundlers, test servers, local development signing and deferred argument conversion | Development tools/assurance stay outside product runtime; INPUT's owner-deferred conversion is not enabled | [Scope](../../01-purpose/scope-and-non-goals.md), [INPUT](../../02-governance/requests.md), [ADR016](../../04-architecture/decisions/0016-local-development-signing.md) |
+| Lean, bundlers, test servers, local development signing and deferred argument conversion | Development tools/assurance stay outside product runtime; INPUT's owner-deferred conversion is not enabled | [Scope](../../01-purpose/scope-and-non-goals.md), INPUT (local-only `docs/02-governance/requests.md`), [ADR016](../../04-architecture/decisions/0016-local-development-signing.md) |
 
 ## Unresolved mechanisms and competing source statements
 

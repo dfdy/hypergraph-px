@@ -22,7 +22,7 @@ These organise supporting documents; they do not duplicate the C1–C4 model:
 
 ## Architectural review integration
 
-Past review and migration records are provenance, not routine reading. Consult [implementation dispositions](09-guides/reference/implementation-resumption.md#architecture-review-integration-2026-10-26) or the authorised [public historical snapshot](../.provenance/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d/README.md) only when needed. All provenance archives now live under [`.provenance/`](../.provenance/README.md). Private `.provenance/oldspecs/` originals and unredacted masters remain selectively ignored; original/current locations and byte hashes are retained in the registers.
+Past review and migration records are provenance, not routine reading. Consult [implementation dispositions](09-guides/reference/implementation-resumption.md#architecture-review-integration-2026-10-26) or the previously published [historical snapshot](https://github.com/dfdy/hypergraph-px/blob/1c5f9e5/.provenance/public-record/public-snapshots/2026-10-26-pre-architecture-integration-a0402d90505d/README.md) only when needed. All provenance archives are now local-only under ignored `.provenance/`; the [historical index](https://github.com/dfdy/hypergraph-px/blob/1c5f9e5/.provenance/README.md) describes the retained layout. A fresh clone contains metadata and historical Git links, not local archive payloads. Private originals and unredacted masters remain unpublished; original/current locations and byte hashes are retained in the registers.
 
 ## Constitution
 

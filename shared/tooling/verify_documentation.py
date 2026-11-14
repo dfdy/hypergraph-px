@@ -74,7 +74,7 @@ def verify(check_local_sources=False):
  checks.append(f'Coverage: {len(canon)} canonical sections; {len(coverage)} retained canonical/policy/evidence sections; {len(sources)} sources; {len(claims)} claim units; {len(req)} requirement seeds')
  # Validate only current docs/control records. Local archive references use registers,
  # not public Markdown links. Imported template placeholders are allowed in templates.
- paths=list((ROOT/'docs').rglob('*.md'))+[ROOT/'README.md',ROOT/'AGENTS.md',ROOT/'.provenance/README.md']
+ paths=list((ROOT/'docs').rglob('*.md'))+[ROOT/'README.md',ROOT/'AGENTS.md']
  for p in paths:
   if not p.exists():continue
   if any(part in p.parts for part in ('templates','node_modules','site','.lake','.likec4')) or p.name=='MIGRATION-AGENT-PROTOCOL.md':continue
@@ -91,13 +91,13 @@ def verify(check_local_sources=False):
    path=ROOT/entry['archive_path']
    if not path.is_file() or sha(path.read_bytes())!=entry['sha256'] or path.stat().st_size!=entry['bytes']:
     errors.append('Archive bytes differ or missing: '+entry['original_path'])
-  if b'/.provenance/oldspecs/' not in (ROOT/'.gitignore').read_bytes():errors.append('Archive ignore rule absent')
+  if b'/.provenance/' not in (ROOT/'.gitignore').read_bytes().splitlines():errors.append('Archive ignore rule absent')
   if moves:
    names='\0'.join(r['archive_path'] for r in moves)+'\0';ignored=subprocess.run(['git','check-ignore','--stdin','-z'],cwd=ROOT,input=names.encode(),capture_output=True,check=True).stdout.decode().strip('\0').split('\0')
    if set(ignored)!={r['archive_path'] for r in moves}:errors.append('Archive paths not all ignored')
-  tracked=subprocess.check_output(['git','--no-pager','ls-files','--','.provenance/oldspecs'],cwd=ROOT,text=True).strip()
+  tracked=subprocess.check_output(['git','--no-pager','ls-files','--','.provenance'],cwd=ROOT,text=True).strip()
   if tracked:errors.append('Archive unexpectedly tracked')
-  checks.append(f'Archive preserved and ignored: {len(moves)} originals; no tracked .provenance/oldspecs paths')
+  checks.append(f'Archive preserved and ignored: {len(moves)} originals; no tracked .provenance paths')
  for check in checks:print('CHECK',check)
  for error in errors:print('FAIL',error)
  if errors:raise SystemExit(1)

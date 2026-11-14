@@ -1,4 +1,12 @@
 {
+  "current_git_boundary": {
+    "authority": "Direct owner instruction, 2026-11-14: make provenance local-only and push removal",
+    "root": ".provenance/",
+    "all_payloads_ignored": true,
+    "prior_public_commit": "1c5f9e5",
+    "identity_policy": "Original/current paths, hashes, classifications and historical as-run evidence remain unchanged; no local bytes deleted or history rewritten.",
+    "verification": "Default skips absent local archives explicitly; --check-local requires all registered bytes. Earlier Git-boundary facts below are historical."
+  },
   "record_version": 1,
   "id": "HPX-TEST-173",
   "date": "2026-11-13",

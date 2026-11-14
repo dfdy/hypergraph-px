@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Read-only archival boundary checks (stdlib only).
 
-Run from any directory. Default checks public retained files and metadata without
-requiring private archives. --check-local additionally requires every local byte.
+Run from any directory. Default checks metadata and available historical-review bytes; absent local
+archives are explicitly skipped. --check-local requires every registered byte.
+All .provenance content is local-only; historical classifications retain meaning.
 This checker never moves files, changes the index, or establishes supersession
 approval: reviewers must establish that before adding archived-duplicate entries.
 """
@@ -30,7 +31,7 @@ CLASSES = {
     "public-historical-snapshot": (".provenance/public-record/public-snapshots/", "retained-immutable", False),
     "publication-review": (".provenance/public-record/reviews/", "retained-history", False),
 }
-PRIVATE_ROOTS = (CLASSES["registered-source"][0], ARCHIVE_ROOT, CLASSES["private-immutable-master"][0])
+PRIVATE_ROOTS = (".provenance/",)
 DEFENSIVE_PRIVATE_ROOTS = (".oldspecs/", ".archive/", "docproject/public-record/specification-snapshots/")
 
 
@@ -91,7 +92,7 @@ def verify(root: Path, manifest: dict, check_local: bool = False) -> dict:
         if not isinstance(refs, list) or not refs:
             raise ValueError("missing recovery references: " + current)
         for ref in refs:
-            if not current_location(root, ref).is_file():
+            if not current_location(root, ref).is_file() and (check_local or not ref.startswith(".provenance/")):
                 raise ValueError("missing recovery reference: " + ref)
         if status == "archived-duplicate":
             original = entry["original_path"]
@@ -104,7 +105,7 @@ def verify(root: Path, manifest: dict, check_local: bool = False) -> dict:
             if entry["obligation_status"] != "superseded":
                 raise ValueError("active/proposed/unresolved archival is forbidden: " + original)
             supersession = entry["supersession_ref"]
-            if not current_location(root, supersession).is_file():
+            if not current_location(root, supersession).is_file() and (check_local or not supersession.startswith(".provenance/")):
                 raise ValueError("missing supersession reference: " + original)
             compatibility = (CLASSES["historical-review"][0] + original[len(REVIEW_ORIGINS[0]):]
                              if original.startswith(REVIEW_ORIGINS[0]) else original)
@@ -113,10 +114,13 @@ def verify(root: Path, manifest: dict, check_local: bool = False) -> dict:
             if (recovery.startswith(ARCHIVE_ROOT) or recovery in (current, original, compatibility)
                     or recovery_file.resolve().is_relative_to((root / ARCHIVE_ROOT).resolve())):
                 raise ValueError("recovery must be an independent retained copy: " + original)
-            exact(root, recovery, entry)
+            if check_local or not recovery.startswith(".provenance/") or recovery_file.exists() or recovery_file.is_symlink():
+                exact(root, recovery, entry)
             # original_path remains provenance. Preserve its relocated canonical
             # access route, not a requirement to recreate obsolete root paths.
-            exact(root, compatibility, entry)
+            compatibility_file = current_location(root, compatibility)
+            if check_local or compatibility_file.exists() or compatibility_file.is_symlink():
+                exact(root, compatibility, entry)
             compatibility_paths.add(compatibility)
             counts["archived"] += 1
             if check_local:
@@ -132,7 +136,7 @@ def verify(root: Path, manifest: dict, check_local: bool = False) -> dict:
                 raise ValueError("retention classification/path mismatch: " + current)
             if entry["obligation_status"] != "preserved-not-reassessed":
                 raise ValueError("retention must not change obligation status: " + current)
-            if (local or local_only) and not check_local:
+            if not check_local and (local or local_only or not (root / current).exists() and not (root / current).is_symlink()):
                 counts["local_skipped"] += 1
             else:
                 exact(root, current, entry)
@@ -195,9 +199,9 @@ def verify_git(root: Path) -> None:
     if tracked:
         raise ValueError("private provenance contains indexed paths; coordinator must handle exact paths without resetting staged work")
     private_probes = {prefix + "archival-boundary-probe" for prefix in private_roots}
-    public_probes = {prefix + "archival-boundary-probe" for prefix, _, local in CLASSES.values() if not local}
-    public_probes.add(".provenance/archival-boundary-probe")
-    probes = sorted(private_probes | public_probes)
+    # All retained classifications are now excluded from the current Git tree.
+    private_probes.update(prefix + "archival-boundary-probe" for prefix, _, _ in CLASSES.values())
+    probes = sorted(private_probes)
     result = subprocess.run(
         ["git", "check-ignore", "--no-index", "--stdin", "-z"],
         cwd=root, input=("\0".join(probes) + "\0").encode(),
@@ -208,13 +212,11 @@ def verify_git(root: Path) -> None:
     ignored = set(result.stdout.decode().split("\0")) - {""}
     if private_probes - ignored:
         raise ValueError("private provenance ignore boundary absent: " + ", ".join(sorted(private_probes - ignored)))
-    if ignored & public_probes:
-        raise ValueError("public provenance unexpectedly ignored (blanket .provenance ignore forbidden): " + ", ".join(sorted(ignored & public_probes)))
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--check-local", action="store_true", help="Require private/local retained and archived bytes")
+    parser.add_argument("--check-local", action="store_true", help="Require all local retained and archived bytes")
     args = parser.parse_args()
     try:
         manifest = json.loads((ROOT / MANIFEST).read_text())
@@ -225,6 +227,7 @@ def main() -> None:
         parser.exit(1, "FAIL: " + str(error) + "\n")
     print(json.dumps({"status": "pass", **counts, "source_register_rows": sources,
                       "source_bytes_checked": args.check_local,
+                      "git_boundary": "All .provenance paths local-only; historical classifications unchanged.",
                       "limits": "Mechanical retention/byte checks only; no semantic approval or product assurance."}, indent=2))
 
 

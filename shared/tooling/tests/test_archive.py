@@ -65,10 +65,11 @@ class ArchiveTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "hash/size mismatch"):
             self.check()
 
-    def test_missing_retained_file_fails(self):
+    def test_missing_retained_file_fails_in_complete_local_mode(self):
         (self.root / self.path).unlink()
+        self.assertEqual(self.check()["local_skipped"], 1)
         with self.assertRaises(FileNotFoundError):
-            self.check()
+            self.check(local=True)
 
     def test_unknown_status_and_classification_fail(self):
         for field in ("status", "classification", "obligation_status"):
@@ -127,7 +128,7 @@ class ArchiveTests(unittest.TestCase):
         self.make_local_metadata()
         del self.entry["local_only"]
         with self.assertRaises(FileNotFoundError):
-            self.check()
+            self.check(local=True)
 
     def test_local_only_requires_exact_true_not_false_or_nonboolean_flags(self):
         self.make_local_metadata()
@@ -301,7 +302,8 @@ class ArchiveTests(unittest.TestCase):
                 (self.root / self.entry["current_path"]).unlink()
 
     def private_probes(self):
-        return {p + "archival-boundary-probe" for p in (*archive.PRIVATE_ROOTS, *archive.DEFENSIVE_PRIVATE_ROOTS)}
+        roots = (*archive.PRIVATE_ROOTS, *archive.DEFENSIVE_PRIVATE_ROOTS, *(p for p, _, _ in archive.CLASSES.values()))
+        return {p + "archival-boundary-probe" for p in roots}
 
     def check_git_with_ignored(self, ignored, code=0):
         with patch.object(archive.subprocess, "check_output", return_value=b""), patch.object(archive.subprocess, "run") as run:
@@ -310,7 +312,7 @@ class ArchiveTests(unittest.TestCase):
             archive.verify_git(self.root)
             return run.call_args
 
-    def test_selective_private_ignore_boundaries_pass_without_git_mutation(self):
+    def test_all_provenance_ignore_boundaries_pass_without_git_mutation(self):
         call = self.check_git_with_ignored(self.private_probes())
         self.assertEqual(call.args[0], ["git", "check-ignore", "--no-index", "--stdin", "-z"])
         self.assertIn(b".provenance/archival-boundary-probe\0", call.kwargs["input"])
@@ -321,12 +323,35 @@ class ArchiveTests(unittest.TestCase):
             with self.subTest(missing=missing), self.assertRaisesRegex(ValueError, "private provenance ignore boundary absent"):
                 self.check_git_with_ignored(private - {missing})
 
-    def test_blanket_or_public_provenance_ignore_is_rejected(self):
-        probes = {p + "archival-boundary-probe" for p, _, private in archive.CLASSES.values() if not private}
-        probes.add(".provenance/archival-boundary-probe")
-        for public in probes:
-            with self.subTest(public=public), self.assertRaisesRegex(ValueError, "public provenance unexpectedly ignored"):
-                self.check_git_with_ignored(self.private_probes() | {public})
+    def test_selective_ignore_is_insufficient(self):
+        selective = {p + "archival-boundary-probe" for p, _, private in archive.CLASSES.values() if private}
+        selective.update(p + "archival-boundary-probe" for p in archive.DEFENSIVE_PRIVATE_ROOTS)
+        with self.assertRaisesRegex(ValueError, "ignore boundary absent"):
+            self.check_git_with_ignored(selective)
+
+    def test_clean_clone_missing_archives_and_archive_references_is_explicit_skip(self):
+        (self.root / self.path).unlink()
+        self.entry["recovery_refs"] = [".provenance/architecture-review/evidence.md"]
+        self.assertEqual(self.check(), {"checked": 0, "local_skipped": 1, "archived": 0})
+        with self.assertRaisesRegex(ValueError, "missing recovery reference"):
+            self.check(local=True)
+
+    def test_missing_repository_recovery_reference_still_fails_by_default(self):
+        self.entry["recovery_refs"] = ["docs/missing.md"]
+        with self.assertRaisesRegex(ValueError, "missing recovery reference"):
+            self.check()
+
+    def test_absent_archive_does_not_hide_invalid_metadata(self):
+        (self.root / self.path).unlink()
+        self.entry["sha256"] = "invalid"
+        with self.assertRaisesRegex(ValueError, "invalid SHA256"):
+            self.check()
+
+    def test_dangling_archive_symlink_does_not_count_as_absent(self):
+        (self.root / self.path).unlink()
+        (self.root / self.path).symlink_to(self.root / "missing.md")
+        with self.assertRaises(FileNotFoundError):
+            self.check()
 
     def test_git_ignore_command_failure_is_not_a_pass(self):
         with self.assertRaisesRegex(ValueError, "Git ignore boundary check failed"):
