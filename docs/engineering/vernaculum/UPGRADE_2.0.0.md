@@ -6,7 +6,7 @@
 
 - Active file: [active PROTOCOL.md](../../../shared/tooling/protocol/PROTOCOL.md), copied without byte changes from [canonical commit 3f14c05f70ed7d033be478621ad4d107e44b8aa6](https://github.com/dfdy/vernaculum-scp-ms/blob/3f14c05f70ed7d033be478621ad4d107e44b8aa6/PROTOCOL.md).
 - Release: `2.0.0`; UTF8 bytes: `15423`; SHA256: `a36b882c56c2355c42945fe8be93eab416cfcd8ead084fb9c066514a05717632`.
-- [Project instructions](../../../AGENTS.md) identify this exact contract; canonical main remains authoritative for protocol updates. A later main revision is not silently adopted by existing peer agreements.
+- Local project instructions (`AGENTS.md`, ignored) identify this exact contract; canonical main remains authoritative for protocol updates. A later main revision is not silently adopted by existing peer agreements.
 - The prior [v1.1.0 reference](PROTOCOL.md) remains unchanged, SHA256 `0722c3deb5d3973fd4bc1b4225def3537d99fd3377d6190ed96877581dbb1426`. Earlier protocol records, proposal interpretations and evidence are not migrated or rewritten.
 
 ## Major-version transition

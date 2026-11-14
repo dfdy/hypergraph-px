@@ -66,3 +66,7 @@
 
 # Owner instruction, 2026-11-14: keep all provenance archives local.
 /.provenance/
+
+# Local project agent instructions (including lowercase spelling).
+/AGENTS.md
+/agents.md
