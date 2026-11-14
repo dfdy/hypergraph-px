@@ -68,7 +68,7 @@ try{
  await page.getByRole('tab',{name:'Users',exact:true}).click();await expect(page.locator('#interactionBody')).toContainText('No current agent');await page.getByLabel('Maths display',{exact:true}).selectOption('rendered');
  await page.evaluate(async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));});
  if(errors.length||await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Synthetic capture has page errors or desktop overflow');
- await page.screenshot({path:join(root,'docs/assets/desktop-preview.png'),animations:'disabled'});passed=true;console.log('Updated README screenshot from the current embedded HTTPS runtime (1600 × 1000; isolated synthetic data).');
+ await page.screenshot({path:join(root,'docs/09-guides/assets/desktop-preview.png'),animations:'disabled'});passed=true;console.log('Updated README screenshot from the current embedded HTTPS runtime (1600 × 1000; isolated synthetic data).');
 }catch(error){throw Error(String(error.message).replace(/#launch=[a-f0-9]+/g,'#launch=[redacted]'));}
 finally{
  await browser?.close();if(runtime?.pid&&runtime.exitCode===null&&runtime.signalCode===null){const exited=new Promise(resolve=>runtime.once('exit',resolve));runtime.kill('SIGTERM');await exited;}

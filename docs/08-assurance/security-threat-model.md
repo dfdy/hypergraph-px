@@ -1,5 +1,22 @@
 # Security Threat Model
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-034-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-034-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-034-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-034-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-034-05` [Normative content](#normative-content) | [hpx.native.authority](../04-architecture/diagrams/executable.c4) · `HPX-CAN-026` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-034-06` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-034-07` [Pending restoration-scope design input, 2026-10-27](#pending-restoration-scope-design-input-2026-10-27) | [hpx.native.authority](../04-architecture/diagrams/executable.c4) · `HPX-CAN-026` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-034-08` [Selected workspace-only restoration scope, 2026-10-27](#selected-workspace-only-restoration-scope-2026-10-27) | [hpx.native.authority](../04-architecture/diagrams/executable.c4) · `HPX-CAN-026` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-034-09` [Portable workspace supersedes external witness direction, 2026-10-27](#portable-workspace-supersedes-external-witness-direction-2026-10-27) | [hpx.native.authority](../04-architecture/diagrams/executable.c4) · `HPX-CAN-026` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-ASSUR-002`
@@ -7,17 +24,22 @@
 - **Purpose:** Trust boundaries, protected assets and residual security risks.
 - **Level:** `08-assurance`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN026 / Authority lifecycle and custody](../06-subsystems/contracts/authority-lifecycle.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -64,7 +86,7 @@ AEAD authenticates bytes/context but does not establish latest state or reject a
 
 HPX-FIND-001 identifies a conflict between the preceding inherited gate and [ADR003](../04-architecture/decisions/0003-sqlite-local-writer.md), which explicitly leaves whole-database rollback outside the initial guarantee. The current writer has authenticated records, expected-state checks and original receipts; these do not establish detection of restoration of an entire authentic older database. No existing requirement is narrowed by this review integration, and no full freshness acceptance is claimed.
 
-The owner decision is tracked as HPX-GAP-023 in [open questions](../registers/open-questions.csv): **A**, retain the inherited freshness gate and require a separately reviewed witness/recovery design before claiming that acceptance; or **B**, explicitly approve a bounded initial-local exception for authentic whole-database rollback while retaining the stronger future requirement. Recommendation pending owner review: A, because a review cannot itself reduce the accepted security guarantee. Either choice preserves current synthetic evidence; neither implements a witness, authorizes real-data use or changes trust settings. A witness design must address backup/restore, unavailable witnesses and independently retained authority; a local epoch alone is insufficient.
+The owner decision is tracked as HPX-GAP-023 in [open questions](../02-governance/registers/open-questions.csv): **A**, retain the inherited freshness gate and require a separately reviewed witness/recovery design before claiming that acceptance; or **B**, explicitly approve a bounded initial-local exception for authentic whole-database rollback while retaining the stronger future requirement. Recommendation pending owner review: A, because a review cannot itself reduce the accepted security guarantee. Either choice preserves current synthetic evidence; neither implements a witness, authorizes real-data use or changes trust settings. A witness design must address backup/restore, unavailable witnesses and independently retained authority; a local epoch alone is insufficient.
 
 The owner requested simpler wording and then asked whether detection is possible, explicitly **without answering the approval question**. Detection is conditional on independent evidence of the latest accepted state: a separate record may detect replacement of the workspace alone, but cannot establish freshness if the attacker can restore that record together with the workspace. A separately trusted device/service or suitable protected counter is a possible design direction, not an adopted HPX dependency or a verified facility on the owner's platform. Define the attacker's restoration scope, trusted state, crash-consistent update order, legitimate backup restore/device transfer and an explicit unknown result when evidence is missing **before asking for final acceptance scope**. Keep the existing gate and ADR003 limit visible meanwhile; do not interpret a clarification request as approval of either alternative.
 
@@ -73,9 +95,9 @@ Method references: [RFC5116 §1.2](https://datatracker.ietf.org/doc/html/rfc5116
 
 ## Source provenance
 
-- `HPX-SRC-0021` — `Specifications/ARCHITECTURE.md`, lines 44–49; SHA-256 `74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 92–99; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 60–67; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0021` — `Specifications/ARCHITECTURE.md`, lines 44–49; SHA-256 `74465205832e350d98953dbfd1f704e590523297d31cdc40f4e4a8d05ee636a7`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 92–99; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 60–67; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Pending restoration-scope design input, 2026-10-27
 

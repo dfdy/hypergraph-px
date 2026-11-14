@@ -1,5 +1,21 @@
 # Text Anchors and Selection Semantics
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-012-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-012-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-012-03` [Entities and identities](#entities-and-identities) | [hpx.native.domain.annotation_rules.concept_anchor](diagrams/relationships.c4) · `HPX-CAN-019` · [concept_relationships](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-012-04` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-012-05` [Owned editor source implementation evidence, 2026-10-25](#owned-editor-source-implementation-evidence-2026-10-25) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-012-06` [Committed comment anchors](#committed-comment-anchors) | [hpx.native.domain.annotation_rules.concept_anchor](diagrams/relationships.c4) · `HPX-CAN-019` · [concept_relationships](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-012-07` [Structural membership and exact partial fragments — OWNER053](#structural-membership-and-exact-partial-fragments--owner053) | [hpx.native.domain.exact](../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-012-08` [Concrete closure map representation — OWNER055](#concrete-closure-map-representation--owner055) | [hpx.native.domain.exact](../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-DOM-006`
@@ -7,16 +23,21 @@
 - **Purpose:** Exact UTF8 text, UTF16 browser coordinates, historical anchors and ownership boundaries.
 - **Level:** `05-domain`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-11-03
 
 Formal meanings do not imply every type or operation is implemented. See implementation discrepancies and requirement evidence separately.
 
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN027 / Working state exact editing and graph policy](../06-subsystems/contracts/editing-and-graph.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Entities and identities
 
@@ -59,7 +80,7 @@ Selection/search responses apply only to their originating document, projection,
 
 ### 4. Selection anchors and promotion
 
-Source `HPX-SRC-0037`, original lines 38–47. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0037`, original lines 38–47. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0037-S005`. Original dates and implementation observations remain historical evidence.
 
 An anchor identifies an exact owner revision and range, including occurrence path/context for repeated or nested content. Canonical coordinate/encoding rules must agree with the frontend UTF-16/source mapping contract. Quote/context selectors assist recovery; text matching alone never proves identity or silently reassigns an ambiguous anchor. Revision-aware mappings report resolved, stale, ambiguous, inaccessible or missing outcomes.
 
@@ -72,15 +93,15 @@ Before enabling durable promotion, specify its exact affected heads, whether it 
 
 ## Source provenance
 
-- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 7–12; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 68–93; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 38–47; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 7–12; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 68–93; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 38–47; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Owned editor source implementation evidence, 2026-10-25
 
-The runtime frontend retains exact source separately from the CodeMirror LF display projection in [owned-source.js](../../frontend/src/owned-source.js). It maps UTF-16 display changes against the exact owned text, rejects stale mappings and split scalar boundaries, and preserves unchanged mixed line endings and combining scalars. Exact paste and undo/redo effects retain raw source; copy and download use owned text. This is implementation/test evidence for the existing UTF-8/source-preservation requirement, not acceptance of generic multi-owner editing. See [test coverage](../registers/tests.csv).
+The runtime frontend retains exact source separately from the CodeMirror LF display projection in [owned-source.js](../../frontend/src/owned-source.js). It maps UTF-16 display changes against the exact owned text, rejects stale mappings and split scalar boundaries, and preserves unchanged mixed line endings and combining scalars. Exact paste and undo/redo effects retain raw source; copy and download use owned text. This is implementation/test evidence for the existing UTF-8/source-preservation requirement, not acceptance of generic multi-owner editing. See [test coverage](../02-governance/registers/tests.csv).
 
-The local read-only runtime now resolves the existing `Anchor` against an exact historical snapshot, including revision/occurrence binding and scalar-safe UTF-8 byte bounds. This adds no persisted anchor encoding, relocation, source promotion or current-draft publication mechanism; see [actual navigation queries](../06-subsystems/interfaces/domain-navigation.md) and [test evidence](../registers/tests.csv).
+The local read-only runtime now resolves the existing `Anchor` against an exact historical snapshot, including revision/occurrence binding and scalar-safe UTF-8 byte bounds. This adds no persisted anchor encoding, relocation, source promotion or current-draft publication mechanism; see [actual navigation queries](../06-subsystems/interfaces/domain-navigation.md) and [test evidence](../02-governance/registers/tests.csv).
 
 ## Committed comment anchors
 
@@ -88,7 +109,7 @@ Accepted HPX-ADR-017 uses one exact committed passage per immutable comment. The
 
 ## Structural membership and exact partial fragments — OWNER053
 
-[Canonical M1](../architecture/Conceptual/identity-closure.c4) owns the accepted composition-selection meanings; [decision provenance](../02-governance/OWNER_DECISIONS.md#structural-selection-membership-and-exact-partial-fragments--2026-11-02) records choices1A/2A together. Distinguish an exact owned-source text range from a graph-preserving composition selection. Composition membership follows the exact selected structural contribution order and full occurrence/source context; numeric parent-source or flattened byte offsets alone do not establish it.
+[Canonical M1](diagrams/identity-closure.c4) owns the accepted composition-selection meanings; [decision provenance](../02-governance/OWNER_DECISIONS.md#structural-selection-membership-and-exact-partial-fragments--2026-11-02) records choices1A/2A together. Distinguish an exact owned-source text range from a graph-preserving composition selection. Composition membership follows the exact selected structural contribution order and full occurrence/source context; numeric parent-source or flattened byte offsets alone do not establish it.
 
 | Selection/context | Accepted meaning; no UI/codec inferred |
 | --- | --- |
@@ -102,4 +123,4 @@ A fragment's necessary source/ancestor context is not a claim that its entire en
 
 ## Concrete closure map representation — OWNER055
 
-The [canonical item3 choices](../architecture/Conceptual/identity-closure.c4) are realised in the [typed source-map design](../architecture/proposals/exact-closure-source-map.md#4-one-typed-ordered-map--choice4a). Copied spans use exact full-source UTF8 ranges; structural/site/stop entries preserve zero-byte distinctions and nesting without source characters. Before/after endpoints retain occurrence/contribution context at coincident byte cuts; partial notation stays a fragment. [UTF16/display conversion](../architecture/proposals/exact-closure-source-map.md#exact-utf8--browser-utf16--display-relation) is checked against exact identified buffers with no normalization or nearest-owner inference. This completes representation design only; browser/source correspondence,composite mutation and new-format acceptance are not delivered.
+The [canonical item3 choices](diagrams/identity-closure.c4) are realised in the [typed source-map design](proposals/exact-closure-source-map.md#4-one-typed-ordered-map--choice4a). Copied spans use exact full-source UTF8 ranges; structural/site/stop entries preserve zero-byte distinctions and nesting without source characters. Before/after endpoints retain occurrence/contribution context at coincident byte cuts; partial notation stays a fragment. [UTF16/display conversion](proposals/exact-closure-source-map.md#exact-utf8--browser-utf16--display-relation) is checked against exact identified buffers with no normalization or nearest-owner inference. This completes representation design only; browser/source correspondence,composite mutation and new-format acceptance are not delivered.

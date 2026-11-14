@@ -11,7 +11,7 @@
 - **Applies to:** first one-owner trusted-server semantic relationship increment; future production format acceptance remains separate
 - **Upstream authority:** [assertion model](../../05-domain/assertions-and-predicates.md), [graph-engine snapshot rule](../../06-subsystems/graph-engine.md), [immutable history](0011-retained-history.md)
 - **Downstream dependencies:** [snapshot/document semantics](../../05-domain/document-semantics.md), [record formats](../../07-implementation/data-structures/sqlite-records.md), future assertion commands and graph projection
-- **Verification:** explicit owner decision; required executable checks below; current evidence in [test register](../../registers/tests.csv)
+- **Verification:** explicit owner decision; required executable checks below; current evidence in [test register](../../02-governance/registers/tests.csv)
 - **Decision/history:** materializes the reserved HPX-ADR-010 topic. The owner adopted a read-only selected-node graph requirement; that adoption does not choose semantic snapshot inclusion. The owner explicitly chose “Adopt separate versioned overlays” on 2026-10-25.
 - **Last reviewed:** 2026-10-25
 

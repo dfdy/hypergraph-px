@@ -1,5 +1,21 @@
 # External Integrations
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-015-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-015-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-015-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-015-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-015-05` [Owner baseline reconciliation, 2026-10-30](#owner-baseline-reconciliation-2026-10-30) | Prose only: Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined. |
+| `HPX-BIND-015-06` [State and operations](#state-and-operations) | [hpx.native.integrations](../04-architecture/diagrams/executable.c4) · `HPX-CAN-003` · [c3_executable](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-015-07` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-015-08` [Future bundled Pandoc compilation](#future-bundled-pandoc-compilation) | [hpx.native.integrations](../04-architecture/diagrams/executable.c4) · `HPX-CAN-003` · [c3_executable](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-SUB-011`
@@ -7,17 +23,22 @@
 - **Purpose:** Explicitly gated citations, providers, Word import, GitHub, exports and future updates.
 - **Level:** `06-subsystems`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-ARCH-001](<../04-architecture/system-architecture.md>); [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN029 / Canonical repair restore and authenticated exchange](contracts/persistence-and-exchange.md), [CAN030 / Integration export and delivery design](contracts/integrations-and-delivery.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -160,16 +181,16 @@ No parser, storage schema, new dependency or formal proof result is selected by 
 
 ## Source provenance
 
-- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 113–123; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 210–223; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 224–252; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 306–310; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 1–2; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 3–6; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 7–14; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 15–22; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 23–28; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 29–37; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 113–123; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 210–223; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 224–252; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 306–310; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 1–2; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 3–6; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 7–14; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 15–22; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 23–28; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0036` — `Specifications/WORD_REVIEW_IMPORT.md`, lines 29–37; SHA-256 `cee7d219d32c14ab11c5844eb44847174a339f0f8dc220e3dc90525aaf425804`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Future bundled Pandoc compilation
 

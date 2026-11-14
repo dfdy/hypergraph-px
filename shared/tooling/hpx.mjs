@@ -1,4 +1,5 @@
 import {cargoExecutable} from './cargo-path.mjs';
+import {developmentOutput} from './development-launch.mjs';
 // One-shot builds and independently supervised development processes. No trust installation.
 import {spawn} from 'node:child_process';
 import {resolve} from 'node:path';
@@ -22,12 +23,12 @@ if(command==='build'){
 }else if(['frontend','backend','dev'].includes(command)){
  if(command==='dev'&&opts.mock)throw Error('Use dev:mock to run without a backend');
  if(command!=='frontend'&&(!opts.workspace||!opts.cert||!opts.key))throw Error('Backend requires --workspace, --cert and --key; workspace creation additionally requires --create');
- if(command==='dev'&&frontendPort===backendPort)throw Error('Development ports must differ');
+ if(command!=='frontend'&&frontendPort===backendPort)throw Error('Development ports must differ');
  if(!opts.mock&&command!=='backend'&&(!opts.cert||!opts.key))throw Error('Connected frontend requires --cert and --key (and --ca if backend trust is not in Node); use --mock for fixtures');
  const children=[];let stopping=false;
  async function stop(code=0){if(stopping)return;stopping=true;for(const child of children)if(child.exitCode===null&&child.signalCode===null)child.kill('SIGTERM');const timer=setTimeout(()=>{for(const child of children)if(child.exitCode===null&&child.signalCode===null)child.kill('SIGKILL');},3000);timer.unref();await Promise.all(children.map(child=>child.exitCode!==null||child.signalCode!==null?Promise.resolve():new Promise(resolve=>child.once('exit',resolve))));clearTimeout(timer);process.exitCode=code;}
- function start(program,arguments_,capture=false){const child=spawn(program,arguments_,{cwd:root,env:process.env,stdio:capture?['inherit','pipe','inherit']:'inherit'});children.push(child);if(capture){let buffered='';child.stdout.on('data',data=>{process.stdout.write(data);buffered+=data;const match=buffered.match(/https:\/\/127\.0\.0\.1:\d+\/#launch=([a-f0-9]+)/);if(match){console.log(`Development launch (private): https://127.0.0.1:${frontendPort}/#launch=${match[1]}`);buffered='';}});}child.once('error',error=>{console.error(error.message);void stop(1);});child.once('exit',code=>{if(!stopping)void stop(code??1);});return child;}
+ function start(program,arguments_,capture=false){const child=spawn(program,arguments_,{cwd:root,env:process.env,stdio:capture?['inherit','pipe','inherit']:'inherit'});children.push(child);if(capture){const output=developmentOutput(frontendPort,text=>process.stdout.write(text));child.stdout.on('data',data=>output.data(data));child.stdout.once('end',()=>output.end());}child.once('error',error=>{console.error(error.message);void stop(1);});child.once('exit',code=>{if(!stopping)void stop(code??1);});return child;}
  for(const signal of ['SIGINT','SIGTERM'])process.once(signal,()=>void stop());
- if(command!=='frontend')start('cargo',['run','--locked','-p','hypergraph-runtime','--bin','hypergraph','--features','dev-backend','--','--workspace',resolve(opts.workspace),'--cert',resolve(opts.cert),'--key',resolve(opts.key),'--port',backendPort,...(opts.create?['--create']:[])],command==='dev');
+ if(command!=='frontend')start('cargo',['run','--locked','-p','hypergraph-runtime','--bin','hypergraph','--features','dev-backend','--','--workspace',resolve(opts.workspace),'--cert',resolve(opts.cert),'--key',resolve(opts.key),'--port',backendPort,...(opts.create?['--create']:[])],true);
  if(command!=='backend')start(process.execPath,frontendArgs());
 }else throw Error('Usage: node shared/tooling/hpx.mjs frontend|backend|dev|build [options]. See docs/09-guides/developers/repository-development.md');

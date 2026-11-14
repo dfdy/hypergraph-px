@@ -16,7 +16,7 @@ from pathlib import Path
 from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[2]
-BASE = ROOT / 'docs' / 'engineering' / 'semantic-protocol'
+BASE = ROOT / '.provenance' / 'docs-reorganisation' / 'historical-docs' / 'docs' / 'engineering' / 'semantic-protocol'
 SCHEMA = BASE / 'schema' / 'record.schema.json'
 CANONICAL = BASE / 'records'
 EXAMPLES = BASE / 'examples'

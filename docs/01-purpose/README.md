@@ -6,4 +6,4 @@ Level `01-purpose`. This is navigation, not a new requirement. See the [document
 - [Project Purpose and Vision](<project-purpose.md>) — `HPX-PRIN-001`; proposed.
 - [Scope and Non-Goals](<scope-and-non-goals.md>) — `HPX-PRIN-004`; proposed.
 
-Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
+Unpopulated future topics remain reserved in the [document register](../02-governance/registers/document-inventory.csv); no empty specification implies an implemented service.

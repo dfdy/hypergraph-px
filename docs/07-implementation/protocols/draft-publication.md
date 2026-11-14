@@ -1,5 +1,21 @@
 # Draft acknowledgement and atomic commit protocol
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-030-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-030-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-030-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-030-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](../../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-030-05` [Messages and type schemas](#messages-and-type-schemas) | [hpx.native.application.publication](../../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-030-06` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-030-07` [Owner-adopted navigation publication boundary, 2026-10-27](#owner-adopted-navigation-publication-boundary-2026-10-27) | [hpx.native.application.publication](../../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-030-08` [Experimental single-parent temporal Commit transaction](#experimental-single-parent-temporal-commit-transaction) | [hpx.native.application.publication](../../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-PROTO-001`
@@ -7,17 +23,22 @@
 - **Purpose:** Draft acknowledgement, immutable commit, stale-state rejection and retry reconciliation.
 - **Level:** `07-implementation`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-SUB-006](<../../06-subsystems/workspace-storage.md>); [HPX-API-002](<../../06-subsystems/interfaces/browser-runtime.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN027 / Working state exact editing and graph policy](../../06-subsystems/contracts/editing-and-graph.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -88,11 +109,19 @@ Do not put real drafts in plaintext localStorage, IndexedDB, cookies, service-wo
 
 ### 6. Explicit commit and reviewed structural actions
 
-Source `HPX-SRC-0028`, original lines 116–134. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0028`, original lines 116–134. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0028-S007`. Original dates and implementation observations remain historical evidence.
+
+Current scope: [OWNER010 departure Commit](#owner-adopted-navigation-publication-boundary-2026-10-27) supplements manual Commit when leaving the node or switching its branch; ordinary focus changes do not publish. OWNER050 leaves the universal future Save/Commit relationship unresolved; the [current composition/retention refinement](../../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md#current-compositionretention-refinement--owner049050-2026-11-01) does not revoke this scoped workflow or retained immutable history.
 
 Commit freezes an exact draft generation/local sequence and affected owner bases, then publishes one complete permitted result. Flush/acknowledge the intended draft before executing `commit_draft`; autosave is not this operation. Structural actions require a resolved selection/destination, known ownership and a current compatible base. Block them while mapping/save outcomes are unresolved. If the user types after an action is frozen, preserve the later changes and rebase only through a validated mapping; otherwise show a recoverable conflict. An initial implementation may temporarily pause input during publication rather than claim unsupported rebasing.
 
 HPX-OWNER-027 qualifies the following reviewed-action workflow: an authorised selected-node MCP edit follows the ordinary human-equivalent edit/draft/Commit path unless applicable policy requires review. It is not forced through a proposal per edit. Actor/target/current authority/expected state and original receipt recovery remain mandatory. Exact MCP messages are not selected here.
+
+#### Frozen reviewed-proposal attribution
+
+For proposals that undergo review under the applicable policy, freeze the model and actor attribution together with the exact targets, scope and expected state, so the reviewed attribution remains bound to the proposal that is approved and executed. This retains `HPX-SRC-0032-S006`, line66 / `HPX-CLAIM-00076`; OWNER027 qualifies when review is required, not this obligation when review occurs.
+
+Distinguish known or observed attribution from reported, unknown or unobserved attribution; preserve those distinctions in the frozen proposal rather than inventing missing facts. Actor identity alone does not establish model identity or authorship. Models and sessions are not additional workspace users under OWNER030/031, and OWNER033 leaves inference on the machine user's side. This contract selects no wire/storage metadata format, HPX inference orchestration or unconditional approval requirement.
 
 For an action whose policy requires reviewed approval (human or AI): resolve intent → prepare frozen proposal → show exact targets/effects/disclosure → explicit human approval → execute atomically → reconcile receipt and projection. A preview may allocate encrypted workflow state but publishes no document history. Approval of a proposal is not publication, and execution rechecks heads, rights, policy and dependency closure. Ordinary human commits need an explicit commit action, not a proposal for each keystroke.
 
@@ -101,7 +130,7 @@ For an action whose policy requires reviewed approval (human or AI): resolve int
 | Fork/extract | New logical content/revision and exact transformation provenance; retain source history; placement effects are explicit |
 | Link | Stable target/reference and source anchors, separate from display text/slug; plain Markdown URL formatting must not pretend to create a typed graph relation |
 | Copy versus shared inclusion | A Markdown copy is independent text; shared inclusion creates an occurrence with explicit pin/follow/closure and ownership semantics |
-| Move/remove occurrence | Preserve occurrence identity on move; detach placement without erasing source history; reject illegal expansion cycles atomically |
+| Move/remove occurrence | Preserve occurrence identity on move; detach placement without erasing source history. Saved inclusion cycles are permitted under OWNER041; validate the required bounded expansion/closure policy rather than rejecting a saved cycle merely for being cyclic. Revision ancestry remains acyclic. |
 | Table editing | Draft text transaction by default; table rendering is UI-only; no publication command per cell |
 | Branch integration/restore | Review exact base/target/closure; append state, never rewrite retained history |
 
@@ -112,9 +141,9 @@ Every mutation has an opaque `operation_id` scoped to the authenticated context 
 
 ## Source provenance
 
-- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 64–91; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 94–115; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 116–134; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 64–91; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 94–115; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 116–134; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Owner-adopted navigation publication boundary, 2026-10-27
 

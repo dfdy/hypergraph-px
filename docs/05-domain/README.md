@@ -9,4 +9,4 @@ Level `05-domain`. This is navigation, not a new requirement. See the [documenta
 - [Provenance and Event Semantics](<provenance-model.md>) — `HPX-DOM-004`; proposed.
 - [Text Anchors and Selection Semantics](<text-and-anchors.md>) — `HPX-DOM-006`; proposed.
 
-Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
+Unpopulated future topics remain reserved in the [document register](../02-governance/registers/document-inventory.csv); no empty specification implies an implemented service.

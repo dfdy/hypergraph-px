@@ -8,4 +8,4 @@ Level `07-implementation`. This is navigation, not a new requirement. See the [d
 - [Formal Invariants and Proof Obligations](<formal-invariants.md>) — `HPX-ALG-001`; proposed.
 - [Draft acknowledgement and atomic commit protocol](<protocols/draft-publication.md>) — `HPX-PROTO-001`; proposed.
 
-Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
+Unpopulated future topics remain reserved in the [document register](../02-governance/registers/document-inventory.csv); no empty specification implies an implemented service.

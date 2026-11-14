@@ -1,5 +1,27 @@
 # Per-node temporal parent-Merge planning
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-027-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-027-02` [Implemented pure selection boundary](#implemented-pure-selection-boundary) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-03` [Resource and failure boundary](#resource-and-failure-boundary) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-04` [Remaining exact mapping work](#remaining-exact-mapping-work) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-05` [Retained format contract to implement next](#retained-format-contract-to-implement-next) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-06` [Upgrade and application integration acceptance](#upgrade-and-application-integration-acceptance) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-07` [Immediate-base working lineage trace](#immediate-base-working-lineage-trace) | [hpx.native.application.publication](../../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-08` [Bounded common-base selection](#bounded-common-base-selection) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-09` [Retained immediate-parent passage origins](#retained-immediate-parent-passage-origins) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-10` [Guarded encrypted draft-lineage Save](#guarded-encrypted-draft-lineage-save) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-11` [Authenticated legacy-history loading boundary](#authenticated-legacy-history-loading-boundary) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-12` [Candidate single-parent origin evidence replay](#candidate-single-parent-origin-evidence-replay) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-13` [Guarded single-parent temporal publication component](#guarded-single-parent-temporal-publication-component) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-027-14` [Temporal capacity and result readback](#temporal-capacity-and-result-readback) | [hpx.native.domain.source_plans](../../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-003` · [c3_pure_domain](../../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-ALGO-002`

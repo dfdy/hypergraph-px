@@ -7,12 +7,12 @@
 - **Purpose:** Application licensing, dependency/source provenance and user-content rights.
 - **Level:** `02-governance`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-PRIN-002](<../01-purpose/principles.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
 
 Keep root/upstream licenses unchanged. This document does not relicense supplied prose, private manuscripts or user content.
@@ -60,6 +60,12 @@ CodeMirror 6, KaTeX and esbuild dependencies are pinned with their resolved vers
 
 ## Source provenance
 
-- `HPX-SRC-0114` — `legal/TOOLING.md`, lines 1–20; SHA-256 `931174282e3b973d5b9e68ab19a89574d3f5dac435e2828d994871bf5b8772c3`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0114` — `legal/TOOLING.md`, lines 21–26; SHA-256 `931174282e3b973d5b9e68ab19a89574d3f5dac435e2828d994871bf5b8772c3`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0114` — `legal/TOOLING.md`, lines 27–29; SHA-256 `931174282e3b973d5b9e68ab19a89574d3f5dac435e2828d994871bf5b8772c3`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0114` — `legal/TOOLING.md`, lines 1–20; SHA-256 `931174282e3b973d5b9e68ab19a89574d3f5dac435e2828d994871bf5b8772c3`. Original bytes and paths are recorded in [source manifest](<registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0114` — `legal/TOOLING.md`, lines 21–26; SHA-256 `931174282e3b973d5b9e68ab19a89574d3f5dac435e2828d994871bf5b8772c3`. Original bytes and paths are recorded in [source manifest](<registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0114` — `legal/TOOLING.md`, lines 27–29; SHA-256 `931174282e3b973d5b9e68ab19a89574d3f5dac435e2828d994871bf5b8772c3`. Original bytes and paths are recorded in [source manifest](<registers/source-manifest.csv>); archive is local/ignored.
+
+## Owner attestation and publication authority
+
+The owner confirmed creation or redistribution rights for the supplied HPX prose/design inputs, authoring template pack and logo. This factual attestation selects no new licence, relicenses no manuscript/user content and grants no continuing publication permission. Root/upstream licence texts remain unchanged. Private originals, runtime data, credentials and baseline archives remain excluded from publication.
+
+The one-time documentation and source publication authorisations, including the 2026-10-26 source milestone, are completed and exhausted. Do not commit, push or release without new explicit owner authorisation. Historical source milestone compatibility is recorded in the changelog and current format contracts; installing certificate trust, connecting providers and GitHub issue/comment mutations require their own authorisation.

@@ -24,7 +24,7 @@ class ContinuityAndAmendments(unittest.TestCase):
         cls.example=json.loads((amendments.BASE/'examples'/'HPX-PROTO-20261030-add-impact-extension.json').read_text())
 
     def staged_root(self,location: Path) -> Path:
-        base=location/'docs'/'engineering'/'semantic-protocol'
+        base=location/'.provenance'/'docs-reorganisation'/'historical-docs'/'docs'/'engineering'/'semantic-protocol'
         (base/'amendments').mkdir(parents=True)
         (base/'records').mkdir(parents=True)
         (base/'amendments'/'registry.json').write_text(json.dumps({

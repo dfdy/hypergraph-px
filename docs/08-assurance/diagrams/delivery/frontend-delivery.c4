@@ -1,0 +1,216 @@
+// Canonical definition location: HPX-CAN-005 (HPX-OWNER-032). Existing design/implementation statuses retain their authority; see docs/04-architecture/SPECIFICATION.md.
+// Delivery pipeline is a proposed source interpretation, not a new deployment.
+specification {
+  relationship delivery_build { line dotted; color slate }
+  relationship delivery_call { line solid; color slate }
+  relationship delivery_code { line solid; color slate }
+}
+model {
+  frontend_inputs = artifact "Frontend source and locked dependencies" {
+    #implemented
+    description "Actual build inputs: frontend source including generated API client files, HTML/CSS/logo, installed dependency bytes and reviewed source/license material. Input identity also covers Node version/platform/architecture. Lockfile alone is not a build identity. No dependency installation or build is executed by this modelling task."
+    metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "build inputs" paths ["frontend/src", "frontend/index.html", "frontend/styles.css", "frontend/package.json", "frontend/package-lock.json", "frontend/build.mjs", "frontend/scripts/build-cache.mjs", "docs/01-purpose/assets/logo.png", "shared/legal/upstream-notices", "LICENSE"] }
+    link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+    link ../../../../frontend/src
+    link ../../../../frontend/index.html
+    link ../../../../frontend/styles.css
+    link ../../../../frontend/package.json
+    link ../../../../frontend/package-lock.json
+    link ../../../../frontend/build.mjs
+    link ../../../../frontend/scripts/build-cache.mjs
+    link ../../../01-purpose/assets/logo.png
+    link ../../../../shared/legal/upstream-notices
+    link ../../../../LICENSE
+  }
+  frontend_builder = component "Frontend build tooling (development)" {
+    #implemented
+    description "Node/esbuild bundles CodeMirror, KaTeX, Dockview and Web Awesome with local assets/notices and content-keyed snapshots. Related development tooling runs independently on configurable port3000: tab-only mock mode has no backend; connected mode uses HTTPS on both legs and validates incoming Host/Origin before proxy translation to Rust, normally port8000. It forwards but never grants launch-token/session/workspace authority. Production excludes the development server and embeds all assets in one Rust executable. This view projects build responsibilities only; precise proxy/start/test commands are in the linked development contract."
+    metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "build-time" paths ["frontend/build.mjs", "frontend/scripts/build-cache.mjs", "frontend/package.json", "frontend/scripts/dev.mjs", "frontend/scripts/dev-server.mjs", "shared/tooling/hpx.mjs", "shared/tooling/cargo-path.mjs", ".cargo/config.toml"] symbols ["buildFrontend", "cachedBuild", "installDist", "createDevelopmentServer"] }
+    link ../../../04-architecture/system-architecture.md
+    link ../../../09-guides/developers/repository-development.md
+    link ../../../../frontend/scripts/dev-server.mjs
+    link ../../../../shared/tooling/hpx.mjs
+    link ../../../../shared/tooling/cargo-path.mjs
+    link ../../../../.cargo/config.toml
+    link ../../../09-guides/reference/development-evidence.md
+    link ../../../../frontend/build.mjs
+    link ../../../../frontend/scripts/build-cache.mjs
+    link ../../../../frontend/package.json
+  }
+  frontend_dist = artifact "Prepared frontend/dist" {
+    #implemented
+    description "Existing prepared static tree consumed by Rust build.rs. Current as-read file hashes are an inventory, not proof of freshness or current executable contents. Build writes preview version ending .0; the runtime build overrides its version route. No live directory serving in the released executable."
+    metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "build output" paths ["frontend/build.mjs", "frontend/scripts/build-cache.mjs"] }
+    link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+    link ../../../../frontend/build.mjs
+    link ../../../../frontend/scripts/build-cache.mjs
+  }
+  extend hpx.native.frontend_assets {
+    embedding = component "Rust asset embedding" {
+      #partial
+      description "The production Rust build script requires index.html, sorts traversal, rejects symlinks and generates include_bytes entries. Explicit dev-backend feature omits frontend assets for independent API development/tests and is never enabled by the production command. It replaces preview build-version.json with a separately generated four-part build identity and emits assets.rs into OUT_DIR. It does not independently verify frontend input freshness, an asset allowlist or transitive completeness. Existing functionality is bounded; stronger packaging acceptance remains open."
+      metadata { authority "proposed source-backed delivery grouping" implementation "partial" execution "build-time" paths ["backend/crates/runtime/build.rs"] symbols ["main", "walk"] }
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../../../backend/crates/runtime/build.rs
+    }
+  }
+  extend hpx.native.frontend_assets {
+    resources = component "Compiled frontend resources" {
+      #implemented
+      description "main.rs includes build-produced assets.rs and resolves an embedded ASSETS map. Runtime serves these compiled bytes, not current frontend/dist or arbitrary filesystem paths. This source model does not inspect/rebuild the executable or attest its actual asset set."
+      metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "release-runtime immutable data" paths ["backend/crates/runtime/src/main.rs", "backend/crates/runtime/build.rs"] symbols ["ASSETS"] }
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../../../backend/crates/runtime/src/main.rs
+      link ../../../../backend/crates/runtime/build.rs
+    }
+  }
+  extend frontend_builder {
+    bundle_code = code "buildFrontend • bundle and copy" {
+      #implemented
+      description "Actual esbuild invocation plus explicit copy/write steps for HTML, styles, logo, fonts, legal comments/notices/LICENSE and preview build version. This task does not execute them."
+      metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "build-time" paths ["frontend/build.mjs"] symbols ["buildFrontend"] }
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../../../frontend/build.mjs
+    }
+  }
+  extend frontend_builder {
+    cache_code = code "Input identity / snapshot / dist helpers" {
+      #implemented
+      description "Actual hashing/cache helpers: verify source and output digests, build into temporary storage, recheck inputs, rename snapshot entry and conditionally replace dist under a lock. Dist installation is remove/copy/verify, not atomic transactional replacement or authenticated release provenance."
+      metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "build-time" paths ["frontend/scripts/build-cache.mjs"] symbols ["inputIdentity", "cachedBuild", "validEntry", "assetDigest", "installDist"] }
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../../../frontend/scripts/build-cache.mjs
+    }
+  }
+  extend hpx.native.frontend_assets.embedding {
+    build_code = code "build.rs • main / walk" {
+      #implemented
+      description "Actual build counter lock/append and version generation precede index existence check and sorted walk. Non-directory non-symlink entries are emitted as include_bytes routes; preview build-version is skipped and replaced. Missing index/symlink/IO failures abort the build; a failed build may consume a build number."
+      metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "build-time" paths ["backend/crates/runtime/build.rs"] symbols ["main", "walk"] }
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../../../backend/crates/runtime/build.rs
+    }
+  }
+  extend hpx.native.frontend_assets.resources {
+    map_code = code "include! / ASSETS" {
+      #implemented
+      description "Actual include!(OUT_DIR/assets.rs) and ASSETS lookup dependency. Generated paths are build outputs rather than new checked-in modules. Exact current binary bytes are outside this read-only modelling check."
+      metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "release-runtime immutable data" paths ["backend/crates/runtime/src/main.rs", "backend/crates/runtime/build.rs"] symbols ["ASSETS"] }
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../../../backend/crates/runtime/src/main.rs
+      link ../../../../backend/crates/runtime/build.rs
+    }
+  }
+  extend hpx.native.transport.assets {
+    delivery_lookup = code "route_inner • static GET" {
+      #implemented
+      description "Actual non-API GET branch after Host/cross-site validation and before bootstrap/session checks. Root aliases index.html; exact embedded keys only, explicit suffix MIME table and text/plain fallback. Unknown key returns404. Static code/version/license assets require no session or workspace unlock."
+      metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "release-runtime" paths ["backend/crates/runtime/src/main.rs"] symbols ["route_inner", "ASSETS"] }
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../../../backend/crates/runtime/src/main.rs
+    }
+  }
+  extend hpx.native.transport.responses {
+    delivery_writer = code "write_response • headers and body" {
+      #implemented
+      description "Actual length, connection close, no-store, nosniff, no-referrer and same-origin CSP headers for shared response path. Static Response has no cookie; bootstrap sets the cookie separately. Policy details remain linked to source, not duplicated as new requirements."
+      metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "release-runtime" paths ["backend/crates/runtime/src/main.rs"] symbols ["write_response"] }
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../../../backend/crates/runtime/src/main.rs
+    }
+  }
+  extend hpx.browser {
+    delivery_entry = code "app.js entry / showBuildVersion" {
+      #implemented
+      description "Browser ES module starts a nonblocking no-store version fetch and awaits initializeRuntime before choosing live/fixture document state. Non-HTTPS initialization returns fixture mode; HTTPS initialization errors rethrow rather than silently falling back. Editor/navigation execute in the browser and are outside delivery decomposition."
+      metadata { authority "proposed source-backed delivery grouping" implementation "implemented" execution "browser" paths ["frontend/src/app.js", "frontend/src/build-version.js", "frontend/index.html"] symbols ["initializeRuntime", "showBuildVersion"] }
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../../../frontend/src/app.js
+      link ../../../../frontend/src/build-version.js
+      link ../../../../frontend/index.html
+    }
+  }
+  frontend_inputs -[delivery_build]-> frontend_builder "Source / dependency inputs" { metadata { evidence "frontend/scripts/build-cache.mjs" scope "source-backed delivery/build dependency;not a new service" } link ../../../frontend/scripts/build-cache.mjs }
+  frontend_builder -[delivery_build]-> frontend_dist "Bundle / verify prepared output" { metadata { evidence "frontend/build.mjs" scope "source-backed delivery/build dependency;not a new service" } link ../../../frontend/build.mjs }
+  frontend_dist -[delivery_build]-> hpx.native.frontend_assets.embedding "Prepared tree consumed at build" { metadata { evidence "backend/crates/runtime/build.rs" scope "source-backed delivery/build dependency;not a new service" } link ../../../backend/crates/runtime/build.rs }
+  hpx.native.frontend_assets.embedding -[delivery_build]-> hpx.native.frontend_assets.resources "Generate map / include bytes" { metadata { evidence "backend/crates/runtime/build.rs" scope "source-backed delivery/build dependency;not a new service" } link ../../../backend/crates/runtime/build.rs }
+  hpx.native.transport.assets -[delivery_call]-> hpx.native.frontend_assets.resources "Lookup compiled bytes" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed delivery/build dependency;not a new service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.assets -[delivery_call]-> hpx.native.transport.responses "Construct static response" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed delivery/build dependency;not a new service" } link ../../../backend/crates/runtime/src/main.rs }
+  frontend_inputs -[delivery_code]-> frontend_builder.cache_code "Input identity" { metadata { evidence "frontend/scripts/build-cache.mjs" scope "source-backed delivery/build dependency;not a new service" } link ../../../frontend/scripts/build-cache.mjs }
+  frontend_builder.bundle_code -[delivery_code]-> frontend_builder.cache_code "cachedBuild / installDist" { metadata { evidence "frontend/build.mjs" scope "source-backed delivery/build dependency;not a new service" } link ../../../frontend/build.mjs }
+  frontend_builder.cache_code -[delivery_code]-> frontend_builder.bundle_code "Build callback only on cache miss" { metadata { evidence "frontend/scripts/build-cache.mjs" scope "source-backed delivery/build dependency;not a new service" } link ../../../frontend/scripts/build-cache.mjs }
+  frontend_builder.bundle_code -[delivery_code]-> frontend_dist "Static bundle / explicit copies" { metadata { evidence "frontend/build.mjs" scope "source-backed delivery/build dependency;not a new service" } link ../../../frontend/build.mjs }
+  frontend_dist -[delivery_code]-> hpx.native.frontend_assets.embedding.build_code "Require index / sorted walk" { metadata { evidence "backend/crates/runtime/build.rs" scope "source-backed delivery/build dependency;not a new service" } link ../../../backend/crates/runtime/build.rs }
+  hpx.native.frontend_assets.embedding.build_code -[delivery_code]-> hpx.native.frontend_assets.resources.map_code "Generated assets.rs / include_bytes" { metadata { evidence "backend/crates/runtime/build.rs" scope "source-backed delivery/build dependency;not a new service" } link ../../../backend/crates/runtime/build.rs }
+  hpx.native.transport.security.c4_gates -[delivery_code]-> hpx.native.transport.assets.delivery_lookup "Static Host/site checks; no cookie" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed delivery/build dependency;not a new service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.assets.delivery_lookup -[delivery_code]-> hpx.native.frontend_assets.resources.map_code "Exact ASSETS lookup" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed delivery/build dependency;not a new service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.assets.delivery_lookup -[delivery_code]-> hpx.native.transport.responses.delivery_writer "Response descriptor / bytes" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed delivery/build dependency;not a new service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.browser.delivery_entry -[delivery_code]-> hpx.browser.c4_protocol "Await initializeRuntime" { metadata { evidence "frontend/src/app.js" scope "source-backed delivery/build dependency;not a new service" } link ../../../frontend/src/app.js }
+  hpx.native.transport.responses -[delivery_call]-> hpx.browser "HTTPS static responses" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "response data through the TLS stream and browser platform;not a direct Rust-to-JavaScript function call" } link ../../../backend/crates/runtime/src/main.rs link ../../../frontend/index.html }
+  hpx.native.transport.responses.delivery_writer -[delivery_code]-> hpx.browser.delivery_entry "HTML/module bytes over HTTPS" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "response data through the TLS stream and browser platform;not a direct Rust-to-JavaScript function call" } link ../../../backend/crates/runtime/src/main.rs link ../../../frontend/index.html }
+  runtime_build_identity_inputs = artifact "Rust version and build-counter inputs" {
+    #implemented
+    description "Build-time Cargo package version and the local append-only compile counter feed the default four-part diagnostic identity. Production tooling supplies explicit HPX_RELEASE_BUILD_NUMBER (default1) for repeatable release inputs; it does not reset or truncate the local counter. These are not workspace data, API/schema versions, signed provenance or release attestation. The durable counter lives under .local/artifacts;Cargo metadata resolves the configured .local/target or an explicit environment/cross-target override. These implementation paths are not product requirements. No build/counter update is performed by this audit."
+    metadata { authority "proposed source-backed input grouping" implementation "implemented" execution "Rust build-time inputs" paths ["Cargo.toml", "backend/crates/runtime/Cargo.toml", "backend/crates/runtime/build.rs"] symbols ["CARGO_PKG_VERSION"] input_locations ["Cargo package-version environment", ".local/artifacts/test-build-counter.log"] }
+    link ../../../../Cargo.toml
+    link ../../../../backend/crates/runtime/Cargo.toml
+    link ../../../../backend/crates/runtime/build.rs
+    link ../../../02-governance/OWNER_DECISIONS.md
+  }
+  runtime_build_identity_inputs -[delivery_build]-> hpx.native.frontend_assets.embedding "Cargo version / local build counter" { metadata { evidence "backend/crates/runtime/build.rs" scope "existing build-time version input;not runtime state or a new build step" } link ../../../backend/crates/runtime/build.rs }
+  hpx.native.transport.security -[delivery_call]-> hpx.native.transport.responses "Reject invalid Host / cross-site request" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "route_inner calls error before static selection;shared error/response responsibility,not a new function boundary" } link ../../../backend/crates/runtime/src/main.rs }
+
+}
+views {
+  view c3_frontend_delivery of hpx.native.frontend_assets {
+    title "C3 / Frontend delivery"
+    link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/frontend-delivery-audit.md
+    description "Focused delivery responsibility view before code detail. Dotted arrows are build-time production; solid arrows are runtime dependencies/requests with implicit returns. Build identity comes from Cargo metadata and the local compile counter; output covers assets and safe errors via the existing TLS stream. Build tooling is outside the single released executable; browser UI executes outside Rust. Asset loading, session bootstrap, unlock and resource authority remain distinct. Source interpretation remains proposed, not release acceptance."
+    // Presentation boundary for the focal responsibility;shared code remains co-located as evidenced.
+    group "Frontend delivery" { color primary; border solid
+      group "Build time — development only" { color primary; border solid
+        include frontend_builder with { description "Node/esbuild plus verified content snapshots; build-time only." navigateTo c4_frontend_build }
+        include hpx.native.frontend_assets.embedding with { description "Sorted include_bytes map and compiled-version override; packaging limits open." navigateTo c4_frontend_embedding }
+      }
+      group "Embedded resources and shared runtime delivery" { color primary; border solid
+        include hpx.native.frontend_assets.resources with { description "Embedded HTML/JS/CSS/images/fonts/notices plus compiled build identity; no disk web root." navigateTo c4_frontend_embedding }
+        include hpx.native.transport.assets with { description "Root alias, exact-map lookup, MIME selection and 404; public before session/unlock." navigateTo c4_frontend_routing }
+        include hpx.native.transport.responses with { description "Asset bytes or safe errors; MIME/length, no-store/CSP/nosniff; static reply has no cookie." navigateTo c4_frontend_routing }
+      }
+    }
+    // Callers,providers,artifacts and consumers stay outside the focal boundary.
+    include frontend_dist with { description "Prepared assets; freshness not checked by Rust. Open: Frontend delivery — Implementation overview (shared)." navigateTo c4_frontend_delivery }
+    include frontend_inputs with { title "Frontend source, assets and build inputs" description "Source/HTML/CSS/logo, installed dependencies, build config and legal inputs; Node identity." navigateTo c4_frontend_build }
+    include hpx.browser with { description "Loads assets and evaluates browser code; session bootstrap/unlock follow in linked views." navigateTo seq_frontend_session }
+    include hpx.native.transport.https with { description "Trusted loopback TLS and bounded request framing." navigateTo c3_runtime_api }
+    include hpx.native.transport.security with { title "Asset request checks" description "Host/cross-site checks precede static GET; session and workspace unlock are not required." navigateTo c4_frontend_routing }
+    include runtime_build_identity_inputs with { description "Cargo package version and local compile counter; build-time only, not workspace input." navigateTo c4_frontend_embedding }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include * -> * where kind is delivery_build
+    include * -> * where kind is delivery_call
+    include hpx.native.transport.responses -> hpx.browser where kind is delivery_call with { title "Asset bytes / safe errors via TLS" }
+    include hpx.browser -> hpx.native.transport.https with { title "Static asset GETs over HTTPS" }
+    include hpx.native.transport.https -> hpx.native.transport.security
+    include hpx.native.transport.security -> hpx.native.transport.assets
+    include hpx.native.transport.https -> hpx.native.transport.responses
+    exclude * -> * where kind is delivery_code
+    exclude * -> * where kind is code_call
+    exclude * -> * where kind is domain_use
+    exclude * -> * where kind is domain_call
+    exclude * -> * where kind is domain_type
+    exclude * -> * where kind is domain_test
+    exclude * -> * where kind is coverage_call
+    exclude * -> * where kind is coverage_data
+    exclude * -> * where kind is coverage_plan
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+}

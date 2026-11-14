@@ -1,5 +1,22 @@
 # Provenance and Event Semantics
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-011-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-011-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-011-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-011-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-011-05` [Entities and identities](#entities-and-identities) | [hpx.native.domain.source_plans](../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-011-06` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-011-07` [Owner-directed Merge and Copy action distinction, 2026-10-25](#owner-directed-merge-and-copy-action-distinction-2026-10-25) | [hpx.native.domain.source_plans](../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-011-08` [Current independent Fork projection](#current-independent-fork-projection) | [hpx.native.domain.source_plans](../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-011-09` [Working-source and promotion design, 2026-10-26](#working-source-and-promotion-design-2026-10-26) | [hpx.native.application.publication](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-DOM-004`
@@ -7,17 +24,22 @@
 - **Purpose:** Authorship, influence, derivation, events and immutable historical provenance.
 - **Level:** `05-domain`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN028 / Shared API chat and selected MCP design](../06-subsystems/contracts/shared-api-chat-mcp.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -56,8 +78,8 @@ Reconcile attribution through typing, delete, undo/redo, structural results and 
 
 ## Source provenance
 
-- `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 28–33; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 188–199; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 28–33; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 188–199; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Owner-directed Merge and Copy action distinction, 2026-10-25
 
@@ -74,4 +96,4 @@ The initial durable Fork records an exact committed input range and the new iden
 [ADR019](../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md) designs exact private working checkpoints for provenance-bearing copy/paste at the owner's request. References retain their captured source; a later exact Commit may publish promotion and replacement evidence without mutating original links or inferring an anchor relocation. Semantic assertion/comment/derivation participant changes require new authorized entity revisions. No draft-reference or replacement mechanism is delivered.
 
 
-The preceding delivery statement retains its original development checkpoint scope. ADR019 was subsequently explicitly adopted; acceptance is distinct from the bounded implementation/compatibility evidence in [current development state](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary). [M3 conceptual provenance/working-state roles](../architecture/Conceptual/provenance-working.c4) select no new record format and do not imply that every adopted mechanism is delivered.
+The preceding delivery statement retains its original development checkpoint scope. ADR019 was subsequently explicitly adopted; acceptance is distinct from the bounded implementation/compatibility evidence in [current development state](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary). [M3 conceptual provenance/working-state roles](diagrams/provenance-working.c4) select no new record format and do not imply that every adopted mechanism is delivered.

@@ -1,0 +1,261 @@
+// Focused C3 responsibility decomposition; not new processes/crates.
+// All source-backed implementation remains in the existing executable/adapters.
+specification {
+  relationship runtime_call { line solid; color slate }
+  relationship build_reference { line dotted; color slate }
+}
+model {
+  extend hpx.native.transport {
+    startup = component "Startup and process state" {
+      #implemented
+      summary "Explicit workspace/TLS configuration; locked startup; process tokens."
+      description "run/main select workspace/create/port/certificate/private key; reject invalid paths/port/Unix key permissions and fail closed on TLS configuration. State starts without an unlocked Workspace; launch and session tokens are independent OS-random process-lifetime capabilities. A mutex serializes route handling. No trust installation, startup enrollment or release-time Node/Lean/database server."
+      metadata { authority "proposed source-backed responsibility grouping" implementation "implemented" paths ["backend/crates/runtime/src/main.rs"] symbols ["run", "main", "State", "token"] }
+      link ../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../../04-architecture/system-architecture.md
+      link ../../../backend/crates/runtime/src/main.rs
+    }
+    https = component "Bounded HTTPS and HTTP framing" {
+      #implemented
+      link ../contracts/authority-lifecycle.md#transport-and-client-held-boundary
+      summary "Loopback rustls; bounded workers, request framing and socket deadlines."
+      description "Numeric 127.0.0.1 listener; rustls/httparse; 16 worker slots, 16 KiB headers, 48 parsed headers, 14 MiB body and one ten-second socket deadline. Reject duplicate headers, transfer encoding, Expect, unsupported methods/framing and pipelined bytes already buffered; close each connection. Check deadline after acquiring the state mutex and before running a queued route; no cancellation of already executing storage/KDF work. TLS keys are distinct from workspace keys."
+      metadata { authority "proposed source-backed responsibility grouping" implementation "implemented" paths ["backend/crates/runtime/src/main.rs", "backend/crates/runtime/Cargo.toml"] symbols ["run", "serve_socket", "DeadlineSocket", "read_request"] }
+      link ../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../interfaces/browser-runtime.md
+      link ../security-cryptography.md
+      link ../../../backend/crates/runtime/src/main.rs
+      link ../../../backend/crates/runtime/Cargo.toml
+    }
+    security = component "Request, session and lock gates" {
+      #implemented
+      link ../contracts/authority-lifecycle.md#local-authentication-and-session-state
+      summary "Host/Origin and bootstrap/session checks; protected-data lock guard."
+      description "route_inner checks exact numeric Host, cross-site requests and POST Origin/JSON type before dispatch. Static assets branch before session authentication. Bootstrap exchanges launch capability for a separate Secure/HttpOnly/SameSite=Strict cookie; duplicate session cookies fail closed. Runtime metadata and explicit lifecycle/status are available at their defined locked-state gates; other API calls require an unlocked workspace. Session identity is not document authority or decryption custody. Domain/resource authorization remains below these transport gates."
+      metadata { authority "proposed source-backed responsibility grouping" implementation "implemented" paths ["backend/crates/runtime/src/main.rs"] symbols ["route_inner", "secure_equal", "State"] }
+      link ../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../interfaces/browser-runtime.md
+      link ../security-cryptography.md
+      link ../../../backend/crates/runtime/src/main.rs
+    }
+    assets = component "Embedded-asset routing" {
+      #implemented
+      summary "Static GET lookup; no arbitrary disk serving or workspace unlock."
+      description "Non-API GET requests resolve only the generated embedded ASSETS map, including / to /index.html; return MIME-typed bytes or 404. Host/cross-site checks apply, but no session or unlocked workspace is needed to load the UI. Build.rs creates resources ahead of release; CodeMirror/KaTeX/editor logic runs in the browser. Response headers/CSP are written by the shared response path."
+      metadata { authority "proposed source-backed responsibility grouping" implementation "implemented" paths ["backend/crates/runtime/src/main.rs", "backend/crates/runtime/build.rs"] symbols ["route_inner", "ASSETS"] }
+      link ../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../frontend-interaction.md
+      link ../../../backend/crates/runtime/src/main.rs
+      link ../../../backend/crates/runtime/build.rs
+    }
+    api = component "API dispatch and wire adapters" {
+      #partial
+      link ../interfaces/browser-runtime.md#automatic-commit-on-node-or-branch-departure-2026-10-27
+      link ../interfaces/browser-runtime.md#bounded-documentfork-graph-projection
+      link ../interfaces/browser-runtime.md#current-adapter-retry-and-lock-behavior-2026-10-25
+      link ../interfaces/browser-runtime.md#desktop-graph-scrolling
+      link ../interfaces/browser-runtime.md#document-creation-without-page-replacement
+      link ../interfaces/browser-runtime.md#exact-assertion-judgement-history
+      link ../interfaces/browser-runtime.md#exact-in-text-semantic-relation-words
+      link ../interfaces/browser-runtime.md#exact-snapshot-client-validation
+      link ../interfaces/browser-runtime.md#explicit-local-keychain-routes-2026-10-25
+      link ../interfaces/browser-runtime.md#history-inspection-intent-isolation
+      link ../interfaces/browser-runtime.md#immutable-committed-passage-comments
+      link ../interfaces/browser-runtime.md#independent-committed-source-fork-2026-10-25
+      link ../interfaces/browser-runtime.md#messages-and-type-schemas
+      link ../interfaces/browser-runtime.md#original-branch-integrity-audit-transport-2026-10-27
+      link ../interfaces/browser-runtime.md#protected-clipboard-subset-2026-10-25
+      link ../interfaces/browser-runtime.md#read-only-committed-snapshot-comparison
+      link ../interfaces/browser-runtime.md#read-only-common-base-inspection
+      link ../interfaces/browser-runtime.md#read-only-history-and-exact-historical-ranges-2026-10-25
+      link ../interfaces/browser-runtime.md#read-only-parent-branch-comparison-context-2026-10-27
+      link ../interfaces/browser-runtime.md#request-boundary-enforcement-2026-10-25
+      link ../interfaces/browser-runtime.md#reviewed-captured-source-declarations
+      link ../interfaces/browser-runtime.md#reviewed-new-document-merge
+      link ../interfaces/browser-runtime.md#selected-retrospective-assertion-incidence-graph
+      link ../interfaces/browser-runtime.md#selected-transformation-incidence-graph
+      link ../interfaces/browser-runtime.md#snapshot-bound-publication-contributors
+      link ../interfaces/browser-runtime.md#versioned-retrospective-semantic-assertions
+      link ../interfaces/browser-runtime.md#visible-test-build-identity-2026-10-27
+      link ../formats/representation-profile.md#runtime-interface-versus-persistence
+      link ../contracts/shared-api-chat-mcp.md#one-application-commandquery-boundary
+      summary "API1 commands/queries; lossless conversion; progressive typed coverage."
+      description "Required V3: one logical user command/query API shared by browser and AI MCP, with backend per-user-per-workspace permission enforcement (HPX-OWNER-029); this is not complete in current code. Current evidence: route existing API1 calls after transport/session/lock gates. Forward frozen operation IDs and exact expected state; application/storage retain resource authority, receipts and transaction semantics. Committed Fork uses borrowed RawValue and lossless DTO/codec conversion; other commands retain legacy conversion. Scoped query handlers call existing workspace methods, not Workspace::execute. Canonical byte/ID distinctions and duplicate-field rejection are retained. Typed schema coverage is partial; documents/lock intentionally ignore request bodies. No general query engine, provider execution or complete target endpoint catalogue is implied."
+      metadata { authority "proposed source-backed responsibility grouping" implementation "partial" paths ["backend/crates/runtime/src/main.rs", "backend/crates/runtime/src/api.rs", "backend/crates/runtime/src/api_transport.rs"] symbols ["route_inner", "decode", "api_transport::decode_command", "api_transport::fork_receipt"] }
+      link ../../04-architecture/component-architecture.md
+      link ../interfaces/browser-runtime.md
+      link ../interfaces/domain-navigation.md
+      link ../../07-implementation/protocols/draft-publication.md
+      link ../../../backend/crates/runtime/src/main.rs
+      link ../../../backend/crates/runtime/src/api.rs
+      link ../../../backend/crates/runtime/src/api_transport.rs
+    }
+    lifecycle = component "Workspace session lifecycle" {
+      #implemented
+      summary "Metadata, explicit passphrase/keychain actions and lock; Rust-only keys."
+      description "State owns Option<Workspace>. Authenticated runtime/status can report supported/enrolled/locked state without revealing keys. Explicit passphrase creation/open is default; keychain unlock is an enrolled alternative, not automatic startup access. Shared one-second unlock throttle and mutex serialize attempts. Enroll/remove require unlocked owner; workspace keychain implementation verifies backup/upgrade/cleanup and current ownership. Lock drops the workspace; documents and lock retain ignored-body compatibility. This is transport lifecycle routing, not a new key provider, recovery protocol or grant of document authority."
+      metadata { authority "proposed source-backed responsibility grouping" implementation "implemented" paths ["backend/crates/runtime/src/main.rs", "backend/crates/runtime/src/api.rs"] symbols ["State", "route_inner", "api::RuntimeResponse::new"] }
+      link ../../04-architecture/decisions/0014-keychain-unlock-policy.md
+      link ../interfaces/browser-runtime.md
+      link ../workspace-storage.md
+      link ../../../backend/crates/runtime/src/main.rs
+      link ../../../backend/crates/runtime/src/api.rs
+    }
+    responses = component "Responses, errors and security headers" {
+      #partial
+      summary "Legacy JSON; opt-in problem details; no-store/CSP and connection close."
+      description "json/error/storage_error and route provide bounded stable codes with opt-in application/problem+json for routed LegacyError responses; malformed HTTP, expired queue and unavailable-state responses outside route remain legacy. write_response emits exact body length, close/no-store/nosniff/no-referrer and same-origin CSP. No response includes workspace keys or provider secrets. A transport timeout is not evidence that a publication failed; reconcile the original operation. Full target error/negotiation schema coverage remains partial."
+      metadata { authority "proposed source-backed responsibility grouping" implementation "partial" paths ["backend/crates/runtime/src/main.rs", "backend/crates/runtime/src/api.rs"] symbols ["json", "error", "storage_error", "route", "write_response"] }
+      link ../../04-architecture/decisions/0004-local-https-bootstrap.md
+      link ../interfaces/browser-runtime.md
+      link ../../07-implementation/protocols/draft-publication.md
+      link ../../../backend/crates/runtime/src/main.rs
+      link ../../../backend/crates/runtime/src/api.rs
+    }
+    client_access = component "AI-user MCP access" {
+      #planned
+      link ../ai-collaboration.md#5-selected-node-editing-through-mcp--hpx-rq-036
+      link ../ai-collaboration.md#8-acceptance-obligations
+      link ../contracts/shared-api-chat-mcp.md#mcp-binding-and-tools
+      link ../contracts/shared-api-chat-mcp.md#one-application-commandquery-boundary
+      summary "Mandatory AI-user MCP path;auth/transport/tool design unimplemented."
+      description "Required AI-user MCP adapts to the same logical command/query API used by the browser, with per-user-per-workspace permissions and human-equivalent expected-state/receipt semantics (HPX-OWNER-029),with exact selected-node scope (HPX-OWNER-027). This does not select an internal HTTP hop or a second permission engine. Workspace-user authentication and MCP transport/tool binding remain unselected. Current local HTTPS can be exercised by isolated test clients, but is not delivery of the required AI-user MCP path. Remote deployment, conditional WSS/event channels, multi-user login and client-held execution are not enabled or selected here."
+      metadata { authority "proposed source-backed responsibility grouping" implementation "planned" }
+      link ../../04-architecture/component-architecture.md
+      link ../interfaces/browser-runtime.md
+      link ../security-cryptography.md
+    }
+  }
+  runtime_contract_tooling = component "API contract tooling (development)" {
+    #partial
+    summary "Offline schema export and generated client checks; not a release service."
+    description "Rust adapter DTOs/schema definitions in api.rs are consumed by feature-gated hypergraph-api and frontend/scripts/generate-contract.mjs. Generate/check OpenAPI3.1, TypeScript, route/schema assertions and shared audit constraints. The normal runtime serves no schema endpoint and spawns no exporter/Node worker; frontend tooling is build/development only. Contract1 and existing wire bytes remain fixed; complete target schema/compatibility negotiation is not delivered."
+    metadata { authority "proposed source-backed tooling context" implementation "partial" execution "development-only" paths ["backend/crates/runtime/src/api.rs", "backend/crates/runtime/src/export_api.rs", "frontend/scripts/generate-contract.mjs", "shared/openapi.json"] }
+    link ../interfaces/browser-runtime.md
+    link ../../09-guides/reference/development-evidence.md
+    link ../../../backend/crates/runtime/src/api.rs
+    link ../../../backend/crates/runtime/src/export_api.rs
+    link ../../../frontend/scripts/generate-contract.mjs
+    link ../../../shared/openapi.json
+  }
+  hpx.native.transport.startup -[runtime_call]-> hpx.native.transport.https "Configure listener / shared state" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.https -[runtime_call]-> hpx.native.transport.security "Parsed bounded request" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.https -[runtime_call]-> hpx.native.transport.responses "Write response / security headers" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.security -[runtime_call]-> hpx.native.transport.assets "Static GET before session/unlock" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.security -[runtime_call]-> hpx.native.transport.lifecycle "Authenticated metadata / lock / unlock" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.security -[runtime_call]-> hpx.native.transport.api "Session + unlocked workspace" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.api -[runtime_call]-> hpx.native.transport.responses "JSON outcomes / stable errors" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.api -[runtime_call]-> hpx.native.application "Scoped commands / query services" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.lifecycle -[runtime_call]-> hpx.native.storage "Explicit create / passphrase open" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.lifecycle -[runtime_call]-> hpx.native.keychain "Explicit keychain lifecycle" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.assets -[runtime_call]-> hpx.native.frontend_assets "Lookup embedded bytes" {
+    metadata { evidence "backend/crates/runtime/src/main.rs" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.native.transport.client_access -[planned_flow]-> hpx.native.application "Shared user API / per-user rights (required)" {
+    metadata { evidence "docs/04-architecture/component-architecture.md" scope "logical responsibility/control-data dependency; not a new module or protocol" }
+    link ../../04-architecture/component-architecture.md
+  }
+  runtime_contract_tooling -[build_reference]-> hpx.native.transport.api "Derive schemas from Rust DTOs" {
+    metadata { evidence "backend/crates/runtime/src/export_api.rs" scope "development-only read of definitions; no runtime HTTP/service call" }
+    link ../../../backend/crates/runtime/src/export_api.rs
+  }
+}
+views {
+  view c3_runtime_api of hpx.native.transport {
+    link ../contracts/shared-api-chat-mcp.md
+    title "C3 / Runtime and API"
+    description "Focused responsibility decomposition of Runtime and API within the one Rust executable, not new backend/crates/services or a complete C4 symbol model. Static assets branch before session/unlock; API data access retains application authority. Arrows are dependencies/requests; return values are implicit. Blue/grey blocks match C2; green/amber/grey badges mean bounded implemented/partial/planned. Dotted tooling reference is build-time only. HPX-CAN-013: required HPX-DOM-001 allocation is recorded in view-only notes; current helper coverage is bounded. Precise concepts and unadopted mechanisms remain linked contracts; no conceptual gap is closed by allocation. OWNER059 D01/D04/D13A: native runtime owns workspace-local authentication and current policy admission;browser/MCP share one logical user command/query API. Context-bound MCP target handles are locators,not grants;every request binds actor,target,expected state and operation identity. Loopback HTTPS and explicit verified trust remain;MCP transport adapts the same policy without direct storage writes. Credential/session/profile implementation is future design,not current capability."
+    link ../../05-domain/core-object-model.md
+    link ../interfaces/browser-runtime.md
+    link ../ai-collaboration.md
+    link ../security-cryptography.md
+    group "Runtime and API — inside the Rust executable" {
+      color primary
+      border solid
+      include hpx.native.transport.startup with { description "Explicit workspace/TLS options; locked state and fresh process tokens." }
+      include hpx.native.transport.https with { description "Loopback TLS; 16 workers; bounded framing; socket deadlines." }
+      include hpx.native.transport.security with { navigateTo c4_api_routes description "Host/Origin; bootstrap/cookie; separate session and data-lock gates."  notes "Required: authenticate the acting workspace-local user and keep session admission, workspace unlock and resource permission distinct. Existing loopback/session/lock checks are bounded one-owner evidence, not general human/machine identity or permission implementation. No credential/provider/session or ACL format is selected." }
+      include hpx.native.transport.assets with { description "Static GET from embedded map; no session or unlock required." }
+      include hpx.native.transport.api with { navigateTo c4_api_routes description "Shared human/AI API required; commands/scoped reads and per-user rights. Current DTO/schema coverage partial."  notes "Required: common logical commands/queries for all human/machine reads, drafts, Commit, graph/history and chat capture. Route through current application authority and exact-state validation; wire adapters grant no bypass. Existing DTO/OpenAPI coverage is partial evidence, not the complete adopted API or domain serialization." }
+      include hpx.native.transport.lifecycle with { navigateTo seq_unlock description "Metadata; explicit passphrase/keychain actions; lock drops workspace keys."  notes "Explicit passphrase/keychain unlock makes workspace keys available without granting user/resource authority. Retain locked startup, passphrase recovery and ADR014 enrollment boundaries. Metadata/status are not mutation or historical-key grants; no new epoch/custody or user-permission mechanism is adopted." }
+      include hpx.native.transport.responses with { description "JSON/problem errors; CSP/no-store; close connection. Coverage partial."  notes "Required: return only authorised data, attributable original results or explicit denial/conflict/failure/uncertainty. Lost/delayed responses do not establish save/Commit or justify a new operation. Do not disclose protected history/receipts through errors or adapter differences. Current problem/JSON responses do not complete the multi-user protocol." }
+      include hpx.native.transport.client_access with { description "AI MCP adapts shared user API and per-user rights. Selected-node scope; auth/tools unimplemented."  notes "Required: selected-node MCP adapts the same application operations and workspace-user permissions as humans, including exact source, draft ACK versus Commit, history and recovery. Selection grants no authority. One machine user/provider/workspace; models/sessions/chats are not extra users. Current tools/auth/wire mechanisms remain unimplemented; inference stays machine-side." }
+    }
+    include user with { description "Explicit startup options; local operator owns certificate trust." }
+    include hpx.browser with { description "Browser loads assets, exchanges launch token and calls authenticated API." navigateTo c2_containers }
+    include ai_users with { description "AI users access shared application operations through MCP; no separate external API client requirement." }
+    include hpx.native.application with { title "Application coordination" description "Current resource authority, exact-state commands, reads and receipts; co-located in storage." navigateTo c3_application }
+    include hpx.native.storage with { title "Workspace persistence" description "Encrypted workspace create/open; default passphrase custody." navigateTo c3_workspace_persistence }
+    include hpx.native.keychain with { title "Keychain adapter" description "Enrolled device-secret alternative, verified upgrade backup and provider cleanup." navigateTo c3_keychain }
+    include hpx.native.frontend_assets with { title "Frontend delivery" description "Build-produced bytes bundled in the executable; not disk/web serving." navigateTo c3_frontend_delivery }
+    group "Development only — no release service" {
+      color muted
+      border solid
+      include runtime_contract_tooling with { description "Feature-gated offline exporter; generated OpenAPI/TypeScript and compatibility checks." }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include hpx.native.transport.* -> hpx.native.transport.*
+    include hpx.native.transport.api -> hpx.native.application
+    include hpx.native.transport.lifecycle -> hpx.native.storage
+    include hpx.native.transport.lifecycle -> hpx.native.keychain
+    include hpx.native.transport.assets -> hpx.native.frontend_assets
+    include hpx.native.transport.client_access -> hpx.native.application
+    include user -> hpx.native.transport.startup with { title "Launch / configure" }
+    include hpx.browser -> hpx.native.transport.https with { title "HTTPS requests / responses" }
+    include ai_users -> hpx.native.transport.client_access with { title "MCP edits / results" }
+    include runtime_contract_tooling -> hpx.native.transport.api with { title "DTO definitions (build-time)" }
+    exclude * -> * where kind is code_call
+    exclude * -> * where kind is delivery_build
+    exclude * -> * where kind is delivery_call
+    exclude * -> * where kind is delivery_code
+    exclude * -> * where kind is domain_use
+    exclude * -> * where kind is domain_call
+    exclude * -> * where kind is domain_type
+    exclude * -> * where kind is domain_test
+    exclude * -> * where kind is coverage_call
+    exclude * -> * where kind is coverage_data
+    exclude * -> * where kind is coverage_plan
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    include hpx.native.application -> hpx.native.transport.api where metadata.scope is "application_io_runtime"
+    autoLayout TopBottom 100 90 spline
+  }
+}

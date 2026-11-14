@@ -191,7 +191,7 @@ class ArchiveTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "forbidden"):
                 self.check(local=True)
         self.entry["obligation_status"] = "superseded"
-        for original in ("docs/active.md", "docs/architecture/proposals/design.md", ".oldspecs/source.md", ".provenance/oldspecs/source.md", "backend/proofs/model.lean", "PROTOCOL.md", "shared/tooling/protocol/PROTOCOL.md", "docproject/public-record/specification-snapshots/master.md", ".provenance/public-record/specification-snapshots/master.md"):
+        for original in ("docs/active.md", "docs/proposals/design.md", ".oldspecs/source.md", ".provenance/oldspecs/source.md", "backend/proofs/model.lean", "PROTOCOL.md", "shared/tooling/protocol/PROTOCOL.md", "docproject/public-record/specification-snapshots/master.md", ".provenance/public-record/specification-snapshots/master.md"):
             self.entry["original_path"] = original
             with self.assertRaisesRegex(ValueError, "protected archival"):
                 self.check(local=True)
@@ -358,12 +358,12 @@ class ArchiveTests(unittest.TestCase):
             self.check_git_with_ignored(self.private_probes(), code=128)
 
     def test_old_source_and_archive_register_locations_are_rejected(self):
-        self.put("docs/registers/documentation-archive.json", b"[]\n")
+        self.put("docs/02-governance/registers/documentation-archive.json", b"[]\n")
         for path in (".oldspecs/source.md", "docproject/architecture-review/source.md"):
-            self.put("docs/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC," + path + ",," + self.entry["sha256"] + "\n").encode())
+            self.put("docs/02-governance/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC," + path + ",," + self.entry["sha256"] + "\n").encode())
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, "old provenance location"):
                 archive.verify_sources(self.root, self.manifest, False)
-        self.put("docs/registers/documentation-archive.json", json.dumps([{"archive_path": ".oldspecs/source.md"}]).encode())
+        self.put("docs/02-governance/registers/documentation-archive.json", json.dumps([{"archive_path": ".oldspecs/source.md"}]).encode())
         with self.assertRaisesRegex(ValueError, "old provenance location"):
             archive.verify_sources(self.root, self.manifest, False)
 
@@ -373,36 +373,36 @@ class ArchiveTests(unittest.TestCase):
         self.put(current, self.data)
         self.entry.update(current_path=current, original_path=original,
                           classification="registered-source", status="retained-source")
-        self.put("docs/registers/documentation-archive.json", json.dumps([{
+        self.put("docs/02-governance/registers/documentation-archive.json", json.dumps([{
             "original_path": original, "archive_path": current,
             "sha256": self.entry["sha256"], "bytes": len(self.data),
         }]).encode())
-        self.put("docs/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC," + current + ",," + self.entry["sha256"] + "\n").encode())
+        self.put("docs/02-governance/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC," + current + ",," + self.entry["sha256"] + "\n").encode())
         self.assertEqual(archive.verify_sources(self.root, self.manifest, True), 1)
         self.entry["original_path"] = current
         with self.assertRaisesRegex(ValueError, "existing archive register drift"):
             archive.verify_sources(self.root, self.manifest, True)
 
     def test_relocated_registered_source_cannot_be_excluded_from_manifest(self):
-        self.put("docs/registers/documentation-archive.json", b"[]\n")
-        self.put("docs/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC,.provenance/oldspecs/source.md,," + self.entry["sha256"] + "\n").encode())
+        self.put("docs/02-governance/registers/documentation-archive.json", b"[]\n")
+        self.put("docs/02-governance/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC,.provenance/oldspecs/source.md,," + self.entry["sha256"] + "\n").encode())
         with self.assertRaisesRegex(ValueError, "registered source excluded"):
             archive.verify_sources(self.root, self.manifest, False)
 
     def test_existing_source_register_zip_members_and_hashes(self):
-        self.put("docs/registers/documentation-archive.json", b"[]\n")
+        self.put("docs/02-governance/registers/documentation-archive.json", b"[]\n")
         path = "sources.zip"
         with zipfile.ZipFile(self.root / path, "w") as zipped:
             zipped.writestr("original.txt", self.data)
         digest = self.entry["sha256"]
-        self.put("docs/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC,sources.zip,original.txt," + digest + "\n").encode())
+        self.put("docs/02-governance/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC,sources.zip,original.txt," + digest + "\n").encode())
         self.assertEqual(archive.verify_sources(self.root, self.manifest, True), 1)
-        self.put("docs/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC,sources.zip,original.txt," + "0" * 64 + "\n").encode())
+        self.put("docs/02-governance/registers/source-manifest.csv", ("source_id,current_path,archive_member,sha256\nSRC,sources.zip,original.txt," + "0" * 64 + "\n").encode())
         with self.assertRaisesRegex(ValueError, "source register byte mismatch"):
             archive.verify_sources(self.root, self.manifest, True)
 
     def test_existing_archive_register_cannot_be_rewritten_by_new_manifest(self):
-        self.put("docs/registers/documentation-archive.json", json.dumps([{
+        self.put("docs/02-governance/registers/documentation-archive.json", json.dumps([{
             "original_path": self.path, "archive_path": self.path,
             "sha256": "0" * 64, "bytes": len(self.data),
         }]).encode())

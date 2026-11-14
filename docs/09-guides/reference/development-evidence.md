@@ -7,17 +7,17 @@
 - **Purpose:** Source provenance, work history and proof inventory; current execution status is maintained in the development-state guide.
 - **Level:** `09-guides`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-GOV-004](<../../02-governance/roadmap.md>); [HPX-ASSUR-001](<../../08-assurance/testing-strategy.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-11-03
 
 
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
+Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; documentation ownership does not establish implementation or verification.
 
 ## Audience and prerequisites
 
@@ -33,7 +33,7 @@ Use the [current execution status](DEVELOPMENT_STATE.md#current-execution-status
 
 ### Historical pre-resumption checkpoint
 
-Published version0.7.0: commit2ebe35b8c966ab83530174fcebc8f245238625cb. The working tree includes unfinished encrypted storage/runtime integration from before migration; do not discard it or call it delivered. Application development is paused, publication held. Current documentation migration [owner decisions](../../02-governance/OWNER_DECISIONS.md) and [historical verification](../../08-assurance/migration-verification.md) are maintained in docs; the [relocation record](../../08-assurance/documentation-records-move.md) describes current checks. Dated earlier work records, source studies, proof digest and review reports are retained byte-for-byte under ignored .oldspecs with SHA256/source IDs in registers. Public readers must not be promised access to local/private originals; hashes preserve identity, not access rights.
+Published version0.7.0: commit2ebe35b8c966ab83530174fcebc8f245238625cb. The working tree includes unfinished encrypted storage/runtime integration from before migration; do not discard it or call it delivered. Application development is paused, publication held. Current documentation migration [owner decisions](../../02-governance/OWNER_DECISIONS.md) and historical verification are maintained in docs; the relocation record describes current checks. Dated earlier work records, source studies, proof digest and review reports are retained byte-for-byte under ignored .oldspecs with SHA256/source IDs in registers. Public readers must not be promised access to local/private originals; hashes preserve identity, not access rights.
 
 ### 9. Implementation evidence and resumable progress
 
@@ -56,7 +56,7 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../../03
 
 ## Troubleshooting and limitations
 
-Retain the scoped limits above and [open questions/conflicts](<../../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
+Retain the scoped limits above and [open questions/conflicts](<../../02-governance/registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
 
 ## Related references
 
@@ -64,8 +64,8 @@ Source provenance, work history and proof inventory; current execution status is
 
 ## Source provenance
 
-- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 108–112; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 284–289; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 108–112; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 284–289; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Change-sensitive development workflow (HPX-OWNER-019)
 
@@ -109,7 +109,7 @@ Owner instruction, 2026-10-30: reduce repeated layout computation after the repo
 
 | Boundary | Required checks |
 | --- | --- |
-| Editing feedback | Use the existing `npm --prefix docs/architecture run validate` command (`--json --no-layout`). Check relevant links and source/status mappings. Do not calculate every view merely to validate syntax or prose-only changes. |
+| Editing feedback | Use the existing `npm --prefix docs run validate` command (`--json --no-layout`). Check relevant links and source/status mappings. Do not calculate every view merely to validate syntax or prose-only changes. |
 | Completed model stage | Check model/navigation and source scope; calculate and inspect the served manual arrangement of changed views and views affected through shared elements, relationships, styles or configuration. Verify drift, snapshot metadata, labels, bounds, positions and paths. Check unaffected saved snapshots by bytes/hashes without computing their layouts. |
 | Coherent milestone or global layout change | Run complete applicable model/navigation and saved/served layout regression once against the final unchanged source. Broaden immediately when the affected set cannot be bounded, global layout settings change, or a failure suggests wider impact. |
 
@@ -122,11 +122,16 @@ Evidence must name the views actually computed, why they were selected, the sour
 Under OWNER021, application work has resumed after the process-only checkpoint. For API changes run `npm --prefix frontend run api:check` and relevant Node/runtime tests; use `api:generate` for an intentional compatible addition. The feature-gated Rust exporter is development tooling, not a second release service. Existing API schemas/operations are conservatively frozen by the checker; do not refresh an incompatible baseline without the required review/approval. Actual HTTPS checks also validate selected Fork payloads against generated components with a test-only bounded schema interpreter; this does not establish domain or storage correctness. Full integration/hand-off rules above remain applicable.
 
 
-## Shared user API specification checkpoint, 2026-10-30
-
-HPX-TEST-114 / HPX-OWNER-029 / HPX-RQ-037–038 record documentation/model checks for common browser/MCP hypergraph access and granular per-user permissions. [Executed evidence](../../architecture/evidence/shared-user-api.json) and [coverage/gaps](../../architecture/audits/shared-user-api.md) distinguish accepted requirements from incomplete single-owner implementation. No application/security acceptance tests, compilation, launch, provider/trust/workspace change, commit or publication were performed.
 
 
-## Specification reconciliation checkpoint, 2026-10-30
+## Source-aware documentation verification
 
-HPX-TEST-116 records the [scoped audit](../../architecture/audits/specification-reconciliation-audit.md) and [actual static checks](../../architecture/evidence/specification-reconciliation-audit.json): registered-contract coverage, superseded-claim regressions, immutable backups/public-archive/application hashes and LikeC4 source/navigation/layout preservation. No application or security acceptance/proof was executed; current code inspection and earlier executed tests remain distinct.
+Run `python3 shared/tooling/verify_documentation.py` for current metadata, source-to-contract routes, accepted source obligations, exact reviewed target/authority bindings and local links. Run `python3 -m unittest discover -s shared/tooling/tests` for checker changes. Routine checks do not read historical archives.
+
+The [source authority procedure](../../08-assurance/source-traceability.md) defines how exact source identities and scoped dispositions are checked. Verification is read-only: a changed assessed contract, authority, source mapping or registry row requires explicit re-review before its fingerprint is updated. Hashes detect drift; they do not establish semantic equivalence, acceptance, implementation or a product proof. Private source-byte/archive checks require a separate explicit owner request.
+
+## Section contract binding checks
+
+Run `python3 shared/tooling/contract_bindings.py` during prose/model link edits; both `check_specification_completion.py` and `verify_documentation.py` include this read-only check. Run `python3 -m unittest discover -s shared/tooling/tests -p test_contract_bindings.py` for routing-checker changes. Fixtures reject missing/ambiguous headings, owners/views/scopes, owner conflicts, missing direct/back links, missing consumer links and incomplete coverage. Nested H3–H6 sections inherit the H2 binding; fenced example headings do not create contract sections. No product test or schema activation is implied.
+
+At a completed link milestone, reuse the LikeC4 service to inspect direct links on every affected owner/consumer and the owning nodes in their selected served views. Compare complete served geometry/navigation against the prior verified milestone and check drift and saved-snapshot bytes. Link-only changes do not justify regenerating owner layouts. Follow the existing change-sensitive LikeC4 cadence above; no application build or manual workspace handoff is required. Re-review any changed exact reconciliation evidence before updating its pins; verification never reseals them.

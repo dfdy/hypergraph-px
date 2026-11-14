@@ -7,12 +7,12 @@
 - **Purpose:** Why HPX supports dissertation writing, reflection and accountable collaboration.
 - **Level:** `01-purpose`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** Explicit owner purpose/decisions; source provenance below
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
 
 This is owner purpose and intent; present-tense philosophical descriptions are not implemented-feature claims.
@@ -98,10 +98,10 @@ HPX should make these questions answerable without requiring the user to abandon
 
 ## Source provenance
 
-- `HPX-SRC-0001` — `ABOUT.md`, lines 1–4; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0001` — `ABOUT.md`, lines 5–12; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0001` — `ABOUT.md`, lines 13–18; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0001` — `ABOUT.md`, lines 19–24; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0001` — `ABOUT.md`, lines 25–34; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0001` — `ABOUT.md`, lines 35–42; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0001` — `ABOUT.md`, lines 159–175; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0001` — `ABOUT.md`, lines 1–4; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0001` — `ABOUT.md`, lines 5–12; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0001` — `ABOUT.md`, lines 13–18; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0001` — `ABOUT.md`, lines 19–24; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0001` — `ABOUT.md`, lines 25–34; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0001` — `ABOUT.md`, lines 35–42; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0001` — `ABOUT.md`, lines 159–175; SHA-256 `b4d8dcb49719c422ee43fa3a40563bf95d9e0a15018968411ea17ca599c7f000`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.

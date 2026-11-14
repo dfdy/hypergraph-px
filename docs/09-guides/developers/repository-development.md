@@ -1,8 +1,8 @@
 # Repository development
 
-This is the current executable-command reference for this checkout. The canonical [frontend-delivery scope](../../architecture/C3/frontend-delivery.c4) links here for development details; [development state](../reference/DEVELOPMENT_STATE.md) records actual implementation and verification evidence. Commands below are procedures, not claims that the current integrated or release checks have passed.
+This is the current executable-command reference for this checkout. The canonical [frontend-delivery scope](../../08-assurance/diagrams/delivery/frontend-delivery.c4) links here for development details; [development state](../reference/DEVELOPMENT_STATE.md) records actual implementation and verification evidence. Commands below are procedures, not claims that the current integrated or release checks have passed.
 
-The [three-stage root reorganisation](root-reorganisation.md) records verified Stage1/Stage2/Stage3 execution. All three stages are executed and verified under TEST178;manual handoff remains blocked by the missing recorded workspace. TEST176 records the closed proof/staged-integrity gates and remaining raw-index attribution limit.
+The three-stage root reorganisation records verified Stage1/Stage2/Stage3 execution. All three stages are executed and verified under TEST178;manual handoff remains blocked by the missing recorded workspace. TEST176 records the closed proof/staged-integrity gates and remaining raw-index attribution limit.
 
 ## Prerequisites and repository boundaries
 
@@ -36,7 +36,7 @@ Current live application semantics are a bounded one-owner implementation, not c
 | --- | --- | --- |
 | `npm run dev:mock` | Independent synthetic frontend; no Rust/backend connection | `http://127.0.0.1:3000/` |
 | `npm run dev:frontend -- ...` | Independent HTTPS frontend proxying an already running Rust backend | `https://127.0.0.1:3000/` plus the private launch fragment |
-| `npm run dev:backend -- ...` | Independent Rust API runtime with `dev-backend`; no embedded frontend | Backend HTTPS origin on port 8000; not an editor page |
+| `npm run dev:backend -- ...` | Independent Rust API runtime with `dev-backend`; no embedded frontend | Prints a private frontend launch URL on port 3000; start frontend separately |
 | `npm run dev -- ...` | Supervises the connected frontend and Rust backend together | Prints a private frontend launch URL on port 3000 |
 
 Frontend and backend ports are independent. Root wrappers accept `--frontend-port` / `--backend-port`, or `HPX_FRONTEND_PORT` / `HPX_BACKEND_PORT`; flags take precedence. Ports must be integers from 1024 through 65535. Combined development rejects equal ports. Choose unused ports rather than terminating unrelated servers. These defaults do not replace the separate guarded manual runtime or its workspace.
@@ -83,9 +83,9 @@ npm run dev:frontend -- --backend https://127.0.0.1:8000 --cert .local/credentia
 
 The frontend serves its own assets over HTTPS on port 3000 and forwards allowed `/api/v1/` requests to that backend. It verifies browser Host/Origin before translating the origin for the verified upstream connection. It forwards session material; it neither invents authorization nor bypasses workspace unlock.
 
-Use the backend's **fresh private `#launch=...` fragment** on the frontend origin: replace only the backend URL's origin with `https://127.0.0.1:3000`, retaining the complete fragment. Do not paste the literal ellipsis. Opening the bare frontend origin does not establish a new authenticated session. Keep the launch URL private; enter the passphrase in the browser, not a shell command. Authentication, workspace unlock and resource authority remain distinct.
+Open the complete **`Development launch (private):` URL** printed by `dev:backend` after the frontend is ready. It already uses the frontend origin (`https://127.0.0.1:3000`) and retains the backend's fresh private `#launch=...` fragment; the backend API origin on port 8000 is not an editor page. Launch URLs are explicit clickable hyperlinks in supporting terminals and plain URLs in redirected output. Do not paste the literal ellipsis. Opening the bare frontend origin does not establish a new authenticated session. Keep the launch URL private; enter the passphrase in the browser, not a shell command. Authentication, workspace unlock and resource authority remain distinct.
 
-For nondefault ports, give terminal A `--backend-port 8001`, and terminal B `--frontend-port 3001 --backend https://127.0.0.1:8001` together with the same TLS options. Frontend startup does not start or supervise a backend, and backend startup does not start a frontend. If either is unavailable, diagnose it explicitly; never switch live editing to fixtures.
+For nondefault ports, give terminal A `--backend-port 8001 --frontend-port 3001`, and terminal B `--frontend-port 3001 --backend https://127.0.0.1:8001` together with the same TLS options. Frontend startup does not start or supervise a backend, and backend startup does not start a frontend. If either is unavailable, diagnose it explicitly; never switch live editing to fixtures.
 
 ### Combined supervision
 

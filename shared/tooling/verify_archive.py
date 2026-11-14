@@ -20,7 +20,7 @@ import subprocess
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[2]
-MANIFEST = "docs/registers/archive-manifest.json"
+MANIFEST = ".provenance/specification-migration/records/docs/02-governance/registers/archive-manifest.json"
 ARCHIVE_ROOT = ".provenance/archive/"
 OLD_ROOTS = (".oldspecs/", ".archive/", "docproject/architecture-review/", "docproject/public-record/")
 REVIEW_ORIGINS = ("docproject/architecture-review/", ".provenance/architecture-review/")
@@ -164,14 +164,14 @@ def verify(root: Path, manifest: dict, check_local: bool = False) -> dict:
 def verify_sources(root: Path, manifest: dict, check_local: bool) -> int:
     """Retain the existing registers unchanged, including ZIP member identity."""
     by_path = {e["current_path"]: e for e in manifest["entries"]}
-    moves = json.loads((root / "docs/registers/documentation-archive.json").read_text())
+    moves = json.loads((root / "docs/02-governance/registers/documentation-archive.json").read_text())
     for row in moves:
         current_location(root, row["archive_path"])
         entry = by_path[row["archive_path"]]
         for key in ("original_path", "sha256", "bytes"):
             if entry[key] != row[key]:
                 raise ValueError("existing archive register drift: " + row["archive_path"])
-    with (root / "docs/registers/source-manifest.csv").open(newline="") as handle:
+    with (root / "docs/02-governance/registers/source-manifest.csv").open(newline="") as handle:
         sources = list(csv.DictReader(handle))
     for row in sources:
         current = row["current_path"]

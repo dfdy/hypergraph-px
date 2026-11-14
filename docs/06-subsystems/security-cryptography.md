@@ -1,5 +1,19 @@
 # Security and Cryptography
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-024-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-024-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-024-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-024-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-024-05` [State and operations](#state-and-operations) | [hpx.native.authority](../04-architecture/diagrams/executable.c4) · `HPX-CAN-026` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-024-06` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-SUB-012`
@@ -7,17 +21,22 @@
 - **Purpose:** Key custody, secure loopback transport and future core confidentiality restrictions.
 - **Level:** `06-subsystems`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-ARCH-001](<../04-architecture/system-architecture.md>); [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN026 / Authority lifecycle and custody](contracts/authority-lifecycle.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -33,7 +52,7 @@ Fixture controls and future contracts are not durable service implementations. C
 
 ### 8. Security, preferences and later integrations
 
-Source `HPX-SRC-0028`, original lines 158–173. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0028`, original lines 158–173. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0028-S009`. Original dates and implementation observations remain historical evidence.
 
 Local live serving must bind loopback by default and validate Host/origin, same-origin requests and CSRF protection for cookie-authenticated mutation. Do not enable permissive CORS to connect a hosted mockup. Keep authentication, display preferences and storage unlock distinct. Server-derived actors/device authority, not submitted labels, authorize operations. Protect sensitive API responses and exports from unintended caches and logs; select exact headers, cookies and CSP in the transport/security contract before real data integration.
 
@@ -63,11 +82,11 @@ Status: current requirements and implemented adapter contract, 2026-10-24. [ADR 
 
 ### Modes and authority
 
-Source `HPX-SRC-0024`, original lines 5–14. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0024`, original lines 5–14. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0024-S002`. Original dates and implementation observations remain historical evidence.
 
 Trusted-server mode is the initial/default delivery mode. An unlocked trusted Rust process holds permitted plaintext and keys for editing, navigation, search, compilation and explicitly approved integrations. Protect complete historical content and sensitive derived state at rest, including manifests, provenance, indexes, drafts and backups. Plaintext export and data disclosed to machine users through chat/MCP require authorised scope; incidental working files, temporary files and logs must not defeat confidentiality.
 
-Passphrase storage unlock is the default; support an explicit OS-keychain alternative before claiming complete startup-unlock support. Login authentication is separate from storage-key unlock. The passphrase wrapping primitive exists; the OS-keychain and application startup flows do not yet exist.
+Passphrase storage unlock is the default; support an explicit OS-keychain alternative before claiming complete startup-unlock support. Login authentication is separate from storage-key unlock. The passphrase wrapping primitive exists; the OS-keychain and application startup flows do not yet exist. This sentence records the source-era implementation checkpoint, not current availability; [ADR014](../04-architecture/decisions/0014-keychain-unlock-policy.md#accepted-decision) governs the explicit optional keychain mechanism with retained passphrase recovery and its actual acceptance limits.
 
 Client-held mode remains unavailable until implemented. Its server stores/relays ciphertext without acquiring client-only keys. Plaintext operations execute at an authorized client or report unsupported. Configuration cannot create decryption capability or silently downgrade custody. Authenticated workspace/group policy must govern mode changes and key migration while preserving logical identities.
 
@@ -85,7 +104,7 @@ Use RustCrypto XChaCha20-Poly1305 authenticated encryption with independent OS-g
 
 ### Multi-user sharing and lifecycle obligations
 
-Source `HPX-SRC-0024`, original lines 68–73. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0024`, original lines 68–73. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0024-S007`. Original dates and implementation observations remain historical evidence.
 
 Model users, devices, groups and authenticated policy now. Mandatory single-instance multi-user sharing scope is workspace/document; federation is a separate future capability; full retained history requires explicit grant. Current-state sharing must define disclosure of nested dependencies/provenance and hidden or opaque inaccessible references. Current read permission does not imply all historical keys. Revocation cannot erase content/keys already disclosed.
 
@@ -93,13 +112,13 @@ Specify data-key hierarchy, domain separation, rotation, historical grants, reco
 
 ### Browser–runtime channel priority
 
-Source `HPX-SRC-0024`, original lines 79–81. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0024`, original lines 79–81. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0024-S009`. Original dates and implementation observations remain historical evidence.
 
 Encrypted authenticated transport is a mandatory real-data boundary in every key-custody mode, including local loopback. Storage AEAD and client-held content encryption do not replace HTTPS/WSS or runtime endpoint authentication. See [transport security](<security-cryptography.md>) for the real-data integration gate and certificate trust/bootstrap obligations. No browser/runtime TLS channel is implemented by this byte-encryption adapter or synthetic preview.
 
 ### Browser–runtime transport security
 
-Source `HPX-SRC-0035`, original lines 1–4. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0035`, original lines 1–4. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0035-S001`. Original dates and implementation observations remain historical evidence.
 
 Current bounded implementation: the Rust runtime provides authenticated loopback HTTPS, embedded assets, bootstrap/session gates and explicit workspace unlock under ADR004. This is not complete multi-user authority, automatic certificate provisioning or hostile-host confidentiality. Synthetic HTTP previews remain fixture-only. Current acceptance evidence is separately scoped in the development-state guide.
 
@@ -115,24 +134,24 @@ Transport encryption is separate from storage encryption, authentication/authori
 
 ### Runtime and development boundaries
 
-Source `HPX-SRC-0035`, original lines 13–20. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0035`, original lines 13–20. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0035-S003`. Original dates and implementation observations remain historical evidence.
 
 The release remains one Rust executable with embedded frontend assets and owned secure transport startup. Do not require a separate TLS proxy as the sole supported local release path. Keep certificate/private-key lifecycle separate from content-key lifecycle; never commit or ship a shared server private key.
 
-ADR004 records the current supplied-certificate/key loopback bootstrap; `crates/runtime/Cargo.toml` pins rustls and httparse for the existing implementation. Certificate/private-key provisioning, trust changes, renewal/expiry, revocation/removal and restart remain explicit operational/security gates. No automatic certificate authority or new trust provider is selected by this audit.
+ADR004 records the current supplied-certificate/key loopback bootstrap; `backend/crates/runtime/Cargo.toml` pins rustls and httparse for the existing implementation. Certificate/private-key provisioning, trust changes, renewal/expiry, revocation/removal and restart remain explicit operational/security gates. No automatic certificate authority or new trust provider is selected by this audit. The inherited certificate-lifecycle gate also includes supported hostnames, key-storage permissions and restart/upgrade behaviour; ADR004 supplies the bounded bootstrap context, not blanket completion of issuance, renewal, removal or upgrade acceptance.
 
 A separate frontend development server may remain for synthetic fixtures. Before it handles real data, specify trusted HTTPS asset delivery and the protected browser-to-runtime path. Any development proxy/streaming setup must preserve the same transport guarantees; no plaintext network hop carrying runtime data, credentials or unlock inputs. Browser-facing origin, cookie/session, CSRF and Host checks remain required independently of TLS. Keep loopback binding for the initial local-only deployment; encryption does not enable remote access or federation.
 
 
 ## Source provenance
 
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 158–173; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 311–315; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 1–4; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 5–14; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 31–38; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 68–73; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 79–81; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0035` — `Specifications/TRANSPORT_SECURITY.md`, lines 1–4; SHA-256 `96688214826d64bb9d96f01f98c3f717c7327c9e8ec8487eb461bc71098fa0eb`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0035` — `Specifications/TRANSPORT_SECURITY.md`, lines 5–12; SHA-256 `96688214826d64bb9d96f01f98c3f717c7327c9e8ec8487eb461bc71098fa0eb`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0035` — `Specifications/TRANSPORT_SECURITY.md`, lines 13–20; SHA-256 `96688214826d64bb9d96f01f98c3f717c7327c9e8ec8487eb461bc71098fa0eb`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 158–173; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 311–315; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 1–4; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 5–14; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 31–38; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 68–73; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 79–81; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0035` — `Specifications/TRANSPORT_SECURITY.md`, lines 1–4; SHA-256 `96688214826d64bb9d96f01f98c3f717c7327c9e8ec8487eb461bc71098fa0eb`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0035` — `Specifications/TRANSPORT_SECURITY.md`, lines 5–12; SHA-256 `96688214826d64bb9d96f01f98c3f717c7327c9e8ec8487eb461bc71098fa0eb`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0035` — `Specifications/TRANSPORT_SECURITY.md`, lines 13–20; SHA-256 `96688214826d64bb9d96f01f98c3f717c7327c9e8ec8487eb461bc71098fa0eb`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.

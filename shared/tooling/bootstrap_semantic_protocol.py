@@ -19,7 +19,7 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
-PROTOCOL = ROOT / 'docs' / 'engineering' / 'semantic-protocol' / 'PROTOCOL.md'
+PROTOCOL = ROOT / '.provenance' / 'docs-reorganisation' / 'historical-docs' / 'docs' / 'engineering' / 'semantic-protocol' / 'PROTOCOL.md'
 DELIMITER = b'<!-- HPX-SCP:SEMANTIC-APPENDIX-BEGIN v4 -->\n'
 MANIFEST_DELIMITER = b'<!-- HPX-SCP:INTEGRITY-MANIFEST-BEGIN v4 -->\n'
 FORMAT_VERSION = 4

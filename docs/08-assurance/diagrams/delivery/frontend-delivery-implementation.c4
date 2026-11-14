@@ -1,0 +1,128 @@
+// Focused implementation views reuse actual source fragments; all architectural groupings remain proposed.
+specification {
+  relationship delivery_detail_call { line solid; color slate }
+  relationship delivery_detail_data { line dotted; color slate }
+  relationship delivery_detail_build { line dotted; color slate }
+}
+model {
+  extend hpx.native.transport.https {
+    delivery_socket = code "serve_socket / read_request • TLS request entry" {
+      #implemented
+      description "Existing TLS stream owner, bounded HTTP framing, state/deadline checks, route invocation and write_response call. IO result is ignored by serve_socket; no guarantee the browser received a response. TLS configuration remains Runtime/API responsibility."
+      metadata { authority "proposed source fragment grouping;not new modules/functions" implementation "implemented" paths ["backend/crates/runtime/src/main.rs"] symbols ["serve_socket", "read_request", "route"] }
+      link ../../../../backend/crates/runtime/src/main.rs
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+    }
+  }
+  extend hpx.native.transport.responses {
+    delivery_errors = code "error / json • safe response descriptors" {
+      #implemented
+      description "Existing helpers produce bounded static error/body descriptors. Guards and unknown-key paths return through route to serve_socket; write_response emits headers/body. These are existing functions, not a separate error service or static OpenAPI route family."
+      metadata { authority "proposed source fragment grouping;not new modules/functions" implementation "implemented" paths ["backend/crates/runtime/src/main.rs"] symbols ["error", "json"] }
+      link ../../../../backend/crates/runtime/src/main.rs
+      link ../../../04-architecture/decisions/0004-local-https-bootstrap.md
+    }
+  }
+  runtime_build_identity_inputs -[delivery_detail_build]-> hpx.native.frontend_assets.embedding.build_code "Cargo version / local compile-counter input" { metadata { evidence "backend/crates/runtime/build.rs" scope "source-backed code call/data/build dependency;not a new module/service" } link ../../../backend/crates/runtime/build.rs }
+  hpx.native.transport.https.delivery_socket -[delivery_detail_call]-> hpx.native.transport.security.c4_gates "route calls route_inner; apply request guards" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed code call/data/build dependency;not a new module/service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.security.c4_gates -[delivery_detail_call]-> hpx.native.transport.responses.delivery_errors "error on rejected static request" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed code call/data/build dependency;not a new module/service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.assets.delivery_lookup -[delivery_detail_call]-> hpx.native.transport.responses.delivery_errors "error on unknown embedded key" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed code call/data/build dependency;not a new module/service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.https.delivery_socket -[delivery_detail_call]-> hpx.native.transport.responses.delivery_writer "write_response on owned TLS stream" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed code call/data/build dependency;not a new module/service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.responses.delivery_errors -[delivery_detail_data]-> hpx.native.transport.https.delivery_socket "Error Response returns via route" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed code call/data/build dependency;not a new module/service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.assets.delivery_lookup -[delivery_detail_data]-> hpx.native.transport.https.delivery_socket "Static Response returns via route" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed code call/data/build dependency;not a new module/service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.responses.delivery_writer -[delivery_detail_data]-> hpx.native.transport.https.delivery_socket "IO result; socket owner ignores error" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed code call/data/build dependency;not a new module/service" } link ../../../backend/crates/runtime/src/main.rs }
+  hpx.native.transport.https.delivery_socket -[delivery_detail_data]-> hpx.browser.delivery_entry "HTTPS bytes; browser platform loads module" { metadata { evidence "backend/crates/runtime/src/main.rs" scope "source-backed code call/data/build dependency;not a new module/service" } link ../../../backend/crates/runtime/src/main.rs }
+}
+views {
+  view c4_frontend_build of frontend_builder {
+    title "C4 / Frontend build tooling (development) — Implementation"
+    description "Parent: Frontend build tooling (development). Source-input and prepared-output artifacts support this responsibility. Actual buildFrontend/cachedBuild/installDist functions, not new services. Solid lines are calls/callbacks; dotted lines are input/output production. Node runs at build time only; valid cache does not mean test/release acceptance."
+    link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/frontend-delivery-audit.md
+    group "Inputs and prepared output" { color primary; border solid
+      include frontend_inputs with { description "Actual source/HTML/CSS/logo, dependency/config/legal inputs; Node identity is part of cache key." }
+      include frontend_dist with { description "Prepared output only; Rust does not independently establish current-source freshness." navigateTo c4_frontend_embedding }
+    }
+    group "Frontend build tooling (development)" { color primary; border solid
+      include frontend_builder.bundle_code with { description "buildFrontend callback bundles/copies into snapshot; default installDist prepares dist." navigateTo seq_frontend_build }
+      include frontend_builder.cache_code with { description "Input identity, valid snapshot/digest, input recheck and non-atomic locked dist copy." navigateTo seq_frontend_build }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include frontend_inputs -> frontend_builder.cache_code where kind is delivery_code with { line dotted }
+    include frontend_builder.bundle_code -> frontend_builder.cache_code where kind is delivery_code
+    include frontend_builder.cache_code -> frontend_builder.bundle_code where kind is delivery_code
+    include frontend_builder.bundle_code -> frontend_dist where kind is delivery_code with { line dotted }
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+  view c4_frontend_embedding of hpx.native.frontend_assets.embedding {
+    title "C4 / Rust asset embedding — Implementation (shared)"
+    description "Primary parent: Rust asset embedding. Shared contributors: Compiled frontend resources and Rust version/build-counter input artifact; prepared dist is a build input. Existing build.rs produces assets.rs/version; Cargo compilation embeds include_bytes in main.rs. Dotted edges describe build/data dependencies, not runtime build services. No freshness/admission or reproducible-build guarantee."
+    link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/frontend-delivery-audit.md
+    group "Prepared build inputs" { color primary; border solid
+      include frontend_dist with { description "Prepared output only; Rust does not independently establish current-source freshness." }
+      include runtime_build_identity_inputs with { description "Cargo package version and append-only local counter; build context, not schema or attestation." }
+    }
+    group "Rust asset embedding (shared)" { color primary; border solid
+      include hpx.native.frontend_assets.embedding.build_code with { description "main/walk generate version/map; check index and reject symlinks; failed builds may consume a number." navigateTo seq_frontend_build }
+      include hpx.native.frontend_assets.resources.map_code with { description "Generated assets.rs / include_bytes / ASSETS; compiled constant, no live disk web root." navigateTo c4_frontend_delivery }
+    }
+    group "Runtime consumer context" { color primary; border solid
+      include hpx.native.transport.assets.delivery_lookup with { description "route_inner static branch: exact key/root alias, MIME/body or404; not a new handler function." navigateTo c4_frontend_routing }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include frontend_dist -> hpx.native.frontend_assets.embedding.build_code where kind is delivery_code with { line dotted }
+    include runtime_build_identity_inputs -> hpx.native.frontend_assets.embedding.build_code where kind is delivery_detail_build with { line dotted }
+    include hpx.native.frontend_assets.embedding.build_code -> hpx.native.frontend_assets.resources.map_code where kind is delivery_code with { line dotted }
+    include hpx.native.transport.assets.delivery_lookup -> hpx.native.frontend_assets.resources.map_code where kind is delivery_code with { line dotted }
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+  view c4_frontend_routing of hpx.native.transport.assets {
+    title "C4 / Embedded-asset routing — Implementation (shared)"
+    description "Primary parent: Embedded-asset routing. Shared contributors: Asset request checks; Responses, errors and security headers. Existing serve_socket/route_inner/error/json/write_response fragments; guards and lookup share one function. Solid links are calls/branch control; dotted links are data/IO returns and byte delivery. Runtime TLS setup and later API/session authority are context. Browser evaluation is a platform action, not a Rust-to-JavaScript call."
+    link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/frontend-delivery-audit.md
+    // Presentation boundary for the focal responsibility;shared code remains co-located as evidenced.
+    group "Embedded-asset routing" { color primary; border solid
+      group "Static guard and lookup fragments" { color primary; border solid
+        include hpx.native.transport.security.c4_gates with { title "route_inner • static request checks" description "route_inner fragment: Host/site before public static GET; later session/lock gates remain separate." navigateTo c4_api_routes }
+        include hpx.native.transport.assets.delivery_lookup with { description "route_inner static branch: exact key/root alias, MIME/body or404; not a new handler function." navigateTo seq_frontend_load }
+      }
+      group "Shared response helpers" { color primary; border solid
+        include hpx.native.transport.responses.delivery_errors with { description "error/json return safe descriptors; no bytes sent until shared writer runs." navigateTo seq_frontend_load }
+        include hpx.native.transport.responses.delivery_writer with { description "write_response emits headers/body via supplied TLS stream; writes/flush can fail." navigateTo seq_frontend_load }
+      }
+    }
+    // Callers,providers,artifacts and consumers stay outside the focal boundary.
+    include hpx.browser.delivery_entry with { description "app.js starts best-effort version display and awaits initializeRuntime; browser executes it." navigateTo seq_frontend_session }
+    include hpx.native.frontend_assets.resources.map_code with { description "Generated assets.rs / include_bytes / ASSETS; compiled constant, no live disk web root." navigateTo c4_frontend_embedding }
+    include hpx.native.transport.https.delivery_socket with { description "Own TLS stream; bounded framing, route and shared writer. TLS setup is linked Runtime context." navigateTo c3_runtime_api }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include hpx.native.transport.https.delivery_socket -> hpx.native.transport.security.c4_gates where kind is delivery_detail_call
+    include hpx.native.transport.security.c4_gates -> hpx.native.transport.assets.delivery_lookup where kind is delivery_code
+    include hpx.native.transport.assets.delivery_lookup -> hpx.native.frontend_assets.resources.map_code where kind is delivery_code with { line dotted }
+    include hpx.native.transport.security.c4_gates -> hpx.native.transport.responses.delivery_errors where kind is delivery_detail_call
+    include hpx.native.transport.assets.delivery_lookup -> hpx.native.transport.responses.delivery_errors where kind is delivery_detail_call
+    include hpx.native.transport.https.delivery_socket -> hpx.native.transport.responses.delivery_writer where kind is delivery_detail_call
+    include hpx.native.transport.responses.delivery_errors -> hpx.native.transport.https.delivery_socket where kind is delivery_detail_data
+    include hpx.native.transport.assets.delivery_lookup -> hpx.native.transport.https.delivery_socket where kind is delivery_detail_data
+    include hpx.native.transport.responses.delivery_writer -> hpx.native.transport.https.delivery_socket where kind is delivery_detail_data
+    include hpx.native.transport.https.delivery_socket -> hpx.browser.delivery_entry where kind is delivery_detail_data
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+}

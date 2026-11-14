@@ -90,7 +90,7 @@ def main():
     args = parser.parse_args()
     try:
         verified = verify_path(args.protocol, args.trusted_sha256)
-        validate_registry(verified, root=args.protocol.resolve().parents[3] if args.protocol.resolve() == PROTOCOL.resolve() else None)
+        validate_registry(verified)
         result = packet_for(verified, args.scopes, args.record_type, args.relation, args.message_kind)
     except (BootstrapError, OSError) as exc:
         print('CONTEXT REFUSED: ' + str(exc), file=sys.stderr)

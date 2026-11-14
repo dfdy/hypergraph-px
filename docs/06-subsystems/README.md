@@ -16,6 +16,6 @@ Level `06-subsystems`. This is navigation, not a new requirement. See the [docum
 
 - [Multi-user and AI Collaboration](ai-collaboration.md) — `HPX-SUB-010`; accepted product requirements under HPX-OWNER-027; implementation/mechanisms remain incomplete.
 
-Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
+Unpopulated future topics remain reserved in the [document register](../02-governance/registers/document-inventory.csv); no empty specification implies an implemented service.
 
 - [Future export and compilation scope](import-export.md) — HPX-SUB-008; owner-confirmed bundled Pandoc targets/citations/content selection; mechanisms proposed and implementation deferred.

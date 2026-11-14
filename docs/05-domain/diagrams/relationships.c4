@@ -1,0 +1,85 @@
+// Flat conceptual restatement under an existing responsibility;not software or a persistent schema.
+model {
+  extend hpx.native.domain.annotation_rules {
+    concept_hyperedge = domain_concept "Hyperedge" {
+      description "Identifiable revisioned relationship;not limited to binary arrows."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L11;HPX-CLAIM-00106" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_participant = domain_concept "Ordered role-labelled participant" {
+      description "Participant/reference role;not a newly selected record format."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L11;HPX-ADR-010" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_predicate = domain_concept "Predicate identity / definition" {
+      link ../../06-subsystems/contracts/editing-and-graph.md#predicates-assertions-and-reviews
+      description "Meaning and direction are independent of browsing tags."
+      metadata { scope "conceptual only" source "HPX-SRC-0022:L3-L14;HPX-ADR-010" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_assertion = domain_concept "Attributed assertion" {
+      description "Claim using a predicate,participants and declared qualifiers."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L11;HPX-ADR-010" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "Negation,certainty,attribution and contextual scope qualify the claim;they are not inferred truth,authenticated authorship or access rights. Prior rejected/superseded states remain retained." }
+      link ../core-object-model.md
+    }
+    concept_anchor = domain_concept "Exact historical anchor" {
+      link ../text-and-anchors.md#committed-comment-anchors
+      link ../text-and-anchors.md#entities-and-identities
+      link ../../06-subsystems/contracts/editing-and-graph.md#exact-anchor-relocation
+      description "Exact revision and scalar-safe half-open UTF8 byte range."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L23;HPX-CLAIM-00111" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../text-and-anchors.md
+    }
+    concept_overlay = domain_concept "Exact retrospective overlay context" {
+      link ../../06-subsystems/formats/hpx-workspace.md#designed-combined-conflict-profile--owner056
+      link ../../06-subsystems/interfaces/domain-navigation.md#conflict-review-overlay-and-recovery--owner056
+      link ../../07-implementation/data-structures/sqlite-records.md#item4-conflict-state-record-design--owner056-not-implemented
+      link ../proposals/conflict-state.md#2-conflict-identity-exact-anchors-and-visibility
+      link ../proposals/conflict-state.md#3-orthogonal-states-and-explicit-resolution
+      link ../proposals/conflict-state.md#7-worked-cases--design-examples-only
+      description "Separately versioned annotation view under adopted ADR010."
+      metadata { scope "conceptual only" source "HPX-ADR-010" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "Old text snapshots retain their original bytes and explicit semantic exclusion. Later assertions are not claims present at that text publication. Exact overlay context is distinct from a live current-assertion lookup." }
+      link ../core-object-model.md
+    }
+  }
+  hpx.native.domain.annotation_rules.concept_hyperedge -[conceptual_relation]-> hpx.native.domain.annotation_rules.concept_participant "Ordered role-labelled participants;no minimum arity invented" { metadata { scope "dom001_m2" } }
+  hpx.native.domain.annotation_rules.concept_participant -[conceptual_relation]-> hpx.native.domain.exact.concept_node "May reference logical content" { metadata { scope "dom001_m2" } }
+  hpx.native.domain.annotation_rules.concept_participant -[conceptual_relation]-> hpx.native.domain.exact.concept_revision "May reference exact immutable revision" { metadata { scope "dom001_m2" } }
+  hpx.native.domain.annotation_rules.concept_participant -[conceptual_relation]-> hpx.native.domain.annotation_rules.concept_anchor "May reference exact historical range" { metadata { scope "dom001_m2" } }
+  hpx.native.domain.annotation_rules.concept_participant -[conceptual_relation]-> hpx.native.domain.annotation_rules.concept_hyperedge "May reference a relationship" { metadata { scope "dom001_m2" } }
+  hpx.native.domain.annotation_rules.concept_anchor -[conceptual_relation]-> hpx.native.domain.exact.concept_revision "Binds exact revision,not current text" { metadata { scope "dom001_m2" } }
+  hpx.native.domain.annotation_rules.concept_assertion -[conceptual_relation]-> hpx.native.domain.annotation_rules.concept_predicate "Uses stable predicate identity/definition" { metadata { scope "dom001_m2" } }
+  hpx.native.domain.annotation_rules.concept_assertion -[conceptual_relation]-> hpx.native.domain.annotation_rules.concept_participant "Uses exact role/participant context" { metadata { scope "dom001_m2" } }
+  hpx.native.domain.annotation_rules.concept_overlay -[conceptual_relation]-> hpx.native.domain.annotation_rules.concept_assertion "Pins separate exact annotation state" { metadata { scope "dom001_m2" } }
+  hpx.native.domain.annotation_rules.concept_overlay -[conceptual_relation]-> hpx.native.domain.exact.concept_snapshot "Selected alongside historical text;not inserted into it" { metadata { scope "dom001_m2" } }
+}
+views {
+  view concept_relationships of hpx.native.domain.annotation_rules {
+    link ../../06-subsystems/contracts/editing-and-graph.md
+    title "Conceptual / M2 relationships and assertion context"
+    description "M2 / HPX-CAN-019. Flat conceptual relationship/claim restatement,not code or a required split into stored types. A hyperedge has identity and revisioning;participants have explicit roles and order and can reference content,exact revisions,anchors or relationships. Arity bounds and general representation remain unspecified. Assertion qualifiers do not change predicate identity or establish truth/permission. ADR010 retains exact historical text snapshots and separately versioned retrospective overlays;general compound semantic closure remains gated. Inherited source and adoption statuses remain;current helper coverage is not the complete model. OWNER059 D08/D10/D11A: predicates have immutable versioned definitions with ordered role/range schemas;assertions/reviews bind exact definitions and participants,not inferred truth or merged identities. Anchor relocation requires exact unique mapping. Selected-node Graph starts with bounded direct authorised incidence and role-labelled n-ary links;inspection/recentring is separate from explicit editing-context navigation and departure/recovery."
+    link ../../06-subsystems/diagrams/pure-domain.c4
+    link ../core-object-model.md
+    link ../assertions-and-predicates.md
+    link ../../04-architecture/decisions/0010-semantic-annotation-snapshots.md
+    link ../text-and-anchors.md
+    group "Conceptual subject: M2 relationships and assertion context" {
+      include hpx.native.domain.annotation_rules.concept_hyperedge
+      include hpx.native.domain.annotation_rules.concept_participant
+      include hpx.native.domain.annotation_rules.concept_predicate
+      include hpx.native.domain.annotation_rules.concept_assertion with { notes "Negation,certainty,attribution and contextual scope qualify the claim;they are not inferred truth,authenticated authorship or access rights. Prior rejected/superseded states remain retained." }
+      include hpx.native.domain.annotation_rules.concept_anchor
+      include hpx.native.domain.annotation_rules.concept_overlay with { notes "Old text snapshots retain their original bytes and explicit semantic exclusion. Later assertions are not claims present at that text publication. Exact overlay context is distinct from a live current-assertion lookup." }
+    }
+    group "Retained conceptual context (not software)" {
+      include hpx.native.domain.exact.concept_node
+      include hpx.native.domain.exact.concept_revision
+      include hpx.native.domain.exact.concept_snapshot
+    }
+    exclude * -> *
+    include * -> * where metadata.scope is "dom001_m2"
+    autoLayout LeftRight 110 90 spline
+  }
+}

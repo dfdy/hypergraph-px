@@ -1,0 +1,4602 @@
+{
+  "version": 1,
+  "purpose": "Section ownership and direct node/prose navigation, not adoption, implementation or verification. Each H2 includes its nested subsections; document preambles retain their existing status/authority.",
+  "authority": "Owner-approved contract-linking plan, 2026-11-14",
+  "documents": [
+    {
+      "path": "docs/01-purpose/scope-and-non-goals.md",
+      "document_id": "HPX-PRIN-004",
+      "sections": [
+        {
+          "id": "HPX-BIND-001-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-001-02",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-001-03",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-001-04",
+          "heading": "Normative content",
+          "anchor": "normative-content",
+          "disposition": "bound",
+          "scope": "HPX-CAN-001",
+          "owner": "hpx",
+          "view": "index",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-001-05",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        }
+      ]
+    },
+    {
+      "path": "docs/03-requirements/acceptance-criteria.md",
+      "document_id": "HPX-REQ-004",
+      "sections": [
+        {
+          "id": "HPX-BIND-002-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-002-02",
+          "heading": "Reconstruction and changed-source choices \u2014 HPX-OWNER-043",
+          "anchor": "reconstruction-and-changed-source-choices--hpx-owner-043",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-03",
+          "heading": "Cycle-aware inclusion acceptance \u2014 HPX-OWNER-041",
+          "anchor": "cycle-aware-inclusion-acceptance--hpx-owner-041",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-04",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-05",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-06",
+          "heading": "Unit/integration/property/fuzz cases",
+          "anchor": "unitintegrationpropertyfuzz-cases",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-07",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-002-08",
+          "heading": "Owner-directed action-set acceptance, 2026-10-25",
+          "anchor": "owner-directed-action-set-acceptance-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-09",
+          "heading": "Separately approved equivalence and graph acceptance",
+          "anchor": "separately-approved-equivalence-and-graph-acceptance",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-10",
+          "heading": "Planned bundled export acceptance",
+          "anchor": "planned-bundled-export-acceptance",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-11",
+          "heading": "Working-branch acceptance gate (HPX-RQ-031)",
+          "anchor": "working-branch-acceptance-gate-hpx-rq-031",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-12",
+          "heading": "Logical departure Commit acceptance refinement, 2026-10-27",
+          "anchor": "logical-departure-commit-acceptance-refinement-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-13",
+          "heading": "Semantic word controls \u2014 HPX-OWNER-017",
+          "anchor": "semantic-word-controls--hpx-owner-017",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-14",
+          "heading": "Planned selected-node editor Graph tab acceptance",
+          "anchor": "planned-selected-node-editor-graph-tab-acceptance",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-15",
+          "heading": "Multi-user and AI-user baseline acceptance",
+          "anchor": "multi-user-and-ai-user-baseline-acceptance",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-16",
+          "heading": "Node-creation origin acceptance \u2014 HPX-RQ-039",
+          "anchor": "node-creation-origin-acceptance--hpx-rq-039",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-17",
+          "heading": "Retained composition and branch capture acceptance \u2014 RQ040\u2013041",
+          "anchor": "retained-composition-and-branch-capture-acceptance--rq040041",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-18",
+          "heading": "Structural no-notation reconstruction \u2014 OWNER051",
+          "anchor": "structural-no-notation-reconstruction--owner051",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-19",
+          "heading": "Recovery purpose versus permanent capture \u2014 OWNER052",
+          "anchor": "recovery-purpose-versus-permanent-capture--owner052",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-20",
+          "heading": "Composition membership and partial fragments \u2014 OWNER053",
+          "anchor": "composition-membership-and-partial-fragments--owner053",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-002-21",
+          "heading": "Workspace authority policy acceptance \u2014 OWNER058",
+          "anchor": "workspace-authority-policy-acceptance--owner058",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_permission",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/03-requirements/system-requirements.md",
+      "document_id": "HPX-REQ-002",
+      "sections": [
+        {
+          "id": "HPX-BIND-003-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-003-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-003-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-05",
+          "heading": "Mandatory multi-user and AI-user baseline, 2026-10-30",
+          "anchor": "mandatory-multi-user-and-ai-user-baseline-2026-10-30",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-06",
+          "heading": "Normative content",
+          "anchor": "normative-content",
+          "disposition": "bound",
+          "scope": "HPX-CAN-001",
+          "owner": "hpx",
+          "view": "index",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-07",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-003-08",
+          "heading": "Owner addition: five distinct content actions, 2026-10-25",
+          "anchor": "owner-addition-five-distinct-content-actions-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-001",
+          "owner": "hpx",
+          "view": "index",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-09",
+          "heading": "Separately reviewed owner additions, 2026-10-25",
+          "anchor": "separately-reviewed-owner-additions-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-001",
+          "owner": "hpx",
+          "view": "index",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-10",
+          "heading": "Owner-confirmed future bundled export scope, 2026-10-26",
+          "anchor": "owner-confirmed-future-bundled-export-scope-2026-10-26",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-11",
+          "heading": "HPX-RQ-031: private working branches and exact provenance checkpoints",
+          "anchor": "hpx-rq-031-private-working-branches-and-exact-provenance-checkpoints",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-12",
+          "heading": "Owner-adopted seamless node editing, 2026-10-27",
+          "anchor": "owner-adopted-seamless-node-editing-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-001",
+          "owner": "hpx",
+          "view": "index",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-13",
+          "heading": "Known node-creation origin \u2014 HPX-RQ-039",
+          "anchor": "known-node-creation-origin--hpx-rq-039",
+          "disposition": "bound",
+          "scope": "HPX-CAN-001",
+          "owner": "hpx",
+          "view": "index",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-003-14",
+          "heading": "Retained selections and constructed-version branches \u2014 RQ040\u2013041",
+          "anchor": "retained-selections-and-constructed-version-branches--rq040041",
+          "disposition": "bound",
+          "scope": "HPX-CAN-001",
+          "owner": "hpx",
+          "view": "index",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/03-requirements/user-needs.md",
+      "document_id": "HPX-REQ-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-004-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-004-02",
+          "heading": "Normative content",
+          "anchor": "normative-content",
+          "disposition": "bound",
+          "scope": "HPX-CAN-001",
+          "owner": "hpx",
+          "view": "index",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-004-03",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        }
+      ]
+    },
+    {
+      "path": "docs/04-architecture/component-architecture.md",
+      "document_id": "HPX-ARCH-002",
+      "sections": [
+        {
+          "id": "HPX-BIND-005-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-005-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-005-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-005-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-005-05",
+          "heading": "Owner baseline reconciliation, 2026-10-30",
+          "anchor": "owner-baseline-reconciliation-2026-10-30",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        },
+        {
+          "id": "HPX-BIND-005-06",
+          "heading": "Normative content",
+          "anchor": "normative-content",
+          "disposition": "bound",
+          "scope": "HPX-CAN-001",
+          "owner": "hpx.native",
+          "view": "c2_containers",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-005-07",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-005-08",
+          "heading": "Future bundled document conversion boundary",
+          "anchor": "future-bundled-document-conversion-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/04-architecture/data-architecture.md",
+      "document_id": "HPX-ARCH-003",
+      "sections": [
+        {
+          "id": "HPX-BIND-006-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-006-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-006-03",
+          "heading": "Normative content",
+          "anchor": "normative-content",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-006-04",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-006-05",
+          "heading": "Future export compilation data",
+          "anchor": "future-export-compilation-data",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-006-06",
+          "heading": "Working-branch design boundary, 2026-10-26",
+          "anchor": "working-branch-design-boundary-2026-10-26",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/assertions-and-predicates.md",
+      "document_id": "HPX-DOM-008",
+      "sections": [
+        {
+          "id": "HPX-BIND-007-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-007-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-007-03",
+          "heading": "Entities and identities",
+          "anchor": "entities-and-identities",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-007-04",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-007-05",
+          "heading": "Owner-approved logical-equivalence clarification, 2026-10-25",
+          "anchor": "owner-approved-logical-equivalence-clarification-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/core-object-model.md",
+      "document_id": "HPX-DOM-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-008-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-008-02",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-008-03",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-008-05",
+          "heading": "Entities and identities",
+          "anchor": "entities-and-identities",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-008-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-008-07",
+          "heading": "Working-branch design, 2026-10-26",
+          "anchor": "working-branch-design-2026-10-26",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-008-08",
+          "heading": "Creation origin and placement \u2014 HPX-OWNER-048",
+          "anchor": "creation-origin-and-placement--hpx-owner-048",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/document-semantics.md",
+      "document_id": "HPX-DOM-003",
+      "sections": [
+        {
+          "id": "HPX-BIND-009-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-009-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-009-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-009-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-009-05",
+          "heading": "Entities and identities",
+          "anchor": "entities-and-identities",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-009-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-009-07",
+          "heading": "Retained autosaved selections and branch preservation \u2014 OWNER049/050",
+          "anchor": "retained-autosaved-selections-and-branch-preservation--owner049050",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-009-08",
+          "heading": "Structural contributions without notation \u2014 OWNER051",
+          "anchor": "structural-contributions-without-notation--owner051",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-009-09",
+          "heading": "Recovery purpose and immutable reference evidence \u2014 OWNER052",
+          "anchor": "recovery-purpose-and-immutable-reference-evidence--owner052",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-009-10",
+          "heading": "Selected bundle authority and derived use contexts \u2014 OWNER055",
+          "anchor": "selected-bundle-authority-and-derived-use-contexts--owner055",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/hypergraph-mathematics.md",
+      "document_id": "HPX-DOM-002",
+      "sections": [
+        {
+          "id": "HPX-BIND-010-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-010-02",
+          "heading": "Entities and identities",
+          "anchor": "entities-and-identities",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_composition",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-010-03",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-010-04",
+          "heading": "Creation context versus graph structure \u2014 HPX-OWNER-048",
+          "anchor": "creation-context-versus-graph-structure--hpx-owner-048",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_composition",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-010-05",
+          "heading": "Operational bounds and exact cycle meaning \u2014 OWNER054",
+          "anchor": "operational-bounds-and-exact-cycle-meaning--owner054",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/provenance-model.md",
+      "document_id": "HPX-DOM-004",
+      "sections": [
+        {
+          "id": "HPX-BIND-011-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-011-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-011-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-011-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-011-05",
+          "heading": "Entities and identities",
+          "anchor": "entities-and-identities",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-011-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-011-07",
+          "heading": "Owner-directed Merge and Copy action distinction, 2026-10-25",
+          "anchor": "owner-directed-merge-and-copy-action-distinction-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-011-08",
+          "heading": "Current independent Fork projection",
+          "anchor": "current-independent-fork-projection",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-011-09",
+          "heading": "Working-source and promotion design, 2026-10-26",
+          "anchor": "working-source-and-promotion-design-2026-10-26",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/text-and-anchors.md",
+      "document_id": "HPX-DOM-006",
+      "sections": [
+        {
+          "id": "HPX-BIND-012-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-012-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-012-03",
+          "heading": "Entities and identities",
+          "anchor": "entities-and-identities",
+          "disposition": "bound",
+          "scope": "HPX-CAN-019",
+          "owner": "hpx.native.domain.annotation_rules.concept_anchor",
+          "view": "concept_relationships",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-012-04",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-012-05",
+          "heading": "Owned editor source implementation evidence, 2026-10-25",
+          "anchor": "owned-editor-source-implementation-evidence-2026-10-25",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-012-06",
+          "heading": "Committed comment anchors",
+          "anchor": "committed-comment-anchors",
+          "disposition": "bound",
+          "scope": "HPX-CAN-019",
+          "owner": "hpx.native.domain.annotation_rules.concept_anchor",
+          "view": "concept_relationships",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-012-07",
+          "heading": "Structural membership and exact partial fragments \u2014 OWNER053",
+          "anchor": "structural-membership-and-exact-partial-fragments--owner053",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-012-08",
+          "heading": "Concrete closure map representation \u2014 OWNER055",
+          "anchor": "concrete-closure-map-representation--owner055",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/ai-collaboration.md",
+      "document_id": "HPX-SUB-010",
+      "sections": [
+        {
+          "id": "HPX-BIND-013-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-013-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-013-03",
+          "heading": "1. Mandatory multi-user baseline \u2014 HPX-RQ-032",
+          "anchor": "1-mandatory-multi-user-baseline--hpx-rq-032",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-013-04",
+          "heading": "2. AI agents are users \u2014 HPX-RQ-033",
+          "anchor": "2-ai-agents-are-users--hpx-rq-033",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-013-05",
+          "heading": "3. Multiple AI agents in one workspace \u2014 HPX-RQ-034",
+          "anchor": "3-multiple-ai-agents-in-one-workspace--hpx-rq-034",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-013-06",
+          "heading": "4. Chat is workspace graph content \u2014 HPX-RQ-035",
+          "anchor": "4-chat-is-workspace-graph-content--hpx-rq-035",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.domain.source_plans.concept_interaction",
+          "view": "concept_provenance_working",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-013-07",
+          "heading": "5. Selected-node editing through MCP \u2014 HPX-RQ-036",
+          "anchor": "5-selected-node-editing-through-mcp--hpx-rq-036",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.client_access",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-013-08",
+          "heading": "6. Interfaces and boundaries \u2014 HPX-RQ-037/038",
+          "anchor": "6-interfaces-and-boundaries--hpx-rq-037038",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-013-09",
+          "heading": "7. Authority and implementation limits",
+          "anchor": "7-authority-and-implementation-limits",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        },
+        {
+          "id": "HPX-BIND-013-10",
+          "heading": "8. Acceptance obligations",
+          "anchor": "8-acceptance-obligations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.client_access",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-013-11",
+          "heading": "Source and authority",
+          "anchor": "source-and-authority",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/document-engine.md",
+      "document_id": "HPX-SUB-002",
+      "sections": [
+        {
+          "id": "HPX-BIND-014-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-014-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-014-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-014-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-014-05",
+          "heading": "Owner baseline reconciliation, 2026-10-30",
+          "anchor": "owner-baseline-reconciliation-2026-10-30",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        },
+        {
+          "id": "HPX-BIND-014-06",
+          "heading": "Responsibilities and boundaries",
+          "anchor": "responsibilities-and-boundaries",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-014-07",
+          "heading": "State and operations",
+          "anchor": "state-and-operations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-014-08",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-014-09",
+          "heading": "Initial protected Copy implementation evidence, 2026-10-25",
+          "anchor": "initial-protected-copy-implementation-evidence-2026-10-25",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-014-10",
+          "heading": "Initial independent Fork implementation, 2026-10-25",
+          "anchor": "initial-independent-fork-implementation-2026-10-25",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-014-11",
+          "heading": "Owner-approved first Merge scope, 2026-10-26",
+          "anchor": "owner-approved-first-merge-scope-2026-10-26",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-014-12",
+          "heading": "Planned Merge into parent branch",
+          "anchor": "planned-merge-into-parent-branch",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-014-13",
+          "heading": "Selected-text heading links, owner clarification 2026-10-27",
+          "anchor": "selected-text-heading-links-owner-clarification-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/external-integrations.md",
+      "document_id": "HPX-SUB-011",
+      "sections": [
+        {
+          "id": "HPX-BIND-015-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-015-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-015-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-015-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-015-05",
+          "heading": "Owner baseline reconciliation, 2026-10-30",
+          "anchor": "owner-baseline-reconciliation-2026-10-30",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        },
+        {
+          "id": "HPX-BIND-015-06",
+          "heading": "State and operations",
+          "anchor": "state-and-operations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.integrations",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-015-07",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-015-08",
+          "heading": "Future bundled Pandoc compilation",
+          "anchor": "future-bundled-pandoc-compilation",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.integrations",
+          "view": "c3_executable",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/formats/crypto-envelopes.md",
+      "document_id": "HPX-FMT-002",
+      "sections": [
+        {
+          "id": "HPX-BIND-016-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-016-02",
+          "heading": "Binary/text encoding and schema",
+          "anchor": "binarytext-encoding-and-schema",
+          "disposition": "bound",
+          "scope": "HPX-CAN-015",
+          "owner": "hpx.native.crypto.envelopes",
+          "view": "c3_crypto",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-016-03",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/formats/hpx-workspace.md",
+      "document_id": "HPX-FMT-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-017-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-017-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-017-03",
+          "heading": "Binary/text encoding and schema",
+          "anchor": "binarytext-encoding-and-schema",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-017-04",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-017-05",
+          "heading": "Resumed record implementation, 2026-10-25",
+          "anchor": "resumed-record-implementation-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-017-06",
+          "heading": "Explicit keychain upgrade, 2026-10-25",
+          "anchor": "explicit-keychain-upgrade-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-017-07",
+          "heading": "Optional immutable comment records",
+          "anchor": "optional-immutable-comment-records",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-017-08",
+          "heading": "Local branch foundation under verification",
+          "anchor": "local-branch-foundation-under-verification",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-017-09",
+          "heading": "Designed incompatible closure boundary \u2014 OWNER055",
+          "anchor": "designed-incompatible-closure-boundary--owner055",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-017-10",
+          "heading": "Designed combined conflict profile \u2014 OWNER056",
+          "anchor": "designed-combined-conflict-profile--owner056",
+          "disposition": "bound",
+          "scope": "HPX-CAN-019",
+          "owner": "hpx.native.domain.annotation_rules.concept_overlay",
+          "view": "concept_relationships",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/frontend-interaction.md",
+      "document_id": "HPX-SUB-009",
+      "sections": [
+        {
+          "id": "HPX-BIND-018-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-018-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-018-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-05",
+          "heading": "Functional organisation (owner direction, 2026-10-30)",
+          "anchor": "functional-organisation-owner-direction-2026-10-30",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-06",
+          "heading": "Selected-node Graph tab (owner direction, 2026-10-30)",
+          "anchor": "selected-node-graph-tab-owner-direction-2026-10-30",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-07",
+          "heading": "Multi-user and AI-user UI baseline",
+          "anchor": "multi-user-and-ai-user-ui-baseline",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-08",
+          "heading": "State and operations",
+          "anchor": "state-and-operations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-09",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-018-10",
+          "heading": "Owner-directed action set and branding, 2026-10-25",
+          "anchor": "owner-directed-action-set-and-branding-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-11",
+          "heading": "Owner-approved logical-equivalence search and graph view, 2026-10-25",
+          "anchor": "owner-approved-logical-equivalence-search-and-graph-view-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-12",
+          "heading": "Initial durable graph and creation recovery evidence",
+          "anchor": "initial-durable-graph-and-creation-recovery-evidence",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-13",
+          "heading": "First durable semantic overlay",
+          "anchor": "first-durable-semantic-overlay",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-14",
+          "heading": "Planned branch-parent Merge interface",
+          "anchor": "planned-branch-parent-merge-interface",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-15",
+          "heading": "Initial live Users publication-evidence scope",
+          "anchor": "initial-live-users-publication-evidence-scope",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-16",
+          "heading": "First durable committed-passage comments",
+          "anchor": "first-durable-committed-passage-comments",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-17",
+          "heading": "Runtime contributor badge implementation boundary",
+          "anchor": "runtime-contributor-badge-implementation-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-18",
+          "heading": "Working-branch design in progress",
+          "anchor": "working-branch-design-in-progress",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-19",
+          "heading": "Local gated wiring checkpoint and owner stop",
+          "anchor": "local-gated-wiring-checkpoint-and-owner-stop",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-018-20",
+          "heading": "Heading Link selection eligibility",
+          "anchor": "heading-link-selection-eligibility",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-21",
+          "heading": "Current in-text semantic relation labels \u2014 HPX-OWNER-017",
+          "anchor": "current-in-text-semantic-relation-labels--hpx-owner-017",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-018-22",
+          "heading": "Owner-prioritized readable Markdown, 2026-10-27",
+          "anchor": "owner-prioritized-readable-markdown-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/graph-engine.md",
+      "document_id": "HPX-SUB-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-019-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-019-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-019-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-019-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-019-05",
+          "heading": "State and operations",
+          "anchor": "state-and-operations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-019-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-019-07",
+          "heading": "Owner-approved selected-node graph view, 2026-10-25",
+          "anchor": "owner-approved-selected-node-graph-view-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-019-08",
+          "heading": "Initial document/Fork graph implementation",
+          "anchor": "initial-documentfork-graph-implementation",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-019-09",
+          "heading": "Selected assertion-node incidence extension",
+          "anchor": "selected-assertion-node-incidence-extension",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-019-10",
+          "heading": "Reviewed synthesis incidence extension",
+          "anchor": "reviewed-synthesis-incidence-extension",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-019-11",
+          "heading": "Selected-node editor Graph tab, 2026-10-30",
+          "anchor": "selected-node-editor-graph-tab-2026-10-30",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/import-export.md",
+      "document_id": "HPX-SUB-008",
+      "sections": [
+        {
+          "id": "HPX-BIND-020-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-020-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-020-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-020-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-020-05",
+          "heading": "Authority and delivery status",
+          "anchor": "authority-and-delivery-status",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        },
+        {
+          "id": "HPX-BIND-020-06",
+          "heading": "Conversion and packaging boundary",
+          "anchor": "conversion-and-packaging-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-020-07",
+          "heading": "Frozen content selection and citations",
+          "anchor": "frozen-content-selection-and-citations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-020-08",
+          "heading": "Planned relationship representations and fallbacks",
+          "anchor": "planned-relationship-representations-and-fallbacks",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-020-09",
+          "heading": "Rights and confidentiality",
+          "anchor": "rights-and-confidentiality",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-020-10",
+          "heading": "Future sequencing and verification",
+          "anchor": "future-sequencing-and-verification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/interfaces/browser-runtime.md",
+      "document_id": "HPX-API-002",
+      "sections": [
+        {
+          "id": "HPX-BIND-021-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-021-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-021-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-04",
+          "heading": "Shared human and AI user API \u2014 accepted owner scope",
+          "anchor": "shared-human-and-ai-user-api--accepted-owner-scope",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-05",
+          "heading": "Messages and type schemas",
+          "anchor": "messages-and-type-schemas",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-021-07",
+          "heading": "Current adapter retry and lock behavior, 2026-10-25",
+          "anchor": "current-adapter-retry-and-lock-behavior-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-08",
+          "heading": "Request-boundary enforcement, 2026-10-25",
+          "anchor": "request-boundary-enforcement-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-09",
+          "heading": "Explicit local keychain routes, 2026-10-25",
+          "anchor": "explicit-local-keychain-routes-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-10",
+          "heading": "Read-only history and exact historical ranges, 2026-10-25",
+          "anchor": "read-only-history-and-exact-historical-ranges-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-11",
+          "heading": "Protected clipboard subset, 2026-10-25",
+          "anchor": "protected-clipboard-subset-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-12",
+          "heading": "Independent committed-source Fork, 2026-10-25",
+          "anchor": "independent-committed-source-fork-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-13",
+          "heading": "Read-only committed snapshot comparison",
+          "anchor": "read-only-committed-snapshot-comparison",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-14",
+          "heading": "Bounded document/Fork graph projection",
+          "anchor": "bounded-documentfork-graph-projection",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-15",
+          "heading": "Document creation without page replacement",
+          "anchor": "document-creation-without-page-replacement",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-16",
+          "heading": "Versioned retrospective semantic assertions",
+          "anchor": "versioned-retrospective-semantic-assertions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-17",
+          "heading": "Selected retrospective assertion incidence graph",
+          "anchor": "selected-retrospective-assertion-incidence-graph",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-18",
+          "heading": "Exact assertion judgement history",
+          "anchor": "exact-assertion-judgement-history",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-19",
+          "heading": "Reviewed captured-source declarations",
+          "anchor": "reviewed-captured-source-declarations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-20",
+          "heading": "Reviewed new-document Merge",
+          "anchor": "reviewed-new-document-merge",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-21",
+          "heading": "Selected transformation incidence graph",
+          "anchor": "selected-transformation-incidence-graph",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-22",
+          "heading": "Snapshot-bound publication contributors",
+          "anchor": "snapshot-bound-publication-contributors",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-23",
+          "heading": "Exact snapshot client validation",
+          "anchor": "exact-snapshot-client-validation",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-24",
+          "heading": "Desktop graph scrolling",
+          "anchor": "desktop-graph-scrolling",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-25",
+          "heading": "History inspection intent isolation",
+          "anchor": "history-inspection-intent-isolation",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-26",
+          "heading": "Immutable committed-passage comments",
+          "anchor": "immutable-committed-passage-comments",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-27",
+          "heading": "In-progress local branch routes",
+          "anchor": "in-progress-local-branch-routes",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-021-28",
+          "heading": "In-progress working-checkpoint boundary",
+          "anchor": "in-progress-working-checkpoint-boundary",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-021-29",
+          "heading": "In-progress private working-reference transport",
+          "anchor": "in-progress-private-working-reference-transport",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-021-30",
+          "heading": "Current wiring checkpoint; capability enablement held",
+          "anchor": "current-wiring-checkpoint-capability-enablement-held",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-021-31",
+          "heading": "Advertised branch and working-source slice, 2026-10-27",
+          "anchor": "advertised-branch-and-working-source-slice-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-32",
+          "heading": "Original-branch integrity audit transport, 2026-10-27",
+          "anchor": "original-branch-integrity-audit-transport-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-33",
+          "heading": "Read-only parent-branch comparison context, 2026-10-27",
+          "anchor": "read-only-parent-branch-comparison-context-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-34",
+          "heading": "Automatic Commit on node or branch departure, 2026-10-27",
+          "anchor": "automatic-commit-on-node-or-branch-departure-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-35",
+          "heading": "Visible test build identity, 2026-10-27",
+          "anchor": "visible-test-build-identity-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-36",
+          "heading": "Read-only common-base inspection",
+          "anchor": "read-only-common-base-inspection",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-021-37",
+          "heading": "Exact in-text semantic relation words",
+          "anchor": "exact-in-text-semantic-relation-words",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/interfaces/crypto-adapter.md",
+      "document_id": "HPX-API-003",
+      "sections": [
+        {
+          "id": "HPX-BIND-022-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-022-02",
+          "heading": "Messages and type schemas",
+          "anchor": "messages-and-type-schemas",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.crypto",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-022-03",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/interfaces/domain-navigation.md",
+      "document_id": "HPX-API-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-023-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-023-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-023-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-05",
+          "heading": "Creation context \u2014 HPX-RQ-039",
+          "anchor": "creation-context--hpx-rq-039",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-06",
+          "heading": "Current implementation paths \u2014 2026-11-13",
+          "anchor": "current-implementation-paths--2026-11-13",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-023-07",
+          "heading": "Messages and type schemas",
+          "anchor": "messages-and-type-schemas",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-08",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-023-09",
+          "heading": "Current domain/adapter boundary, 2026-10-25",
+          "anchor": "current-domainadapter-boundary-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-10",
+          "heading": "Initial immutable history and anchor queries, 2026-10-25",
+          "anchor": "initial-immutable-history-and-anchor-queries-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-11",
+          "heading": "Bounded publication-contributor adapter query",
+          "anchor": "bounded-publication-contributor-adapter-query",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-12",
+          "heading": "Initial immutable comment paging",
+          "anchor": "initial-immutable-comment-paging",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-13",
+          "heading": "Working-source boundary",
+          "anchor": "working-source-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-14",
+          "heading": "Gated branch/working navigation wiring, 2026-10-26",
+          "anchor": "gated-branchworking-navigation-wiring-2026-10-26",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-15",
+          "heading": "Verified branch/working navigation, 2026-10-27",
+          "anchor": "verified-branchworking-navigation-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-16",
+          "heading": "Adapter-only immediate-record audit and current scope",
+          "anchor": "adapter-only-immediate-record-audit-and-current-scope",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-17",
+          "heading": "Bounded audit consumer, 2026-10-27",
+          "anchor": "bounded-audit-consumer-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-18",
+          "heading": "Current committed child/parent comparison, 2026-10-27",
+          "anchor": "current-committed-childparent-comparison-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-19",
+          "heading": "Logical editing departure publication, 2026-10-27",
+          "anchor": "logical-editing-departure-publication-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-20",
+          "heading": "Parent-Merge supplied-map planning component, 2026-10-27",
+          "anchor": "parent-merge-supplied-map-planning-component-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-21",
+          "heading": "Supplied-metadata common-base component, 2026-10-27",
+          "anchor": "supplied-metadata-common-base-component-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-22",
+          "heading": "Authenticated bounded common-base inspection",
+          "anchor": "authenticated-bounded-common-base-inspection",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-23",
+          "heading": "Experimental retained-origin loading",
+          "anchor": "experimental-retained-origin-loading",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-24",
+          "heading": "Source-neutral semantic word projection",
+          "anchor": "source-neutral-semantic-word-projection",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-25",
+          "heading": "Autosaved composition, update discovery and branch capture \u2014 OWNER049/050",
+          "anchor": "autosaved-composition-update-discovery-and-branch-capture--owner049050",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-26",
+          "heading": "Structural reconstruction refinement \u2014 OWNER051",
+          "anchor": "structural-reconstruction-refinement--owner051",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-27",
+          "heading": "Structural selection admission \u2014 OWNER053",
+          "anchor": "structural-selection-admission--owner053",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-28",
+          "heading": "Operational reconstruction admission \u2014 OWNER054",
+          "anchor": "operational-reconstruction-admission--owner054",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-29",
+          "heading": "Concrete selected-state and source-map design \u2014 OWNER055",
+          "anchor": "concrete-selected-state-and-source-map-design--owner055",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-023-30",
+          "heading": "Conflict review overlay and recovery \u2014 OWNER056",
+          "anchor": "conflict-review-overlay-and-recovery--owner056",
+          "disposition": "bound",
+          "scope": "HPX-CAN-019",
+          "owner": "hpx.native.domain.annotation_rules.concept_overlay",
+          "view": "concept_relationships",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/security-cryptography.md",
+      "document_id": "HPX-SUB-012",
+      "sections": [
+        {
+          "id": "HPX-BIND-024-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-024-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-024-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-024-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-024-05",
+          "heading": "State and operations",
+          "anchor": "state-and-operations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-024-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/workspace-storage.md",
+      "document_id": "HPX-SUB-006",
+      "sections": [
+        {
+          "id": "HPX-BIND-025-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-025-02",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-025-03",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-025-04",
+          "heading": "State and operations",
+          "anchor": "state-and-operations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-025-05",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        }
+      ]
+    },
+    {
+      "path": "docs/07-implementation/algorithms/expansion-validation.md",
+      "document_id": "HPX-ALGO-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-026-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-026-02",
+          "heading": "Mathematical definition",
+          "anchor": "mathematical-definition",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-026-03",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        }
+      ]
+    },
+    {
+      "path": "docs/07-implementation/algorithms/parent-merge.md",
+      "document_id": "HPX-ALGO-002",
+      "sections": [
+        {
+          "id": "HPX-BIND-027-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-027-02",
+          "heading": "Implemented pure selection boundary",
+          "anchor": "implemented-pure-selection-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-03",
+          "heading": "Resource and failure boundary",
+          "anchor": "resource-and-failure-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-04",
+          "heading": "Remaining exact mapping work",
+          "anchor": "remaining-exact-mapping-work",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-05",
+          "heading": "Retained format contract to implement next",
+          "anchor": "retained-format-contract-to-implement-next",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-06",
+          "heading": "Upgrade and application integration acceptance",
+          "anchor": "upgrade-and-application-integration-acceptance",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-07",
+          "heading": "Immediate-base working lineage trace",
+          "anchor": "immediate-base-working-lineage-trace",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-08",
+          "heading": "Bounded common-base selection",
+          "anchor": "bounded-common-base-selection",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-09",
+          "heading": "Retained immediate-parent passage origins",
+          "anchor": "retained-immediate-parent-passage-origins",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-10",
+          "heading": "Guarded encrypted draft-lineage Save",
+          "anchor": "guarded-encrypted-draft-lineage-save",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-11",
+          "heading": "Authenticated legacy-history loading boundary",
+          "anchor": "authenticated-legacy-history-loading-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-12",
+          "heading": "Candidate single-parent origin evidence replay",
+          "anchor": "candidate-single-parent-origin-evidence-replay",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-13",
+          "heading": "Guarded single-parent temporal publication component",
+          "anchor": "guarded-single-parent-temporal-publication-component",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-027-14",
+          "heading": "Temporal capacity and result readback",
+          "anchor": "temporal-capacity-and-result-readback",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/07-implementation/data-structures/sqlite-records.md",
+      "document_id": "HPX-DATA-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-028-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-028-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-028-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-05",
+          "heading": "Exact types and fields",
+          "anchor": "exact-types-and-fields",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-028-07",
+          "heading": "Current implementation and compatibility, 2026-10-25",
+          "anchor": "current-implementation-and-compatibility-2026-10-25",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-028-08",
+          "heading": "Optional keychain wrapper in database schema 2",
+          "anchor": "optional-keychain-wrapper-in-database-schema-2",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-09",
+          "heading": "Optional private clipboard record, 2026-10-25",
+          "anchor": "optional-private-clipboard-record-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-10",
+          "heading": "Optional immutable fork derivation, 2026-10-25",
+          "anchor": "optional-immutable-fork-derivation-2026-10-25",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-11",
+          "heading": "In-progress versioned semantic overlay records",
+          "anchor": "in-progress-versioned-semantic-overlay-records",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-028-12",
+          "heading": "Optional reviewed synthesis derivation (kind 17, record version 1)",
+          "anchor": "optional-reviewed-synthesis-derivation-kind-17-record-version-1",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-13",
+          "heading": "Optional immutable passage comments (kinds 18\u201319, record version 1)",
+          "anchor": "optional-immutable-passage-comments-kinds-1819-record-version-1",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-14",
+          "heading": "In-progress named branch adapter (kinds20/21)",
+          "anchor": "in-progress-named-branch-adapter-kinds2021",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-028-15",
+          "heading": "Working-checkpoint foundation (kinds22\u201324), local verification",
+          "anchor": "working-checkpoint-foundation-kinds2224-local-verification",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-028-16",
+          "heading": "Private working references and replacements (kinds25/26), local verification",
+          "anchor": "private-working-references-and-replacements-kinds2526-local-verification",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-028-17",
+          "heading": "Working-source Fork and scoped history additions, 2026-10-26",
+          "anchor": "working-source-fork-and-scoped-history-additions-2026-10-26",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-18",
+          "heading": "Actual optional-record compatibility evidence, 2026-10-27",
+          "anchor": "actual-optional-record-compatibility-evidence-2026-10-27",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-028-19",
+          "heading": "Draft-lineage codec prototype under adopted parent-Merge direction",
+          "anchor": "draft-lineage-codec-prototype-under-adopted-parent-merge-direction",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-20",
+          "heading": "Guarded experimental temporal Save transaction",
+          "anchor": "guarded-experimental-temporal-save-transaction",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-21",
+          "heading": "Candidate single-parent publication-origin evidence codec",
+          "anchor": "candidate-single-parent-publication-origin-evidence-codec",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-22",
+          "heading": "Candidate per-node committed-change clock codec",
+          "anchor": "candidate-per-node-committed-change-clock-codec",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-23",
+          "heading": "Experimental legacy origin seeds and bounded origin loading",
+          "anchor": "experimental-legacy-origin-seeds-and-bounded-origin-loading",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-24",
+          "heading": "Candidate temporal Commit frozen receipt",
+          "anchor": "candidate-temporal-commit-frozen-receipt",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-25",
+          "heading": "Experimental single-parent publication writer, 2026-10-27",
+          "anchor": "experimental-single-parent-publication-writer-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-26",
+          "heading": "Temporal private reference batch, 2026-10-27",
+          "anchor": "temporal-private-reference-batch-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-27",
+          "heading": "Experimental capacity ceilings and result readability",
+          "anchor": "experimental-capacity-ceilings-and-result-readability",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-28",
+          "heading": "Item3 concrete closure adapter design \u2014 OWNER055, not implemented",
+          "anchor": "item3-concrete-closure-adapter-design--owner055-not-implemented",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-028-29",
+          "heading": "Item4 conflict-state record design \u2014 OWNER056, not implemented",
+          "anchor": "item4-conflict-state-record-design--owner056-not-implemented",
+          "disposition": "bound",
+          "scope": "HPX-CAN-019",
+          "owner": "hpx.native.domain.annotation_rules.concept_overlay",
+          "view": "concept_relationships",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/07-implementation/formal-invariants.md",
+      "document_id": "HPX-ALG-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-029-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-029-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-029-03",
+          "heading": "Formal property",
+          "anchor": "formal-property",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-029-04",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-029-05",
+          "heading": "Reconstruction correspondence obligations \u2014 item5",
+          "anchor": "reconstruction-correspondence-obligations--item5",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-050-01",
+          "heading": "Model boundary and definitions to review first",
+          "anchor": "model-boundary-and-definitions-to-review-first",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-050-02",
+          "heading": "Dependency order and supporting lemmas",
+          "anchor": "dependency-order-and-supporting-lemmas",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-050-03",
+          "heading": "HPX-PROP-006 \u2014 stopping, termination and recurrence correctness",
+          "anchor": "hpx-prop-006--stopping-termination-and-recurrence-correctness",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-050-04",
+          "heading": "HPX-PROP-007 \u2014 complete results and deterministic reconstruction",
+          "anchor": "hpx-prop-007--complete-results-and-deterministic-reconstruction",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-050-05",
+          "heading": "HPX-PROP-008 \u2014 warning and deliberate navigation",
+          "anchor": "hpx-prop-008--warning-and-deliberate-navigation",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-050-06",
+          "heading": "Worked-example and implementation evidence plan",
+          "anchor": "worked-example-and-implementation-evidence-plan",
+          "disposition": "prose-only",
+          "reason": "Historical proposal/review, authority, provenance or evidence plan; retain its stated status without inventing a software owner."
+        }
+      ]
+    },
+    {
+      "path": "docs/07-implementation/protocols/draft-publication.md",
+      "document_id": "HPX-PROTO-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-030-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-030-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-030-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-030-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-030-05",
+          "heading": "Messages and type schemas",
+          "anchor": "messages-and-type-schemas",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-030-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-030-07",
+          "heading": "Owner-adopted navigation publication boundary, 2026-10-27",
+          "anchor": "owner-adopted-navigation-publication-boundary-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-030-08",
+          "heading": "Experimental single-parent temporal Commit transaction",
+          "anchor": "experimental-single-parent-temporal-commit-transaction",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/08-assurance/build-and-release.md",
+      "document_id": "HPX-ASSUR-005",
+      "sections": [
+        {
+          "id": "HPX-BIND-031-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-031-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-031-03",
+          "heading": "Normative content",
+          "anchor": "normative-content",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.frontend_assets",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-031-04",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-031-05",
+          "heading": "Release qualification",
+          "anchor": "release-qualification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.frontend_assets",
+          "view": "c3_executable",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/08-assurance/privacy-and-data-protection.md",
+      "document_id": "HPX-ASSUR-003",
+      "sections": [
+        {
+          "id": "HPX-BIND-032-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-032-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-032-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-032-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-032-05",
+          "heading": "Normative content",
+          "anchor": "normative-content",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-032-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        }
+      ]
+    },
+    {
+      "path": "docs/08-assurance/recovery.md",
+      "document_id": "HPX-ASSUR-006",
+      "sections": [
+        {
+          "id": "HPX-BIND-033-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-033-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-033-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-033-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-033-05",
+          "heading": "Normative content",
+          "anchor": "normative-content",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-033-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-033-07",
+          "heading": "Bounded audit transport and UI verification, 2026-10-27",
+          "anchor": "bounded-audit-transport-and-ui-verification-2026-10-27",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-033-08",
+          "heading": "Workspace-only local witness proposal",
+          "anchor": "workspace-only-local-witness-proposal",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-033-09",
+          "heading": "Portable self-contained recovery direction, 2026-10-27",
+          "anchor": "portable-self-contained-recovery-direction-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-033-10",
+          "heading": "Experimental temporal transaction recovery evidence, 2026-10-27",
+          "anchor": "experimental-temporal-transaction-recovery-evidence-2026-10-27",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        }
+      ]
+    },
+    {
+      "path": "docs/08-assurance/security-threat-model.md",
+      "document_id": "HPX-ASSUR-002",
+      "sections": [
+        {
+          "id": "HPX-BIND-034-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-034-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-034-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-034-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-034-05",
+          "heading": "Normative content",
+          "anchor": "normative-content",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-034-06",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-034-07",
+          "heading": "Pending restoration-scope design input, 2026-10-27",
+          "anchor": "pending-restoration-scope-design-input-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-034-08",
+          "heading": "Selected workspace-only restoration scope, 2026-10-27",
+          "anchor": "selected-workspace-only-restoration-scope-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-034-09",
+          "heading": "Portable workspace supersedes external witness direction, 2026-10-27",
+          "anchor": "portable-workspace-supersedes-external-witness-direction-2026-10-27",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority",
+          "view": "c3_application",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/08-assurance/testing-strategy.md",
+      "document_id": "HPX-ASSUR-001",
+      "sections": [
+        {
+          "id": "HPX-BIND-035-01",
+          "heading": "Common metadata",
+          "anchor": "common-metadata",
+          "disposition": "prose-only",
+          "reason": "Document identity, authority and verification metadata; no component definition."
+        },
+        {
+          "id": "HPX-BIND-035-02",
+          "heading": "Current adopted design \u2014 OWNER059",
+          "anchor": "current-adopted-design--owner059",
+          "disposition": "prose-only",
+          "reason": "Routing summary to the detailed adopted design contracts; their section bindings carry ownership."
+        },
+        {
+          "id": "HPX-BIND-035-03",
+          "heading": "Workspace-local users \u2014 owner clarification",
+          "anchor": "workspace-local-users--owner-clarification",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-035-04",
+          "heading": "Shared user API and per-user permissions",
+          "anchor": "shared-user-api-and-per-user-permissions",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-035-05",
+          "heading": "Unit/integration/property/fuzz cases",
+          "anchor": "unitintegrationpropertyfuzz-cases",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.domain",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-035-06",
+          "heading": "Pass/fail or measurement thresholds",
+          "anchor": "passfail-or-measurement-thresholds",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        },
+        {
+          "id": "HPX-BIND-035-07",
+          "heading": "Source provenance",
+          "anchor": "source-provenance",
+          "disposition": "prose-only",
+          "reason": "Source/approval provenance retained as prose; no runtime owner is implied."
+        },
+        {
+          "id": "HPX-BIND-035-08",
+          "heading": "Bounded runtime workload observations, 2026-10-27",
+          "anchor": "bounded-runtime-workload-observations-2026-10-27",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        },
+        {
+          "id": "HPX-BIND-035-09",
+          "heading": "Change-sensitive execution, 2026-10-27",
+          "anchor": "change-sensitive-execution-2026-10-27",
+          "disposition": "prose-only",
+          "reason": "Scoped implementation or execution record; evidence does not define or adopt the product architecture."
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/contracts/authority-lifecycle.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-036-01",
+          "heading": "Local authentication and session state",
+          "anchor": "local-authentication-and-session-state",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_session",
+          "view": "concept_authority_distinctions",
+          "consumers": [
+            "hpx.native.transport.security"
+          ]
+        },
+        {
+          "id": "HPX-BIND-036-02",
+          "heading": "Bootstrap, recovery and administration",
+          "anchor": "bootstrap-recovery-and-administration",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": [
+            "hpx.native.application.admission"
+          ]
+        },
+        {
+          "id": "HPX-BIND-036-03",
+          "heading": "Authenticated policy, concurrency and keys",
+          "anchor": "authenticated-policy-concurrency-and-keys",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_policy",
+          "view": "concept_authority_distinctions",
+          "consumers": [
+            "hpx.native.application.admission",
+            "hpx.native.application.publication",
+            "hpx.native.application.reads",
+            "hpx.native.crypto"
+          ]
+        },
+        {
+          "id": "HPX-BIND-036-04",
+          "heading": "Transport and client-held boundary",
+          "anchor": "transport-and-client-held-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.transport.https",
+          "view": "c3_runtime_api",
+          "consumers": [
+            "hpx.native.authority"
+          ]
+        },
+        {
+          "id": "HPX-BIND-036-05",
+          "heading": "Required unexecuted acceptance",
+          "anchor": "required-unexecuted-acceptance",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority",
+          "view": "c3_application",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/contracts/editing-and-graph.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-037-01",
+          "heading": "Working state, Save and Commit",
+          "anchor": "working-state-save-and-commit",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": [
+            "hpx.browser.coordination"
+          ]
+        },
+        {
+          "id": "HPX-BIND-037-02",
+          "heading": "Main branch and constructed-version capture",
+          "anchor": "main-branch-and-constructed-version-capture",
+          "disposition": "bound",
+          "scope": "HPX-CAN-027",
+          "owner": "hpx.native.domain.exact.concept_branch",
+          "view": "concept_identity_closure",
+          "consumers": [
+            "hpx.native.application.dispatch"
+          ]
+        },
+        {
+          "id": "HPX-BIND-037-03",
+          "heading": "Exact anchor relocation",
+          "anchor": "exact-anchor-relocation",
+          "disposition": "bound",
+          "scope": "HPX-CAN-027",
+          "owner": "hpx.native.domain.annotation_rules.concept_anchor",
+          "view": "concept_relationships",
+          "consumers": [
+            "hpx.browser.editor"
+          ]
+        },
+        {
+          "id": "HPX-BIND-037-04",
+          "heading": "Predicates, assertions and reviews",
+          "anchor": "predicates-assertions-and-reviews",
+          "disposition": "bound",
+          "scope": "HPX-CAN-027",
+          "owner": "hpx.native.domain.annotation_rules.concept_predicate",
+          "view": "concept_relationships",
+          "consumers": [
+            "hpx.native.application.dispatch"
+          ]
+        },
+        {
+          "id": "HPX-BIND-037-05",
+          "heading": "Selected-node Graph query and navigation",
+          "anchor": "selected-node-graph-query-and-navigation",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": [
+            "hpx.browser.editor"
+          ]
+        },
+        {
+          "id": "HPX-BIND-037-06",
+          "heading": "Unexecuted conformance",
+          "anchor": "unexecuted-conformance",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/contracts/integrations-and-delivery.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-038-01",
+          "heading": "Rights evidence and scope",
+          "anchor": "rights-evidence-and-scope",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-038-02",
+          "heading": "Exact export plan and conversion boundary",
+          "anchor": "exact-export-plan-and-conversion-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.export",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-038-03",
+          "heading": "Zotero capture",
+          "anchor": "zotero-capture",
+          "disposition": "bound",
+          "scope": "HPX-CAN-030",
+          "owner": "hpx.native.integrations.citations",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-038-04",
+          "heading": "Local spelling and inert Word review",
+          "anchor": "local-spelling-and-inert-word-review",
+          "disposition": "bound",
+          "scope": "HPX-CAN-014",
+          "owner": "hpx.browser.editor",
+          "view": "c3_browser_functions",
+          "consumers": [
+            "hpx.native.integrations.word_import",
+            "hpx.native.frontend_assets"
+          ]
+        },
+        {
+          "id": "HPX-BIND-038-05",
+          "heading": "Platform, workloads and accessibility",
+          "anchor": "platform-workloads-and-accessibility",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.frontend_assets",
+          "view": "c3_executable",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-038-06",
+          "heading": "Governance, maintenance and acceptance",
+          "anchor": "governance-maintenance-and-acceptance",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/contracts/persistence-and-exchange.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-039-01",
+          "heading": "Canonical state versus derived indexes",
+          "anchor": "canonical-state-versus-derived-indexes",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-039-02",
+          "heading": "Package v1 design",
+          "anchor": "package-v1-design",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.integrations.federation",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-039-03",
+          "heading": "Restore and cross-workspace identity",
+          "anchor": "restore-and-cross-workspace-identity",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-039-04",
+          "heading": "Create-only GitHub backup",
+          "anchor": "create-only-github-backup",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.integrations.github_jobs",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-039-05",
+          "heading": "Explicit federation exchange",
+          "anchor": "explicit-federation-exchange",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.integrations.federation",
+          "view": "c3_integrations",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-039-06",
+          "heading": "Unexecuted acceptance",
+          "anchor": "unexecuted-acceptance",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage",
+          "view": "c3_integrations",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/formats/representation-profile.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-040-01",
+          "heading": "Types, decoding and compatibility",
+          "anchor": "types-decoding-and-compatibility",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-040-02",
+          "heading": "Upgrade and unknown readers",
+          "anchor": "upgrade-and-unknown-readers",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-040-03",
+          "heading": "Runtime interface versus persistence",
+          "anchor": "runtime-interface-versus-persistence",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.api",
+          "view": "c3_runtime_api",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-040-04",
+          "heading": "Subsystem contracts",
+          "anchor": "subsystem-contracts",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        }
+      ]
+    },
+    {
+      "path": "docs/06-subsystems/contracts/shared-api-chat-mcp.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-041-01",
+          "heading": "One application command/query boundary",
+          "anchor": "one-application-commandquery-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": [
+            "hpx.native.transport.api",
+            "hpx.native.transport.client_access"
+          ]
+        },
+        {
+          "id": "HPX-BIND-041-02",
+          "heading": "Chat interaction lifecycle",
+          "anchor": "chat-interaction-lifecycle",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.domain.source_plans.concept_interaction",
+          "view": "concept_provenance_working",
+          "consumers": [
+            "hpx.native.integrations.agents"
+          ]
+        },
+        {
+          "id": "HPX-BIND-041-03",
+          "heading": "MCP binding and tools",
+          "anchor": "mcp-binding-and-tools",
+          "disposition": "bound",
+          "scope": "HPX-CAN-028",
+          "owner": "hpx.native.transport.client_access",
+          "view": "c3_runtime_api",
+          "consumers": [
+            "hpx.native.application.admission"
+          ]
+        },
+        {
+          "id": "HPX-BIND-041-04",
+          "heading": "Unexecuted acceptance",
+          "anchor": "unexecuted-acceptance",
+          "disposition": "bound",
+          "scope": "HPX-CAN-003",
+          "owner": "hpx.native.transport",
+          "view": "c3_executable",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/proposals/conflict-state.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-042-01",
+          "heading": "1. Authorised alternatives, preference and millisecond comparison",
+          "anchor": "1-authorised-alternatives-preference-and-millisecond-comparison",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-042-02",
+          "heading": "2. Conflict identity, exact anchors and visibility",
+          "anchor": "2-conflict-identity-exact-anchors-and-visibility",
+          "disposition": "bound",
+          "scope": "HPX-CAN-019",
+          "owner": "hpx.native.domain.annotation_rules.concept_overlay",
+          "view": "concept_relationships",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-042-03",
+          "heading": "3. Orthogonal states and explicit resolution",
+          "anchor": "3-orthogonal-states-and-explicit-resolution",
+          "disposition": "bound",
+          "scope": "HPX-CAN-019",
+          "owner": "hpx.native.domain.annotation_rules.concept_overlay",
+          "view": "concept_relationships",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-042-04",
+          "heading": "4. Shared current history, carry-forward and uncertain mapping",
+          "anchor": "4-shared-current-history-carry-forward-and-uncertain-mapping",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.source_plans",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-042-05",
+          "heading": "5. Stale, concurrent, idempotent and crash recovery contract",
+          "anchor": "5-stale-concurrent-idempotent-and-crash-recovery-contract",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.publication",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-042-06",
+          "heading": "6. Explicit versioned adapter design and compatibility",
+          "anchor": "6-explicit-versioned-adapter-design-and-compatibility",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-042-07",
+          "heading": "7. Worked cases \u2014 design examples only",
+          "anchor": "7-worked-cases--design-examples-only",
+          "disposition": "bound",
+          "scope": "HPX-CAN-019",
+          "owner": "hpx.native.domain.annotation_rules.concept_overlay",
+          "view": "concept_relationships",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-042-08",
+          "heading": "8. Future conformance matrix \u2014 unexecuted",
+          "anchor": "8-future-conformance-matrix--unexecuted",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.annotation_rules",
+          "view": "c3_pure_domain",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/proposals/exact-closure-source-map.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-043-01",
+          "heading": "1. Authoritative bundle and representation types",
+          "anchor": "1-authoritative-bundle-and-representation-types",
+          "disposition": "bound",
+          "scope": "HPX-CAN-018",
+          "owner": "hpx.native.domain.exact.concept_snapshot",
+          "view": "concept_identity_closure",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-043-02",
+          "heading": "2. Interpretation evidence, not a policy-name promise",
+          "anchor": "2-interpretation-evidence-not-a-policy-name-promise",
+          "disposition": "bound",
+          "scope": "HPX-CAN-018",
+          "owner": "hpx.native.domain.exact.concept_manifest",
+          "view": "concept_identity_closure",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-043-03",
+          "heading": "3. Derived finite uses \u2014 choices1A/3A",
+          "anchor": "3-derived-finite-uses--choices1a3a",
+          "disposition": "bound",
+          "scope": "HPX-CAN-018",
+          "owner": "hpx.native.domain.exact.concept_occurrence",
+          "view": "concept_identity_closure",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-043-04",
+          "heading": "4. One typed ordered map \u2014 choice4A",
+          "anchor": "4-one-typed-ordered-map--choice4a",
+          "disposition": "bound",
+          "scope": "HPX-CAN-018",
+          "owner": "hpx.native.domain.exact.concept_manifest",
+          "view": "concept_identity_closure",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-043-05",
+          "heading": "5. Deterministic derivation and caches \u2014 choice6A",
+          "anchor": "5-deterministic-derivation-and-caches--choice6a",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_closure",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-043-06",
+          "heading": "6. Persistent adapter records and reference decomposition",
+          "anchor": "6-persistent-adapter-records-and-reference-decomposition",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-043-07",
+          "heading": "7. Effective incompatible-workspace gate \u2014 choice8A",
+          "anchor": "7-effective-incompatible-workspace-gate--choice8a",
+          "disposition": "bound",
+          "scope": "HPX-CAN-029",
+          "owner": "hpx.native.storage.records",
+          "view": "c3_workspace_persistence",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-043-08",
+          "heading": "8. Worked representations",
+          "anchor": "8-worked-representations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-043-09",
+          "heading": "9. Cost obligations and future conformance \u2014 unexecuted",
+          "anchor": "9-cost-obligations-and-future-conformance--unexecuted",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/proposals/reconstruction-correspondence.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-044-01",
+          "heading": "Subject and exact inputs",
+          "anchor": "subject-and-exact-inputs",
+          "disposition": "bound",
+          "scope": "HPX-CAN-010",
+          "owner": "hpx.native.domain.exact",
+          "view": "c3_pure_domain",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-044-02",
+          "heading": "Required refinement obligations",
+          "anchor": "required-refinement-obligations",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_closure",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-044-03",
+          "heading": "Evidence and execution order",
+          "anchor": "evidence-and-execution-order",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        },
+        {
+          "id": "HPX-BIND-044-04",
+          "heading": "Definition completion and open execution",
+          "anchor": "definition-completion-and-open-execution",
+          "disposition": "prose-only",
+          "reason": "Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined."
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/proposals/reconstruction-operational-limits.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-045-01",
+          "heading": "Result, authority and completion boundary",
+          "anchor": "result-authority-and-completion-boundary",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-045-02",
+          "heading": "One intent, one accounting lifetime",
+          "anchor": "one-intent-one-accounting-lifetime",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-045-03",
+          "heading": "Phase and resource accounting",
+          "anchor": "phase-and-resource-accounting",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-045-04",
+          "heading": "Conditional supplier interfaces",
+          "anchor": "conditional-supplier-interfaces",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-045-05",
+          "heading": "Failure and explicit recovery",
+          "anchor": "failure-and-explicit-recovery",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-045-06",
+          "heading": "Bounded cycle navigation and budget independence",
+          "anchor": "bounded-cycle-navigation-and-budget-independence",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-045-07",
+          "heading": "Representation and measurement dependencies",
+          "anchor": "representation-and-measurement-dependencies",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-045-08",
+          "heading": "Future conformance matrix \u2014 unexecuted",
+          "anchor": "future-conformance-matrix--unexecuted",
+          "disposition": "bound",
+          "scope": "HPX-CAN-025",
+          "owner": "hpx.native.domain.projection_expansion",
+          "view": "concept_graph_projections",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/02-governance/proposals/workspace-authority-decisions.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-046-01",
+          "heading": "Fixed constraints and recorded choice alternatives",
+          "anchor": "fixed-constraints-and-recorded-choice-alternatives",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_user",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-046-02",
+          "heading": "Accepted logical capability vocabulary \u2014 choice 2A",
+          "anchor": "accepted-logical-capability-vocabulary--choice-2a",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority.concept_permission",
+          "view": "concept_authority_distinctions",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-046-03",
+          "heading": "Logical enforcement interface and flow",
+          "anchor": "logical-enforcement-interface-and-flow",
+          "disposition": "bound",
+          "scope": "HPX-CAN-006",
+          "owner": "hpx.native.application.admission",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-046-04",
+          "heading": "Required unexecuted policy acceptance cases",
+          "anchor": "required-unexecuted-policy-acceptance-cases",
+          "disposition": "bound",
+          "scope": "HPX-CAN-026",
+          "owner": "hpx.native.authority",
+          "view": "c3_application",
+          "consumers": []
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/proposals/cycle-boundary-source-emission.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-048-01",
+          "heading": "Byte ownership and frozen inputs",
+          "anchor": "byte-ownership-and-frozen-inputs",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.exact.concept_manifest",
+          "scope": "HPX-CAN-018",
+          "view": "concept_identity_closure",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-048-02",
+          "heading": "Result and source-map boundary",
+          "anchor": "result-and-source-map-boundary",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.exact.concept_manifest",
+          "scope": "HPX-CAN-018",
+          "view": "concept_identity_closure",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-048-03",
+          "heading": "Proof and execution boundaries",
+          "anchor": "proof-and-execution-boundaries",
+          "disposition": "prose-only",
+          "reason": "Historical proposal/review, authority, provenance or evidence plan; retain its stated status without inventing a software owner."
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/proposals/finite-cycle-closure-state.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-049-01",
+          "heading": "Authority and bounded outcome",
+          "anchor": "authority-and-bounded-outcome",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-049-02",
+          "heading": "1. Freeze a finite selected-state bundle",
+          "anchor": "1-freeze-a-finite-selected-state-bundle",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-049-03",
+          "heading": "2. Proposed recurrence equivalence",
+          "anchor": "2-proposed-recurrence-equivalence",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-049-04",
+          "heading": "3. Finite uses and exact cycle boundaries",
+          "anchor": "3-finite-uses-and-exact-cycle-boundaries",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-049-05",
+          "heading": "4. Outcomes, completeness and exact reconstruction",
+          "anchor": "4-outcomes-completeness-and-exact-reconstruction",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-049-06",
+          "heading": "5. Worked cases",
+          "anchor": "5-worked-cases",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-049-07",
+          "heading": "6. Deliberate navigation and two distinct warning lifecycles",
+          "anchor": "6-deliberate-navigation-and-two-distinct-warning-lifecycles",
+          "disposition": "bound",
+          "owner": "hpx.native.domain.projection_expansion",
+          "scope": "HPX-CAN-025",
+          "view": "concept_graph_projections",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-049-08",
+          "heading": "Original review recommendation and boundary (resolved by OWNER045)",
+          "anchor": "original-review-recommendation-and-boundary-resolved-by-owner045",
+          "disposition": "prose-only",
+          "reason": "Historical proposal/review, authority, provenance or evidence plan; retain its stated status without inventing a software owner."
+        }
+      ]
+    },
+    {
+      "path": "docs/05-domain/proposals/reconstruction-input-preparation.md",
+      "document_id": null,
+      "sections": [
+        {
+          "id": "HPX-BIND-051-01",
+          "heading": "Intended result and supplier boundary",
+          "anchor": "intended-result-and-supplier-boundary",
+          "disposition": "bound",
+          "owner": "hpx.native.application.admission",
+          "scope": "HPX-CAN-006",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-051-02",
+          "heading": "Proposed admission gates",
+          "anchor": "proposed-admission-gates",
+          "disposition": "bound",
+          "owner": "hpx.native.application.admission",
+          "scope": "HPX-CAN-006",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-051-03",
+          "heading": "Acknowledgement, reopening and reconciliation matrix",
+          "anchor": "acknowledgement-reopening-and-reconciliation-matrix",
+          "disposition": "bound",
+          "owner": "hpx.native.application.admission",
+          "scope": "HPX-CAN-006",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-051-04",
+          "heading": "Future conformance cases and remaining engineering work",
+          "anchor": "future-conformance-cases-and-remaining-engineering-work",
+          "disposition": "bound",
+          "owner": "hpx.native.application.admission",
+          "scope": "HPX-CAN-006",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-051-05",
+          "heading": "Completed supplier-result contract",
+          "anchor": "completed-supplier-result-contract",
+          "disposition": "bound",
+          "owner": "hpx.native.application.admission",
+          "scope": "HPX-CAN-006",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-051-06",
+          "heading": "Item1 coverage and remaining work allocation",
+          "anchor": "item1-coverage-and-remaining-work-allocation",
+          "disposition": "prose-only",
+          "reason": "Historical proposal/review, authority, provenance or evidence plan; retain its stated status without inventing a software owner."
+        },
+        {
+          "id": "HPX-BIND-052-09",
+          "heading": "Change and rationale",
+          "anchor": "change-and-rationale",
+          "disposition": "bound",
+          "owner": "hpx.native.application.admission",
+          "scope": "HPX-CAN-006",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-052-10",
+          "heading": "Source and premise trace",
+          "anchor": "source-and-premise-trace",
+          "disposition": "prose-only",
+          "reason": "Historical proposal/review, authority, provenance or evidence plan; retain its stated status without inventing a software owner."
+        },
+        {
+          "id": "HPX-BIND-052-11",
+          "heading": "Proposed acquisition and validation boundary",
+          "anchor": "proposed-acquisition-and-validation-boundary",
+          "disposition": "bound",
+          "owner": "hpx.native.application.admission",
+          "scope": "HPX-CAN-006",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-052-12",
+          "heading": "Missing, stale and unsupported inputs",
+          "anchor": "missing-stale-and-unsupported-inputs",
+          "disposition": "bound",
+          "owner": "hpx.native.application.admission",
+          "scope": "HPX-CAN-006",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-052-13",
+          "heading": "Real choices and recommendation",
+          "anchor": "real-choices-and-recommendation",
+          "disposition": "prose-only",
+          "reason": "Historical proposal/review, authority, provenance or evidence plan; retain its stated status without inventing a software owner."
+        },
+        {
+          "id": "HPX-BIND-052-14",
+          "heading": "Acceptance criteria and verification dependencies",
+          "anchor": "acceptance-criteria-and-verification-dependencies",
+          "disposition": "bound",
+          "owner": "hpx.native.application.admission",
+          "scope": "HPX-CAN-006",
+          "view": "c3_application",
+          "consumers": []
+        },
+        {
+          "id": "HPX-BIND-052-15",
+          "heading": "Open questions for the owner",
+          "anchor": "open-questions-for-the-owner",
+          "disposition": "prose-only",
+          "reason": "Historical proposal/review, authority, provenance or evidence plan; retain its stated status without inventing a software owner."
+        }
+      ]
+    }
+  ],
+  "coverage_policy": {
+    "split_document_ids": [
+      "HPX-PRIN-004",
+      "HPX-REQ-004",
+      "HPX-REQ-002",
+      "HPX-REQ-001",
+      "HPX-ARCH-002",
+      "HPX-ARCH-003",
+      "HPX-DOM-001",
+      "HPX-DOM-003",
+      "HPX-DOM-002",
+      "HPX-DOM-004",
+      "HPX-DOM-006",
+      "HPX-SUB-010",
+      "HPX-SUB-002",
+      "HPX-SUB-011",
+      "HPX-SUB-009",
+      "HPX-SUB-001",
+      "HPX-SUB-008",
+      "HPX-SUB-012",
+      "HPX-SUB-006",
+      "HPX-ALG-001",
+      "HPX-ASSUR-005",
+      "HPX-ASSUR-003",
+      "HPX-ASSUR-006",
+      "HPX-ASSUR-002",
+      "HPX-ASSUR-001",
+      "HPX-DOM-008",
+      "HPX-FMT-001",
+      "HPX-FMT-002",
+      "HPX-API-001",
+      "HPX-API-002",
+      "HPX-API-003",
+      "HPX-DATA-001",
+      "HPX-PROTO-001",
+      "HPX-ALGO-001",
+      "HPX-ALGO-002"
+    ],
+    "documents": 49,
+    "sections": 462,
+    "bound": 331,
+    "prose_only": 131
+  }
+}

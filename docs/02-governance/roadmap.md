@@ -7,17 +7,22 @@
 - **Purpose:** Gated delivery sequence without speculative release dates.
 - **Level:** `02-governance`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-PRIN-004](<../01-purpose/scope-and-non-goals.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN030 / Integration export and delivery design](../06-subsystems/contracts/integrations-and-delivery.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared API baseline
@@ -54,7 +59,7 @@ Use a bounded issue per increment, reproducible checks, license/provenance accou
 
 ## Source provenance
 
-- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 82–93; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 82–93; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<registers/source-manifest.csv>); archive is local/ignored.
 
 ## Resumed implementation progress, 2026-10-25
 
@@ -82,7 +87,7 @@ The owner adopted ADR018 committed-snapshot child creation and then requested de
 
 ## Next implementation units after review integration
 
-These are small dependency-ordered units for a future explicit implementation resume. Use the existing state/test records, not mandatory new issues, reports or a sprint process. Current working functionality and full future scope remain intact. [Finding dispositions and impact](../09-guides/reference/implementation-resumption.md#architecture-review-integration-2026-10-26) supply the review trace.
+These are small dependency-ordered units for a future explicit implementation resume. Use the existing state/test records, not mandatory new issues, reports or a sprint process. Current working functionality and full future scope remain intact. [Finding dispositions and impact](../08-assurance/development-findings.md#finding-dispositions) supply the review trace.
 
 | Unit / capability | Authoritative specification / dependencies | Affected implementation | Acceptance / migration / approval |
 | --- | --- | --- | --- |

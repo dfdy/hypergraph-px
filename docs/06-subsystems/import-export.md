@@ -1,5 +1,23 @@
 # Future document export and compilation
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-020-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-020-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-020-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-020-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-020-05` [Authority and delivery status](#authority-and-delivery-status) | Prose only: Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined. |
+| `HPX-BIND-020-06` [Conversion and packaging boundary](#conversion-and-packaging-boundary) | [hpx.native.integrations.export](../04-architecture/diagrams/executable.c4) · `HPX-CAN-030` · [c3_integrations](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-020-07` [Frozen content selection and citations](#frozen-content-selection-and-citations) | [hpx.native.integrations.export](../04-architecture/diagrams/executable.c4) · `HPX-CAN-030` · [c3_integrations](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-020-08` [Planned relationship representations and fallbacks](#planned-relationship-representations-and-fallbacks) | [hpx.native.integrations.export](../04-architecture/diagrams/executable.c4) · `HPX-CAN-030` · [c3_integrations](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-020-09` [Rights and confidentiality](#rights-and-confidentiality) | [hpx.native.integrations.export](../04-architecture/diagrams/executable.c4) · `HPX-CAN-030` · [c3_integrations](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-020-10` [Future sequencing and verification](#future-sequencing-and-verification) | [hpx.native.integrations.export](../04-architecture/diagrams/executable.c4) · `HPX-CAN-030` · [c3_integrations](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-SUB-008`
@@ -15,9 +33,14 @@
 - **Decision/history:** materializes reserved HPX-SUB-008 for the bounded export topic confirmed by the owner on 2026-10-26; inherited import obligations remain in the [external integration contract](external-integrations.md)
 - **Last reviewed:** 2026-11-01
 
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN030 / Integration export and delivery design](contracts/integrations-and-delivery.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
+
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -76,4 +99,4 @@ For each target, test citations/bibliography, Unicode/newlines, mathematics, rep
 
 ### Main designation and exact construction — OWNER049/050 clarification
 
-[M1](../architecture/Conceptual/identity-closure.c4) and [branch reconciliation](../architecture/proposals/branch-selection-reconciliation.md) distinguish the explicitly designated main identity already required above from a general construction algorithm. Neither a name/current UI selection nor choosing latest versions of every constituent defines main. Reconstruct the chosen exact branch/snapshot or explicitly captured working composition through its retained selections and source inputs; a future cache is derived performance data and grants no identity, selection or disclosure authority. General main designation/reassignment, reconstruction/caching and working-composition formats are not selected. Default reopening from last acknowledged autosave does not change the explicitly reviewed export-source choice or silently turn a private composition into published/exported content.
+[M1](../05-domain/diagrams/identity-closure.c4) and branch reconciliation distinguish the explicitly designated main identity already required above from a general construction algorithm. Neither a name/current UI selection nor choosing latest versions of every constituent defines main. Reconstruct the chosen exact branch/snapshot or explicitly captured working composition through its retained selections and source inputs; a future cache is derived performance data and grants no identity, selection or disclosure authority. General main designation/reassignment, reconstruction/caching and working-composition formats are not selected. Default reopening from last acknowledged autosave does not change the explicitly reviewed export-source choice or silently turn a private composition into published/exported content.

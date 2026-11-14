@@ -1,5 +1,16 @@
 # HGOB/HGWK envelope formats
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-016-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-016-02` [Binary/text encoding and schema](#binarytext-encoding-and-schema) | [hpx.native.crypto.envelopes](../diagrams/shared-responsibilities.c4) · `HPX-CAN-015` · [c3_crypto](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-016-03` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-FMT-002`
@@ -7,12 +18,12 @@
 - **Purpose:** Exact implemented HGOB/HGWK byte layouts and cryptographic bindings.
 - **Level:** `06-subsystems`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-SUB-012](<../security-cryptography.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
 
 Preserve the byte adapter format exactly. Future explicit application record versions do not silently change envelope version/suite.
@@ -59,5 +70,5 @@ Ciphertext/tag use the library postfix-tag format. Equal plaintexts sealed separ
 
 ## Source provenance
 
-- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 39–59; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0038` — `crates/crypto/README.md`, lines 16–25; SHA-256 `f0e23d0926c724b816157a3ccf1b0a07ac3f7332a55eb6ab809747dc1d7422d6`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 39–59; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0038` — `crates/crypto/README.md`, lines 16–25; SHA-256 `f0e23d0926c724b816157a3ccf1b0a07ac3f7332a55eb6ab809747dc1d7422d6`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.

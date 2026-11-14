@@ -7,15 +7,15 @@
 - **Purpose:** Human authority, agent change boundaries and evidence discipline.
 - **Level:** `02-governance`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-PRIN-002](<../01-purpose/principles.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
 
-Owner messages override procedural source text. This task is documentation-only; implementation and publication remain paused.
+Owner messages override procedural source text. The earlier documentation-only implementation pause is historical; HPX-OWNER-007 and later scoped owner instructions govern implementation authority. Publication and external issue/comment changes still require explicit current authorisation. This reconciliation itself changes documentation only.
 
 
 ## Normative content
@@ -24,7 +24,7 @@ Owner messages override procedural source text. This task is documentation-only;
 
 For the current owner-and-agent arrangement, use the existing development-state handoff and update only affected requirement/test/compatibility/decision rows for a material increment. Preserve the minimal chain **finding → requirement/decision → specification → code impact → actual or pending check**. A minor factual correction does not require another report, ADR, GitHub issue, PR or approval round. Create an ADR when choosing consequential semantics, not merely to restate an accepted rule. External issue/comment actions and publication still require their own authorization.
 
-The source-era procedures below retain their historical context; references to a bounded issue are not a requirement to contact GitHub for each local increment. Current navigation is [docs/README.md](../README.md), and current execution scope is in the [development state](../09-guides/reference/DEVELOPMENT_STATE.md). The owner's review-integration instruction authorizes documentation corrections only. Application work remains stopped. This reduces record duplication, not mathematical precision, exceptional cases, test obligations, future capability or human authority over substantive design/security changes.
+The source-era procedures below retain their historical context; references to a bounded issue are not a requirement to contact GitHub for each local increment. Current navigation is [docs/README.md](../README.md), and current execution scope is in the [development state](../09-guides/reference/DEVELOPMENT_STATE.md). The earlier review-integration instruction authorised documentation corrections only; it is not a current blanket application stop. Use the linked current execution scope and owner decisions, without inferring publication or unrelated implementation authority. This reduces record duplication, not mathematical precision, exceptional cases, test obligations, future capability or human authority over substantive design/security changes.
 
 
 ### 8. Implementation documentation rule
@@ -41,7 +41,7 @@ Source title/navigation context retained by this subsection; no additional requi
 
 ### Current owner instruction: publication hold
 
-Source `HPX-SRC-0002`, original lines 3–26. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0002`, original lines 3–26. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0002-S002`. Original dates and implementation observations remain historical evidence.
 
 The owner explicitly instructed “Don't push to github unless I ask you.” Do not push, release or make GitHub issue/comment updates until the owner explicitly requests publication again. Local implementation/testing remains authorized. Use local work records while held. Automatic milestone publication is not authorised. The owner authorized one milestone push on 2026-10-25, including a refreshed README screenshot. After that push, this hold remains in force; do not treat the one-time authorization as permission for subsequent publication.
 
@@ -69,8 +69,8 @@ The owner explicitly instructed “Don't push to github unless I ask you.” Do 
 
 ## Source provenance
 
-- `HPX-SRC-0026` — `docs/06-subsystems/interfaces/domain-navigation.md`, lines 126–130; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0002` — `AGENTS.md`, lines 1–2; SHA-256 `395aadaad5ede26c3e7091502e8266720e4d229fc40c7734ed810906f7aebac1`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0002` — `AGENTS.md`, lines 3–26; SHA-256 `395aadaad5ede26c3e7091502e8266720e4d229fc40c7734ed810906f7aebac1`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0026` — `docs/06-subsystems/interfaces/domain-navigation.md`, lines 126–130; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0002` — `AGENTS.md`, lines 1–2; SHA-256 `395aadaad5ede26c3e7091502e8266720e4d229fc40c7734ed810906f7aebac1`. Original bytes and paths are recorded in [source manifest](<registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0002` — `AGENTS.md`, lines 3–26; SHA-256 `395aadaad5ede26c3e7091502e8266720e4d229fc40c7734ed810906f7aebac1`. Original bytes and paths are recorded in [source manifest](<registers/source-manifest.csv>); archive is local/ignored.
 
-Current release-history location: [CHANGELOG.md](../releases/CHANGELOG.md). Retained source wording above keeps its historical basename.
+Current release-history location: [CHANGELOG.md](../08-assurance/releases/CHANGELOG.md). Retained source wording above keeps its historical basename.

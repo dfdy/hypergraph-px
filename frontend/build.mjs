@@ -7,7 +7,7 @@ export async function buildFrontend({snapshotOnly=false}={}){
  const file=path=>resolve(frontend,path);
  const snapshot=await cachedBuild(async output=>{
   await mkdir(resolve(output,'vendor/katex'),{recursive:true});await mkdir(resolve(output,'vendor/dockview'),{recursive:true});await mkdir(resolve(output,'vendor/webawesome'),{recursive:true});await mkdir(resolve(output,'assets'),{recursive:true});
-  await copyFile(file('../docs/assets/logo.png'),resolve(output,'assets/logo.png'));
+  await copyFile(file('../docs/01-purpose/assets/logo.png'),resolve(output,'assets/logo.png'));
   await build({absWorkingDir:frontend,entryPoints:['src/app.js'],bundle:true,format:'esm',minify:true,outfile:resolve(output,'app.js'),legalComments:'linked'});
   const version=JSON.parse(await readFile(file('package.json'),'utf8')).version+'.0';
   await writeFile(resolve(output,'index.html'),(await readFile(file('index.html'),'utf8')).replace('Version pending','v'+version));

@@ -1,0 +1,79 @@
+// Source-backed flat conceptual projection meanings; not new modules or storage engines.
+model {
+  extend hpx.native.domain {
+    projection_composition = domain_concept "Occurrence structure" {
+      link ../hypergraph-mathematics.md#creation-context-versus-graph-structure--hpx-owner-048
+      link ../hypergraph-mathematics.md#entities-and-identities
+      description "Ordered rooted forest per resolved document view; repeated placements are distinct and each non-root occurrence has one structural parent. Sharing refers from placements to content, not multiple structural parents."
+      metadata { scope "conceptual only" source "HPX-SRC-0025:L5-L19;HPX-SRC-0026:L31-L41" authority "source-scoped;existing acceptance retained" }
+    }
+    projection_references = domain_concept "References and semantic links" {
+      description "Typed directed multigraph; parallel, self and cyclic references allowed. Semantic assertions are neither proof of entailment nor permission grants."
+      metadata { scope "conceptual only" source "HPX-SRC-0025:L5-L19;HPX-SRC-0026:L31-L41" authority "source-scoped;existing acceptance retained" }
+    }
+    projection_expansion = domain_concept "Selected expansion dependencies" {
+      link ../proposals/finite-cycle-closure-state.md#authority-and-bounded-outcome
+      link ../proposals/finite-cycle-closure-state.md#1-freeze-a-finite-selected-state-bundle
+      link ../proposals/finite-cycle-closure-state.md#2-proposed-recurrence-equivalence
+      link ../proposals/finite-cycle-closure-state.md#3-finite-uses-and-exact-cycle-boundaries
+      link ../proposals/finite-cycle-closure-state.md#4-outcomes-completeness-and-exact-reconstruction
+      link ../proposals/finite-cycle-closure-state.md#5-worked-cases
+      link ../proposals/finite-cycle-closure-state.md#6-deliberate-navigation-and-two-distinct-warning-lifecycles
+      link ../../07-implementation/formal-invariants.md#model-boundary-and-definitions-to-review-first
+      link ../../07-implementation/formal-invariants.md#dependency-order-and-supporting-lemmas
+      link ../../07-implementation/formal-invariants.md#hpx-prop-006--stopping-termination-and-recurrence-correctness
+      link ../../07-implementation/formal-invariants.md#hpx-prop-007--complete-results-and-deterministic-reconstruction
+      link ../../07-implementation/formal-invariants.md#hpx-prop-008--warning-and-deliberate-navigation
+      link ../../03-requirements/acceptance-criteria.md#cycle-aware-inclusion-acceptance--hpx-owner-041
+      link ../hypergraph-mathematics.md#operational-bounds-and-exact-cycle-meaning--owner054
+      link ../../06-subsystems/interfaces/domain-navigation.md#operational-reconstruction-admission--owner054
+      link ../../07-implementation/algorithms/expansion-validation.md#mathematical-definition
+      link ../proposals/reconstruction-operational-limits.md#bounded-cycle-navigation-and-budget-independence
+      link ../proposals/reconstruction-operational-limits.md#conditional-supplier-interfaces
+      link ../proposals/reconstruction-operational-limits.md#failure-and-explicit-recovery
+      link ../proposals/reconstruction-operational-limits.md#future-conformance-matrix--unexecuted
+      link ../proposals/reconstruction-operational-limits.md#one-intent-one-accounting-lifetime
+      link ../proposals/reconstruction-operational-limits.md#phase-and-resource-accounting
+      link ../proposals/reconstruction-operational-limits.md#representation-and-measurement-dependencies
+      link ../proposals/reconstruction-operational-limits.md#result-authority-and-completion-boundary
+      description "Saved inclusion may cycle under OWNER041. Finite exact selected-state expansion stops at warned cycle-closing boundaries; repeated siblings and finite older-version uses are not cycles merely because logical identities repeat. Work/output refusal is not a cycle or complete result."
+      metadata { scope "conceptual only" source "HPX-SRC-0025:L5-L19;HPX-SRC-0026:L31-L41;HPX-OWNER-041/045/047/051/053/054/055" authority "OWNER041 supersedes only inherited blanket cyclic-inclusion rejection;implementation remains bounded DAG helper" }
+      link ../hypergraph-mathematics.md#accepted-cycle-aware-inclusion-policy--hpx-owner-041
+      link ../proposals/exact-closure-source-map.md
+    }
+    projection_ancestry = domain_concept "Revision ancestry" {
+      description "Immutable same-node DAG; divergent revisions remain retained and merge parents cannot name unrelated logical identities. This acyclic projection is distinct from cyclic inclusion or references."
+      metadata { scope "conceptual only" source "HPX-SRC-0025:L5-L19;HPX-SRC-0026:L31-L41" authority "source-scoped;existing acceptance retained" }
+    }
+    projection_derivation = domain_concept "Transformation provenance" {
+      description "Cross-identity incidence linking exact ordered immutable inputs to a transformation event and that event to outputs; source context and ranges matter for extraction, split and multi-source merge. Never substitute same-node revision parents for derivation."
+      metadata { scope "conceptual only" source "HPX-SRC-0025:L5-L19;HPX-SRC-0026:L31-L41" authority "source-scoped;existing acceptance retained" }
+    }
+    projection_closure = domain_concept "Snapshot resolution" {
+      link ../proposals/exact-closure-source-map.md#5-deterministic-derivation-and-caches--choice6a
+      link ../proposals/reconstruction-correspondence.md#required-refinement-obligations
+      description "Finite exact bindings for every required reachable occurrence context, including nested, repeated and revision/descendant-closure-pinned uses. Historical selection never resolves current heads. Exact byte, authority, resource and format invariants remain linked contracts."
+      metadata { scope "conceptual only" source "HPX-SRC-0025:L5-L19;HPX-SRC-0026:L31-L41;HPX-OWNER-041/045/055" authority "source-scoped;existing acceptance retained;not complete resolver implementation" }
+    }
+  }
+}
+views {
+  view concept_graph_projections of hpx.native.domain {
+    title "Conceptual / Distinct graph projections"
+    description "HPX-CAN-025. Six source-defined conceptual projections, not six components/databases or a global graph constraint. Canonical projection meanings from DOM002; existing exact algorithm/format/permission contracts remain required. Dependency/topological order is not authorial reading order. Canonical records are stored once; derived indexes are not historical authority. Wall-clock time is not ancestry or causal operation order. OWNER041 permits saved cyclic inclusions with bounded exact-state boundaries; revision ancestry remains acyclic. No mechanism, code or proof is newly adopted."
+    link ../../06-subsystems/diagrams/pure-domain.c4
+    link ../hypergraph-mathematics.md
+    link ../../06-subsystems/interfaces/domain-navigation.md
+    link ../proposals/reconstruction-correspondence.md
+    group "Conceptual subject: distinct graph projections" {
+      include hpx.native.domain.projection_composition
+      include hpx.native.domain.projection_references
+      include hpx.native.domain.projection_expansion
+      include hpx.native.domain.projection_ancestry
+      include hpx.native.domain.projection_derivation
+      include hpx.native.domain.projection_closure
+    }
+    exclude * -> *
+    autoLayout LeftRight 110 90 spline
+  }
+}

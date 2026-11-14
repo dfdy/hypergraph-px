@@ -1,5 +1,24 @@
 # Multi-user and AI Collaboration
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-013-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-013-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-013-03` [1. Mandatory multi-user baseline — HPX-RQ-032](#1-mandatory-multi-user-baseline--hpx-rq-032) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-013-04` [2. AI agents are users — HPX-RQ-033](#2-ai-agents-are-users--hpx-rq-033) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-013-05` [3. Multiple AI agents in one workspace — HPX-RQ-034](#3-multiple-ai-agents-in-one-workspace--hpx-rq-034) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-013-06` [4. Chat is workspace graph content — HPX-RQ-035](#4-chat-is-workspace-graph-content--hpx-rq-035) | [hpx.native.domain.source_plans.concept_interaction](../05-domain/diagrams/provenance-working.c4) · `HPX-CAN-028` · [concept_provenance_working](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-013-07` [5. Selected-node editing through MCP — HPX-RQ-036](#5-selected-node-editing-through-mcp--hpx-rq-036) | [hpx.native.transport.client_access](diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-013-08` [6. Interfaces and boundaries — HPX-RQ-037/038](#6-interfaces-and-boundaries--hpx-rq-037038) | [hpx.native.application.admission](diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-013-09` [7. Authority and implementation limits](#7-authority-and-implementation-limits) | Prose only: Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined. |
+| `HPX-BIND-013-10` [8. Acceptance obligations](#8-acceptance-obligations) | [hpx.native.transport.client_access](diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-013-11` [Source and authority](#source-and-authority) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-SUB-010`
@@ -15,9 +34,14 @@
 - **Decision/history:** Reserved HPX-SUB-010 materialised under explicit owner direction; earlier single-human product staging/proposal-only restrictions are qualified below
 - **Last reviewed:** 2026-11-01
 
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN026 / Authority lifecycle and custody](contracts/authority-lifecycle.md), [CAN028 / Shared API chat and selected MCP design](contracts/shared-api-chat-mcp.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
+
 ## 1. Mandatory multi-user baseline — HPX-RQ-032
 
-User structure and cardinality are canonical in [C1/C2](../architecture/context.c4), HPX-CAN-002. Development with one human does not constrain product architecture; a single SQLite writer is not a user limit. The interaction and enforcement obligations below supplement the diagrams.
+User structure and cardinality are canonical in [C1/C2](../04-architecture/diagrams/context.c4), HPX-CAN-002. Development with one human does not constrain product architecture; a single SQLite writer is not a user limit. The interaction and enforcement obligations below supplement the diagrams.
 
 ## 2. AI agents are users — HPX-RQ-033
 
@@ -49,7 +73,7 @@ Inputs: workspace-local authenticated user, workspace permissions, selected-node
 
 ### Creation context for human and machine users — HPX-RQ-039
 
-Every created node, including chat/context/result nodes, obeys [M1's accepted creation-origin invariant](../architecture/Conceptual/identity-closure.c4) and the [context contract](../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048). Machine requests require explicit equivalent initiating placement context, not a literal browser caret. Backend validation must determine the parent or position and reject missing/ambiguous context under ordinary permissions; inference, provider identity and node selection cannot invent placement or grant authority. This selects no chat, identity, context-payload or MCP wire format.
+Every created node, including chat/context/result nodes, obeys [M1's accepted creation-origin invariant](../05-domain/diagrams/identity-closure.c4) and the [context contract](../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048). Machine requests require explicit equivalent initiating placement context, not a literal browser caret. Backend validation must determine the parent or position and reject missing/ambiguous context under ordinary permissions; inference, provider identity and node selection cannot invent placement or grant authority. This selects no chat, identity, context-payload or MCP wire format.
 
 ## 7. Authority and implementation limits
 

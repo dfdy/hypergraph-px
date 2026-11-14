@@ -1,9 +1,0 @@
-{
-  "$schema": "https://likec4.dev/schemas/config.json",
-  "name": "hpx-v3",
-  "title": "HPX Specification V3",
-  "exclude": [
-    "**/node_modules/**",
-    "**/site/**"
-  ]
-}

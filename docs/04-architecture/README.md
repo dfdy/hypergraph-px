@@ -1,6 +1,6 @@
 # Architecture
 
-Structural definitions now live in the [LikeC4 specification](../architecture/SPECIFICATION.md). This folder retains linked contracts and ADRs; architecture summaries delegate to diagram-owned scopes rather than reproduce them.
+Structural definitions now live in the [LikeC4 specification](SPECIFICATION.md). This folder retains linked contracts and ADRs; architecture summaries delegate to diagram-owned scopes rather than reproduce them.
 
 - [Component and Module Architecture](<component-architecture.md>) — `HPX-ARCH-002`; proposed.
 - [Data and Storage Architecture](<data-architecture.md>) — `HPX-ARCH-003`; proposed.
@@ -8,13 +8,12 @@ Structural definitions now live in the [LikeC4 specification](../architecture/SP
 - [Existing ADR 0002, retain decision identity/status](<decisions/0002-trusted-server-envelopes.md>) — `HPX-ADR-002`; proposed.
 - [Existing ADR 0003, retain decision identity/status](<decisions/0003-sqlite-local-writer.md>) — `HPX-ADR-003`; proposed.
 - [Existing ADR 0004, retain decision identity/status](<decisions/0004-local-https-bootstrap.md>) — `HPX-ADR-004`; proposed.
-- [Documentation migration and archive authority](<decisions/0005-documentation-migration.md>) — `HPX-ADR-005`; proposed.
 - [Serialization outside the pure domain](<decisions/0006-domain-serialization-boundary.md>) — `HPX-ADR-006`; accepted.
 - [Explicit persistent record versions](<decisions/0007-explicit-record-versions.md>) — `HPX-ADR-007`; accepted.
 - [Retained immutable committed history](<decisions/0011-retained-history.md>) — `HPX-ADR-011`; accepted.
 - [System Architecture](<system-architecture.md>) — `HPX-ARCH-001`; proposed.
 
-Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
+Unpopulated future topics remain reserved in the [document register](../02-governance/registers/document-inventory.csv); no empty specification implies an implemented service.
 
 - [Accepted keychain unlock/recovery policy](decisions/0014-keychain-unlock-policy.md) — HPX-ADR-014; owner approved 2026-10-25; evidence tracked separately.
 - [Accepted semantic annotation/snapshot scope](decisions/0010-semantic-annotation-snapshots.md) — HPX-ADR-010; owner adopted separate versioned overlays; implementation/evidence tracked separately.

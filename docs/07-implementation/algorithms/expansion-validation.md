@@ -1,5 +1,16 @@
 # Bounded expansion DAG validation
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-026-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-026-02` [Mathematical definition](#mathematical-definition) | [hpx.native.domain.projection_expansion](../../05-domain/diagrams/graph-projections.c4) · `HPX-CAN-025` · [concept_graph_projections](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-026-03` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-ALGO-001`
@@ -7,12 +18,12 @@
 - **Purpose:** Bounded Kahn expansion validation and its exact work/error contract.
 - **Level:** `07-implementation`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-DOM-002](<../../05-domain/hypergraph-mathematics.md>); [HPX-API-001](<../../06-subsystems/interfaces/domain-navigation.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
 
 Only the spend helper has an extracted-Rust proof. Graph examples/oracle tests are separate evidence.
@@ -37,4 +48,4 @@ Five tests cover repeated/parallel/isolated dependencies, self/long/disconnected
 
 ## Source provenance
 
-- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 131–138; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 131–138; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.

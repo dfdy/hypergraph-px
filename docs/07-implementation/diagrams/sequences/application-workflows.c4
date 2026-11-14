@@ -1,0 +1,206 @@
+// Canonical definition location: HPX-CAN-006 (HPX-OWNER-032). Existing design/implementation statuses retain their authority; see docs/04-architecture/SPECIFICATION.md.
+views {
+ dynamic view seq_application_transaction {
+ variant sequence
+ title "Sequence / Application coordination — Authorize, reconcile and publish"
+ description "Shared writer spine for all supported ordinary Command variants. Session/unlock and decoding precede entry. Command digest uses adapter serde representation,not raw HTTP bytes. Existing execute_inner fragments are not separate services. Fresh commands check mutable preconditions only after replay misses. Production checkpoint callback is no-op; fault-injection hooks are test context. COMMIT is not receipt delivery."
+ link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/application-coordination-audit.md
+ link ../../../../backend/crates/storage/src/lib.rs
+ link ../../../../backend/crates/storage/src/authority.rs
+ link ../../../../backend/crates/runtime/src/main.rs
+ link ../../protocols/draft-publication.md
+ hpx.native.transport.api.c4_publication -> hpx.native.storage.c4_publication "Decoded operation and Command; trusted unlocked Workspace identity"
+ hpx.native.storage.c4_publication -> hpx.native.application.admission.validation_code "validate_command: feature structure and limits"
+ alt "Input validation" {
+ when "Rejected" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Invalid/Limit; no transaction or publication"
+ }
+ else "Valid" {
+ hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Serialize Command in zeroizing adapter buffer; SHA256; attempt BEGIN IMMEDIATE and supported schema check"
+ alt "Writer/schema admission" {
+ when "Busy/IO or unsupported schema" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Error; no authorized feature execution"
+ }
+ else "Supported schema1/2 writer" {
+ hpx.native.storage.c4_publication -> hpx.native.authority.c4_checks "Check current owner/device and command source scope"
+ hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Typed branch/working/reference authority checks before receipt lookup"
+ alt "Current scope" {
+ when "Denied or invalid current source" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Fail closed; no retained outcome disclosed"
+ }
+ else "Current scope allowed" {
+ hpx.native.storage.c4_publication -> hpx.native.storage.coordination_records "Read StoredReceipt by original operation"
+ alt "Original receipt lookup" {
+ when "Corrupt/decryption error or changed digest/operation" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Integrity/Conflict; do not execute replacement intent"
+ }
+ when "Matching original record" {
+ hpx.native.storage.c4_publication -> hpx.native.authority.c4_checks "Reauthorize stored Outcome including source/output scope"
+ alt "Outcome scope" {
+ when "Denied" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Deny retained receipt"
+ }
+ else "Still authorized" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Return original receipt before mutable generation checks; no new write"
+ }
+ }
+ }
+ else "NotFound only" {
+ hpx.native.storage.c4_publication -> hpx.native.application.dispatch.match_code "Dispatch new operation in the same writer transaction"
+ hpx.native.application.dispatch.match_code -> hpx.native.application.dispatch.match_code "Feature helpers recheck exact draft/head/source expectations and stage effects"
+ alt "Feature result" {
+ when "Stale/invalid/budget/IO failure before COMMIT" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Abort/drop transaction; no partial staged result published"
+ }
+ else "Staged Outcome" {
+ hpx.native.storage.c4_publication <- hpx.native.application.dispatch.match_code "Return Outcome; Save remains mutable,Commit is immutable history"
+ hpx.native.storage.c4_publication -> hpx.native.storage.coordination_records "Insert StoredReceipt with original digest and Outcome in the same transaction"
+ alt "Receipt staging" {
+ when "Insert fails" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Abort before COMMIT; no receipt/result publication"
+ }
+ else "Receipt staged" {
+ hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Attempt tx.commit: bind staged effects and receipt"
+ alt "COMMIT observation" {
+ when "Returns error or process exits before outcome known" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Do not infer success or safe fresh operation; reconcile original" { navigateTo seq_uncertain }
+ }
+ else "COMMIT succeeds" {
+ hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Result and original receipt are durably published under SQLite guarantees"
+ opt "Test-only committed checkpoint fails/exits;production callback is no-op" {
+ break "After-COMMIT fault is not rollback" {
+ hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Retained result/receipt survive; response may never be observed"
+ }
+ }
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Return original Receipt; not proof the browser observed it"
+ opt "Response lost or invalid for browser" {
+ hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Keep original frozen intent and recover through existing uncertain-outcome workflow" { navigateTo seq_uncertain }
+ }
+ }
+ }
+ }
+ }
+ }
+ }
+ }
+ }
+ }
+ }
+ }
+ }
+ }
+ }
+ style * { color primary }
+ style element.tag = #planned { color muted; border dashed }
+ include hpx.native.transport.api.c4_publication with { navigateTo c4_api_routes }
+ include hpx.browser.c4_protocol with { navigateTo seq_uncertain }
+ include hpx.native.storage.c4_publication with { navigateTo c4_application_transaction }
+ include hpx.native.application.admission.validation_code with { navigateTo c4_application_transaction }
+ include hpx.native.authority.c4_checks with { navigateTo c4_application_transaction }
+ include hpx.native.storage.coordination_records with { navigateTo c3_workspace_persistence }
+ include hpx.native.application.dispatch.match_code with { navigateTo c4_application_features }
+ }
+ dynamic view seq_application_read {
+ variant sequence
+ title "Sequence / Application coordination — Read an exact retained snapshot"
+ description "Representative actual reconstruct_snapshot read. Other query families enforce their own scopes/budgets/transactions; no common read facade is inferred. An immutable snapshot identifier does not grant current authority. Missing/mismatched retained data fails; no current-head or provider repair. Read transaction commit is not content Commit."
+ link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/application-coordination-audit.md
+ link ../../../../backend/crates/storage/src/lib.rs
+ link ../../../../backend/crates/storage/src/authority.rs
+ link ../../../../backend/crates/runtime/src/main.rs
+ link ../../../06-subsystems/interfaces/domain-navigation.md
+ hpx.native.transport.api -> hpx.native.storage.c4_history "After session/unlock guards: document and exact SnapshotId"
+ hpx.native.storage.c4_history -> hpx.native.storage.c4_history "Begin read transaction; bind Cipher to current workspace"
+ hpx.native.storage.c4_history -> hpx.native.authority.c4_checks "authority::catalog checks current owner/device; document scope"
+ alt "Current authority" {
+ when "Denied/catalog integrity failure" {
+ hpx.native.transport.api <- hpx.native.storage.c4_history "NotFound/Integrity; no retained source returned"
+ }
+ else "Authorized document" {
+ hpx.native.storage.c4_history -> hpx.native.storage.coordination_records "Load Document; verify requested identity; reconstruct exact retained snapshot"
+ alt "Exact record closure" {
+ when "Missing/authentication/decode/binding mismatch" {
+ hpx.native.transport.api <- hpx.native.storage.c4_history "Explicit error; no live-head substitution or partial historical text"
+ }
+ else "One-binding retained snapshot valid" {
+ hpx.native.storage.c4_history <- hpx.native.storage.coordination_records "Exact source bytes as Rust String; preserve line endings"
+ hpx.native.storage.c4_history -> hpx.native.storage.c4_history "Commit read transaction; no revision/head/receipt mutation"
+ hpx.native.transport.api <- hpx.native.storage.c4_history "Return text; runtime encodes response outside pure domain"
+ }
+ }
+ }
+ }
+ style * { color primary }
+ style element.tag = #planned { color muted; border dashed }
+ include hpx.native.transport.api with { navigateTo c4_api_routes }
+ include hpx.native.storage.c4_history with { navigateTo c4_application_reads }
+ include hpx.native.authority.c4_checks with { navigateTo c4_application_transaction }
+ include hpx.native.storage.coordination_records with { navigateTo c3_workspace_persistence }
+ }
+ dynamic view seq_application_checkpoint {
+ variant sequence
+ title "Sequence / Application coordination — Capture and promote a working reference"
+ description "Existing WorkingCopy path once shared writer admission/replay has accepted a new operation. Capture is private retained workflow state,not source Commit. WorkingCopy stages both checkpoint and reference atomically. A later exact Commit promotes matching checkpoints without erasing their unpublished origins; clipboard replacement is a separate browser operation."
+ link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/application-coordination-audit.md
+ link ../../../../backend/crates/storage/src/lib.rs
+ link ../../../../backend/crates/storage/src/working.rs
+ link ../../../../backend/crates/storage/src/working_clipboard.rs
+ link ../../../../frontend/src/runtime-adapter.js
+ link ../../../04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md
+ hpx.native.transport.api.c4_publication -> hpx.native.storage.c4_publication "Frozen WorkingCopy; exact document/branch/base/draft generation/sequence and byte quote"
+ hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Shared validation/current scope/replay; only a new operation proceeds" { navigateTo seq_application_transaction }
+ hpx.native.storage.c4_publication -> hpx.native.storage.domain_working "working::apply in the shared writer transaction"
+ hpx.native.storage.domain_working -> hpx.native.storage.coordination_records "Read current head/draft and retained working state"
+ hpx.native.storage.domain_working -> hpx.native.storage.domain_working "Check exact generation/base/sequence; pure working::capture checks byte range/quote/owned text"
+ alt "Capture preconditions" {
+ when "Stale/invalid/limit/integrity failure" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Conflict/error; no checkpoint/reference publication"
+ }
+ else "Exact source accepted" {
+ hpx.native.storage.domain_working -> hpx.native.storage.coordination_records "Stage immutable private checkpoint and working-state slot"
+ hpx.native.storage.c4_publication <- hpx.native.storage.domain_working "Checkpoint Change,still unpublished text history"
+ hpx.native.storage.c4_publication -> hpx.native.storage.coordination_private_refs "working_clipboard::capture with expected private-list generation"
+ alt "Private reference state" {
+ when "Stale list/full/error" {
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Abort whole writer transaction including checkpoint; preserve source"
+ }
+ else "Reference staged" {
+ hpx.native.storage.coordination_private_refs -> hpx.native.storage.coordination_records "Stage retained reference plus encrypted private index"
+ hpx.native.storage.c4_publication <- hpx.native.storage.coordination_private_refs "WorkingCopied outcome with exact checkpoint/source identity"
+ hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Stage original receipt and COMMIT both effects" { navigateTo seq_application_transaction }
+ hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Original receipt or uncertain acknowledgement; no source revision implied"
+ opt "Later Commit exactly matches checkpoint text and base" {
+ hpx.native.storage.c4_publication -> hpx.native.storage.domain_working "working::promote inside text Commit transaction" { navigateTo seq_commit }
+ hpx.native.storage.domain_working -> hpx.native.storage.coordination_records "Retain checkpoint; bind promotion to exact revision/snapshot; no rewrite of origin"
+ hpx.native.transport.api.c4_publication -> hpx.native.storage.c4_publication "Later separate WorkingClipboard promotion command; own frozen operation and admission" { navigateTo seq_application_transaction }
+ hpx.native.storage.c4_publication -> hpx.native.storage.coordination_private_refs "After its own admission/replay: private-list promotion,not a second text Commit"
+ alt "Separate private-list operation" {
+  when "Helper rejects stale state or other pre-COMMIT failure" {
+   hpx.native.storage.c4_publication <- hpx.native.storage.coordination_private_refs "Error; abort this private-list transaction"
+   hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Report reference replacement needs attention; earlier text Commit remains"
+  }
+  else "Private-list state staged" {
+   hpx.native.storage.c4_publication <- hpx.native.storage.coordination_private_refs "Updated private-list Outcome"
+   hpx.native.storage.c4_publication -> hpx.native.storage.c4_publication "Publish separate Outcome and original receipt atomically" { navigateTo seq_application_transaction }
+   hpx.native.transport.api.c4_publication <- hpx.native.storage.c4_publication "Original private-list receipt; no new text Commit"
+   opt "Acknowledgement is lost" {
+    hpx.browser.c4_protocol -> hpx.browser.c4_protocol "Recover the separate original operation; retain earlier text Commit" { navigateTo seq_uncertain }
+   }
+  }
+ }
+
+ }
+ }
+ }
+ }
+ }
+ style * { color primary }
+ style element.tag = #planned { color muted; border dashed }
+ include hpx.native.transport.api.c4_publication with { navigateTo c4_api_routes }
+ include hpx.browser.c4_protocol with { navigateTo seq_uncertain }
+ include hpx.native.storage.c4_publication with { navigateTo c4_application_transaction }
+ include hpx.native.storage.domain_working with { navigateTo c4_application_features }
+ include hpx.native.storage.coordination_private_refs with { navigateTo c4_application_features }
+ include hpx.native.storage.coordination_records with { navigateTo c3_workspace_persistence }
+ }
+}

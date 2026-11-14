@@ -1,0 +1,17 @@
+{
+  "name": "hypergraph-px-architecture",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "setup": "node ../shared/tooling/likec4.mjs setup",
+    "dev": "node ../shared/tooling/likec4.mjs dev",
+    "validate": "node ../shared/tooling/likec4.mjs validate",
+    "build": "node ../shared/tooling/likec4.mjs build",
+    "mcp": "node ../shared/tooling/likec4.mjs mcp"
+  },
+  "devDependencies": {
+    "likec4": "1.60.0"
+  }
+}

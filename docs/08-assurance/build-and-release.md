@@ -1,5 +1,18 @@
 # Build and Release
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-031-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-031-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-031-03` [Normative content](#normative-content) | [hpx.native.frontend_assets](../04-architecture/diagrams/executable.c4) · `HPX-CAN-003` · [c3_executable](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-031-04` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-031-05` [Release qualification](#release-qualification) | [hpx.native.frontend_assets](../04-architecture/diagrams/executable.c4) · `HPX-CAN-003` · [c3_executable](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-ASSUR-005`
@@ -7,16 +20,21 @@
 - **Purpose:** Build/release procedures, SemVer and publication hold.
 - **Level:** `08-assurance`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
 
 Recorded checks retain original source/toolchain/time scope. No new software validation claim follows from documentation assembly.
 
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN030 / Integration export and delivery design](../06-subsystems/contracts/integrations-and-delivery.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Normative content
 
@@ -41,11 +59,11 @@ The public contract comprises exported Rust APIs and documented behavior, and su
 
 ## Source provenance
 
-- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 94–107; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 94–107; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 
 ## Release qualification
 
 State platform libraries and static-link limits accurately for each release target. A diagram-owned deployment boundary does not establish a fully static build or production acceptance.
 
-Current release-history location: [CHANGELOG.md](../releases/CHANGELOG.md). Retained source wording above keeps its historical basename.
+Current release-history location: [CHANGELOG.md](releases/CHANGELOG.md). Retained source wording above keeps its historical basename.

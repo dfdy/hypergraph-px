@@ -7,4 +7,4 @@ Level `02-governance`. This is navigation, not a new requirement. See the [docum
 - [Licensing and Intellectual Property](<licensing-policy.md>) — `HPX-GOV-002`; proposed.
 - [Roadmap and Milestones](<roadmap.md>) — `HPX-GOV-004`; proposed.
 
-Unpopulated future topics remain reserved in the [document register](../registers/document-inventory.csv); no empty specification implies an implemented service.
+Unpopulated future topics remain reserved in the [document register](registers/document-inventory.csv); no empty specification implies an implemented service.

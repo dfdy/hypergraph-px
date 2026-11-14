@@ -4,7 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {testBrowser} from './browser-session.mjs';
 
 const frontend=fileURLToPath(new URL('../',import.meta.url));
-const output=fileURLToPath(new URL('../../docs/assets/desktop-preview.png',import.meta.url));
+const output=fileURLToPath(new URL('../../docs/09-guides/assets/desktop-preview.png',import.meta.url));
 execFileSync(process.execPath,['build.mjs'],{cwd:frontend,stdio:'inherit'});
 const server=spawn(process.execPath,['server.mjs'],{
  cwd:frontend,env:{...process.env,HYPERGRAPH_PREVIEW_PORT:'5193'},stdio:['ignore','pipe','pipe']

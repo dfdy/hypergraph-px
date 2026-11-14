@@ -1,5 +1,27 @@
 # System Requirements
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-003-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-003-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-003-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-05` [Mandatory multi-user and AI-user baseline, 2026-10-30](#mandatory-multi-user-and-ai-user-baseline-2026-10-30) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-06` [Normative content](#normative-content) | [hpx](../04-architecture/diagrams/context.c4) · `HPX-CAN-001` · [index](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-07` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-003-08` [Owner addition: five distinct content actions, 2026-10-25](#owner-addition-five-distinct-content-actions-2026-10-25) | [hpx](../04-architecture/diagrams/context.c4) · `HPX-CAN-001` · [index](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-09` [Separately reviewed owner additions, 2026-10-25](#separately-reviewed-owner-additions-2026-10-25) | [hpx](../04-architecture/diagrams/context.c4) · `HPX-CAN-001` · [index](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-10` [Owner-confirmed future bundled export scope, 2026-10-26](#owner-confirmed-future-bundled-export-scope-2026-10-26) | [hpx.native.integrations.export](../04-architecture/diagrams/executable.c4) · `HPX-CAN-030` · [c3_integrations](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-11` [HPX-RQ-031: private working branches and exact provenance checkpoints](#hpx-rq-031-private-working-branches-and-exact-provenance-checkpoints) | [hpx.native.application.publication](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-12` [Owner-adopted seamless node editing, 2026-10-27](#owner-adopted-seamless-node-editing-2026-10-27) | [hpx](../04-architecture/diagrams/context.c4) · `HPX-CAN-001` · [index](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-13` [Known node-creation origin — HPX-RQ-039](#known-node-creation-origin--hpx-rq-039) | [hpx](../04-architecture/diagrams/context.c4) · `HPX-CAN-001` · [index](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-003-14` [Retained selections and constructed-version branches — RQ040–041](#retained-selections-and-constructed-version-branches--rq040041) | [hpx](../04-architecture/diagrams/context.c4) · `HPX-CAN-001` · [index](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-REQ-002`
@@ -7,17 +29,22 @@
 - **Purpose:** Observable requirements and invariant commitments, independent of implementation completeness.
 - **Level:** `03-requirements`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-PRIN-002](<../01-purpose/principles.md>); [HPX-PRIN-004](<../01-purpose/scope-and-non-goals.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-11-01
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN027 / Working state exact editing and graph policy](../06-subsystems/contracts/editing-and-graph.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -44,7 +71,7 @@ These are accepted requirements, not implementation claims. Exact identity/grant
 
 ## Normative content
 
-Implementation-status words in retained source passages below belong to their recorded milestone. The [current scope/evidence summary](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) and [requirement register](../registers/requirements.csv) distinguish accepted obligations, local implementation, verified scope and future work. This clarification changes no requirement: in particular general composition, same-identity branch Merge, rights/authority, academic export, client-held mode and federation retain their full intended scope even where implementation is deferred. Thirty-one registered compound seeds and source-coverage counts are not an exhaustive set of individually verified atomic obligations.
+Implementation-status words in retained source passages below belong to their recorded milestone. The [current scope/evidence summary](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) and [requirement register](../02-governance/registers/requirements.csv) distinguish accepted obligations, local implementation, verified scope and future work. This clarification changes no requirement: in particular general composition, same-identity branch Merge, rights/authority, academic export, client-held mode and federation retain their full intended scope even where implementation is deferred. Thirty-one registered compound seeds and source-coverage counts are not an exhaustive set of individually verified atomic obligations.
 
 
 ### Hypergraph PX MU-F — product specification
@@ -55,7 +82,7 @@ Status: current requirements, 2026-10-24. Project version 0.7.0. This document d
 
 ### 2. Data and history invariants
 
-Source `HPX-SRC-0032`, original lines 13–29. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0032`, original lines 13–29. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0032-S003`. Original dates and implementation observations remain historical evidence.
 
 **Text encoding:** UTF-8 is required for document text, textual stored payloads, text API/wire representations and plain-text/Markdown exports. Encrypted objects and other binary containers remain binary; encode their text payloads as UTF-8 before encryption/serialization. Reject malformed UTF-8 at text boundaries rather than silently replacing characters. Preserve exact Unicode content and line endings; encoding does not authorize normalization. Browser UTF-16 indices are an internal coordinate convention and must be explicitly converted at integration boundaries.
 
@@ -74,7 +101,7 @@ Each traversal identifies its projection, order, context, permission scope, dupl
 
 ### 3. Persistence and concurrency
 
-Source `HPX-SRC-0032`, original lines 30–43. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0032`, original lines 30–43. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0032-S004`. Original dates and implementation observations remain historical evidence.
 
 Embedded SQLite is selected for native `.hpx` workspaces. The [core object model](<../05-domain/core-object-model.md>) and [persistence/recovery specification](<../06-subsystems/formats/hpx-workspace.md>) document the current single-owner development writer and its explicit exclusions. That current catalog is not the mandatory multi-user product architecture (HPX-OWNER-027); a single SQLite publication writer does not restrict user cardinality. Portable formats, GitHub backup and federation remain separate milestones.
 
@@ -84,13 +111,15 @@ Transactions bind actor/action, exact affected owners, expected heads, policy an
 
 Five-second idle autosave persists mutable recoverable working drafts separately from immutable commits. Acknowledged drafts survive restart; autosave alone creates no revisions/snapshots/branch transitions. Explicit commit and reviewed structural/agent actions publish history. Older acknowledgements preserve newer typing, selection and undo history.
 
+This paragraph retains the current scoped draft/Commit workflow. [OWNER010](#owner-adopted-seamless-node-editing-2026-10-27) also publishes changed text on node/branch departure. [OWNER050/052 composition recovery](#retained-selections-and-constructed-version-branches--rq040041) requires exact last-acknowledged-autosave selections without cadence-created history; universal future autosave/Commit coupling or separation remains undecided. No historical deletion, new format or general multi-owner save follows.
+
 Future replicated operations carry causal and authenticated author/device/policy evidence; local publication order and timestamps are not a global federation order. A text CRDT alone does not validate structural moves. The concurrency ADR must specify deterministic acceptance/conflicts, offline operations and membership/policy changes before remote mutation is enabled.
 
 Durability acceptance includes interrupted staging/publication, disk/write/fsync failures, corruption, index rebuilding and exact retry. No recoverability claim is made before the relevant mechanism/tests exist.
 
 ### 4. Encryption and authority
 
-Source `HPX-SRC-0032`, original lines 44–59. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0032`, original lines 44–59. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0032-S005`. Original dates and implementation observations remain historical evidence.
 
 **Important medium-term priority:** encrypt and authenticate all browser-to-runtime communication, including loopback, using HTTPS and WSS where applicable. This is a gate before real-data browser integration, independent of storage/client-held encryption. Keep the current synthetic HTTP preview clearly separate. See [transport security](<../06-subsystems/security-cryptography.md>) for certificate trust, bootstrap and acceptance requirements. This capability is not implemented.
 
@@ -108,7 +137,7 @@ Keep cryptographic transport/group-key agreement separate from document synchron
 
 ### 5. Editor and integrations
 
-Source `HPX-SRC-0032`, original lines 60–71. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0032`, original lines 60–71. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0032-S006`. Original dates and implementation observations remain historical evidence.
 
 Provide a desktop writing interface with four default columns, from left to right: (1) a contents tree of chapters, sections and subsections; (2) an editor showing styled Markdown source; (3) a document minimap labelled Navigator, supporting wheel/click/drag/keyboard navigation and current-viewport indication, hide/show and placement on either side of the editor; (4) a split sidebar with upper Interaction tabs (Agent, Comments, Users) and lower Investigation tabs (Relationships, Concepts, Sources, Provenance, History). The left navigator provides Workspace, Document, Graph and History lenses while keeping the heading tree accessible. Preserve whole-document caret, selection and source-ownership mapping. Comments are user-authored document annotations and remain separate from agent conversation. Users shows the known contributors to the current document, with the current human and current agent pinned above other contributing users/agents, each with a distinct display colour. It is a permission-scoped contribution/provenance view rather than a logged-in-user list; showing a contributor does not enable remote editing or grant historical access. Mobile is deferred. Document-local prose and repeated/nested source ownership are part of the core source model rather than late editor exceptions.
 
@@ -123,11 +152,11 @@ The [workspace interface specification](<../06-subsystems/document-engine.md>) e
 
 ## Source provenance
 
-- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 1–4; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 13–29; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 30–43; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 44–59; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 60–71; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 1–4; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 13–29; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 30–43; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 44–59; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0032` — `Specifications/SPECIFICATION.md`, lines 60–71; SHA-256 `5c3b5ea4054e8528a7a8849b42d6ed1f0fdde1a8875734ce40b5893c455b585a`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Owner addition: five distinct content actions, 2026-10-25
 
@@ -156,8 +185,8 @@ HPX-OWNER-009 requires required persistent application/recovery evidence to rema
 
 ## Known node-creation origin — HPX-RQ-039
 
-Accepted under HPX-OWNER-048: [M1](../architecture/Conceptual/identity-closure.c4) defines the universal known-origin and determinable-parent/position precondition for every node kind; [O2](../architecture/Conceptual/placement-effects.c4) applies it before creation effects. [Context and shared-API constraints](../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048) distinguish reusable identity, occurrence placement, root context, ancestry, derivation and machine-equivalent creation context. Creation must not succeed with missing/ambiguous context or a silently selected position. This is specification acceptance, not implementation or a new format.
+Accepted under HPX-OWNER-048: [M1](../05-domain/diagrams/identity-closure.c4) defines the universal known-origin and determinable-parent/position precondition for every node kind; [O2](../05-domain/diagrams/placement-effects.c4) applies it before creation effects. [Context and shared-API constraints](../05-domain/core-object-model.md#creation-origin-and-placement--hpx-owner-048) distinguish reusable identity, occurrence placement, root context, ancestry, derivation and machine-equivalent creation context. Creation must not succeed with missing/ambiguous context or a silently selected position. This is specification acceptance, not implementation or a new format.
 
 ## Retained selections and constructed-version branches — RQ040–041
 
-Under OWNER049/050, [M1](../architecture/Conceptual/identity-closure.c4) and [editor notes](../architecture/C3/browser-organisation.c4) require exact last-successful-autosave composition restoration with nested/repeated inclusion selections, a separate newer-authorised-version indication, and saving an authorised constructed current-document version as a specific branch while retaining logical identity. Routine autosaves must not accumulate historical versions merely because they occur; universal future autosave/Commit separation remains open. [Current scope and unresolved mechanisms](../architecture/proposals/branch-selection-reconciliation.md) preserve original ADR/departure-Commit/history/authority boundaries and distinguish owning branch, constituent selections, private working state, committed snapshots and read-only projections. No unnamed editable-branch premise, main algorithm, cache or storage format is adopted.
+Under OWNER049/050, [M1](../05-domain/diagrams/identity-closure.c4) and [editor notes](../06-subsystems/diagrams/browser/organisation.c4) require exact last-successful-autosave composition restoration with nested/repeated inclusion selections, a separate newer-authorised-version indication, and saving an authorised constructed current-document version as a specific branch while retaining logical identity. Routine autosaves must not accumulate historical versions merely because they occur; universal future autosave/Commit separation remains open. Current scope and unresolved mechanisms preserve original ADR/departure-Commit/history/authority boundaries and distinguish owning branch, constituent selections, private working state, committed snapshots and read-only projections. No unnamed editable-branch premise, main algorithm, cache or storage format is adopted.

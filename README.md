@@ -1,5 +1,5 @@
 # Hypergraph PX
-<img src="docs/assets/logo.png" alt="Hypergraph PX logo" width="128">
+<img src="docs/01-purpose/assets/logo.png" alt="Hypergraph PX logo" width="128">
 
 **Hypergraph PX (HPX)** is a writing and thinking environment born out of my frustration with writing a doctoral dissertation in software that doesn't let me work the way I think.
 
@@ -9,7 +9,7 @@ HPX explores a different approach: treating writing as an evolving network of id
 
 Underlying the project is a commitment to **intellectual autonomy, transparency, privacy, and collaboration**. It is a tool that helps people think together without obscuring who contributed what, including when collaborating with AI. It begins as a personal writing environment but is ultimately intended to become a secure, federated, collaborative commons for writing and inquiry.
 
-![Latest Hypergraph PX desktop runtime with synthetic documents](docs/assets/desktop-preview.png)
+![Latest Hypergraph PX desktop runtime with synthetic documents](docs/09-guides/assets/desktop-preview.png)
 
 *Latest local HTTPS runtime, captured on 2026-10-26 using isolated synthetic documents. Real-document acceptance remains pending.*
 
@@ -41,7 +41,7 @@ For more, see the [project purpose](docs/01-purpose/project-purpose.md), [docume
 
 ## Current status
 
-Source version **1.0.0** includes the integrated one-owner HTTPS/SQLite workflow, exact source and immutable history, opt-in macOS Keychain unlock with retained passphrase recovery, protected provenance captures, independent Fork and reviewed synthesis, retrospective assertions and selected-node graphs. Publication contributors are an explicitly incomplete evidence view. Previously recorded synthetic integration checks have bounded scope; current checkout/release verification is tracked separately. Real-document acceptance and broader feature/platform coverage remain pending. The major version records incompatible domain API and experimental-record decoding changes, not completion of the product. See the [implementation handoff](docs/09-guides/reference/DEVELOPMENT_STATE.md) and [publication record](docs/09-guides/reference/source-publication-1.0.0.md).
+Source version **1.0.0** includes the integrated one-owner HTTPS/SQLite workflow, exact source and immutable history, opt-in macOS Keychain unlock with retained passphrase recovery, protected provenance captures, independent Fork and reviewed synthesis, retrospective assertions and selected-node graphs. Publication contributors are an explicitly incomplete evidence view. Previously recorded synthetic integration checks have bounded scope; current checkout/release verification is tracked separately. Real-document acceptance and broader feature/platform coverage remain pending. The major version records incompatible domain API and experimental-record decoding changes, not completion of the product. See the [implementation handoff](docs/09-guides/reference/DEVELOPMENT_STATE.md) and [publication authority policy](docs/02-governance/licensing-policy.md#owner-attestation-and-publication-authority).
 
 For independent synthetic frontend development, install the locked frontend dependencies, run `npm run dev:mock` from the repository root, and open [http://127.0.0.1:3000/](http://127.0.0.1:3000/). Its content is tab-local and resets on reload. Connected development uses a separate HTTPS frontend on port 3000 and Rust backend on port 8000, with an approved certificate/trust setup and the private launch fragment; it never falls back to HTTP or fixtures for workspace data. See the [repository development guide](docs/09-guides/developers/repository-development.md) for independent/combined commands, configurable ports, debugging and test boundaries. The unfinished integrated runtime is not yet accepted for real documents.
 

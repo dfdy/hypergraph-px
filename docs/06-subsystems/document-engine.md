@@ -1,5 +1,26 @@
 # Document Engine
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-014-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-014-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-014-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-014-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-014-05` [Owner baseline reconciliation, 2026-10-30](#owner-baseline-reconciliation-2026-10-30) | Prose only: Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined. |
+| `HPX-BIND-014-06` [Responsibilities and boundaries](#responsibilities-and-boundaries) | [hpx.native.domain.source_plans](diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-014-07` [State and operations](#state-and-operations) | [hpx.native.domain.source_plans](diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-014-08` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-014-09` [Initial protected Copy implementation evidence, 2026-10-25](#initial-protected-copy-implementation-evidence-2026-10-25) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-014-10` [Initial independent Fork implementation, 2026-10-25](#initial-independent-fork-implementation-2026-10-25) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-014-11` [Owner-approved first Merge scope, 2026-10-26](#owner-approved-first-merge-scope-2026-10-26) | [hpx.native.domain.source_plans](diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-014-12` [Planned Merge into parent branch](#planned-merge-into-parent-branch) | [hpx.native.domain.source_plans](diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-014-13` [Selected-text heading links, owner clarification 2026-10-27](#selected-text-heading-links-owner-clarification-2026-10-27) | [hpx.native.domain.source_plans](diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-SUB-002`
@@ -7,17 +28,22 @@
 - **Purpose:** Composition, source promotion, private clipboard, pinned/live reuse and publication gates.
 - **Level:** `06-subsystems`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-ARCH-001](<../04-architecture/system-architecture.md>); [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN027 / Working state exact editing and graph policy](contracts/editing-and-graph.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -43,7 +69,7 @@ Composition, source promotion, private clipboard, pinned/live reuse and publicat
 
 ### Workspace, reuse and investigation interface
 
-Source `HPX-SRC-0037`, original lines 1–4. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0037`, original lines 1–4. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0037-S001`. Original dates and implementation observations remain historical evidence.
 
 Current specification: required document/workspace behaviour with bounded implementation evidence. Rust runtime, encrypted drafts/publication, references, branches, history and comments exist in explicitly recorded subsets. Full composition, planned Graph tab, multi-user permissions and AI chat/MCP remain incomplete; consult the development state and linked contracts for exact scope. Synthetic previews remain fixture-only and do not establish durability or authority. This contract does not select new schemas or dependencies.
 
@@ -113,9 +139,9 @@ Branch deletion/rename, offline fallback, concurrent head changes and cross-work
 
 ### 8. Backend dependencies and staged acceptance
 
-Source `HPX-SRC-0037`, original lines 93–116. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0037`, original lines 93–116. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0037-S009`. Original dates and implementation observations remain historical evidence.
 
-Logical capabilities (identity, content/anchors, composition, revisions, references, provenance, snapshots, private clipboard, queries, permissions and integrations) are modules inside the application boundary, not mandatory microservices. Browser HTTPS and AI MCP converge on the same authorized planner/publication semantics. Canonical records, reconstructible indexes and protected private user state have distinct responsibilities. SQLite is an available embedded-engine option, **not selected**. Keep the single Rust release executable and local-only initial serving restrictions.
+Logical capabilities (identity, content/anchors, composition, revisions, references, provenance, snapshots, private clipboard, queries, permissions and integrations) are modules inside the application boundary, not mandatory microservices. Browser HTTPS and AI MCP converge on the same authorized planner/publication semantics. Canonical records, reconstructible indexes and protected private user state have distinct responsibilities. SQLite is an available embedded-engine option, **not selected**. Keep the single Rust release executable and local-only initial serving restrictions. The not-selected wording is historical and is qualified by the [responsibilities and ADR003 pointer](#responsibilities-and-boundaries); it is not a current database-choice requirement.
 
 Zotero integration plans include separately selectable/authenticated desktop-local REST and cloud Web API adapters, read-only initially. Their actual protocol/credential/origin contracts require review before code. Bind cited metadata to reconstruction inputs; live provider refresh never changes historical output. GitHub publication remains an explicit external job, not canonical history.
 
@@ -139,15 +165,15 @@ Future export/compilation and external integration capabilities are subject to t
 
 ## Source provenance
 
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 1–4; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 5–10; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 48–70; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 71–80; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 93–116; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 1–4; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 5–10; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 48–70; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 71–80; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 93–116; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Initial protected Copy implementation evidence, 2026-10-25
 
-The trusted-server runtime now implements the protected-reference portion of Copy for exact committed selections in the one-owner whole-document projection. The private chip row survives document changes/restart, offers exact historical inspection, removal/clear and bounded pagination, and never creates a destination fork merely by capturing. Missing/inaccessible sources appear as removable opaque entries without previews. Editor selections with uncommitted source are rejected with a commit-first explanation; source publication remains an explicit separate action. This increment does not implement promotion, fork-paste, multi-component clipboard plans or shared transclusion. See [wire behavior](interfaces/browser-runtime.md#protected-clipboard-subset-2026-10-25), [private record](../07-implementation/data-structures/sqlite-records.md#optional-private-clipboard-record-2026-10-25) and [executed checks](../registers/tests.csv).
+The trusted-server runtime now implements the protected-reference portion of Copy for exact committed selections in the one-owner whole-document projection. The private chip row survives document changes/restart, offers exact historical inspection, removal/clear and bounded pagination, and never creates a destination fork merely by capturing. Missing/inaccessible sources appear as removable opaque entries without previews. Editor selections with uncommitted source are rejected with a commit-first explanation; source publication remains an explicit separate action. This increment does not implement promotion, fork-paste, multi-component clipboard plans or shared transclusion. See [wire behavior](interfaces/browser-runtime.md#protected-clipboard-subset-2026-10-25), [private record](../07-implementation/data-structures/sqlite-records.md#optional-private-clipboard-record-2026-10-25) and [executed checks](../02-governance/registers/tests.csv).
 
 ## Initial independent Fork implementation, 2026-10-25
 

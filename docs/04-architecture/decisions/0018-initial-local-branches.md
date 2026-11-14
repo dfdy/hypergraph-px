@@ -15,6 +15,11 @@
 - **Decision/history:** prepared after the accepted first durable comment workflow; does not implement or accelerate the separately planned parent-branch Merge workflow
 - **Last reviewed:** 2026-10-26
 
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN027 / Working state exact editing and graph policy](../../06-subsystems/contracts/editing-and-graph.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
+
 ## Decision context
 
 Branch identity, same-node revision ancestry and independently recoverable drafts are required, but the first branch's treatment of current uncommitted text is unresolved. The current one-owner writer stores one designated branch/draft per document. Silently cloning a draft, committing it or discarding it when creating/switching branches would choose product semantics that are not specified.
@@ -59,4 +64,4 @@ HPX-OWNER-010 supersedes explicit-user-action-only Commit at logical node/branch
 
 ## Current composition/retention refinement — OWNER049/050, 2026-11-01
 
-The original accepted policy and dated implementation evidence above retain their interpretations. [OWNER049/050](../../02-governance/OWNER_DECISIONS.md#last-autosaved-composition-and-historical-version-accumulation--2026-11-01) now requires last-acknowledged-autosave restoration of exact general composition selections and no historical-version accumulation merely from routine autosaves; universal future autosave/Commit separation is reopened, not newly reaffirmed. Existing private working-state visibility, immutable history and OWNER010 departure Commit are not silently revoked. [Branch reconciliation](../../architecture/proposals/branch-selection-reconciliation.md) separates the requested arbitrary constructed-composition save-as capability from this existing committed-parent child creation/working-source subset. Main construction, capture/publication and general nested-selection recovery mechanisms remain unadopted; no implementation or format change follows.
+The original accepted policy and dated implementation evidence above retain their interpretations. [OWNER049/050](../../02-governance/OWNER_DECISIONS.md#last-autosaved-composition-and-historical-version-accumulation--2026-11-01) now requires last-acknowledged-autosave restoration of exact general composition selections and no historical-version accumulation merely from routine autosaves; universal future autosave/Commit separation is reopened, not newly reaffirmed. Existing private working-state visibility, immutable history and OWNER010 departure Commit are not silently revoked. Branch reconciliation separates the requested arbitrary constructed-composition save-as capability from this existing committed-parent child creation/working-source subset. Main construction, capture/publication and general nested-selection recovery mechanisms remain unadopted; no implementation or format change follows.

@@ -1,5 +1,23 @@
 # Migration, Backup and Recovery
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-033-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-033-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-033-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-033-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-033-05` [Normative content](#normative-content) | [hpx.native.storage](../04-architecture/diagrams/executable.c4) · `HPX-CAN-029` · [c3_integrations](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-033-06` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-033-07` [Bounded audit transport and UI verification, 2026-10-27](#bounded-audit-transport-and-ui-verification-2026-10-27) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-033-08` [Workspace-only local witness proposal](#workspace-only-local-witness-proposal) | [hpx.native.storage](../04-architecture/diagrams/executable.c4) · `HPX-CAN-029` · [c3_integrations](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-033-09` [Portable self-contained recovery direction, 2026-10-27](#portable-self-contained-recovery-direction-2026-10-27) | [hpx.native.storage](../04-architecture/diagrams/executable.c4) · `HPX-CAN-029` · [c3_integrations](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-033-10` [Experimental temporal transaction recovery evidence, 2026-10-27](#experimental-temporal-transaction-recovery-evidence-2026-10-27) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-ASSUR-006`
@@ -7,17 +25,22 @@
 - **Purpose:** Atomic recovery, corruption, rollback limits and future backups.
 - **Level:** `08-assurance`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN026 / Authority lifecycle and custody](../06-subsystems/contracts/authority-lifecycle.md), [CAN029 / Canonical repair restore and authenticated exchange](../06-subsystems/contracts/persistence-and-exchange.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -78,7 +101,7 @@ Durability assumes local filesystem, functioning SQLite VFS/fsync and storage ha
 
 ## Source provenance
 
-- `HPX-SRC-0034` — `Specifications/SQLITE_PERSISTENCE.md`, lines 27–31; SHA-256 `a5f2ddf4a59c93589326af673ca8dd14254291167ed3504262c68afe4c6cb5df`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0034` — `Specifications/SQLITE_PERSISTENCE.md`, lines 27–31; SHA-256 `a5f2ddf4a59c93589326af673ca8dd14254291167ed3504262c68afe4c6cb5df`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Bounded audit transport and UI verification, 2026-10-27
 

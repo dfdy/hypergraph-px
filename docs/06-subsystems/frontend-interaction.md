@@ -1,5 +1,35 @@
 # Frontend Interaction
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-018-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-018-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-018-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-05` [Functional organisation (owner direction, 2026-10-30)](#functional-organisation-owner-direction-2026-10-30) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-06` [Selected-node Graph tab (owner direction, 2026-10-30)](#selected-node-graph-tab-owner-direction-2026-10-30) | [hpx.native.domain.annotation_rules](diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-07` [Multi-user and AI-user UI baseline](#multi-user-and-ai-user-ui-baseline) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-08` [State and operations](#state-and-operations) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-09` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-018-10` [Owner-directed action set and branding, 2026-10-25](#owner-directed-action-set-and-branding-2026-10-25) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-11` [Owner-approved logical-equivalence search and graph view, 2026-10-25](#owner-approved-logical-equivalence-search-and-graph-view-2026-10-25) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-12` [Initial durable graph and creation recovery evidence](#initial-durable-graph-and-creation-recovery-evidence) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-13` [First durable semantic overlay](#first-durable-semantic-overlay) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-14` [Planned branch-parent Merge interface](#planned-branch-parent-merge-interface) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-15` [Initial live Users publication-evidence scope](#initial-live-users-publication-evidence-scope) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-16` [First durable committed-passage comments](#first-durable-committed-passage-comments) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-17` [Runtime contributor badge implementation boundary](#runtime-contributor-badge-implementation-boundary) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-18` [Working-branch design in progress](#working-branch-design-in-progress) | [hpx.native.application.publication](diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-19` [Local gated wiring checkpoint and owner stop](#local-gated-wiring-checkpoint-and-owner-stop) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-018-20` [Heading Link selection eligibility](#heading-link-selection-eligibility) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-21` [Current in-text semantic relation labels — HPX-OWNER-017](#current-in-text-semantic-relation-labels--hpx-owner-017) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-018-22` [Owner-prioritized readable Markdown, 2026-10-27](#owner-prioritized-readable-markdown-2026-10-27) | [hpx.browser.editor](diagrams/browser/interface.c4) · `HPX-CAN-014` · [c3_browser_functions](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-SUB-009`
@@ -7,17 +37,22 @@
 - **Purpose:** Desktop UI, formatting, navigation, selection, provenance and relation displays.
 - **Level:** `06-subsystems`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-ARCH-001](<../04-architecture/system-architecture.md>); [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-11-03
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN027 / Working state exact editing and graph policy](contracts/editing-and-graph.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -30,7 +65,7 @@ Fixture controls and future contracts are not durable service implementations. C
 
 ## Functional organisation (owner direction, 2026-10-30)
 
-The browser organisation and its displayed inputs/outputs are canonical in [C3 / Browser interface](../architecture/C3/browser-interface.c4) and its [UI/functions expansions](../architecture/C3/browser-organisation.c4), HPX-CAN-004. Grouping and implementation-path tables are removed from this document.
+The browser organisation and its displayed inputs/outputs are canonical in [C3 / Browser interface](diagrams/browser/interface.c4) and its [UI/functions expansions](diagrams/browser/organisation.c4), HPX-CAN-004. Grouping and implementation-path tables are removed from this document.
 
 ### User interface — visible regions
 
@@ -38,7 +73,7 @@ The User interface view owns spatial groups/nesting and planned Graph-tab placem
 
 ### Interface functions — retained logical responsibilities
 
-The Interface functions view owns the displayed responsibility decomposition. [Workspace and contents navigation C4](../architecture/C4/workspace-navigation.c4) owns its source-symbol mapping; detailed editor behaviour, exact-source ownership, API state and error rules remain in this document and linked contracts.
+The Interface functions view owns the displayed responsibility decomposition. [Workspace and contents navigation C4](../07-implementation/diagrams/workspace-navigation.c4) owns its source-symbol mapping; detailed editor behaviour, exact-source ownership, API state and error rules remain in this document and linked contracts.
 
 ## Selected-node Graph tab (owner direction, 2026-10-30)
 
@@ -60,7 +95,7 @@ HPX-OWNER-026 refines HPX-RQ-029: move graph visualisation from a separate dialo
 
 ### Changed-source conflict handling — HPX-OWNER-043
 
-The [existing Editor region](../architecture/C3/browser-organisation.c4) owns the accepted control scope. For conflicts encountered while resolving changed followed sources before Commit, provide a setting that toggles between **Ask** (request a choice) and **Automatic latest timestamp** (choose the version with the latest timestamp). In automatic mode, visually mark the affected sentence, paragraph or section as having a **potential conflict**. The marker has a link opening a modal for comparing changes. This is accepted future behaviour, not an implemented setting or a general adoption of last-write-wins branch merging.
+The [existing Editor region](diagrams/browser/organisation.c4) owns the accepted control scope. For conflicts encountered while resolving changed followed sources before Commit, provide a setting that toggles between **Ask** (request a choice) and **Automatic latest timestamp** (choose the version with the latest timestamp). In automatic mode, visually mark the affected sentence, paragraph or section as having a **potential conflict**. The marker has a link opening a modal for comparing changes. This is accepted future behaviour, not an implemented setting or a general adoption of last-write-wins branch merging.
 
 Automatic choice does not prove the conflict resolved, confer permission or trigger Commit by itself. The chosen exact version must still be reflected in the committed snapshot; retained alternatives/history are not erased. Compare only authorised exact versions, preserve source bytes/selection/Undo and distinguish repeated occurrence contexts; sentence/paragraph/section display regions do not automatically become new persistent nodes. Normal current-authority, exact-state, uncertain-outcome and atomic publication requirements remain; this setting cannot change an already-submitted frozen operation or its receipt.
 
@@ -68,7 +103,7 @@ Automatic choice does not prove the conflict resolved, confer permission or trig
 
 The potential-conflict marker is shared evidence about the affected committed version,not a private consequence of a viewer's preference. Every authorised viewer of that version sees the marker regardless of mode. A private unpublished draft and its markers do not thereby become shared. Keep the shared marker until someone authorised explicitly resolves the conflict;merely opening or reading the comparison modal cannot clear it. Retain resolution/history evidence rather than rewriting historical source bytes. OWNER056 now completes marker/resolution records and UI-state design in the linked contract;actual implementation and permission enforcement remain downstream,with no new permission vocabulary.
 
-**OWNER056 completes the seven-choice conflict design:** millisecond HPX Commit records;ties/missing/unreliable/incomparable values Ask;explicit accept-selected/choose-existing/edited-result resolution;independent issue identities and named batches;verified carry or reported correspondence uncertainty;current shared historical status with review history;actual resolver/outcome and optional explanation. The [precise conflict-state contract](../architecture/proposals/conflict-state.md) defines comparison,anchors,states,concurrency,recovery and versioned record design. An ordinary Ask choice is not resolution unless explicitly requested;regional summaries cannot clear unlisted issues. Recorded Commit time remains a heuristic,not causal precedence,correctness or semantic proof. Current UI/storage/wire versions remain unchanged;F1–F12 and actual enforcement are unimplemented/unexecuted.
+**OWNER056 completes the seven-choice conflict design:** millisecond HPX Commit records;ties/missing/unreliable/incomparable values Ask;explicit accept-selected/choose-existing/edited-result resolution;independent issue identities and named batches;verified carry or reported correspondence uncertainty;current shared historical status with review history;actual resolver/outcome and optional explanation. The [precise conflict-state contract](../05-domain/proposals/conflict-state.md) defines comparison,anchors,states,concurrency,recovery and versioned record design. An ordinary Ask choice is not resolution unless explicitly requested;regional summaries cannot clear unlisted issues. Recorded Commit time remains a heuristic,not causal precedence,correctness or semantic proof. Current UI/storage/wire versions remain unchanged;F1–F12 and actual enforcement are unimplemented/unexecuted.
 
 ### Cycle warnings and deliberate navigation — HPX-OWNER-041
 
@@ -99,7 +134,7 @@ Treat document text, comments, model output, remote labels and link destinations
 
 ### 8.1 Users as document contributors
 
-Source `HPX-SRC-0028`, original lines 174–187. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0028`, original lines 174–187. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0028-S010`. Original dates and implementation observations remain historical evidence.
 
 The upper Interaction panel has three tabs: **Agent, Comments, Users**. **Users lists all known contributors to the current document, not logged-in or connected users.** Derive it from authorized contribution/attribution/provenance records for the viewed document/state. A disconnected contributor remains listed; connecting alone does not make anyone a contributor. This read projection is not membership or mutation authority. HPX-OWNER-027 requires multiple human/AI users and agents in the product; the current one-human development view does not constrain that architecture.
 
@@ -115,7 +150,7 @@ The optional `getContributors` adapter may use candidate `GET /documents/{docume
 
 ### 8.3 Mathematics source and rendered presentation
 
-Source `HPX-SRC-0028`, original lines 200–209. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0028`, original lines 200–209. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0028-S012`. Original dates and implementation observations remain historical evidence.
 
 Provide a **Source/Rendered** mathematics display toggle, default Source. Save/export the original Markdown/LaTeX source; generated HTML/MathML is presentation only. Support the planned delimiters `\(...\)`, `\[...\]` and `$$...$$` outside code spans/fences, including mapped table-cell source. Toggling must preserve source bytes, source ownership, draft sequence, attribution, selection and undo; it creates no save, revision or mathematical proof.
 
@@ -349,35 +384,35 @@ Acceptance must cover real editor marking/suggestions, exact corrections and und
 
 ## Source provenance
 
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 27–46; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 174–187; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 200–209; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 297–305; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 316–320; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 321–323; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 11–27; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 117–125; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 126–140; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 141–151; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 152–154; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 1–2; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 3–10; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 11–22; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 23–31; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 32–43; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0031` — `Specifications/SENTENCE_PROVENANCE.md`, lines 1–2; SHA-256 `717a143f1d4affbbc6ac8aea5f1ce27d8df14609419516509705218f4c66c133`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0031` — `Specifications/SENTENCE_PROVENANCE.md`, lines 3–24; SHA-256 `717a143f1d4affbbc6ac8aea5f1ce27d8df14609419516509705218f4c66c133`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0031` — `Specifications/SENTENCE_PROVENANCE.md`, lines 25–35; SHA-256 `717a143f1d4affbbc6ac8aea5f1ce27d8df14609419516509705218f4c66c133`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0031` — `Specifications/SENTENCE_PROVENANCE.md`, lines 36–42; SHA-256 `717a143f1d4affbbc6ac8aea5f1ce27d8df14609419516509705218f4c66c133`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0027` — `Specifications/EDITOR_STRUCTURE_GUIDES.md`, lines 1–14; SHA-256 `6e725b35aa4d7ecf35a61d9c753a2a060dbb96f518b07a94b8f233a341ab94db`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0033` — `Specifications/SPELL_CHECKING.md`, lines 1–9; SHA-256 `d84fe838b40e136d3a16859a71c82caf430cfcddd3a0ad9110147be198d7c1ab`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 27–46; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 174–187; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 200–209; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 297–305; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 316–320; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 321–323; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 11–27; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 117–125; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 126–140; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 141–151; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 152–154; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 1–2; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 3–10; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 11–22; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 23–31; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0030` — `Specifications/RELATIONSHIP_UI.md`, lines 32–43; SHA-256 `bc21bc77787d76a46dd0781fd7015c0df4e1e6957cce31e83469414f23658fc8`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0031` — `Specifications/SENTENCE_PROVENANCE.md`, lines 1–2; SHA-256 `717a143f1d4affbbc6ac8aea5f1ce27d8df14609419516509705218f4c66c133`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0031` — `Specifications/SENTENCE_PROVENANCE.md`, lines 3–24; SHA-256 `717a143f1d4affbbc6ac8aea5f1ce27d8df14609419516509705218f4c66c133`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0031` — `Specifications/SENTENCE_PROVENANCE.md`, lines 25–35; SHA-256 `717a143f1d4affbbc6ac8aea5f1ce27d8df14609419516509705218f4c66c133`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0031` — `Specifications/SENTENCE_PROVENANCE.md`, lines 36–42; SHA-256 `717a143f1d4affbbc6ac8aea5f1ce27d8df14609419516509705218f4c66c133`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0027` — `Specifications/EDITOR_STRUCTURE_GUIDES.md`, lines 1–14; SHA-256 `6e725b35aa4d7ecf35a61d9c753a2a060dbb96f518b07a94b8f233a341ab94db`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0033` — `Specifications/SPELL_CHECKING.md`, lines 1–9; SHA-256 `d84fe838b40e136d3a16859a71c82caf430cfcddd3a0ad9110147be198d7c1ab`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 
 ## Owner-directed action set and branding, 2026-10-25
 
 **Owner addition, 2026-10-25:** the required Functions action set is **Fork, Link, Embed, Merge and Copy**. Present Merge and Copy alongside the existing names with clear eligibility/availability and accessible labels. Use the [single action definition in the document engine](document-engine.md#owner-directed-action-set-fork-link-embed-merge-and-copy): Merge reviews exact inputs and preserves their histories/provenance; Copy captures content/references to the explicitly identified clipboard without silently creating a fork or committing a draft. Preview and cancellation preserve source, selection and undo. Authoritative command integration remains separately gated; a labelled control or demonstration does not claim durable implementation.
 
-Use the owner-supplied [system logo](../assets/logo.png) in application and documentation branding. Keep the canonical PNG unchanged, preserve aspect ratio, ensure it remains legible in both themes and accompany decorative instances with an accessible system name. Build/embed the asset into the single executable and serve it as PNG; branding must not introduce remote asset requests or disclose manuscript data.
+Use the owner-supplied [system logo](../01-purpose/assets/logo.png) in application and documentation branding. Keep the canonical PNG unchanged, preserve aspect ratio, ensure it remains legible in both themes and accompany decorative instances with an accessible system name. Build/embed the asset into the single executable and serve it as PNG; branding must not introduce remote asset requests or disclose manuscript data.
 
 ## Owner-approved logical-equivalence search and graph view, 2026-10-25
 
@@ -387,7 +422,7 @@ The Graph view lets the user choose any authorised nodes and displays labelled c
 
 ## Initial durable graph and creation recovery evidence
 
-The runtime Graph entry now offers arbitrary selection of up to 16 authorised document nodes, labelled circles and recorded historical Fork connectors, with direction and keyboard/text inspection. It explicitly excludes unavailable semantic relationship families and out-of-selection connections; exact source inspection resolves pinned history, not the current document text. The first projection does not implement arbitrary semantic/n-ary graph delivery. See [bounded query contract](interfaces/browser-runtime.md#bounded-documentfork-graph-projection) and [executed graph evidence](../registers/tests.csv).
+The runtime Graph entry now offers arbitrary selection of up to 16 authorised document nodes, labelled circles and recorded historical Fork connectors, with direction and keyboard/text inspection. It explicitly excludes unavailable semantic relationship families and out-of-selection connections; exact source inspection resolves pinned history, not the current document text. The first projection does not implement arbitrary semantic/n-ary graph delivery. See [bounded query contract](interfaces/browser-runtime.md#bounded-documentfork-graph-projection) and [executed graph evidence](../02-governance/registers/tests.csv).
 
 Creating a new runtime document registers/opens its editor without replacing the page. A retained operation can be reconciled through “Retry new document” after unknown command replies or failed editor reads, preserving newer source typing and other cached buffers. This is separate from explicit Lock, whose acknowledged completion still replaces the page with the unlock view. The current scope remains one-owner document editing; it does not promise tab-reload recovery of arbitrary unacknowledged typing.
 
@@ -440,6 +475,6 @@ The current partial working-tree implementation uses full-tree presentation meta
 
 ### Retained inclusion state and newer-version indication — HPX-RQ-040
 
-The [canonical editor notes](../architecture/C3/browser-organisation.c4) and [M1](../architecture/Conceptual/identity-closure.c4) require retained A to show its retained selected B versions from the last successful acknowledged autosave, including nested/repeated contexts. Indicate an available newer authorised version separately, without editing source, retargeting selections, revealing inaccessible identities/counts or creating/clearing a shared conflict marker. OWNER043/044's Ask/Automatic Commit-conflict selection rules keep their own scope. The hint's comparison rule and exact UI mapping remain undesigned; no global newest timestamp or background update is selected. OWNER050 reopens universal future autosave/Commit separation while forbidding historical-version accumulation merely from routine autosaves; no current draft publication or departure-Commit revocation follows.
+The [canonical editor notes](diagrams/browser/organisation.c4) and [M1](../05-domain/diagrams/identity-closure.c4) require retained A to show its retained selected B versions from the last successful acknowledged autosave, including nested/repeated contexts. Indicate an available newer authorised version separately, without editing source, retargeting selections, revealing inaccessible identities/counts or creating/clearing a shared conflict marker. OWNER043/044's Ask/Automatic Commit-conflict selection rules keep their own scope. The hint's comparison rule and exact UI mapping remain undesigned; no global newest timestamp or background update is selected. OWNER050 reopens universal future autosave/Commit separation while forbidding historical-version accumulation merely from routine autosaves; no current draft publication or departure-Commit revocation follows.
 
-HPX-RQ-041 additionally requires the option to preserve an authorised constructed current-document version as a specific branch, retaining exact composition and logical identity. This is not a claim of branchless ordinary editing or existing single-node branch-creation delivery of arbitrary composition capture. [The reconciliation](../architecture/proposals/branch-selection-reconciliation.md) retains the precise unresolved capture/main questions. No control or storage mechanism is implemented by this specification change.
+HPX-RQ-041 additionally requires the option to preserve an authorised constructed current-document version as a specific branch, retaining exact composition and logical identity. This is not a claim of branchless ordinary editing or existing single-node branch-creation delivery of arbitrary composition capture. The reconciliation retains the precise unresolved capture/main questions. No control or storage mechanism is implemented by this specification change.

@@ -1,0 +1,57 @@
+// Implementation projections of the shared model declared in ../C3/frontend-delivery.c4
+views {
+  view c4_frontend_delivery of hpx.native.frontend_assets {
+    title "C4 / Frontend delivery — Implementation overview"
+    link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/frontend-delivery-audit.md
+    description "Primary parent: Frontend delivery in the Rust engine. Shared contributors: Frontend build tooling (development), Rust asset embedding, Compiled frontend resources, Embedded-asset routing, Asset request checks, Responses/errors/security headers and browser delivery context. Preserved overview; click code groups for focused matching-name implementation views. Solid links are calls/branch control; dotted links are build/data dependencies. Exact inventories/policies remain linked; no new services or V3 adoption."
+    // Presentation boundary for the focal responsibility;shared code remains co-located as evidenced.
+    group "Frontend delivery" { color primary; border solid
+      group "Build time — development only" { color primary; border solid
+        include frontend_builder.bundle_code with { description "ESM bundle, explicit asset copies, notices and preview version." navigateTo c4_frontend_build }
+        include frontend_builder.cache_code with { description "Input/output hashing, snapshot validation, locked dist copy. Not build acceptance." navigateTo c4_frontend_build }
+        include hpx.native.frontend_assets.embedding.build_code with { description "main/walk: version counter, index check, sorted embed and symlink rejection." navigateTo c4_frontend_embedding }
+      }
+      group "Embedded resources and shared runtime delivery" { color primary; border solid
+        include hpx.native.frontend_assets.resources.map_code with { description "Generated assets.rs included into main.rs; ASSETS is compiled data." navigateTo c4_frontend_embedding }
+        include hpx.native.transport.assets.delivery_lookup with { description "route_inner non-API GET: root alias, exact key/MIME or 404." navigateTo c4_frontend_routing }
+        include hpx.native.transport.responses.delivery_writer with { description "Shared write_response emits secured headers, exact body length and close." navigateTo c4_frontend_routing }
+      }
+    }
+    // Callers,providers,artifacts and consumers stay outside the focal boundary.
+    include frontend_dist with { description "Read-only inventory of the existing prepared tree." }
+    include frontend_inputs with { description "Actual source/dependency/license input set; no install/build run here." }
+    include hpx.browser.c4_protocol with { description "initializeRuntime: fragment exchange, capability checks, then explicit unlock/data reads." navigateTo seq_frontend_session }
+    include hpx.browser.delivery_entry with { description "Version display starts asynchronously; module awaits live initialization." navigateTo seq_frontend_session }
+    include hpx.native.transport.security.c4_gates with { description "Static Host/site checks; session and unlock are later API gates." navigateTo c4_frontend_routing }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include frontend_inputs -> frontend_builder.cache_code where kind is delivery_code with { line dotted }
+    include frontend_builder.bundle_code -> frontend_builder.cache_code where kind is delivery_code
+    include frontend_builder.cache_code -> frontend_builder.bundle_code where kind is delivery_code
+    include frontend_builder.bundle_code -> frontend_dist where kind is delivery_code with { line dotted }
+    include frontend_dist -> hpx.native.frontend_assets.embedding.build_code where kind is delivery_code with { line dotted }
+    include hpx.native.frontend_assets.embedding.build_code -> hpx.native.frontend_assets.resources.map_code where kind is delivery_code with { line dotted }
+    include hpx.native.transport.security.c4_gates -> hpx.native.transport.assets.delivery_lookup where kind is delivery_code
+    include hpx.native.transport.assets.delivery_lookup -> hpx.native.frontend_assets.resources.map_code where kind is delivery_code with { line dotted }
+    include hpx.native.transport.assets.delivery_lookup -> hpx.native.transport.responses.delivery_writer where kind is delivery_code with { line dotted }
+    include hpx.browser.delivery_entry -> hpx.browser.c4_protocol where kind is delivery_code
+    include hpx.native.transport.responses.delivery_writer -> hpx.browser.delivery_entry where kind is delivery_code with { line dotted }
+    exclude * -> * where kind is domain_use
+    exclude * -> * where kind is domain_call
+    exclude * -> * where kind is domain_type
+    exclude * -> * where kind is domain_test
+    exclude * -> * where kind is coverage_call
+    exclude * -> * where kind is coverage_data
+    exclude * -> * where kind is coverage_plan
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude hpx.native.frontend_assets.embedding, hpx.native.frontend_assets.resources
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+}

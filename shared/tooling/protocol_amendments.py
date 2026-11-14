@@ -16,7 +16,7 @@ from pathlib import Path
 from bootstrap_semantic_protocol import BootstrapError, PROTOCOL, strict_object, verify_path
 
 ROOT = Path(__file__).resolve().parents[2]
-BASE = ROOT / 'docs' / 'engineering' / 'semantic-protocol'
+BASE = ROOT / '.provenance' / 'docs-reorganisation' / 'historical-docs' / 'docs' / 'engineering' / 'semantic-protocol'
 INDEX = BASE / 'amendments' / 'registry.json'
 ID_PATTERN = re.compile(r'HPX-PROTO-\d{8}-[a-z0-9][a-z0-9-]*$')
 
@@ -56,7 +56,7 @@ def canonical_records(base: Path) -> dict:
 
 def validate_registry(projection: dict, *, root: Path | None = None, allow_unindexed: set[str] | None = None, allow_stale_version: bool = False) -> dict:
     """Return verified registry; abort on stale/missing/extra applied records."""
-    base = (root or ROOT) / 'docs' / 'engineering' / 'semantic-protocol'
+    base = (root or ROOT) / '.provenance' / 'docs-reorganisation' / 'historical-docs' / 'docs' / 'engineering' / 'semantic-protocol'
     registry = load_json(base / 'amendments' / 'registry.json')
     if set(registry) != {'registry_version','protocol_version','amendments'}:
         raise BootstrapError('invalid shared amendment registry envelope')
@@ -117,7 +117,7 @@ def sync(projection: dict, *, register: str | None = None, root: Path = ROOT) ->
     Only the version and an explicitly chosen *applied* change are synced.
     Concurrent modifications must additionally be protected by repository review.
     """
-    base = root / 'docs' / 'engineering' / 'semantic-protocol'
+    base = root / '.provenance' / 'docs-reorganisation' / 'historical-docs' / 'docs' / 'engineering' / 'semantic-protocol'
     old = validate_registry(projection, root=root, allow_unindexed={register} if register else None, allow_stale_version=True)
     amended = dict(old)
     amended['protocol_version'] = projection['protocol_version']

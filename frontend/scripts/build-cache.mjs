@@ -22,7 +22,7 @@ export async function sharedBrowserInputFiles(repository=root){
  return files.sort();
 }
 export async function inputIdentity(){
- const files=[...await filesUnder(join(frontend,'src')),...await sharedBrowserInputFiles(),...await filesUnder(join(frontend,'node_modules')),...['frontend/index.html','frontend/styles.css','frontend/package.json','frontend/package-lock.json','frontend/build.mjs','frontend/scripts/build-cache.mjs','docs/assets/logo.png','LICENSE'].map(p=>join(root,p))];
+ const files=[...await filesUnder(join(frontend,'src')),...await sharedBrowserInputFiles(),...await filesUnder(join(frontend,'node_modules')),...['frontend/index.html','frontend/styles.css','frontend/package.json','frontend/package-lock.json','frontend/build.mjs','frontend/scripts/build-cache.mjs','docs/01-purpose/assets/logo.png','LICENSE'].map(p=>join(root,p))];
  return createHash('sha256').update(process.version+'\0'+process.platform+'\0'+process.arch+'\0'+await hashFiles(files)).digest('hex');
 }
 export async function validEntry(directory,source){

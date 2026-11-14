@@ -1,0 +1,112 @@
+// Implementation projections of the shared model declared in ../C3/pure-domain.c4
+views {
+  view c4_domain_sources of hpx.native.domain.source_plans {
+    title "C4 / Exact fragment and checkpoint plans — Implementation (shared)"
+    description "Primary parent: Exact fragment and checkpoint plans; shared contributors: Identity and exact-source coordinates; Passage comments and assertion rules. Actual Rust modules/functions grouped by source responsibility; context adapters are part of the same executable. Solid links are calls; dotted links are type dependencies. Returned plans/slices are not authenticated grants or SQL publication. Click Fork for its guarded boundary sequence; writer links to existing Commit workflow."
+    link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/pure-domain-audit.md
+    group "Exact fragment and checkpoint plans (shared pure code)" { color primary; border solid
+      include hpx.native.domain.exact.records with { description "Opaque IDs, Anchor/SnapshotBinding; scalar-safe UTF8 ranges and UTF16 conversion." }
+      include hpx.native.domain.source_plans.fork with { description "Different identity, exact revision/path and nonempty scalar-safe fragment." navigateTo seq_domain_fork }
+      include hpx.native.domain.source_plans.merge with { description "Bounded reviewed cross-identity synthesis; validates inputs through fork::plan." }
+      include hpx.native.domain.source_plans.working with { description "Exact owned/acknowledged equality and quote; no persistence or Commit." }
+      include hpx.native.domain.annotation_rules.comment with { description "Pinned passage/quote and bounded nonblank body; no source rewriting." }
+      include hpx.native.domain.annotation_rules.assertion with { description "Roles, exact participants, orientation and judgement transitions; no proof of truth." }
+    }
+    group "Adapter call sites / serialization boundary" { color primary; border solid
+      include hpx.native.storage.c4_publication with { description "Current authority before replay; normal command transaction, result and receipt." navigateTo seq_commit }
+      include hpx.native.storage.domain_forks with { description "Authenticate pinned source; pure plan; independent output history and derivation." }
+      include hpx.native.storage.domain_merges with { description "Verify inputs; pure synthesis checks; retain transformation evidence." }
+      include hpx.native.storage.domain_working with { description "Validate current sequence/generation/source; checkpoint is not Commit." }
+      include hpx.native.storage.domain_comments with { description "Verify committed passage; pure comment plan; persist retrospective records." }
+      include hpx.native.storage.domain_assertions with { description "Supply verified sources/predicate roles/order keys; persist review revisions." }
+      include hpx.native.storage.c4_history with { description "Authorized historical/snapshot/anchor reads; exact single-occurrence adapter scope." navigateTo c4_api_routes }
+      include hpx.native.storage.domain_encoding with { description "Adapter-owned identity/binding codecs and versioned record wrappers." }
+    }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include hpx.native.storage.c4_publication -> hpx.native.storage.domain_forks where kind is domain_call
+    include hpx.native.storage.domain_forks -> hpx.native.domain.source_plans.fork where kind is domain_call
+    include hpx.native.storage.c4_publication -> hpx.native.storage.domain_merges where kind is domain_call
+    include hpx.native.storage.domain_merges -> hpx.native.domain.source_plans.merge where kind is domain_call
+    include hpx.native.storage.c4_publication -> hpx.native.storage.domain_working where kind is domain_call
+    include hpx.native.storage.domain_working -> hpx.native.domain.source_plans.working where kind is domain_call
+    include hpx.native.storage.c4_publication -> hpx.native.storage.domain_comments where kind is domain_call
+    include hpx.native.storage.domain_comments -> hpx.native.domain.annotation_rules.comment where kind is domain_call
+    include hpx.native.storage.c4_publication -> hpx.native.storage.domain_assertions where kind is domain_call
+    include hpx.native.storage.domain_assertions -> hpx.native.domain.annotation_rules.assertion where kind is domain_call
+    include hpx.native.domain.source_plans.fork -> hpx.native.domain.exact.records where kind is domain_call
+    include hpx.native.domain.source_plans.working -> hpx.native.domain.exact.records where kind is domain_call
+    include hpx.native.domain.annotation_rules.comment -> hpx.native.domain.exact.records where kind is domain_call
+    include hpx.native.domain.annotation_rules.assertion -> hpx.native.domain.exact.records where kind is domain_call
+    include hpx.native.domain.source_plans.merge -> hpx.native.domain.source_plans.fork where kind is domain_call
+    include hpx.native.domain.source_plans.merge -> hpx.native.domain.exact.records where kind is domain_type
+    include hpx.native.storage.c4_history -> hpx.native.domain.exact.records where kind is domain_call
+    include hpx.native.storage.domain_encoding -> hpx.native.domain.exact.records where kind is domain_type
+    exclude * -> * where kind is coverage_call
+    exclude * -> * where kind is coverage_data
+    exclude * -> * where kind is coverage_plan
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+  view c4_domain_history of hpx.native.domain.history_plans {
+    title "C4 / Same-node history and passage planning — Implementation (shared)"
+    description "Primary parent: Same-node history and passage planning; shared contributor: Supplied expansion projection. Independent existing pure helpers; no ancestry-to-selector orchestrator is invented. Dotted type edges do not invoke plan. Test callers are not runtime services. Experimental trace/origin adapters remain schema3 guarded; pure Map.publish is an in-memory result, not COMMIT. Full snapshot closure and two-parent map composition are absent."
+    link https://github.com/dfdy/hypergraph-px/blob/d8d8c16f8923c0ff506d230c2de12037dcaf8d8c/docs/architecture/audits/pure-domain-audit.md
+    // Presentation boundary for the focal responsibility;shared code remains co-located as evidenced.
+    group "Same-node history and passage planning" { color primary; border solid
+      group "Supplied history and exact-source code" { color primary; border solid
+        include hpx.native.domain.exact.records with { description "Opaque IDs, Anchor/SnapshotBinding; scalar-safe UTF8 ranges and UTF16 conversion." }
+        include hpx.native.domain.history_plans.types with { description "Actual grouped Base/Side/Edit/Origin/Mapping/Limits/Outcome types; not trusted clocks." }
+        include hpx.native.domain.history_plans.selector with { description "Supplied same-node maps → Merged or Unresolved; no production caller or publication." navigateTo seq_domain_parent_plan }
+        include hpx.native.domain.history_plans.ancestry with { description "Supplied same-node DAG → unique maximal base or explicit unresolved/error result." }
+        include hpx.native.domain.history_plans.lineage with { description "Exact immediate-base splices; immutable-on-error and canonical restoration." }
+        include hpx.native.domain.history_plans.origins with { description "Retained fresh/copy/unknown evidence; publish returns in-memory Map, not SQL COMMIT." }
+      }
+      group "Supplied expansion validation" { color primary; border solid
+        include hpx.native.domain.expansion_rules.validate with { description "Bounded supplied vertices/edges; Kahn validation returns counts, not closure or reading order." navigateTo seq_domain_expansion }
+      }
+    }
+    // Callers,providers,artifacts and consumers stay outside the focal boundary.
+    include hpx.native.domain.test_calls with { description "Existing cfg(test) call sites; inventoried, not run. No runtime orchestration." navigateTo seq_domain_expansion }
+    include hpx.native.storage.domain_base_reader with { description "Current authority and bounded consistent history; current API1 read path." navigateTo c4_api_routes }
+    include hpx.native.storage.domain_origin_replay with { description "Candidate origin replay and gated single-parent drivers; wider workflow held." }
+    include hpx.native.storage.domain_trace_driver with { description "Experimental schema3 Save/reset and candidate codec; no temporal runtime route." }
+    style * { color primary }
+    style element.tag = #planned { color muted; border dashed }
+    exclude * -> *
+    include hpx.native.storage.domain_base_reader -> hpx.native.domain.history_plans.ancestry where kind is domain_call
+    include hpx.native.storage.domain_trace_driver -> hpx.native.domain.history_plans.lineage where kind is domain_call
+    include hpx.native.storage.domain_origin_replay -> hpx.native.domain.history_plans.origins where kind is domain_call
+    include hpx.native.storage.domain_origin_replay -> hpx.native.domain.history_plans.lineage where kind is domain_call
+    include hpx.native.domain.history_plans.selector -> hpx.native.domain.exact.records where kind is domain_call
+    include hpx.native.domain.history_plans.lineage -> hpx.native.domain.exact.records where kind is domain_call
+    include hpx.native.domain.history_plans.origins -> hpx.native.domain.exact.records where kind is domain_call
+    include hpx.native.domain.history_plans.ancestry -> hpx.native.domain.exact.records where kind is domain_type
+    include hpx.native.domain.history_plans.types -> hpx.native.domain.exact.records where kind is domain_type
+    include hpx.native.domain.history_plans.selector -> hpx.native.domain.history_plans.types where kind is domain_type
+    include hpx.native.domain.history_plans.ancestry -> hpx.native.domain.history_plans.types where kind is domain_type
+    include hpx.native.domain.history_plans.lineage -> hpx.native.domain.history_plans.types where kind is domain_type
+    include hpx.native.domain.history_plans.origins -> hpx.native.domain.history_plans.types where kind is domain_type
+    include hpx.native.domain.history_plans.origins -> hpx.native.domain.history_plans.lineage where kind is domain_call
+    include hpx.native.domain.test_calls -> hpx.native.domain.expansion_rules.validate where kind is domain_test
+    include hpx.native.domain.test_calls -> hpx.native.domain.history_plans.selector where kind is domain_test
+    exclude * -> * where kind is coverage_call
+    exclude * -> * where kind is coverage_data
+    exclude * -> * where kind is coverage_plan
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    autoLayout LeftRight 100 90 spline
+  }
+}

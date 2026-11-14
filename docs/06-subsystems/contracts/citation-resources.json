@@ -1,0 +1,36 @@
+{
+  "profile_version": 1,
+  "source_commit": "3c3995baaa0c4fe1e5c6328027ff6d985c07bfde",
+  "profiles": [
+    {
+      "id": "apa",
+      "title": "APA Style 7th edition",
+      "url": "https://raw.githubusercontent.com/citation-style-language/styles/3c3995baaa0c4fe1e5c6328027ff6d985c07bfde/apa.csl",
+      "sha256": "3917def5fc951b104d64216c3373096042368b9704ba269ca83c14ebaba889fc",
+      "licence": "http://creativecommons.org/licenses/by-sa/3.0/"
+    },
+    {
+      "id": "harvard-cite-them-right",
+      "title": "Cite Them Right 12th edition (author-date/Harvard)",
+      "url": "https://raw.githubusercontent.com/citation-style-language/styles/3c3995baaa0c4fe1e5c6328027ff6d985c07bfde/harvard-cite-them-right.csl",
+      "sha256": "0ca3d2c7c881cd98cdd81098b5349f5921edf430498aa9a5a41918621cf7cc45",
+      "licence": "http://creativecommons.org/licenses/by-sa/3.0/"
+    },
+    {
+      "id": "chicago-author-date",
+      "title": "Chicago Manual of Style 18th edition (author-date)",
+      "url": "https://raw.githubusercontent.com/citation-style-language/styles/3c3995baaa0c4fe1e5c6328027ff6d985c07bfde/chicago-author-date.csl",
+      "sha256": "002fade78d7e4fe9d42936a16b43a8066b097013f6255df40b1bfba6631eff9b",
+      "licence": "http://creativecommons.org/licenses/by-sa/3.0/"
+    },
+    {
+      "id": "ieee",
+      "title": "IEEE Reference Guide version 11.29.2023",
+      "url": "https://raw.githubusercontent.com/citation-style-language/styles/3c3995baaa0c4fe1e5c6328027ff6d985c07bfde/ieee.csl",
+      "sha256": "b4c7619fc16c45a31e4cc3271eab94ffe83192d3b4c7fc729470a3b459448de3",
+      "licence": "http://creativecommons.org/licenses/by-sa/3.0/"
+    }
+  ],
+  "status": "pinned source resources read;not installed bundled converted or accepted as rendered output",
+  "release_requirement": "Bundle these exact bytes plus exact pinned locale/bibliography/reference resources and upstream notices;future changes explicitly version the resource profile"
+}

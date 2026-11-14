@@ -7,17 +7,17 @@
 - **Purpose:** Metadata view of an existing scoped decision; original decision identity and provenance retained.
 - **Level:** `04-architecture`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-ARCH-001](<../system-architecture.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
 
 The underlying decision retains its recorded acceptance. This new editorial wrapper does not expand that decision or imply implemented services.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
+Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; documentation ownership does not establish implementation or verification.
 
 ## Owner baseline reconciliation, 2026-10-30
 
@@ -63,11 +63,11 @@ Consequences: model context/occurrence identity, immutable history, transformati
 
 ## Consequences and risks
 
-Retain the scoped limits above and [open questions/conflicts](<../../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
+Retain the scoped limits above and [open questions/conflicts](<../../02-governance/registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
 
 ## Revisit triggers
 
-Retain the scoped limits above and [open questions/conflicts](<../../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
+Retain the scoped limits above and [open questions/conflicts](<../../02-governance/registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
 
 ## Affected specifications and tests
 
@@ -75,4 +75,4 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../../03
 
 ## Source provenance
 
-- `HPX-SRC-0041` — `docs/adr/0001-foundation-decisions.md`, lines 1–18; SHA-256 `8e36576431b39364dab6e4cc464ef40624e3ba586643a8401d6647a10b716748`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0041` — `docs/adr/0001-foundation-decisions.md`, lines 1–18; SHA-256 `8e36576431b39364dab6e4cc464ef40624e3ba586643a8401d6647a10b716748`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.

@@ -7,17 +7,17 @@
 - **Purpose:** Entry point for current repository development commands and bounded runtime/fixture modes.
 - **Level:** `09-guides`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** current checkout development tooling; bounded one-owner runtime and explicitly labelled unfinished/future scope
 - **Upstream authority:** [HPX-ARCH-001](<../../04-architecture/system-architecture.md>); [HPX-ASSUR-005](<../../08-assurance/build-and-release.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-11-13
 
 Do not use certificate-warning bypasses. No trusted live runtime was launched by this migration.
 
-Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; no unimplemented capability becomes delivered through this migration.
+Inherited accepted source obligations retain their original scope. `proposed` describes the editorial assembly, not revocation of those obligations. Current owner decisions override preserved contradictory wording; documentation ownership does not establish implementation or verification.
 
 ## Audience and prerequisites
 
@@ -29,7 +29,7 @@ Developer setup for fixture preview and the unfinished integrated Rust writer. T
 
 ## Procedure
 
-Start with the [repository development guide](repository-development.md), linked from the [canonical frontend-delivery scope](../../architecture/C3/frontend-delivery.c4). It is the current reference for commands, ports, HTTPS proxy/launch behavior, source watch, debugging, tests and production packaging. Use Git, a native compiler/linker, Rust stable with rustfmt/Clippy and Node.js 26/npm. From the repository root:
+Start with the [repository development guide](repository-development.md), linked from the [canonical frontend-delivery scope](../../08-assurance/diagrams/delivery/frontend-delivery.c4). It is the current reference for commands, ports, HTTPS proxy/launch behavior, source watch, debugging, tests and production packaging. Use Git, a native compiler/linker, Rust stable with rustfmt/Clippy and Node.js 26/npm. From the repository root:
 
 ```sh
 npm --prefix frontend ci --ignore-scripts
@@ -54,7 +54,7 @@ Proof sources/pins remain under `backend/proofs/`; the replay command is `python
 
 ### 11. Local frontend intake and runtime transition
 
-Source `HPX-SRC-0028`, original lines 290–296. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0028`, original lines 290–296. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0028-S017`. Original dates and implementation observations remain historical evidence.
 
 Frontend development takes place in this IDE/workspace. Receive exported source/assets in the local [frontend inbox](<../reference/development-evidence.md>), preserving raw input and reviewing it against this specification and the integration evaluation before adoption. An export is reference code/design, not an accepted data/storage/application architecture. Refactor or replace its internals where needed.
 
@@ -67,7 +67,7 @@ Use the source-grounded examples/evidence above and [acceptance gates](<../../03
 
 ## Troubleshooting and limitations
 
-Retain the scoped limits above and [open questions/conflicts](<../../registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
+Retain the scoped limits above and [open questions/conflicts](<../../02-governance/registers/open-questions.csv>). Missing mechanisms remain TBD; no silent resolution or software change is made.
 
 ## Related references
 
@@ -75,7 +75,7 @@ Developer setup for fixture preview and the unfinished integrated Rust writer. T
 
 ## Source provenance
 
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 290–296; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 290–296; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Current Stage3 local paths
 

@@ -71,7 +71,7 @@ class ProtocolTests(unittest.TestCase):
     def test_applied_compatible_change_can_use_delegated_authorisation(self):
         rec = deepcopy(next(r for r in self.examples if r['kind']=='protocol_change'))
         rec['status'] = 'applied'
-        rec['content']['authorisation'] = {'basis':'delegated_compatible','ref':'docs/engineering/semantic-protocol/PROTOCOL.md#11-agent-maintained-extension-process'}
+        rec['content']['authorisation'] = {'basis':'delegated_compatible','ref':'.provenance/docs-reorganisation/historical-docs/docs/engineering/semantic-protocol/PROTOCOL.md#11-agent-maintained-extension-process'}
         rec['content']['validation'] = {'outcome':'pass','commands':['python3 -m unittest'], 'evidence':['test-output.txt']}
         self.assertFalse(list(self.v.iter_errors(rec)))
 

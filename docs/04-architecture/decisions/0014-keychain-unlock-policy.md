@@ -9,7 +9,7 @@
 - **Status:** `accepted`
 - **Maintainer:** project owner; implementation agent
 - **Applies to:** next trusted-server unlock increment; macOS first; no client-held mode
-- **Upstream authority:** [key-custody requirements](../../06-subsystems/security-cryptography.md), [open question HPX-GAP-007](../../registers/open-questions.csv)
+- **Upstream authority:** [key-custody requirements](../../06-subsystems/security-cryptography.md), [open question HPX-GAP-007](../../02-governance/registers/open-questions.csv)
 - **Downstream dependencies:** [workspace format](../../06-subsystems/formats/hpx-workspace.md), [record representation](../../07-implementation/data-structures/sqlite-records.md), runtime unlock UI and native provider
 - **Verification:** required tests below; executed evidence is recorded separately in the test register
 - **Decision/history:** HPX-RQ-011 requires a keychain alternative; it does not select credential custody or recovery policy. Owner explicitly approved this policy with “Policy approved” on 2026-10-25. Implementation and verification remain separately scoped.
@@ -54,4 +54,4 @@ Removal verifies the expected secret before checked service/account deletion. Th
 
 A failed item cleanup is reported and its expected secret is retained only in the unlocked process for retrying removal. Locking/exiting drops that handle. A crash between native creation and database commit can leave an orphan with no wrapper; a subsequent enrollment reports the existing item and never overwrites or deletes it speculatively. Manual scoped inspection/removal is then required before reenrollment. Passphrase recovery stays available. Backups are verified schema-1 SQLite snapshots under sibling `.hypergraph-backups/`, with mode 0700 on the directory and 0600 on files on Unix; the upgrade aborts before native creation if backup verification fails or another writer changes the source after the backup snapshot. These backups do not implement the deferred portable/remote backup design.
 
-See [current implementation state](../../09-guides/reference/DEVELOPMENT_STATE.md) and [test register](../../registers/tests.csv) for executed checks and remaining UI acceptance limits. The owner's manual runtime is excluded from enrollment and testing.
+See [current implementation state](../../09-guides/reference/DEVELOPMENT_STATE.md) and [test register](../../02-governance/registers/tests.csv) for executed checks and remaining UI acceptance limits. The owner's manual runtime is excluded from enrollment and testing.

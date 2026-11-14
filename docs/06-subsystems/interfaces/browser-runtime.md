@@ -1,5 +1,50 @@
 # Browser/runtime contract and capability gates
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-021-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-021-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-021-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-04` [Shared human and AI user API — accepted owner scope](#shared-human-and-ai-user-api--accepted-owner-scope) | [hpx.native.application.admission](../diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-05` [Messages and type schemas](#messages-and-type-schemas) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-06` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-021-07` [Current adapter retry and lock behavior, 2026-10-25](#current-adapter-retry-and-lock-behavior-2026-10-25) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-08` [Request-boundary enforcement, 2026-10-25](#request-boundary-enforcement-2026-10-25) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-09` [Explicit local keychain routes, 2026-10-25](#explicit-local-keychain-routes-2026-10-25) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-10` [Read-only history and exact historical ranges, 2026-10-25](#read-only-history-and-exact-historical-ranges-2026-10-25) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-11` [Protected clipboard subset, 2026-10-25](#protected-clipboard-subset-2026-10-25) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-12` [Independent committed-source Fork, 2026-10-25](#independent-committed-source-fork-2026-10-25) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-13` [Read-only committed snapshot comparison](#read-only-committed-snapshot-comparison) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-14` [Bounded document/Fork graph projection](#bounded-documentfork-graph-projection) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-15` [Document creation without page replacement](#document-creation-without-page-replacement) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-16` [Versioned retrospective semantic assertions](#versioned-retrospective-semantic-assertions) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-17` [Selected retrospective assertion incidence graph](#selected-retrospective-assertion-incidence-graph) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-18` [Exact assertion judgement history](#exact-assertion-judgement-history) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-19` [Reviewed captured-source declarations](#reviewed-captured-source-declarations) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-20` [Reviewed new-document Merge](#reviewed-new-document-merge) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-21` [Selected transformation incidence graph](#selected-transformation-incidence-graph) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-22` [Snapshot-bound publication contributors](#snapshot-bound-publication-contributors) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-23` [Exact snapshot client validation](#exact-snapshot-client-validation) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-24` [Desktop graph scrolling](#desktop-graph-scrolling) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-25` [History inspection intent isolation](#history-inspection-intent-isolation) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-26` [Immutable committed-passage comments](#immutable-committed-passage-comments) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-27` [In-progress local branch routes](#in-progress-local-branch-routes) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-021-28` [In-progress working-checkpoint boundary](#in-progress-working-checkpoint-boundary) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-021-29` [In-progress private working-reference transport](#in-progress-private-working-reference-transport) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-021-30` [Current wiring checkpoint; capability enablement held](#current-wiring-checkpoint-capability-enablement-held) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-021-31` [Advertised branch and working-source slice, 2026-10-27](#advertised-branch-and-working-source-slice-2026-10-27) | [hpx.native.application.publication](../diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-32` [Original-branch integrity audit transport, 2026-10-27](#original-branch-integrity-audit-transport-2026-10-27) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-33` [Read-only parent-branch comparison context, 2026-10-27](#read-only-parent-branch-comparison-context-2026-10-27) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-34` [Automatic Commit on node or branch departure, 2026-10-27](#automatic-commit-on-node-or-branch-departure-2026-10-27) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-35` [Visible test build identity, 2026-10-27](#visible-test-build-identity-2026-10-27) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-36` [Read-only common-base inspection](#read-only-common-base-inspection) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-021-37` [Exact in-text semantic relation words](#exact-in-text-semantic-relation-words) | [hpx.native.transport.api](../diagrams/runtime-api.c4) · `HPX-CAN-028` · [c3_runtime_api](../../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-API-002`
@@ -7,17 +52,22 @@
 - **Purpose:** Browser/runtime capabilities, source ownership and versioned command boundary.
 - **Level:** `06-subsystems`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-ARCH-002](<../../04-architecture/component-architecture.md>); [HPX-DOM-006](<../../05-domain/text-and-anchors.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../../registers/requirements.csv>); generated transport/implementation references below
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../../02-governance/registers/requirements.csv>); generated transport/implementation references below
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN026 / Authority lifecycle and custody](../contracts/authority-lifecycle.md), [CAN027 / Working state exact editing and graph policy](../contracts/editing-and-graph.md), [CAN028 / Shared API chat and selected MCP design](../contracts/shared-api-chat-mcp.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared human and AI user API — accepted owner scope
@@ -28,7 +78,7 @@ HPX-OWNER-029 establishes **HPX-RQ-037**: all human and machine user interaction
 
 Inputs are authenticated actor identity, workspace/target context, operation, applicable grants/policy, and exact expected state/operation identity where relevant. Outputs are authorised query data or attributed results/drafts/Commit receipts, or explicit denial/conflict/failure/uncertainty without unauthorised disclosure. Draft acknowledgement is not Commit. Session authentication and workspace unlock do not confer resource rights. Domain planning remains deterministic; application policy controls access and storage publishes below that boundary. UI-local view preferences and buffer manipulation are not backend hypergraph publication.
 
-This clarifies HPX-OWNER-028: no separate general-purpose external/public API product or external API-client actor is required. The shared user API is nevertheless mandatory. The released system remains one Rust executable with embedded frontend and SQLite. Current one-owner checks do not implement the required multi-user permission model. Workspace permission vocabulary, representation, administration, revocation and compatibility remain unresolved (HPX-GAP-029); no ACL/RBAC/ABAC scheme, new endpoint, record format or migration is selected.
+This clarifies HPX-OWNER-028: no separate general-purpose external/public API product or external API-client actor is required. The shared user API is nevertheless mandatory. The released system remains one Rust executable with embedded frontend and SQLite. Current one-owner checks do not implement the required multi-user permission model. [Canonical M4](../../05-domain/diagrams/authority-distinction.c4) and the [OWNER058 authority contract](../../02-governance/proposals/workspace-authority-decisions.md) now own the accepted explicit per-user capability vocabulary, lifecycle/bootstrap policy, final publication/release authority revalidation and separate current/history access. Exact credential/session, delegation/admin/recovery, policy/record/wire and compatibility mechanisms remain unresolved (HPX-GAP-006/026/029). No new endpoint, record format or migration is selected.
 
 
 Candidate endpoints in source contracts remain sketches. The local /api/v1 implementation is provisional and not a frozen complete wire contract.
@@ -40,7 +90,7 @@ The current local listener is [runtime/src/main.rs](../../../backend/crates/runt
 
 ### Independent development boundary — 2026-11-13
 
-The [canonical frontend delivery model](../../architecture/C3/frontend-delivery.c4) owns build/deployment responsibility; the [development guide](../../09-guides/developers/repository-development.md) supplies exact commands and security prerequisites. The development-only frontend bridge validates incoming Host/Origin before forwarding contract-inventoried API paths over verified HTTPS. It forwards session material, never supplies authority, and obtains executable build metadata from the backend. Both ports remain loopback-only. Production has no bridge: one Rust executable embeds and serves the interface and API from one origin. Explicit synthetic mock mode has no backend/persistent authority and is never a failed-live-connection fallback. No wire, record, database or envelope version changes.
+The [canonical frontend delivery model](../../08-assurance/diagrams/delivery/frontend-delivery.c4) owns build/deployment responsibility; the [development guide](../../09-guides/developers/repository-development.md) supplies exact commands and security prerequisites. The development-only frontend bridge validates incoming Host/Origin before forwarding contract-inventoried API paths over verified HTTPS. It forwards session material, never supplies authority, and obtains executable build metadata from the backend. Both ports remain loopback-only. Production has no bridge: one Rust executable embeds and serves the interface and API from one origin. Explicit synthetic mock mode has no backend/persistent authority and is never a failed-live-connection fallback. No wire, record, database or envelope version changes.
 
 ### Generated transport contract (OWNER021, 2026-10-27)
 
@@ -60,7 +110,7 @@ Clients may request `application/problem+json`. Errors then contain RFC9457 `typ
 
 ### Frontend integration specification
 
-Source `HPX-SRC-0028`, original lines 1–8. Preserved contract/evidence wording; original dates and implementation claims retain their recorded scope.
+Source `HPX-SRC-0028`, original lines 1–8. Source-linked obligations with scoped retention, transformation or owner qualification; see the clause dispositions for `HPX-SRC-0028-S001`. Original dates and implementation observations remain historical evidence.
 
 Status: development coordination specification, 2026-10-24. Audience: the agent building the browser interface and the developers implementing its Rust application services. Read this document with [the product specification](<../../03-requirements/system-requirements.md>), [architecture](<../../04-architecture/system-architecture.md>), [data/navigation reference](<domain-navigation.md>) and [encryption specification](<../security-cryptography.md>).
 
@@ -143,10 +193,10 @@ Optional server events may invalidate authorized projections or report progress.
 
 ## Source provenance
 
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 1–8; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 9–26; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 47–67; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 135–157; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 1–8; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 9–26; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 47–67; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0028` — `Specifications/FRONTEND_INTEGRATION.md`, lines 135–157; SHA-256 `71d477947a404e9c60b9f99150ff6c681e266d18d62ef56b27c1b3f94501936d`. Original bytes and paths are recorded in [source manifest](<../../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Current adapter retry and lock behavior, 2026-10-25
 
@@ -160,7 +210,7 @@ CodeMirror LF coordinates are a display projection. An owned-source state field 
 
 The current runtime bounds complete headers to 16 KiB, including fragmented reads; body declarations remain bounded to 14 MiB and duplicate framing fields are rejected. Header delimiter scanning is linear. A single ten-second deadline covers underlying socket reads/writes through TLS and is checked before a queued route starts. It does not cancel an already executing storage/KDF operation; unknown outcomes still reconcile via the same operation ID. Host/Origin/session parsing removes only HTTP ASCII optional whitespace, and duplicate __Host-hpx session cookies fail closed. UTF-8 document content remains unchanged.
 
-[Current tests](../../registers/tests.csv) include 24 real transport/startup checks run without browser automation against isolated temporary servers. The TLS client trusts only the approved leaf, checks its exact DER hash, retains normal chain/hostname verification and uses Node's documented [partial-chain trust option](https://nodejs.org/api/tls.html#tlscreatesecurecontextoptions) for that explicit leaf anchor. This changes no OS/browser trust store and is not a certificate-warning bypass. It does not establish clean-profile browser renewal/expiry acceptance or a full platform matrix.
+[Current tests](../../02-governance/registers/tests.csv) include 24 real transport/startup checks run without browser automation against isolated temporary servers. The TLS client trusts only the approved leaf, checks its exact DER hash, retains normal chain/hostname verification and uses Node's documented [partial-chain trust option](https://nodejs.org/api/tls.html#tlscreatesecurecontextoptions) for that explicit leaf anchor. This changes no OS/browser trust store and is not a certificate-warning bypass. It does not establish clean-profile browser renewal/expiry acceptance or a full platform matrix.
 
 ## Explicit local keychain routes, 2026-10-25
 
@@ -349,7 +399,7 @@ The stage5 read-only comparison increment precedes separately gated branch-paren
 
 The additive capability is `branch_parent_comparison`. Within Document branches, a named child can open Compare committed with parent. The browser captures that exact branch and displays the two read-only exact snapshots pinned by the protected context query. Snapshot reads recheck current authority. Later edits/Commit, repeated text and branch changes cannot retarget either displayed snapshot. Close/lock/obsolete results are discarded; source, selection, Undo and acknowledgements remain unchanged. Both pending drafts are explicitly excluded. This is a two-version byte comparison, not a selected Merge base, conflict resolver, ancestry change or parent write. The witness proposal remains unadopted and independent. No durable record/schema/envelope/protocol version changes.
 
-Verification is recorded separately in HPX-TEST-046: ordinary storage/runtime/adapter/headless cases and the actual isolated HTTPS/SQLite/older-reader workflow. The latest executed counts and guarded handoff are in the [current development state](../../09-guides/reference/DEVELOPMENT_STATE.md#read-only-parent-comparison-delivered-2026-10-27).
+Verification is recorded separately in HPX-TEST-046: ordinary storage/runtime/adapter/headless cases and the actual isolated HTTPS/SQLite/older-reader workflow. The latest executed counts and guarded handoff are in the [current development state](../../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary).
 
 ## Automatic Commit on node or branch departure, 2026-10-27
 

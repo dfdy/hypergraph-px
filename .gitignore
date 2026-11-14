@@ -1,4 +1,4 @@
-# Local runtime and reference material. Current specifications start at docs/architecture/SPECIFICATION.md.
+# Local runtime and reference material. Current specifications start at docs/04-architecture/SPECIFICATION.md.
 .DS_Store
 /target/
 /node_modules/
@@ -54,7 +54,7 @@
 /.provenance/local-reorganisation-checkpoints/
 
 # Relocated locally private owner request dispositions (formerly INPUT.md).
-/docs/02-governance/requests.md
+/.provenance/docs-reorganisation/local-only/docs/02-governance/requests.md
 
 # Classified private local evidence,credentials,workspaces,tools and compiler outputs.
 /.local/
@@ -70,3 +70,4 @@
 # Local project agent instructions (including lowercase spelling).
 /AGENTS.md
 /agents.md
+

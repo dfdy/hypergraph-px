@@ -1,0 +1,144 @@
+// Flat conceptual restatement under an existing responsibility;not software or a persistent schema.
+model {
+  extend hpx.native.authority {
+    concept_workspace = domain_concept "Workspace scope" {
+      description "Storage/key boundary and workspace-local user context."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L7;HPX-OWNER-031" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_user = domain_concept "Workspace-local human/machine user" {
+      link ../../01-purpose/scope-and-non-goals.md#workspace-local-users--owner-clarification
+      link ../../03-requirements/acceptance-criteria.md#multi-user-and-ai-user-baseline-acceptance
+      link ../../03-requirements/acceptance-criteria.md#workspace-local-users--owner-clarification
+      link ../../03-requirements/system-requirements.md#mandatory-multi-user-and-ai-user-baseline-2026-10-30
+      link ../../03-requirements/system-requirements.md#workspace-local-users--owner-clarification
+      link ../../04-architecture/component-architecture.md#workspace-local-users--owner-clarification
+      link ../core-object-model.md#workspace-local-users--owner-clarification
+      link ../document-semantics.md#workspace-local-users--owner-clarification
+      link ../provenance-model.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/ai-collaboration.md#1-mandatory-multi-user-baseline--hpx-rq-032
+      link ../../06-subsystems/ai-collaboration.md#2-ai-agents-are-users--hpx-rq-033
+      link ../../06-subsystems/ai-collaboration.md#3-multiple-ai-agents-in-one-workspace--hpx-rq-034
+      link ../../06-subsystems/document-engine.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/external-integrations.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/frontend-interaction.md#multi-user-and-ai-user-ui-baseline
+      link ../../06-subsystems/frontend-interaction.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/graph-engine.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/import-export.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/interfaces/browser-runtime.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/interfaces/domain-navigation.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/security-cryptography.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/workspace-storage.md#workspace-local-users--owner-clarification
+      link ../../07-implementation/data-structures/sqlite-records.md#workspace-local-users--owner-clarification
+      link ../../07-implementation/protocols/draft-publication.md#workspace-local-users--owner-clarification
+      link ../../08-assurance/privacy-and-data-protection.md#workspace-local-users--owner-clarification
+      link ../../08-assurance/recovery.md#workspace-local-users--owner-clarification
+      link ../../08-assurance/security-threat-model.md#workspace-local-users--owner-clarification
+      link ../../08-assurance/testing-strategy.md#workspace-local-users--owner-clarification
+      link ../../06-subsystems/contracts/authority-lifecycle.md#bootstrap-recovery-and-administration
+      link ../../02-governance/proposals/workspace-authority-decisions.md#fixed-constraints-and-recorded-choice-alternatives
+      description "Attributable user;identity and permissions do not carry elsewhere. OWNER058: authorised creation/activation/suspension retains stable identity and attribution; explicit initial-human bootstrap/recovery, never first login."
+      metadata { scope "conceptual only" source "HPX-OWNER-030/031/033;HPX-OWNER-058" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "At most one machine user per provider in each workspace;multiple providers may participate. Models/sessions/chats are not additional users. Organisation/group source categories do not introduce another user class or provider account. Inference remains machine-side." }
+      link ../core-object-model.md
+      link ../../02-governance/proposals/workspace-authority-decisions.md
+    }
+    concept_session = domain_concept "Authentication/session context" {
+      link ../../06-subsystems/contracts/authority-lifecycle.md#local-authentication-and-session-state
+      description "Admission context,distinct from user identity and rights."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L7;HPX-OWNER-029" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_permission = domain_concept "Current workspace-user permission" {
+      link ../../03-requirements/acceptance-criteria.md#workspace-authority-policy-acceptance--owner058
+      link ../../02-governance/proposals/workspace-authority-decisions.md#accepted-logical-capability-vocabulary--choice-2a
+      description "Backend-enforced explicit per-user capability sets without role inheritance (OWNER058); wire/storage representation remains unadopted."
+      metadata { scope "conceptual only" source "HPX-OWNER-029/030/031;HPX-OWNER-058" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "No frontend/MCP/chat bypass or self-grants. Source ownership/contribution,logical identity,selection and key possession are not permission. OWNER058 adopts explicit capabilities: read_current,read_history,edit,commit,disclose_machine_context,export,administer_users,administer_permissions. Commit requires edit; disclosure/export require the corresponding reads and egress policy. Serialise permission changes with final publication admission;revalidate current authority immediately before mutation publication and protected read/receipt release. Revoked work cannot subsequently publish or release protected output;completed outcomes and prior disclosures are not undone. Separate current/history read authority;authorise every exact dependency and receipt payload,or fail the complete protected operation without omission. Private workflow isolation remains. OWNER059 and the linked authority/profile contracts now specify local credential/session,enrolment/recovery,ceiling-bounded administration,policy generations and mediated history-key designs;actual credential/codec/key/upgrade implementation and acceptance remain downstream." }
+      link ../core-object-model.md
+      link ../../02-governance/proposals/workspace-authority-decisions.md
+    }
+    concept_key = domain_concept "Workspace key availability" {
+      description "Unlock capability,not authentication or resource permission."
+      metadata { scope "conceptual only" source "HPX-ADR-014;HPX-SRC-0024:L5-L14" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_policy = domain_concept "SecurityPolicy / epoch distinction" {
+      link ../../06-subsystems/contracts/authority-lifecycle.md#authenticated-policy-concurrency-and-keys
+      description "Authenticated policy/custody context;OWNER059 candidate policy/key mediation is specified,not implemented."
+      metadata { scope "conceptual only" source "HPX-SRC-0026:L15-L27" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      metadata { invariant "Configuration alone cannot grant decryption. Trusted-server/passphrase and explicit ADR014 keychain scope remain. OWNER059 specifies authenticated policy generations,key catalogue and explicit rotation/history mediation without active format or client-held enablement;general commitment/signature schemes are not inferred." }
+      link ../core-object-model.md
+    }
+    concept_logical_id = domain_concept "Logical identifier" {
+      description "Opaque typed identity,not plaintext digest or ciphertext address."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L25;HPX-SRC-0026:L29" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_digest = domain_concept "Private plaintext commitment" {
+      description "PrivateDigest distinction;general commitment scheme unimplemented."
+      metadata { scope "conceptual only" source "HPX-SRC-0026:L15-L29" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_address = domain_concept "Ciphertext lookup address" {
+      description "Physical encrypted-byte location,not logical revision identity."
+      metadata { scope "conceptual only" source "HPX-SRC-0026:L15-L29;HPX-SRC-0024:L31-L38" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_device = domain_concept "Device identity (source category)" {
+      description "Distinct from user,hosting instance,session and grant."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L7;HPX-SRC-0026:L15-L27" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+    concept_group = domain_concept "Group identity (source category)" {
+      description "Retained source scope;no membership/ACL mechanism adopted."
+      metadata { scope "conceptual only" source "HPX-SRC-0023:L7;HPX-SRC-0026:L15-L27" authority "source-scoped;accepted/proposed/implementation distinctions retained" }
+      link ../core-object-model.md
+    }
+  }
+  hpx.native.authority.concept_user -[conceptual_relation]-> hpx.native.authority.concept_workspace "Belongs to exactly one workspace;not reusable elsewhere" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_user -[conceptual_relation]-> hpx.native.authority.concept_permission "Permissions belong to this workspace user" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_session -[conceptual_relation]-> hpx.native.authority.concept_user "Authenticated actor context;mechanism unspecified" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_key -[conceptual_relation]-> hpx.native.authority.concept_workspace "Key availability within storage/key boundary" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_key -[conceptual_relation]-> hpx.native.authority.concept_permission "Key possession does not grant resource authority" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_policy -[conceptual_relation]-> hpx.native.authority.concept_workspace "Source policy/epoch context;no format adopted" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_logical_id -[conceptual_relation]-> hpx.native.domain.exact.concept_node "Identifies logical content independently of physical bytes" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_logical_id -[conceptual_relation]-> hpx.native.authority.concept_digest "Not a plaintext commitment" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_logical_id -[conceptual_relation]-> hpx.native.authority.concept_address "Not a physical encrypted-byte address" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_digest -[conceptual_relation]-> hpx.native.authority.concept_address "Distinct commitment and lookup roles" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_device -[conceptual_relation]-> hpx.native.authority.concept_user "Distinct identity categories;no extra user inferred" { metadata { scope "dom001_m4" } }
+  hpx.native.authority.concept_group -[conceptual_relation]-> hpx.native.authority.concept_user "Distinct source categories;membership unspecified" { metadata { scope "dom001_m4" } }
+}
+views {
+  view concept_authority_distinctions of hpx.native.authority {
+    link ../../06-subsystems/contracts/authority-lifecycle.md
+    title "Conceptual / M4 authority and representation distinctions"
+    description "M4 / HPX-CAN-021. Conceptual distinctions and accepted workspace-user scope,not new users/services or an authentication/ACL/key schema. Human and machine users belong to exactly one workspace;at most one machine user per provider per workspace. Models,sessions and chats are not extra users. Authentication,storage-key unlock and resource permission remain distinct;no separate node ACL is required. Device/group categories retain their source scope without new user classes or membership rules. OWNER059 specifies policy generations,mediated key/history and exact administration contracts without runtime acceptance;general private-commitment/signature/addressing schemes are not inferred. OWNER058 adopts explicit lifecycle/bootstrap policy,per-user capability sets,publication/release revocation revalidation and separate current/history access;the linked authority contract specifies the accepted policy and remaining mechanism boundaries. Distinction arrows express constraints,not calls or assignment protocols. OWNER059 D01–D05A: workspace-local human verifier and revocable machine credential authentication;explicit owner-controlled enrolment/recovery,ceiling-bounded administration and last-administrator protection. Versioned authenticated policy generations serialize publication/release admission;trusted-server key mediation distinguishes current/history grants. Transport trust/renewal remains explicit;independently verified native client delivery and controlled-sink denial precede client-held activation. No unlock/OS-login/selection authority,no cross-workspace users,no runtime implementation or active format change."
+    link ../../06-subsystems/diagrams/shared-responsibilities.c4
+    link ../core-object-model.md
+    link ../../06-subsystems/interfaces/browser-runtime.md
+    link ../../06-subsystems/ai-collaboration.md
+    link ../../06-subsystems/security-cryptography.md
+    link ../../06-subsystems/interfaces/crypto-adapter.md
+    link ../../02-governance/proposals/workspace-authority-decisions.md
+    group "Conceptual subject: M4 authority and representation distinctions" {
+      include hpx.native.authority.concept_workspace
+      include hpx.native.authority.concept_user with { notes "At most one machine user per provider in each workspace;multiple providers may participate. Models/sessions/chats are not additional users. Organisation/group source categories do not introduce another user class or provider account. Inference remains machine-side." }
+      include hpx.native.authority.concept_session
+      include hpx.native.authority.concept_permission with { notes "No frontend/MCP/chat bypass or self-grants. Source ownership/contribution,logical identity,selection and key possession are not permission. OWNER058 adopts explicit capabilities: read_current,read_history,edit,commit,disclose_machine_context,export,administer_users,administer_permissions. Commit requires edit; disclosure/export require the corresponding reads and egress policy. Serialise permission changes with final publication admission;revalidate current authority immediately before mutation publication and protected read/receipt release. Revoked work cannot subsequently publish or release protected output;completed outcomes and prior disclosures are not undone. Separate current/history read authority;authorise every exact dependency and receipt payload,or fail the complete protected operation without omission. Private workflow isolation remains. OWNER059 and the linked authority/profile contracts now specify local credential/session,enrolment/recovery,ceiling-bounded administration,policy generations and mediated history-key designs;actual credential/codec/key/upgrade implementation and acceptance remain downstream." }
+      include hpx.native.authority.concept_key
+      include hpx.native.authority.concept_policy with { notes "Configuration alone cannot grant decryption. Trusted-server/passphrase and explicit ADR014 keychain scope remain. OWNER059 specifies authenticated policy generations,key catalogue and explicit rotation/history mediation without active format or client-held enablement;general commitment/signature schemes are not inferred." }
+      include hpx.native.authority.concept_logical_id
+      include hpx.native.authority.concept_digest
+      include hpx.native.authority.concept_address
+      include hpx.native.authority.concept_device
+      include hpx.native.authority.concept_group
+    }
+    group "Retained conceptual context (not software)" {
+      include hpx.native.domain.exact.concept_node
+    }
+    exclude * -> *
+    include * -> * where metadata.scope is "dom001_m4"
+    autoLayout LeftRight 110 90 spline
+  }
+}

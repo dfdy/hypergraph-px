@@ -6,7 +6,7 @@ import {pathToFileURL} from 'node:url';
 export function planChanges(files){
  if(!files.length)throw Error('Supply the exact increment with --files; the dirty tree includes unrelated retained work.');
  if(files.some(file=>file.startsWith('/')||file.split('/').includes('..')))throw Error('Paths must be repository-relative.');
- const model=files.some(p=>p.startsWith('docs/architecture/'));
+ const model=files.some(p=>p.endsWith('.c4')||['docs/likec4.config.json','docs/package.json','docs/package-lock.json','docs/02-governance/registers/specification-ownership.csv','docs/02-governance/registers/contract-bindings.json'].includes(p));
  const docs=!model&&files.every(p=>p.startsWith('docs/')||['AGENTS.md','README.md'].includes(p));
  const toolingPaths=new Set(['frontend/build.mjs','frontend/server.mjs','frontend/playwright.config.js','frontend/package.json','frontend/scripts/build-cache.mjs','frontend/scripts/run-ui.mjs','shared/tooling/verify-change.mjs']);
  const tooling=files.every(p=>toolingPaths.has(p)||p.includes('/tests/'));

@@ -1,0 +1,191 @@
+// Canonical definition location: HPX-CAN-001/002 (HPX-OWNER-032). Existing design/implementation statuses retain their authority; see docs/04-architecture/SPECIFICATION.md.
+// C2 describes execution and persistent-data boundaries, not Rust modules.
+// Future relationships retain source proposal status; no provider/protocol is selected.
+specification {
+  element artifact { style { shape storage } }
+  relationship planned_flow {
+    #planned
+    color muted
+    line dashed
+  }
+}
+
+model {
+  ai_users -[planned_flow]<-> hpx.browser.ui.interaction "Required chat: prompt / context / response nodes" { link ../../06-subsystems/ai-collaboration.md }
+  ai_users -[planned_flow]<-> hpx.native.transport.client_access "Required selected-node MCP edits / results" { link ../../06-subsystems/ai-collaboration.md }
+
+  zotero = system "Zotero (planned)" {
+    #planned
+    description "Read-only citation integration has two separately selectable and authenticated interfaces: Zotero Desktop-local REST and Zotero cloud Web API. Exact credentials, origins and protocol profiles remain unselected. Captured metadata, not later live refresh, binds historical reconstruction."
+    link ../../06-subsystems/document-engine.md
+    link ../../03-requirements/user-needs.md
+
+    desktop = system "Zotero Desktop REST (planned)" {
+      #planned
+      description "Read-only desktop-local citation adapter, separately selected and authenticated. No cloud fallback, fixed port or credential scheme is selected."
+      link ../../06-subsystems/document-engine.md
+    }
+    cloud = system "Zotero cloud Web API (planned)" {
+      #planned
+      description "Read-only cloud citation adapter, separately selected and authenticated. Captured citation metadata must remain reproducible without a later provider lookup."
+      link ../../06-subsystems/document-engine.md
+    }
+  }
+
+  github = system "GitHub (planned)" {
+    #planned
+    description "Future release discovery, separately approved document publication and proposed encrypted remote backup. Each purpose has distinct disclosure, credential and recovery gates. Application integration is separate from this repository's development tools."
+    link ../../06-subsystems/external-integrations.md
+  }
+
+  peers = system "Other HPX instances (future)" {
+    #planned
+    description "Future cross-instance collaboration, offline exchange and federation; mandatory same-instance multi-user/AI support is separate. Membership, authorization, causal conflict handling and cryptographic protocols remain separate design and acceptance gates. Local SQLite transactions do not establish convergence."
+    link ../../03-requirements/system-requirements.md
+    link ../../02-governance/roadmap.md
+  }
+
+  os_clipboard = artifact "Operating-system clipboard" {
+    description "Ordinary copy/paste crosses the browser boundary. This is distinct from HPX's protected per-principal/workspace provenance clipboard, whose durable state remains inside the encrypted .hpx workspace. Future client-held egress restrictions remain a separate unimplemented gate."
+    link ../../06-subsystems/document-engine.md
+    link ../../../frontend/src/owned-source.js
+  }
+
+  enrollment_backups = artifact "Pre-keychain-upgrade .hpx backups" {
+    description "Existing bounded recovery snapshots created and verified before explicit schema1-to-schema2 keychain enrollment, in the sibling .hypergraph-backups directory. Retain encrypted bytes and passphrase recovery. Optional infrastructure, not a second authoritative workspace, external freshness witness or general portable restore service."
+    link ../decisions/0014-keychain-unlock-policy.md
+    link ../../08-assurance/recovery.md
+    link ../../../backend/crates/storage/src/keychain.rs
+  }
+
+  exchange_files = artifact "Import, export and backup files" {
+    description "External artifacts, not an HPX database or another running service. Exact temporary Markdown download is the current subset. Future Word review import, Markdown/PDF/HTML and academic export, exact content/provenance manifests or read-only archives, and portable package/backup formats retain separate gates. .hpxz, .hpx.json and .hpxe remain proposed formats. Pandoc packaging is unresolved; no separate converter process is selected."
+    link ../../06-subsystems/external-integrations.md
+    link ../../06-subsystems/import-export.md
+  }
+
+  user -[existing_flow]-> hpx.native.transport.startup "Launches / configures the local executable" {
+    description "Existing startup selects workspace, certificate, private key, port and explicit create/reopen. This does not claim a full import/export/backup command-line suite or new persistent configuration store."
+    link ../decisions/0004-local-https-bootstrap.md
+    link ../../../backend/crates/runtime/src/main.rs
+  }
+  hpx.browser -[existing_flow]<-> os_clipboard "Explicit exact-source copy / paste" {
+    description "Browser-mediated ordinary OS clipboard interaction; not a provenance checkpoint, Commit or authority grant."
+    link ../../06-subsystems/document-engine.md
+    link ../../../frontend/src/owned-source.js
+  }
+  hpx.native.storage -[existing_flow]-> enrollment_backups "Verified backup before explicit keychain upgrade" {
+    link ../decisions/0014-keychain-unlock-policy.md
+    link ../../../backend/crates/storage/src/keychain.rs
+  }
+  hpx.native.integrations -[planned_flow]-> zotero.desktop "Read-only desktop citation lookup (planned)" {
+    link ../../06-subsystems/document-engine.md
+  }
+  hpx.native.integrations -[planned_flow]-> zotero.cloud "Read-only cloud citation lookup (planned)" {
+    link ../../06-subsystems/document-engine.md
+  }
+  hpx.native.integrations -[planned_flow]-> github "Release checks; approved publication / backup (planned)" {
+    link ../../06-subsystems/external-integrations.md
+  }
+  hpx.native.integrations -[planned_flow]<-> peers "Authorized exchange / federation (future)" {
+    link ../../03-requirements/system-requirements.md
+  }
+  hpx.browser -[existing_flow]-> exchange_files "Downloads exact captured Markdown buffer" {
+    description "Temporary/uncommitted source; browser download does not establish durable device storage, autosave or a Commit."
+    link ../../06-subsystems/external-integrations.md
+    link ../../../frontend/src/app.js
+  }
+  exchange_files -[planned_flow]-> hpx.native.integrations "Bounded document / package import (planned)" {
+    description "Word tracked changes are untrusted file input, not a connection to Word cloud services. Portable restore contracts and byte formats remain undecided."
+    link ../../06-subsystems/external-integrations.md
+  }
+  hpx.native.integrations -[planned_flow]-> exchange_files "Authorized export / portable backup (planned)" {
+    description "Freeze exact permitted content and citation resources; enforce current authorization and egress policy. Academic conversion, portable packages and general restore are not delivered by the bounded keychain enrollment backup."
+    link ../../06-subsystems/import-export.md
+    link ../../06-subsystems/external-integrations.md
+  }
+}
+
+views {
+  view c2_containers of hpx {
+    title "C2 / HPX containers"
+    description "Inside the HPX subject boundary: Browser interface derives presentations, one HPX Rust executable executes domain/application operations, and the encrypted .hpx workspace is authoritative persistence and the storage/key boundary. These are responsibility and data boundaries, not domain object types or three server processes. Outside: human/machine callers, OS credentials, file artifacts and specified future integrations. HPX-CAN-001/002/008 own this container scope; precise HPX-DOM-001 invariants remain linked contracts. Solid connections show the bounded existing local slice; dashed connections are required but unimplemented or planned/future as described. Trusted-server is default; client-held and remote deployment mechanisms remain unavailable and unselected. Explicit optional keychain enrollment retains passphrase recovery. Canonical ownership does not imply complete implementation. Open the executable for its existing C3 overview; C2 migration stops here."
+    include hpx, hpx.workspace
+    include hpx.browser with { navigateTo c3_browser }
+    include hpx.native with { navigateTo c3_executable }
+    include user, ai_users
+    // Local resources are context/artifacts, not additional runtime containers.
+    group "Local platform and files" {
+      color muted
+      include credentials, exchange_files, os_clipboard, enrollment_backups
+    }
+    // Presentation group only; no shared deployment or trust boundary is implied.
+    group "Future integrations" {
+      color muted
+      border dashed
+      include zotero, zotero.*, github, peers
+    }
+    style element.tag = #planned {
+      color muted
+      border dashed
+    }
+    // Compact captions in this view; full relationship wording remains in the model.
+    include user -> hpx.browser with { title "Edit / unlock" }
+    include user -> hpx.native with { title "Launch / configure" }
+    include ai_users -> hpx.browser with { title "Chat nodes (required; planned)" }
+    include ai_users -> hpx.native with { title "Shared API via MCP" }
+    include hpx.browser -> os_clipboard with { title "Exact-source copy / paste" }
+    include hpx.native -> enrollment_backups with { title "Before keychain upgrade" }
+    include hpx.browser -> hpx.native with { title "Shared API / HTTPS" description "Browser commands/queries enter the shared backend API; authorised results return through the adapter. Authentication, workspace unlock and resource permission are distinct gates. The machine-user MCP path uses the same logical API and application policy without requiring an internal HTTP hop. Exact identity, permission and wire mechanisms remain unadopted; current HTTPS is bounded implementation evidence." }
+    include hpx.native -> hpx.browser with { title "Embedded frontend assets" }
+    include hpx.native -> hpx.workspace with { title "Encrypted reads / writes" description "The executable reads and publishes authoritative encrypted workspace state through storage/crypto adapters under application authority. Logical content/revision identities are distinct from physical ciphertext lookup addresses; internal plaintext commitments are not logical IDs or public existence/disclosure rights. Exact addressing, deduplication, policy epochs and record/envelope formats remain in the linked contracts; no format or custody change is selected." }
+    include hpx.native -> credentials with { title "Optional keychain unlock" }
+    include hpx.browser -> exchange_files with { title "Exact Markdown download" }
+    include hpx.native -> exchange_files with { title "Export / portable backup" }
+    include exchange_files -> hpx.native with { title "Document / package import" }
+    include hpx.native -> zotero.desktop with { title "Desktop-local citations" }
+    include hpx.native -> zotero.cloud with { title "Cloud citations" }
+    include hpx.native -> github with { title "Releases / publication / backup" }
+    include hpx.native -> peers with { title "Future federation / exchange" }
+    // Short C2 captions; full descriptions remain on the underlying model.
+    include user with { description "Writes, explores and reviews documents." }
+    include hpx.browser with { description "Owns derived presentation, editing interaction and navigation with exact source preserved. A View is derived as defined at C1; headings/sentences shown as views do not require new physical nodes per keystroke. Browser buffers and UI-local preferences do not publish authoritative hypergraph state. Sharing and permission checks apply to every projection through the backend API. Frontend assets come from the Rust executable; workspace keys remain Rust-only in trusted-server mode. Exact buffer, coordinate and edit semantics remain in HPX-DOM-001 and linked contracts." }
+    include hpx.native with { description "One executable owns domain/application execution, backend authorization, storage/crypto and secure delivery; these responsibilities are not new containers. Pure domain plans grant no authority and remain free of serialization, entropy and I/O. Human and machine users are attributable principals governed by workspace-user permissions. All human/machine protected commands and queries use one logical API through browser/MCP adapters with backend-enforced workspace-user permissions. Authentication, workspace unlock/key availability, logical identity, ownership/contribution, occurrence and session do not confer resource permission. Humans and machine users belong to one workspace and are not reusable elsewhere; at most one machine user per provider per workspace, with multiple providers permitted. Models/sessions/chats are not additional users; no separate node/edge ACL is required. Current sole-owner code is incomplete evidence; identity, permission, wire and storage mechanisms are not adopted here. Machine-side inference stays outside HPX." }
+    include hpx.workspace with { description "Workspace is the storage/key boundary and authoritative encrypted .hpx persistence for content, recoverable drafts, heads, immutable history and receipts; not a domain content node or an extra server. SQLite runs inside the Rust executable; WAL/SHM support recovery, not application history or permission. Logical identity is distinct from ciphertext addressing and internal plaintext commitments; equality is neither identity nor permission to disclose cross-domain existence. Unlock makes keys available without granting user resource rights. Explicit keychain enrollment is optional with passphrase recovery retained; client-held mode remains unavailable. Exact identities, closed snapshots, draft acknowledgement versus Commit, epochs, metadata visibility and record/envelope versions remain in the linked contracts." }
+    include credentials with { description "Optional device-secret unlock; passphrase recovery retained." }
+    include os_clipboard with { description "Ordinary copy / paste; separate from private provenance state." }
+    include enrollment_backups with { description "Verified encrypted snapshot before explicit keychain upgrade." }
+    include exchange_files with { description "Exact Markdown download; broader import / export remains planned." }
+    include github with { description "Planned release discovery, reviewed publication and backup." }
+    include peers with { description "Cross-instance federation/exchange only;not baseline multi-user support." }
+    include zotero with { description "Two separately selected, read-only citation interfaces." }
+    include zotero.desktop with { description "Desktop-local REST; authentication design pending." }
+    include zotero.cloud with { description "Cloud Web API; authentication design pending." }
+    rank source { user, ai_users }
+    exclude * -> * where kind is code_call
+    exclude * -> * where kind is delivery_build
+    exclude * -> * where kind is delivery_call
+    exclude * -> * where kind is delivery_code
+    exclude * -> * where kind is domain_use
+    exclude * -> * where kind is domain_call
+    exclude * -> * where kind is domain_type
+    exclude * -> * where kind is domain_test
+    exclude * -> * where kind is coverage_call
+    exclude * -> * where kind is coverage_data
+    exclude * -> * where kind is coverage_plan
+    exclude * -> * where kind is delivery_detail_call
+    exclude * -> * where kind is delivery_detail_data
+    exclude * -> * where kind is delivery_detail_build
+    exclude * -> * where kind is coordination_call
+    exclude * -> * where kind is coordination_control
+    exclude * -> * where kind is coordination_data
+    exclude * -> * where kind is coordination_result
+    exclude * -> * where kind is browser_detail
+    exclude * -> * where kind is browser_organisation
+    exclude * -> * where kind is browser_presentation
+    exclude * -> * where kind is navigation_call
+    exclude * -> * where kind is navigation_data
+    exclude * -> * where kind is graph_tab_design
+    autoLayout LeftRight 100 65 spline
+  }
+}

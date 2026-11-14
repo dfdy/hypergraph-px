@@ -1,5 +1,23 @@
 # Document, Branch and Revision Semantics
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-009-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-009-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-009-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-009-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-009-05` [Entities and identities](#entities-and-identities) | [hpx.native.domain.exact](../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-009-06` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-009-07` [Retained autosaved selections and branch preservation — OWNER049/050](#retained-autosaved-selections-and-branch-preservation--owner049050) | [hpx.native.application.publication](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-009-08` [Structural contributions without notation — OWNER051](#structural-contributions-without-notation--owner051) | [hpx.native.domain.exact](../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-009-09` [Recovery purpose and immutable reference evidence — OWNER052](#recovery-purpose-and-immutable-reference-evidence--owner052) | [hpx.native.application.publication](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-009-10` [Selected bundle authority and derived use contexts — OWNER055](#selected-bundle-authority-and-derived-use-contexts--owner055) | [hpx.native.domain.exact](../06-subsystems/diagrams/pure-domain.c4) · `HPX-CAN-010` · [c3_pure_domain](../04-architecture/navigation.md) · consumers: none |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-DOM-003`
@@ -7,17 +25,22 @@
 - **Purpose:** Occurrences, manifests, revision ancestry, derivation and closed snapshot reconstruction.
 - **Level:** `05-domain`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-11-03
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN027 / Working state exact editing and graph policy](../06-subsystems/contracts/editing-and-graph.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -30,7 +53,7 @@ Formal meanings do not imply every type or operation is implemented. See impleme
 
 ## Entities and identities
 
-**Reconstruction scope (HPX-OWNER-043):** [M1 closed state](../architecture/Conceptual/identity-closure.c4) now specifies an explicit logical list of the exact version at each inclusion position, including exact cycle-boundary targets. The first reconstruction guarantee is identical source text and included versions; visual appearance, font rendering and typesetting are external to that guarantee. Retain deterministic source-emission inputs and dependencies that affect source bytes; this does not require preserving a visual rendering environment. Physical record/encoding choices remain unadopted. The newer owner scope qualifies inherited renderer/profile wording below without rewriting source provenance.
+**Reconstruction scope (HPX-OWNER-043):** [M1 closed state](diagrams/identity-closure.c4) now specifies an explicit logical list of the exact version at each inclusion position, including exact cycle-boundary targets. The first reconstruction guarantee is identical source text and included versions; visual appearance, font rendering and typesetting are external to that guarantee. Retain deterministic source-emission inputs and dependencies that affect source bytes; this does not require preserving a visual rendering environment. Physical record/encoding choices remain unadopted. The newer owner scope qualifies inherited renderer/profile wording below without rewriting source provenance.
 
 **Current cycle qualification (HPX-OWNER-041):** [cyclic inclusions may be saved](hypergraph-mathematics.md#accepted-cycle-aware-inclusion-policy--hpx-owner-041). A complete finite reconstruction accounts for exact expanded contexts and explicit cycle boundaries under the frozen stopping rule, rather than infinitely enumerating cyclic occurrence paths. Missing dependencies or exhausted budgets are not cycle boundaries or complete closure. Exact boundary/state encoding remains unadopted; immutable revision ancestry and historical selections are unchanged. Source passages below retain their provenance subject to this qualification.
 
@@ -97,30 +120,30 @@ Compilation targets Markdown and HTML, with a machine-readable source/revision m
 
 ## Source provenance
 
-- `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 20–27; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 34–43; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 53–59; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 113–125; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
-- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 28–37; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 20–27; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 34–43; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0025` — `Specifications/DATA/MATHEMATICAL_MODEL.md`, lines 53–59; SHA-256 `3320a86703c95f61a357d88a972f43eb1ff8bf1756f5abe9ab3f844b3a461117`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0026` — `Specifications/DATA/README.md`, lines 113–125; SHA-256 `1b821f333c1bd2db9cfd3499017a6c43597403b66fbc0520f91429616febd800`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0037` — `Specifications/WORKSPACE_INTERFACE.md`, lines 28–37; SHA-256 `2a3eda5c15638cc67be928fd6afa7c0583c07c2b8cc5bdd85715bb197dcc321e`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Retained autosaved selections and branch preservation — OWNER049/050
 
-[M1](../architecture/Conceptual/identity-closure.c4) owns RQ040–041's retained-selection and constructed-version branch scope; [decision provenance](../02-governance/OWNER_DECISIONS.md#last-autosaved-composition-and-historical-version-accumulation--2026-11-01) retains the owner's successive refinements. Reopen A using its last successful acknowledged autosave, with exact occurrence-specific nested selections, not B's newest head or merely A's last Commit. Unacknowledged typing is not claimed durable. Newer authorised versions have a separate source-neutral indication; the comparison relation remains undesigned and cannot expose inaccessible versions or retarget history.
+[M1](diagrams/identity-closure.c4) owns RQ040–041's retained-selection and constructed-version branch scope; [decision provenance](../02-governance/OWNER_DECISIONS.md#last-autosaved-composition-and-historical-version-accumulation--2026-11-01) retains the owner's successive refinements. Reopen A using its last successful acknowledged autosave, with exact occurrence-specific nested selections, not B's newest head or merely A's last Commit. Unacknowledged typing is not claimed durable. Newer authorised versions have a separate source-neutral indication; the comparison relation remains undesigned and cannot expose inaccessible versions or retarget history.
 
 Routine autosaves must not accumulate historical versions merely because they occur. The future universal autosave/Commit relationship is reopened; current ADR019 private Save/checkpoint versus Commit and OWNER010 departure Commit keep their original scoped meanings and implementation evidence. No deletion/coalescing or mutable-history exception is adopted. Current private visibility and authority remain; current whole-owned draft records do not establish general nested composition recovery.
 
-Save-as-branch must preserve an authorised constructed current-document composition and its exact selections without silently changing document/content identity into a Fork. Ordinary current editing already has an owning branch; selected constituent versions and read-only projections are separate. [Branch reconciliation](../architecture/proposals/branch-selection-reconciliation.md) explains the tentative known-branch hypothesis, main designation, graph reconstruction and non-authoritative caching. Exact branch-capture publication/parentage, general working-state representation and main designation/construction remain design work, not accepted schemas or a latest-all-nodes rule.
+Save-as-branch must preserve an authorised constructed current-document composition and its exact selections without silently changing document/content identity into a Fork. Ordinary current editing already has an owning branch; selected constituent versions and read-only projections are separate. Branch reconciliation explains the tentative known-branch hypothesis, main designation, graph reconstruction and non-authoritative caching. Exact branch-capture publication/parentage, general working-state representation and main designation/construction remain design work, not accepted schemas or a latest-all-nodes rule.
 
 ## Structural contributions without notation — OWNER051
 
-[Canonical M1](../architecture/Conceptual/identity-closure.c4) now includes the accepted no-notation reconstruction case and its stopped-cycle source contribution, alongside OWNER047's exact original-notation rule. [Approval and exact scope](../02-governance/OWNER_DECISIONS.md#structural-inclusion-contributions-and-no-notation-cycle-stops--2026-11-02) and [marker-versus-structure example](../architecture/proposals/trustworthy-reconstruction-inputs.md#revision5--bounded-owner-adoption) distinguish semantic adoption from an implemented graph-only editor or physical placement encoding. OWNER053 now defines structural membership and exact partial-fragment meaning in the [selection contract](text-and-anchors.md#structural-membership-and-exact-partial-fragments--owner053);endpoint representation and exact structural/source acquisition remain design work; no silently dropped inclusion, guessed position or new retention rule follows.
+[Canonical M1](diagrams/identity-closure.c4) now includes the accepted no-notation reconstruction case and its stopped-cycle source contribution, alongside OWNER047's exact original-notation rule. [Approval and exact scope](../02-governance/OWNER_DECISIONS.md#structural-inclusion-contributions-and-no-notation-cycle-stops--2026-11-02) and [marker-versus-structure example](proposals/reconstruction-input-preparation.md#completed-supplier-result-contract) distinguish semantic adoption from an implemented graph-only editor or physical placement encoding. OWNER053 now defines structural membership and exact partial-fragment meaning in the [selection contract](text-and-anchors.md#structural-membership-and-exact-partial-fragments--owner053);endpoint representation and exact structural/source acquisition remain design work; no silently dropped inclusion, guessed position or new retention rule follows.
 
 ## Recovery purpose and immutable reference evidence — OWNER052
 
-[Canonical M1](../architecture/Conceptual/identity-closure.c4) and [approval provenance](../02-governance/OWNER_DECISIONS.md#ordinary-composition-recovery-and-durable-reference-evidence--2026-11-02) distinguish ordinary acknowledged-composition recovery from an operation requiring immutable durable-reference evidence. Preserve the exact selected unpublished source and nested context required by the acknowledged composition after its constituent drafts advance. Ordinary reopening retention does not itself create a permanent checkpoint; repeated autosaves are not permanent-capture events by themselves. Existing immutable revisions/checkpoints/references remain intact.
+[Canonical M1](diagrams/identity-closure.c4) and [approval provenance](../02-governance/OWNER_DECISIONS.md#ordinary-composition-recovery-and-durable-reference-evidence--2026-11-02) distinguish ordinary acknowledged-composition recovery from an operation requiring immutable durable-reference evidence. Preserve the exact selected unpublished source and nested context required by the acknowledged composition after its constituent drafts advance. Ordinary reopening retention does not itself create a permanent checkpoint; repeated autosaves are not permanent-capture events by themselves. Existing immutable revisions/checkpoints/references remain intact.
 
 Recovery evidence is required state, not an evictable cache. Another composition or unresolved operation must not lose required evidence when a recovery state changes. This does not authorise deletion/release, adopt physical copying/deduplication/storage/format, define general durable-reference events, settle branch capture/publication, change private-state authority/permissions or establish universal autosave/Commit separation. OWNER053 defines selection meaning;exact acquisition/acknowledgement consistency and endpoint representation remain unresolved; no current implementation or new theorem is claimed.
 
 ## Selected bundle authority and derived use contexts — OWNER055
 
-[M1](../architecture/Conceptual/identity-closure.c4) and the [concrete closure contract](../architecture/proposals/exact-closure-source-map.md) select the exact bundle as authority, with finite uses/maps derived on read. Source-state variants preserve committed,checkpoint and retained-working bindings/lifetimes; local parent/occurrence chains preserve repeated uses and distinct descendant selections without making the selected graph a tree. Only validated reproducible caches are discardable. Exact acknowledged recovery and immutable reference evidence remain protected under OWNER050/052; no routine permanent history,cleanup/release or universal Save/Commit coupling is introduced. Storage formats are specified as design,not implemented or accepted for real-data use.
+[M1](diagrams/identity-closure.c4) and the [concrete closure contract](proposals/exact-closure-source-map.md) select the exact bundle as authority, with finite uses/maps derived on read. Source-state variants preserve committed,checkpoint and retained-working bindings/lifetimes; local parent/occurrence chains preserve repeated uses and distinct descendant selections without making the selected graph a tree. Only validated reproducible caches are discardable. Exact acknowledged recovery and immutable reference evidence remain protected under OWNER050/052; no routine permanent history,cleanup/release or universal Save/Commit coupling is introduced. Storage formats are specified as design,not implemented or accepted for real-data use.

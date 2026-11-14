@@ -1,5 +1,22 @@
 # Verification and Testing Strategy
 
+
+<!-- contract-bindings:start -->
+Section ownership below includes nested subsections. [Binding register](../02-governance/registers/contract-bindings.json) is authoritative for this routing. Links preserve existing acceptance, design and implementation status.
+
+| Contract section | C4 owner / scope / view and consumers, or prose disposition |
+| --- | --- |
+| `HPX-BIND-035-01` [Common metadata](#common-metadata) | Prose only: Document identity, authority and verification metadata; no component definition. |
+| `HPX-BIND-035-02` [Current adopted design — OWNER059](#current-adopted-design--owner059) | Prose only: Routing summary to the detailed adopted design contracts; their section bindings carry ownership. |
+| `HPX-BIND-035-03` [Workspace-local users — owner clarification](#workspace-local-users--owner-clarification) | [hpx.native.authority.concept_user](../05-domain/diagrams/authority-distinction.c4) · `HPX-CAN-026` · [concept_authority_distinctions](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-035-04` [Shared user API and per-user permissions](#shared-user-api-and-per-user-permissions) | [hpx.native.application.admission](../06-subsystems/diagrams/shared-responsibilities.c4) · `HPX-CAN-006` · [c3_application](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-035-05` [Unit/integration/property/fuzz cases](#unitintegrationpropertyfuzz-cases) | [hpx.native.domain](../04-architecture/diagrams/executable.c4) · `HPX-CAN-003` · [c3_executable](../04-architecture/navigation.md) · consumers: none |
+| `HPX-BIND-035-06` [Pass/fail or measurement thresholds](#passfail-or-measurement-thresholds) | Prose only: Authority, routing, qualification or documentation disposition remains prose; no additional software responsibility is defined. |
+| `HPX-BIND-035-07` [Source provenance](#source-provenance) | Prose only: Source/approval provenance retained as prose; no runtime owner is implied. |
+| `HPX-BIND-035-08` [Bounded runtime workload observations, 2026-10-27](#bounded-runtime-workload-observations-2026-10-27) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+| `HPX-BIND-035-09` [Change-sensitive execution, 2026-10-27](#change-sensitive-execution-2026-10-27) | Prose only: Scoped implementation or execution record; evidence does not define or adopt the product architecture. |
+<!-- contract-bindings:end -->
+
 ## Common metadata
 
 - **ID:** `HPX-ASSUR-001`
@@ -7,17 +24,22 @@
 - **Purpose:** Reported tests, proof evidence, limits and future acceptance strategy.
 - **Level:** `08-assurance`
 - **Status:** `proposed`
-- **Maintainer:** project owner; agent-authored migration assembly
+- **Maintainer:** project owner; current specification maintenance
 - **Applies to:** local-first HPX; published 0.7.0 and explicitly labelled unfinished working-tree/future scope
 - **Upstream authority:** [HPX-REQ-002](<../03-requirements/system-requirements.md>)
-- **Downstream dependencies:** [requirements and implementation traces](<../registers/requirements.csv>); application code remains unchanged
-- **Verification:** source coverage/hash/link/metadata review in [migration report](<../MIGRATION-REPORT.md>); software evidence is separately scoped
-- **Decision/history:** Phase C owner authorization and decisions in [owner record](<../02-governance/OWNER_DECISIONS.md>); source IDs/hashes below
+- **Downstream dependencies:** [requirements and implementation traces](<../02-governance/registers/requirements.csv>); application code remains unchanged
+- **Verification:** current metadata, source-authority and contract-link validation; software/proof evidence is separately scoped
+- **Decision/history:** current governing owner decisions and stable source identities
 - **Last reviewed:** 2026-10-30
+
+
+## Current adopted design — OWNER059
+
+The directly selected D01–D22A briefs now have diagram-owned definitions and precise supplements: [CAN027 / Working state exact editing and graph policy](../06-subsystems/contracts/editing-and-graph.md). These govern the listed design questions; earlier open-mechanism statements below retain their historical checkpoint scope where superseded by this explicit decision. Candidate record/profile designs are not active formats or implemented capability. Exact retained source/byte/history and accepted obligations remain; actual code, measured capacity, genuine older-reader, recovery/security/UI acceptance and proofs are separately unperformed. No original source provenance or as-run evidence is rewritten.
 
 ## Workspace-local users — owner clarification
 
-User structure is canonical in [C1/C2](../architecture/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
+User structure is canonical in [C1/C2](../04-architecture/diagrams/context.c4) (HPX-CAN-002); [chat/MCP and permission details](../06-subsystems/ai-collaboration.md) remain supplementary contracts.
 
 
 ## Shared user API and per-user permissions
@@ -27,7 +49,7 @@ Future acceptance must cross human/AI actor kinds, browser/MCP paths, distinct u
 
 Recorded checks retain original source/toolchain/time scope. No new software validation claim follows from documentation assembly.
 
-The checkpoint counts retained below are historical. The [current scope/evidence summary](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) and [test register](../registers/tests.csv) separate integrated local behavior, gated branch/working code and future acceptance. This refinement executes documentation/archive checks only; it does not rerun application tests or promote the review's abstract model into implementation proof.
+The checkpoint counts retained below are historical. The [current scope/evidence summary](../09-guides/reference/DEVELOPMENT_STATE.md#current-scope-and-evidence-summary) and [test register](../02-governance/registers/tests.csv) separate integrated local behavior, gated branch/working code and future acceptance. This refinement executes documentation/archive checks only; it does not rerun application tests or promote the review's abstract model into implementation proof.
 
 
 ## Unit/integration/property/fuzz cases
@@ -57,7 +79,7 @@ Analytical complexity and repeated-work hypotheses are not measured regressions.
 
 ## Source provenance
 
-- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 74–78; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../registers/source-manifest.csv>); archive is local/ignored.
+- `HPX-SRC-0024` — `Specifications/DATA/ENCRYPTION.md`, lines 74–78; SHA-256 `5d38ac394760cbf83720f2de41f2494cc051cd014b6b46f0ee4e5b0369eb06e6`. Original bytes and paths are recorded in [source manifest](<../02-governance/registers/source-manifest.csv>); archive is local/ignored.
 
 ## Bounded runtime workload observations, 2026-10-27
 
