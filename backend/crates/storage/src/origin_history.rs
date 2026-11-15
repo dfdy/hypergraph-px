@@ -1,5 +1,38 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Read-only experimental origin loading with explicit legacy seeds.
+//! # Hypergraph PX — Bounded experimental origin reconstruction
+//!
+//! Reconstructs exact single-parent passage origins from authenticated immutable
+//! evidence back to an explicit legacy seed, within record, byte and work caps.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Experimental temporal Commit readback and temporal origin
+//! queries; isolated storage tests.
+//!
+//! Specification:
+//! - [Storage responsibilities][spec0]
+//! - [Candidate origin and seed records][spec1]
+//! - [Experimental publication contract][spec2]
+//!
+//! Boundary: Read only and guarded by experimental feature/schema. A
+//! missing origin/seed/clock fails closed; unknown legacy age requires an
+//! explicit seed rather than inferred missing evidence.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/origin_history.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/07-implementation/data-structures/sqlite-records.md
+//! [spec2]: ../../../../docs/07-implementation/protocols/draft-publication.md#experimental-single-parent-temporal-commit-transaction
+
 use super::*;
 use hypergraph_domain::parent_merge::{Base, Limits, origins::Map};
 use std::collections::BTreeSet;
@@ -25,6 +58,8 @@ struct Frame {
     bytes: Zeroizing<Vec<u8>>,
     text: String,
 }
+
+/// Authenticate the node clock and require its stored generation to equal encoded order.
 fn raw_clock(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -37,13 +72,16 @@ fn raw_clock(
     let (generation, envelope): (i64, Vec<u8>) = db.query_row(
         "SELECT generation,envelope FROM slots WHERE kind=?1 AND id=?2",
         params![node_clock::CANDIDATE_KIND, doc.node.0.as_slice()],
+        // Read generation together with the encrypted clock under the charged budget.
         |row| Ok((row.get(0)?, row.get(1)?)),
     )?;
+    // The conversion callback rejects negative persisted generations.
     let generation = u64::try_from(generation).map_err(|_| Error::Integrity)?;
     let plain = cipher.key.open(
         cipher.context(node_clock::CANDIDATE_KIND, doc.node.0, generation),
         &envelope,
     )?;
+    // Translate bound-context mismatch to stored corruption, preserving other error kinds.
     let clock = node_clock::decode(&plain, doc.id, doc.node).map_err(|error| match error {
         Error::Conflict => Error::Integrity,
         other => other,
@@ -53,11 +91,15 @@ fn raw_clock(
     }
     Ok(clock)
 }
+
 impl Workspace {
+    /// Return the complete bounded current origin map for an authorized experimental branch.
     /// No fallback from missing required origin evidence to inferred legacy state.
     pub fn temporal_origins(&mut self, document: DocumentId, branch: BranchId) -> Result<Map> {
         self.temporal_origins_budget(document, branch, MAX_RECORDS, READ_BYTES, WORK)
     }
+
+    /// Authorize the requested branch and reconstruct within one pinned read transaction.
     fn temporal_origins_budget(
         &mut self,
         document: DocumentId,
@@ -80,6 +122,8 @@ impl Workspace {
     }
 }
 
+/// Replay authenticated origin frames from an explicit seed to the selected head.
+///
 /// Caller supplies the already authorized document and one pinned transaction.
 /// No nested transaction or implicit initialization; share its encrypted-read budget.
 pub(super) fn read_map(
@@ -116,6 +160,7 @@ pub(super) fn read_map(
         let envelope: Vec<u8> = db.query_row(
             "SELECT envelope FROM objects WHERE kind=?1 AND id=?2",
             params![origin_record::CANDIDATE_KIND, change.revision.0.as_slice()],
+            // Retrieve the exact charged origin envelope without decoding unrelated records.
             |row| row.get(0),
         )?;
         let bytes = cipher.key.open(
@@ -170,6 +215,7 @@ pub(super) fn read_map(
         let envelope: Vec<u8> = db.query_row(
             "SELECT envelope FROM objects WHERE kind=?1 AND id=?2",
             params![origin_record::CANDIDATE_KIND, id.0.as_slice()],
+            // Retrieve the exact charged origin envelope without decoding unrelated records.
             |row| row.get(0),
         )?;
         let bytes = cipher.key.open(
@@ -207,6 +253,7 @@ pub(super) fn read_map(
         None,
         limits,
     )
+    // Root-map construction failure exhausts the supplied domain resource allowance.
     .map_err(|_| Error::Limit)?;
     for frame in frames.into_iter().rev() {
         map = origin_record::decode(
@@ -217,6 +264,7 @@ pub(super) fn read_map(
             limits,
             hypergraph_crypto::MAX_PLAINTEXT,
         )
+        // A stored frame bound to another context is corrupt, not a client conflict.
         .map_err(|error| match error {
             Error::Conflict => Error::Integrity,
             other => other,
@@ -233,12 +281,15 @@ mod tests {
         Mapping,
         lineage::{Splice, Trace},
     };
+    /// Provide bounded source/work capacity to synthetic origin fixtures.
     fn limits() -> Limits {
         Limits {
             text_bytes: MAX_TEXT_BYTES,
             work: WORK,
         }
     }
+
+    /// Enroll only the isolated fixture with explicit seed, initial clock and experimental marker.
     fn install(ws: &mut Workspace, state: &EditorState) {
         let cipher = Cipher {
             key: &ws.key,
@@ -279,7 +330,8 @@ mod tests {
         tx.execute_batch("PRAGMA user_version=3").unwrap();
         tx.commit().unwrap();
     }
-    // Fixtures simulate the future publication transaction; no public writer is enabled.
+    // Fixtures install origin evidence directly; normal runtime publication remains unavailable.
+    /// Install exact synthetic parent-origin and clock evidence for a known legacy publication.
     fn evidence(
         ws: &Workspace,
         parent: &EditorState,
@@ -400,6 +452,8 @@ mod tests {
             .unwrap();
         next
     }
+
+    /// Reconstruct two exact retained transitions after reconnect without writing state.
     #[test]
     fn explicit_seed_and_two_origin_edges_replay_against_exact_publications_after_reconnect() {
         let temp = Temp::new();
@@ -441,6 +495,8 @@ mod tests {
             Err(Error::Format)
         ));
     }
+
+    /// Reject missing required records rather than silently synthesizing legacy origin evidence.
     #[test]
     fn missing_required_origin_seed_or_clock_never_becomes_an_unknown_legacy_map() {
         let temp = Temp::new();
@@ -474,6 +530,8 @@ mod tests {
             Err(Error::Integrity)
         ));
     }
+
+    /// Reject substituted parent snapshot, conflicting seed and clock-generation context.
     #[test]
     fn stored_context_substitution_and_conflicting_seed_do_not_return_origins() {
         let temp = Temp::new();
@@ -501,6 +559,7 @@ mod tests {
             .query_row(
                 "SELECT envelope FROM objects WHERE kind=?1 AND id=?2",
                 params![origin_record::CANDIDATE_KIND, current.base.0.as_slice()],
+                // Retrieve the exact charged origin envelope without decoding unrelated records.
                 |row| row.get(0),
             )
             .unwrap();
@@ -611,6 +670,8 @@ mod tests {
             Err(Error::Integrity)
         ));
     }
+
+    /// Reject resource and current authority failures without mutating or exposing a partial result.
     #[test]
     fn record_byte_work_and_current_authority_failures_do_not_return_a_partial_map() {
         let temp = Temp::new();
@@ -673,6 +734,8 @@ mod tests {
             Err(Error::NotFound)
         ));
     }
+
+    /// Authenticate working promotion using its dedicated frozen temporal receipt and reject altered intent.
     #[test]
     fn exact_working_promotion_can_verify_the_actual_temporal_receipt_without_a_legacy_alias() {
         let temp = Temp::new();

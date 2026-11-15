@@ -1,5 +1,38 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Optional private checkpoint evidence. Idle autosave remains mutable draft state.
+//! # Hypergraph PX — Explicit private working checkpoints
+//!
+//! Retains exact acknowledged draft evidence only when explicitly captured and
+//! records a verified promotion when the identical source is later committed.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace checkpoint/Commit commands, working clipboard/Fork
+//! adapters and browser source reads.
+//!
+//! Specification:
+//! - [Working-source definitions][spec0]
+//! - [Storage responsibilities][spec1]
+//! - [Working-source boundary][spec2]
+//!
+//! Boundary: Idle autosave remains mutable recovery state. Private
+//! checkpoints are not text publication; promotion retains the original
+//! exact evidence and does not authorize heuristic retargeting.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/working.rs
+//! [spec0]: ../../../../docs/05-domain/diagrams/provenance-working.c4
+//! [spec1]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md#working-source-boundary
+
 use super::*;
 
 pub const STATE_KIND: i32 = 22;
@@ -62,7 +95,9 @@ pub struct Source {
     pub start_byte: usize,
     pub end_byte: usize,
 }
+
 impl Change {
+    /// Construct an explicitly ranged source address for this acknowledged checkpoint.
     pub fn source(&self, occurrence: OccurrenceId, start_byte: usize, end_byte: usize) -> Source {
         Source {
             kind: SourceKind::WorkingCheckpoint,
@@ -146,8 +181,11 @@ pub struct View {
     pub publication: &'static str,
     pub promotion: Option<Promotion>,
 }
+
+/// Bound serialized capture size and require exact scalar-safe quote coordinates.
 pub(super) fn validate(request: &Request) -> Result<()> {
     // Leave room for the command/operation envelope and persisted metadata.
+    // The serialization callback rejects malformed captures before measuring their bounded record size.
     if serde_json::to_vec(request)
         .map_err(|_| Error::Format)?
         .len()
@@ -170,9 +208,12 @@ pub(super) fn validate(request: &Request) -> Result<()> {
         request.end_byte,
         &request.quote,
     )
+    // Reject non-exact quotes and invalid UTF8 byte cuts at this input boundary.
     .map_err(|_| Error::Invalid)?;
     Ok(())
 }
+
+/// Require present document and selected branch membership before checkpoint execution.
 pub(super) fn authorize(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -182,6 +223,8 @@ pub(super) fn authorize(
     branches::document(cipher, db, catalog, request.document, request.branch)?;
     Ok(())
 }
+
+/// Read an optional private working chain and verify its bound identities and ordinal generation.
 fn load(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -209,6 +252,8 @@ fn load(
         Err(error) => Err(error),
     }
 }
+
+/// Authenticate checkpoint metadata, base identity and exact original command digest.
 fn record(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -217,6 +262,7 @@ fn record(
     checkpoint: CheckpointId,
 ) -> Result<Record> {
     let record: Record = cipher.object(db, CHECKPOINT_KIND, checkpoint.0)?;
+    // Invalid stored capture shape is corruption rather than a fresh input error.
     validate(&record.request).map_err(|_| Error::Integrity)?;
     let state = &record.state;
     if state.document != doc.id
@@ -263,6 +309,7 @@ fn record(
         }
         _ => return Err(Error::Integrity),
     };
+    // The error callback rejects an unencodable reconstructed command before digest comparison.
     let bytes = Zeroizing::new(serde_json::to_vec(&command).map_err(|_| Error::Format)?);
     let digest: [u8; 32] = Sha256::digest(&*bytes).into();
     if receipt.digest != digest || receipt.receipt.operation != record.operation {
@@ -270,6 +317,8 @@ fn record(
     }
     Ok(record)
 }
+
+/// Capture the exact acknowledged draft and atomically advance its private evidence chain.
 pub(super) fn apply(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -295,8 +344,10 @@ pub(super) fn apply(
         request.end_byte,
         &request.quote,
     )
+    // A capture that no longer matches the acknowledged draft is stale.
     .map_err(|_| Error::Conflict)?;
     let prior = load(cipher, db, catalog, &doc)?;
+    // Start the explicit chain at one or advance its verified retained count.
     let count = prior.as_ref().map_or(1, |(_, s)| s.count + 1);
     if count > JS_MAX {
         return Err(Error::Limit);
@@ -330,6 +381,7 @@ pub(super) fn apply(
             actor: catalog.owner,
             device: catalog.device,
             operation,
+            // Retain checkpoint-chain linkage independently of content revision ancestry.
             previous: prior.as_ref().map(|(_, s)| s.head),
             request,
         },
@@ -354,6 +406,7 @@ pub(super) fn apply(
     Ok(state)
 }
 
+/// Record publication correspondence only for the latest exact matching checkpoint.
 #[allow(clippy::too_many_arguments)]
 pub(super) fn promote(
     cipher: &Cipher<'_>,
@@ -406,6 +459,8 @@ pub(super) fn promote(
         },
     )
 }
+
+/// Verify retained publication revision, snapshot, event and original receipt evidence.
 fn read_promotion(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -508,6 +563,7 @@ fn read_promotion(
         }
         _ => return Err(Error::Integrity),
     };
+    // The error callback rejects an unencodable reconstructed command before digest comparison.
     let bytes = Zeroizing::new(serde_json::to_vec(&command).map_err(|_| Error::Format)?);
     let digest: [u8; 32] = Sha256::digest(&*bytes).into();
     if document != doc.id
@@ -519,6 +575,8 @@ fn read_promotion(
     }
     Ok(Some(promotion))
 }
+
+/// Resolve exact authorized checkpoint source and validated optional promotion without retargeting.
 pub(super) fn source_view(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -535,6 +593,7 @@ pub(super) fn source_view(
         return Err(Error::Invalid);
     }
     validate_byte_range(&checkpoint.request.text, source.start_byte, source.end_byte)
+        // Reject non-exact quotes and invalid UTF8 byte cuts at this input boundary.
         .map_err(|_| Error::Invalid)?;
     let promotion = read_promotion(cipher, db, &doc, &checkpoint)?;
     Ok(View {
@@ -546,7 +605,9 @@ pub(super) fn source_view(
         promotion,
     })
 }
+
 impl Workspace {
+    /// Read retained working source under current catalogue authority in one transaction.
     pub fn working_source(&mut self, source: Source) -> Result<View> {
         let cipher = Cipher {
             key: &self.key,
@@ -568,6 +629,7 @@ pub(super) mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
 
+    /// Capture the fixture current acknowledged source and full byte range.
     pub(crate) fn request(state: &EditorState) -> Request {
         Request {
             document: state.document,
@@ -581,6 +643,8 @@ pub(super) mod tests {
             quote: state.text.clone(),
         }
     }
+
+    /// Execute an explicit checkpoint and return its exact source address.
     fn capture(ws: &mut Workspace, state: &EditorState, operation: u8) -> Source {
         match ws
             .execute(
@@ -598,6 +662,8 @@ pub(super) mod tests {
             _ => panic!(),
         }
     }
+
+    /// Preserve original bytes and private scope after newer autosave, Commit and reopen.
     #[test]
     fn checkpoint_keeps_private_exact_source_after_newer_autosave_commit_and_restart() {
         let temp = Temp::new();
@@ -634,6 +700,8 @@ pub(super) mod tests {
         wrong.working_branch = state.branch;
         assert!(matches!(ws.working_source(wrong), Err(Error::Invalid)));
     }
+
+    /// Bind exact Commit correspondence once while retaining the original unpublished source.
     #[test]
     fn exact_commit_promotes_once_and_preserves_the_unpublished_checkpoint() {
         let temp = Temp::new();
@@ -664,6 +732,8 @@ pub(super) mod tests {
             promotion
         );
     }
+
+    /// Separate parent/child working identities and promote only the exact matching child checkpoint.
     #[test]
     fn content_branches_keep_distinct_working_identities_and_only_matching_child_promotes() {
         let temp = Temp::new();
@@ -727,6 +797,8 @@ pub(super) mod tests {
         wrong.branch = child;
         assert!(matches!(ws.working_source(wrong), Err(Error::Integrity)));
     }
+
+    /// Verify atomic checkpoint/promotion rollback and original receipt replay after unknown results.
     #[test]
     fn checkpoint_and_promotion_faults_are_atomic_and_unknown_acknowledgements_replay() {
         for phase in ["objects", "heads", "receipt", "committed"] {
@@ -738,6 +810,7 @@ pub(super) mod tests {
                 plan: request(&editor),
             };
             assert!(matches!(
+                // Interrupt the chosen checkpoint stage, including its post-commit acknowledgement.
                 ws.execute_inner(op(2), command.clone(), |at| if at == phase {
                     Err(Error::Io)
                 } else {
@@ -750,6 +823,7 @@ pub(super) mod tests {
                 .query_row(
                     "SELECT count(*) FROM objects WHERE kind=?1",
                     params![CHECKPOINT_KIND],
+                    // Count retained checkpoints to detect any partial pre-commit insertion.
                     |r| r.get(0),
                 )
                 .unwrap();
@@ -763,6 +837,7 @@ pub(super) mod tests {
                 _ => panic!(),
             };
             assert!(matches!(
+                // Interrupt publication at the same stage to check atomic promotion visibility.
                 ws.execute_inner(op(3), commit(&editor), |at| if at == phase {
                     Err(Error::Io)
                 } else {
@@ -777,6 +852,8 @@ pub(super) mod tests {
             assert!(ws.working_source(source).unwrap().promotion.is_some());
         }
     }
+
+    /// Reject stale intent, altered authenticated checkpoint text and present membership revocation.
     #[test]
     fn stale_scope_reuse_and_authenticated_text_damage_cannot_capture_or_retarget() {
         let temp = Temp::new();

@@ -1,5 +1,39 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Schema3-guarded temporal Save foundation. No opener/upgrade/runtime route.
+//! # Hypergraph PX — Atomic acknowledged temporal draft saves
+//!
+//! Persists exact draft text, compact splice lineage and original retry receipt in
+//! one guarded transaction without creating an immutable text publication.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Experimental temporal Commit driver, origin loader and isolated
+//! temporal Save tests.
+//!
+//! Specification:
+//! - [Storage transaction responsibilities][spec0]
+//! - [Temporal Save foundation][spec1]
+//! - [Draft publication protocol][spec2]
+//!
+//! Boundary: Experimental marker3 plus authenticated feature32 are
+//! mandatory. There is no public opener, upgrade or runtime route. Missing
+//! unexplained lineage fails closed; this is not cadence-created immutable
+//! history.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/temporal_save.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/07-implementation/data-structures/sqlite-records.md
+//! [spec2]: ../../../../docs/07-implementation/protocols/draft-publication.md
+
 use super::*;
 use hypergraph_domain::parent_merge::{
     Base, Limits,
@@ -47,6 +81,7 @@ pub struct Save {
     pub text: String,
     pub edits: Vec<Edit>,
 }
+
 /// Owned verified view; serialization remains an adapter concern.
 pub struct View {
     pub binding: lineage_record::Binding,
@@ -54,6 +89,8 @@ pub struct View {
     pub text: String,
     pub changes: Vec<Change>,
 }
+
+/// Derive a draft-specific lineage slot address independent of the source text.
 pub fn address(draft: DraftId) -> [u8; 32] {
     let mut hash = Sha256::new();
     hash.update(b"hpx/draft-lineage/slot/v1\0");
@@ -64,28 +101,38 @@ struct DigestWriter {
     hash: Sha256,
     left: usize,
 }
+
 impl Write for DigestWriter {
+    /// Charge serialized request bytes before streaming them into the intent hash.
     fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
         self.left = self
             .left
             .checked_sub(bytes.len())
+            // Construct a writer error only when the serialized intent exceeds its cap.
             .ok_or_else(|| io::Error::other("temporal request limit"))?;
         self.hash.update(bytes);
         Ok(bytes.len())
     }
+
+    /// Complete the in-memory hash writer without external I/O.
     fn flush(&mut self) -> io::Result<()> {
         Ok(())
     }
 }
+
+/// Bind exact serialized Save intent, including edits, within the hashing byte allowance.
 fn digest(request: &Save) -> Result<[u8; 32]> {
     let mut writer = DigestWriter {
         hash: Sha256::new(),
         left: INTENT_BYTES,
     };
     writer.hash.update(b"hpx/temporal-save/v1\0");
+    // The callback classifies failed bounded serialization as exhausted intent capacity.
     serde_json::to_writer(&mut writer, request).map_err(|_| Error::Limit)?;
     Ok(writer.hash.finalize().into())
 }
+
+/// Charge ciphertext length before allocation and distinguish a genuinely missing record.
 pub(super) fn charge(
     db: &Connection,
     table: &str,
@@ -97,12 +144,14 @@ pub(super) fn charge(
         "slots" => "SELECT length(envelope) FROM slots WHERE kind=?1 AND id=?2",
         _ => "SELECT length(envelope) FROM objects WHERE kind=?1 AND id=?2",
     };
+    // The SQL callback reads length only, before any ciphertext allocation.
     let length: Option<i64> = db
         .query_row(sql, params![kind, id.as_slice()], |row| row.get(0))
         .optional()?;
     let Some(length) = length else {
         return Ok(false);
     };
+    // Reject negative or unrepresentable stored envelope lengths.
     let length = usize::try_from(length).map_err(|_| Error::Integrity)?;
     if length > MAX_ENVELOPE {
         return Err(Error::Limit);
@@ -110,7 +159,10 @@ pub(super) fn charge(
     *left = left.checked_sub(length).ok_or(Error::Limit)?;
     Ok(true)
 }
+
+/// Require both experimental SQL marker and workspace-bound authenticated feature metadata.
 pub(super) fn guard(cipher: &Cipher<'_>, db: &Connection, left: &mut usize) -> Result<()> {
+    // The SQL callback reads only the numeric schema marker.
     let schema: i32 = db.query_row("PRAGMA user_version", [], |r| r.get(0))?;
     if schema != EXPERIMENTAL_SCHEMA || !charge(db, "slots", FEATURE_KIND, ROOT, left)? {
         return Err(Error::Format);
@@ -125,6 +177,8 @@ pub(super) fn guard(cipher: &Cipher<'_>, db: &Connection, left: &mut usize) -> R
     }
     Ok(())
 }
+
+/// Reject zero or excessive work before constructing bounded domain allowances.
 fn limits(work: usize) -> Result<Limits> {
     if work == 0 || work > BYTES {
         return Err(Error::Limit);
@@ -139,6 +193,8 @@ pub(super) struct ContextData {
     pub(super) base: String,
     pub(super) text: String,
 }
+
+/// Read exact authorized head/draft/base context under the shared encrypted-read budget.
 pub(super) fn context(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -182,6 +238,8 @@ pub(super) fn context(
         text: draft.text,
     })
 }
+
+/// Restore bound lineage, allowing an empty start only when draft equals its committed base.
 pub(super) fn read<'a>(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -202,13 +260,16 @@ pub(super) fn read<'a>(
             },
             work,
         )
+        // An empty initial domain trace must fit the supplied allowance.
         .map_err(|_| Error::Limit);
     }
     let (generation, bytes): (i64, Vec<u8>) = db.query_row(
         "SELECT generation,envelope FROM slots WHERE kind=?1 AND id=?2",
         params![lineage_record::CANDIDATE_KIND, id.as_slice()],
+        // Retrieve the already charged generation/envelope pair together.
         |row| Ok((row.get(0)?, row.get(1)?)),
     )?;
+    // Negative slot generations cannot describe acknowledged draft state.
     let generation = u64::try_from(generation).map_err(|_| Error::Integrity)?;
     if generation != current.binding.generation {
         return Err(Error::Integrity);
@@ -225,11 +286,14 @@ pub(super) fn read<'a>(
         work,
         BYTES,
     )
+    // A persisted binding mismatch is corruption rather than a client retry conflict.
     .map_err(|error| match error {
         Error::Conflict => Error::Integrity,
         other => other,
     })
 }
+
+/// Require the frozen branch Save result to match operation and expected generation/sequence.
 fn validate_receipt(receipt: &Receipt, operation: OperationId, request: &Save) -> Result<()> {
     if receipt.operation != operation {
         return Err(Error::Integrity);
@@ -251,7 +315,9 @@ fn validate_receipt(receipt: &Receipt, operation: OperationId, request: &Save) -
         _ => Err(Error::Integrity),
     }
 }
+
 impl Workspace {
+    /// Return owned exact source and validated changes from one authorized read view.
     pub fn temporal_lineage(
         &mut self,
         document: DocumentId,
@@ -279,14 +345,19 @@ impl Workspace {
             changes,
         })
     }
+
+    /// Acknowledge exact temporal draft edits with durable idempotent retry evidence.
     pub fn temporal_save(
         &mut self,
         operation: OperationId,
         request: Save,
         work: usize,
     ) -> Result<Receipt> {
+        // The default fault callback does not interrupt ordinary operation.
         self.temporal_save_inner(operation, request, work, |_| Ok(()))
     }
+
+    /// Reconcile original receipts before mutable preconditions, then atomically save draft and lineage.
     fn temporal_save_inner(
         &mut self,
         operation: OperationId,
@@ -354,6 +425,7 @@ impl Workspace {
         let edits: Vec<_> = request
             .edits
             .iter()
+            // Borrow exact quotes/replacements without changing byte coordinates.
             .map(|edit| Splice {
                 start: edit.start_byte,
                 end: edit.end_byte,
@@ -363,6 +435,7 @@ impl Workspace {
             .collect();
         let next = trace
             .apply(&current.text, &edits, &request.text, work)
+            // A persisted binding mismatch is corruption rather than a client retry conflict.
             .map_err(|error| match error {
                 hypergraph_domain::parent_merge::lineage::Error::Limit => Error::Limit,
                 _ => Error::Invalid,
@@ -384,6 +457,7 @@ impl Workspace {
             self.device,
             operation,
             command,
+            // This writer uses the enclosing temporal fault checkpoints.
             &mut |_| Ok(()),
         )?;
         fault("draft")?;
@@ -418,6 +492,7 @@ impl Workspace {
 mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, create, op};
+    /// Install feature/schema markers only in the isolated synthetic test workspace.
     fn enable(ws: &mut Workspace) {
         let cipher = Cipher {
             key: &ws.key,
@@ -439,6 +514,8 @@ mod tests {
         tx.execute_batch("PRAGMA user_version=3").unwrap();
         tx.commit().unwrap();
     }
+
+    /// Build an exact append edit from the branch current acknowledged source.
     fn request(ws: &mut Workspace, document: DocumentId, branch: BranchId, append: &str) -> Save {
         let state = ws.open_branch(document, branch).unwrap();
         Save {
@@ -457,9 +534,14 @@ mod tests {
             }],
         }
     }
+
+    /// Capture every encrypted slot/object row for exact rollback and preservation assertions.
     fn rows(ws: &Workspace) -> Vec<(i32, Vec<u8>, i64, Vec<u8>)> {
+        // SQL callbacks extract typed row tuples and surface fixture row failures.
         ws.db.prepare("SELECT kind,id,generation,envelope FROM slots UNION ALL SELECT kind,id,0,envelope FROM objects ORDER BY kind,id").unwrap().query_map([], |row| Ok((row.get(0)?,row.get(1)?,row.get(2)?,row.get(3)?))).unwrap().map(|row|row.unwrap()).collect()
     }
+
+    /// Require authenticated feature enrollment and explainable lineage before temporal saving.
     #[test]
     fn legacy_numeric_marker_and_untraced_draft_do_not_silently_enable_temporal_saves() {
         let temp = Temp::new();
@@ -515,6 +597,8 @@ mod tests {
         ));
         assert_eq!(rows(&ws), before);
     }
+
+    /// Keep exact draft/trace/receipt durable and encrypted while preserving the committed snapshot.
     #[test]
     fn text_trace_and_receipt_persist_encrypted_and_reconnect_without_committing_text() {
         let temp = Temp::new();
@@ -542,6 +626,7 @@ mod tests {
             !std::fs::read(temp.db())
                 .unwrap()
                 .windows(b"TEMPORAL-SENTINEL".len())
+                // Scan exact persisted windows for the synthetic plaintext sentinel.
                 .any(|bytes| bytes == b"TEMPORAL-SENTINEL")
         );
         ws.db = connect(&temp.db()).unwrap();
@@ -557,6 +642,8 @@ mod tests {
             Err(Error::Format)
         ));
     }
+
+    /// Roll back intermediate writes and replay the original result after reply loss or later saves.
     #[test]
     fn intermediate_faults_roll_back_and_unknown_acknowledgements_replay_original_receipt() {
         let temp = Temp::new();
@@ -568,6 +655,8 @@ mod tests {
         let before = rows(&ws);
         for (i, stage) in ["draft", "lineage", "receipt"].iter().enumerate() {
             assert!(
+                // Fail the selected pre-commit stage to verify complete rollback.
+                // Lose the acknowledgement after commit to test original-result replay.
                 ws.temporal_save_inner(op(2 + i as u8), req.clone(), BYTES, |at| if at == *stage {
                     Err(Error::Database)
                 } else {
@@ -578,6 +667,7 @@ mod tests {
             assert_eq!(rows(&ws), before);
         }
         assert!(
+            // Lose the acknowledgement after commit to test original-result replay.
             ws.temporal_save_inner(op(8), req.clone(), BYTES, |at| if at == "committed" {
                 Err(Error::Database)
             } else {
@@ -602,12 +692,15 @@ mod tests {
         ));
         assert_eq!(
             ws.db
+                // The SQL callback counts only dedicated temporal Save receipts.
                 .query_row("SELECT count(*) FROM objects WHERE kind=33", [], |r| r
                     .get::<_, i64>(0))
                 .unwrap(),
             2
         );
     }
+
+    /// Recheck present authority on retries and reject operation IDs already used by other record kinds.
     #[test]
     fn current_principal_membership_and_legacy_operation_collisions_are_rechecked() {
         let temp = Temp::new();
@@ -652,6 +745,8 @@ mod tests {
         ));
         assert_eq!(rows(&ws), before);
     }
+
+    /// Reject cross-draft ciphertext, generation drift and oversized evidence before exposing lineage.
     #[test]
     fn copied_stale_and_oversized_lineage_slots_never_return_unverified_source() {
         let temp = Temp::new();
@@ -678,11 +773,13 @@ mod tests {
         ws.temporal_save(op(3), req, BYTES).unwrap();
         let req = request(&mut ws, other, b.branch, "B");
         ws.temporal_save(op(4), req, BYTES).unwrap();
+        // Retrieve fixture ciphertext for deliberate cross-draft substitution.
         let fetch = |ws: &Workspace, id: [u8; 32]| {
             ws.db
                 .query_row(
                     "SELECT envelope FROM slots WHERE kind=31 AND id=?1",
                     [id.as_slice()],
+                    // Read only the targeted encrypted lineage envelope.
                     |r| r.get::<_, Vec<u8>>(0),
                 )
                 .unwrap()
@@ -726,6 +823,8 @@ mod tests {
             Err(Error::Limit)
         ));
     }
+
+    /// Save a named child independently without mutating parent or optional branch metadata.
     #[test]
     fn named_child_saves_preserve_parent_draft_and_optional_branch_ciphertext() {
         let temp = Temp::new();
@@ -753,6 +852,7 @@ mod tests {
         };
         let optional: Vec<_> = rows(&ws)
             .into_iter()
+            // Retain optional branch records for exact preservation comparison.
             .filter(|row| row.0 == 20 || row.0 == 21)
             .collect();
         enable(&mut ws);
@@ -768,6 +868,7 @@ mod tests {
             optional,
             rows(&ws)
                 .into_iter()
+                // Retain optional branch records for exact preservation comparison.
                 .filter(|row| row.0 == 20 || row.0 == 21)
                 .collect::<Vec<_>>()
         );
@@ -780,6 +881,8 @@ mod tests {
         ));
         assert_eq!(rows(&ws), before);
     }
+
+    /// Allow maximum raw source despite JSON expansion within explicitly provisioned read caps.
     #[test]
     fn maximum_raw_text_with_json_escaping_does_not_hit_a_small_combined_read_budget() {
         let temp = Temp::new();
@@ -831,6 +934,7 @@ mod tests {
         ws.temporal_save(op(4), request, BYTES).unwrap();
         let view = ws.temporal_lineage(doc, state.branch, BYTES).unwrap();
         assert_eq!(view.text.len(), MAX_TEXT_BYTES);
+        // The predicate checks every recovered byte, not just the overall text length.
         assert!(view.text.as_bytes().iter().all(|&byte| byte == 1));
         assert_eq!(view.changes.len(), 1);
         assert_eq!(view.changes[0].end, MAX_TEXT_BYTES);

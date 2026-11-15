@@ -247,3 +247,7 @@ node shared/tooling/cargo-path.mjs --profile release
 ```
 
 Substitute that effective path for example `.local/target` commands when overriding Cargo configuration. Config-only `build.target` selection is not inferred from Cargo metadata by this helper:export the matching `CARGO_BUILD_TARGET` when using wrappers,or supply `--target <triple-or-target-json>` to the helper. Do not treat its host-profile default as cross-target autodetection. The build counter retains exclusive locking,append-only high-water checks and fsync;failed builds may consume a number. Original required evidence and workspace recovery/history are not evictable caches. No tool here grants trust,provider,keychain enrollment or manual handoff authority. The legacy `serve-manual-runtime.mjs` entry now delegates only to the exact-tested-SHA refresh guard;it cannot synthesize a replacement workspace.
+
+## Code comment maintenance
+
+Follow the [human-readable commenting programme](code-comments.md) for teaching-oriented module, interface and internal reasoning. Its current inventory separates pending review, exact-byte reviewed files and justified generated/third-party exclusions. Run `python3 shared/tooling/check_code_comments.py --json`; use `--require-complete` for programme closeout, not as an assertion that the pending baseline is already complete.

@@ -1,11 +1,46 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Lossless transport-to-application adapter. Does not duplicate command semantics.
+//! # Hypergraph PX — Lossless transport and application conversion
+//!
+//! Decode the progressively typed committed-Fork request directly from borrowed
+//! raw JSON and translate its identities/context without a lossy value round trip.
+//! Retain existing application codecs for commands not yet migrated to typed DTOs.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Runtime command endpoint, frontend contract generation and
+//! transport compatibility tests.
+//!
+//! Specification:
+//! - [Transport adapter responsibilities][spec0]
+//! - [Generated typed/legacy contract boundary][spec1]
+//! - [Source and command navigation][spec2]
+//!
+//! Boundary: This adapter validates transport shape only; storage/domain
+//! retain authority, exact-source and transaction semantics. Typed schema
+//! coverage is not general API feature delivery.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/runtime/src/api_transport.rs
+//! [spec0]: ../../../../docs/07-implementation/diagrams/api-implementation.c4
+//! [spec1]: ../../../../docs/06-subsystems/interfaces/browser-runtime.md#generated-transport-contract-owner021-2026-10-27
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md
+
 use crate::api;
 use hypergraph_domain::records::*;
 use hypergraph_storage::{Command, Outcome, Receipt, clipboard, forks};
 use serde::Deserialize;
 use serde_json::value::RawValue;
 
+/// Select the typed Fork path by discriminator while preserving legacy decoding for other commands.
 pub fn decode_command(raw: &RawValue) -> serde_json::Result<Command> {
     #[derive(Deserialize)]
     struct Tag {
@@ -15,6 +50,7 @@ pub fn decode_command(raw: &RawValue) -> serde_json::Result<Command> {
     if tag.command != "fork" {
         return serde_json::from_str(raw.get());
     }
+
     let api::ForkCommand { plan, .. } = serde_json::from_str(raw.get())?;
     Ok(Command::Fork {
         plan: forks::Request {
@@ -28,11 +64,13 @@ pub fn decode_command(raw: &RawValue) -> serde_json::Result<Command> {
                     .source
                     .occurrence_path
                     .into_iter()
+                    // Preserve every occurrence identity in its original order.
                     .map(|id| OccurrenceId(id.0))
                     .collect(),
                 start_byte: plan.source.start_byte,
                 end_byte: plan.source.end_byte,
             },
+            // Preserve optional editor-generation/sequence guards without inventing a context.
             expected_draft: plan.expected_draft.map(|draft| clipboard::DraftContext {
                 generation: draft.generation,
                 sequence: draft.sequence,
@@ -41,6 +79,9 @@ pub fn decode_command(raw: &RawValue) -> serde_json::Result<Command> {
         },
     })
 }
+
+/// Rewrap a successful application Fork receipt without changing its existing serialized bytes.
+/// Any other outcome is an integrity mismatch, not a fabricated Fork result.
 pub fn fork_receipt(receipt: Receipt) -> hypergraph_storage::Result<api::ForkReceipt> {
     let Outcome::Forked {
         document,
@@ -51,6 +92,7 @@ pub fn fork_receipt(receipt: Receipt) -> hypergraph_storage::Result<api::ForkRec
     else {
         return Err(hypergraph_storage::Error::Integrity);
     };
+
     Ok(api::ForkReceipt {
         operation: api::Id(receipt.operation.0),
         outcome: api::ForkOutcome {
@@ -66,13 +108,18 @@ pub fn fork_receipt(receipt: Receipt) -> hypergraph_storage::Result<api::ForkRec
 #[cfg(test)]
 mod tests {
     use super::*;
+    /// Supply one exact synthetic Fork envelope for wire-shape and byte-preservation tests.
     fn request() -> serde_json::Value {
         serde_json::json!({"operation":vec![1;32],"request":{"command":"fork","plan":{"title":"Exact fork","source":{"document":vec![2;32],"node":vec![3;32],"snapshot":vec![4;32],"revision":vec![5;32],"occurrence_path":[vec![6;32]],"start_byte":0,"end_byte":10},"expected_draft":null,"quote":"😀\r\n中\r"}}})
     }
+
+    /// Borrow the original raw request from a strict execution envelope before conversion.
     fn decode(bytes: &[u8]) -> serde_json::Result<Command> {
         let envelope: api::Execute<&RawValue> = serde_json::from_slice(bytes)?;
         decode_command(envelope.request)
     }
+
+    /// Guard borrowed raw input and byte-identical Fork intent/receipt conversion.
     #[test]
     fn fork_wire_and_receipt_remain_byte_identical_to_existing_application_codecs() {
         let value = request();
@@ -109,6 +156,8 @@ mod tests {
             .remove("expected_draft");
         assert!(decode(&serde_json::to_vec(&missing).unwrap()).is_ok());
     }
+
+    /// Reject malformed/duplicate/unknown transport fields without a lossy JSON-value pass.
     #[test]
     fn exact_width_duplicates_unknowns_and_malformed_scalars_fail_without_lossy_value_roundtrip() {
         let good = request();
@@ -148,6 +197,8 @@ mod tests {
             assert!(decode(malformed.as_bytes()).is_err());
         }
     }
+
+    /// Guard exact snapshot identity codecs and original Unicode/newline response bytes.
     #[test]
     fn snapshot_transport_reuses_exact_identity_codec_and_preserves_text_bytes() {
         let bytes =
@@ -183,6 +234,8 @@ mod tests {
             text.as_bytes()
         );
     }
+
+    /// Preserve API1 capability/status bytes while accepting future additive capability names.
     #[test]
     fn runtime_metadata_keeps_exact_api1_bytes_and_open_capability_strings() {
         for (locked, create, supported) in [
@@ -204,6 +257,8 @@ mod tests {
             assert!(serde_json::from_value::<api::RuntimeResponse>(wire).is_ok());
         }
     }
+
+    /// Guard strict one-use bootstrap input and unchanged authentication acknowledgement bytes.
     #[test]
     fn bootstrap_remains_strict_and_keeps_legacy_body_bytes() {
         let request = api::BootstrapRequest {
@@ -237,6 +292,8 @@ mod tests {
             true
         );
     }
+
+    /// Preserve legacy empty-body acceptance, strict unlock input and non-secret status shapes.
     #[test]
     fn unlock_and_status_preserve_strict_bodies_and_existing_public_bytes() {
         assert!(serde_json::from_str::<api::EmptyRequest>("{}").is_ok());
@@ -278,6 +335,8 @@ mod tests {
             assert_eq!(serde_json::to_vec(&result).unwrap(),serde_json::to_vec(&serde_json::json!({"supported":supported,"schema":schema,"enrolled":enrolled,"cleanup_pending":cleanup_pending})).unwrap());
         }
     }
+
+    /// Guard enrollment/cleanup acknowledgement bytes independently of native credential actions.
     #[test]
     fn keychain_enrollment_and_removal_acknowledgements_keep_existing_bytes() {
         for backup_created in [false, true] {
@@ -302,6 +361,8 @@ mod tests {
             b"{\"cleanup_pending\":false,\"enrolled\":false}"
         );
     }
+
+    /// Guard the real audit limit/scope and distinct audit-versus-HTTP problem schema names.
     #[test]
     fn audit_schema_reuses_authoritative_limits_scope_and_separate_problem_names() {
         let spec = api::document();
@@ -330,6 +391,8 @@ mod tests {
                 .is_err()
         );
     }
+
+    /// Check fixed identity constraints and every local schema reference across inventoried routes.
     #[test]
     fn generated_schema_has_complete_local_references_and_exact_identity_bounds() {
         let spec = api::document();
@@ -341,9 +404,11 @@ mod tests {
             spec["components"]["schemas"]["ForkPlan"]["additionalProperties"],
             false
         );
+        /// Recursively verify every local schema reference resolves within the exported document.
         fn refs(value: &serde_json::Value, root: &serde_json::Value) {
             match value {
                 serde_json::Value::Object(map) => {
+                    // Only string-valued reference targets participate in JSON-pointer checks.
                     if let Some(reference) = map.get("$ref").and_then(|v| v.as_str()) {
                         assert!(reference.starts_with("#/"));
                         assert!(root.pointer(&reference[1..]).is_some(), "{reference}");

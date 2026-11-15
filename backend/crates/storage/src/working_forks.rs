@@ -1,7 +1,46 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Cross-identity derivation from exact unpublished source evidence.
+//! # Hypergraph PX — Independent Fork from retained working evidence
+//!
+//! Create an independent document from an exact unpublished checkpoint selection
+//! and retain the original working source alongside its initial committed output.
+//! The source document remains uncommitted and later source edits do not
+//! retarget it.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace WorkingFork dispatch, provenance reads and
+//! working-source acceptance tests.
+//!
+//! Specification:
+//! - [Source planning and adapters][spec0]
+//! - [Working-source and promotion policy][spec1]
+//! - [Working navigation boundary][spec2]
+//! - [Private reference record contract][spec3]
+//!
+//! Boundary: The adapter uses explicit retained working evidence and
+//! current catalogue scope. This is not a generic multi-owner composition
+//! loader or ordinary-autosave history policy.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/working_forks.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/pure-domain.c4
+//! [spec1]: ../../../../docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md#working-source-boundary
+//! [spec3]: ../../../../docs/07-implementation/data-structures/sqlite-records.md
+
 use super::*;
+/// Existing immutable working-Fork derivation allocation, separate from committed Fork kind11.
 pub const KIND: i32 = 27;
+/// Captured title, exact working checkpoint/range and original quoted bytes.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Request {
@@ -9,6 +48,8 @@ pub struct Request {
     pub source: working::Source,
     pub quote: String,
 }
+
+/// Exact independently created output identities returned in the original receipt.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Change {
@@ -21,11 +62,15 @@ pub struct Change {
     #[serde(with = "encoding::identity")]
     pub snapshot: SnapshotId,
 }
+
+/// Record-family discriminator; working evidence is not relabelled a committed input.
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Kind {
     WorkingFork,
 }
+
+/// Immutable source-checkpoint to initial-output relationship, retaining both actual source kinds.
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Derivation {
@@ -41,6 +86,8 @@ pub struct Derivation {
     pub input: working::Source,
     pub output: clipboard::Source,
 }
+
+/// Bound request shape/title/quote before current-authority source resolution.
 pub(super) fn validate(plan: &Request) -> Result<()> {
     if plan.title.trim().is_empty()
         || plan.title.len() > 512
@@ -56,6 +103,8 @@ pub(super) fn validate(plan: &Request) -> Result<()> {
     }
     Ok(())
 }
+
+/// Create output/history and its exact working-input derivation within the caller transaction.
 pub(super) fn apply(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -69,6 +118,7 @@ pub(super) fn apply(
     if text != plan.quote {
         return Err(Error::Conflict);
     }
+
     let output = create_document(
         cipher,
         db,
@@ -80,6 +130,7 @@ pub(super) fn apply(
         text.to_owned(),
         checkpoint,
     )?;
+
     let transformation = TransformationId(new_id()?);
     cipher.insert(
         db,
@@ -104,6 +155,7 @@ pub(super) fn apply(
         },
     )?;
     checkpoint("derivation")?;
+
     Ok(Change {
         document: output.document.id,
         transformation,
@@ -111,7 +163,10 @@ pub(super) fn apply(
         snapshot: output.snapshot,
     })
 }
+
 impl Workspace {
+    /// Reconstruct and verify retained working input, initial output and original receipt.
+    /// Later heads do not replace the pinned sources or revise this derivation.
     pub fn working_derivation(&mut self, document: DocumentId) -> Result<Derivation> {
         let cipher = Cipher {
             key: &self.key,
@@ -137,6 +192,7 @@ impl Workspace {
         {
             return Err(Error::Integrity);
         }
+
         let input = working::source_view(&cipher, &tx, &catalog, event.input.clone())?;
         let (_, revision) = clipboard::resolve_source(&cipher, &tx, &catalog, &event.output)?;
         let quote = &input.text[event.input.start_byte..event.input.end_byte];
@@ -158,6 +214,7 @@ impl Workspace {
         {
             return Err(Error::Integrity);
         }
+
         let receipt: StoredReceipt = cipher.object(&tx, RECEIPT, event.operation.0)?;
         let expected = Outcome::WorkingForked {
             state: Change {
@@ -174,6 +231,7 @@ impl Workspace {
                 quote: quote.into(),
             },
         };
+        // Rebuild the original intent; serializer failure is not repaired by guessing bytes.
         let bytes = Zeroizing::new(serde_json::to_vec(&command).map_err(|_| Error::Format)?);
         let digest: [u8; 32] = Sha256::digest(&*bytes).into();
         if receipt.digest != digest
@@ -182,7 +240,9 @@ impl Workspace {
         {
             return Err(Error::Integrity);
         }
+
         tx.commit()?;
+
         Ok(event)
     }
 }
@@ -191,6 +251,7 @@ impl Workspace {
 mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
+    /// Publish an explicit synthetic checkpoint and capture its exact working-source reference.
     fn plan(ws: &mut Workspace, editor: &EditorState) -> Request {
         let state = match ws
             .execute(
@@ -211,6 +272,8 @@ mod tests {
             quote: editor.text.clone(),
         }
     }
+
+    /// Guard independent output/history and pinned unpublished input across changes and restart.
     #[test]
     fn unpublished_fork_keeps_independent_identity_and_exact_immutable_derivation_after_restart() {
         let temp = Temp::new();
@@ -257,6 +320,8 @@ mod tests {
             plan.quote
         );
     }
+
+    /// Guard atomic publication/replay, changed-intent rejection and wrong working-source scope.
     #[test]
     fn publication_faults_replay_one_result_without_committing_source_or_guessing_scope() {
         for phase in ["objects", "derivation", "heads", "receipt", "committed"] {
@@ -267,6 +332,7 @@ mod tests {
             let plan = plan(&mut ws, &editor);
             let command = Command::WorkingFork { plan: plan.clone() };
             assert!(matches!(
+                // Inject failure only at this selected write/commit checkpoint.
                 ws.execute_inner(op(3), command.clone(), |at| if at == phase {
                     Err(Error::Io)
                 } else {

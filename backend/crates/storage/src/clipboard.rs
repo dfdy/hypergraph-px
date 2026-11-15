@@ -1,5 +1,40 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Private principal/workspace state; capture does not publish a content revision.
+//! # Hypergraph PX — Private historical source clipboard
+//!
+//! Keeps bounded owner-private references to exact historical source ranges.
+//! Capture validates source and optional current draft context without
+//! publishing text.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace clipboard commands, retrospective
+//! comment/assertion/synthesis source adapters and browser clipboard
+//! paging.
+//!
+//! Specification:
+//! - [Storage responsibilities][spec0]
+//! - [Provenance and working-source definitions][spec1]
+//! - [Navigation contract][spec2]
+//!
+//! Boundary: Current catalogue-owner scope is implementation evidence, not
+//! full product permissions. Cached previews are withheld when source
+//! cannot currently be resolved; captures do not create content revisions.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/clipboard.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/05-domain/diagrams/provenance-working.c4
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md
+
 use super::*;
 pub const KIND: i32 = 10;
 pub const MAX_ENTRIES: usize = 128;
@@ -10,9 +45,12 @@ const JS_MAX: u64 = 9_007_199_254_740_991;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct EntryId(pub [u8; 32]);
 impl encoding::Identity for EntryId {
+    /// Expose the exact private entry identity for strict record encoding.
     fn bytes(&self) -> [u8; 32] {
         self.0
     }
+
+    /// Reconstruct an entry identity without changing its stored bytes.
     fn from_bytes(bytes: [u8; 32]) -> Self {
         Self(bytes)
     }
@@ -95,12 +133,16 @@ pub struct Page {
     pub entries: Vec<EntryView>,
     pub next: Option<usize>,
 }
+
+/// Separate each owner private clipboard slot with a domain-specific hash.
 fn slot(owner: PrincipalId) -> [u8; 32] {
     let mut hash = Sha256::new();
     hash.update(b"hpx/private-clipboard/v1\0");
     hash.update(owner.0);
     hash.finalize().into()
 }
+
+/// Check cached principal/device against the authenticated current catalogue.
 fn authorize(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -113,6 +155,8 @@ fn authorize(
     }
     Ok(catalog)
 }
+
+/// Load bounded private entries, rejecting inconsistent identities or malformed cached ranges.
 fn load(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -147,6 +191,8 @@ fn load(
         Err(error) => Err(error),
     }
 }
+
+/// Validate mutation shape and leave room for a browser-safe next generation.
 pub(super) fn validate(mutation: &Mutation) -> Result<()> {
     let generation = match mutation {
         Mutation::Capture {
@@ -165,6 +211,8 @@ pub(super) fn validate(mutation: &Mutation) -> Result<()> {
     }
     Ok(())
 }
+
+/// Reject empty/oversized captures and unsafe optional draft counters.
 pub(super) fn validate_capture(
     source: &Source,
     expected: Option<&DraftContext>,
@@ -178,11 +226,14 @@ pub(super) fn validate_capture(
     {
         return Err(Error::Invalid);
     }
+    // The predicate checks both browser-visible counters before source access.
     if expected.is_some_and(|d| d.generation > JS_MAX || d.sequence > JS_MAX) {
         return Err(Error::Limit);
     }
     Ok(())
 }
+
+/// Resolve authorized immutable source and validate exact UTF8 scalar-boundary offsets.
 pub(super) fn resolve_source(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -209,10 +260,12 @@ pub(super) fn resolve_source(
     if revision.text.len() > MAX_TEXT_BYTES {
         return Err(Error::Limit);
     }
+    // The mapping callback treats a split scalar or invalid byte interval as bad input.
     validate_byte_range(&revision.text, source.start_byte, source.end_byte)
         .map_err(|_| Error::Invalid)?;
     Ok((doc, revision))
 }
+/// Require exact quoted source and, when supplied, the unchanged acknowledged editor context.
 #[allow(clippy::too_many_arguments)]
 pub(super) fn capture_source(
     cipher: &Cipher<'_>,
@@ -244,6 +297,8 @@ pub(super) fn capture_source(
     }
     Ok((doc, revision))
 }
+
+/// Apply one generation-checked private capture/remove/clear without altering source history.
 pub(super) fn apply(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -281,6 +336,7 @@ pub(super) fn apply(
                 &quote,
             )?;
             let text = &revision.text[source.start_byte..source.end_byte];
+            // Reuse the exact binding rather than inserting a duplicate private entry.
             if let Some(prior) = state.entries.iter().find(|entry| entry.source == source) {
                 selected = Some(prior.id);
                 changed = false;
@@ -299,6 +355,7 @@ pub(super) fn apply(
         }
         Mutation::Remove { entry, .. } => {
             let before = state.entries.len();
+            // Preserve every entry except the specifically selected private identity.
             state.entries.retain(|item| item.id != entry);
             if state.entries.len() == before {
                 return Err(Error::NotFound);
@@ -330,7 +387,9 @@ pub(super) fn apply(
         count: state.entries.len(),
     })
 }
+
 impl Workspace {
+    /// Page a stable private generation and reveal previews only for currently resolvable source.
     pub fn clipboard_page(
         &mut self,
         generation: Option<u64>,
@@ -350,6 +409,7 @@ impl Workspace {
         };
         let catalog = authorize(&cipher, &tx, self.owner, self.device)?;
         let (_, actual, state) = load(&cipher, &tx, self.owner)?;
+        // Bind continuation to the same private-state generation.
         if generation.is_some_and(|expected| expected != actual) {
             return Err(Error::Conflict);
         }
@@ -359,6 +419,7 @@ impl Workspace {
         let entries = state.entries[offset..]
             .iter()
             .take(limit)
+            // Re-resolve each source before exposing a cached preview; retain removable identity otherwise.
             .map(|entry| {
                 let available = match resolve_source(&cipher, &tx, &catalog, &entry.source) {
                     Ok((_, revision)) => {
@@ -405,6 +466,7 @@ impl Workspace {
 pub(super) mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
+    /// Capture complete committed fixture text with its exact acknowledged editor context.
     pub(crate) fn capture(editor: &EditorState, generation: u64) -> Command {
         Command::Clipboard {
             mutation: Mutation::Capture {
@@ -426,19 +488,27 @@ pub(super) mod tests {
             },
         }
     }
+
+    /// Extract the private-state result from a successful command receipt.
     fn change(receipt: Receipt) -> Change {
         match receipt.outcome {
             Outcome::Clipboard { state } => state,
             _ => panic!(),
         }
     }
+
+    /// Count retained content records so private mutations cannot silently publish history.
     fn immutable_counts(db: &Connection) -> Vec<(i32, i64)> {
         let mut s=db.prepare("SELECT kind,count(*) FROM objects WHERE kind IN(3,4,5,9) GROUP BY kind ORDER BY kind").unwrap();
+        // The SQL callback reads kind/count pairs without decrypting source content.
         s.query_map([], |r| Ok((r.get(0)?, r.get(1)?)))
             .unwrap()
+            // Surface any failed count row as a fixture failure.
             .map(|r| r.unwrap())
             .collect()
     }
+
+    /// Verify durable private captures, deduplication and clear preserve content history and exact source.
     #[test]
     fn capture_retries_restart_dedup_and_clear_preserve_source_and_immutable_history() {
         let temp = Temp::new();
@@ -462,6 +532,7 @@ pub(super) mod tests {
                 assert!(
                     !bytes
                         .windows(editor.text.len())
+                        // Detect any exact plaintext source window in SQLite-related files.
                         .any(|part| part == editor.text.as_bytes())
                 );
             }
@@ -503,6 +574,8 @@ pub(super) mod tests {
                 .is_empty()
         );
     }
+
+    /// Distinguish unchanged editor capture from independently valid immutable historical capture.
     #[test]
     fn editor_capture_rejects_uncommitted_and_stale_ranges_but_historical_capture_stays_exact() {
         let temp = Temp::new();
@@ -537,6 +610,8 @@ pub(super) mod tests {
             Some(editor.text.as_str())
         );
     }
+
+    /// Reject stale generations and operation reuse while replaying original removal receipts.
     #[test]
     fn generations_and_receipts_prevent_cross_context_removal_or_silent_reordering() {
         let temp = Temp::new();
@@ -577,6 +652,8 @@ pub(super) mod tests {
         ));
         assert_eq!(ws.clipboard_page(None, 0, 16).unwrap().total, 0);
     }
+
+    /// Exercise rollback and uncertain post-commit retry across reopening without duplicate entries.
     #[test]
     fn faults_roll_back_private_state_and_unknown_commit_reply_reconciles_exactly() {
         for phase in ["objects", "heads", "receipt", "committed"] {
@@ -586,6 +663,7 @@ pub(super) mod tests {
             let editor = ws.open_document(doc).unwrap();
             let command = capture(&editor, 0);
             assert!(matches!(
+                // Fail the selected write stage, including a lost reply after commit.
                 ws.execute_inner(op(2), command.clone(), |point| if point == phase {
                     Err(Error::Io)
                 } else {
@@ -602,6 +680,8 @@ pub(super) mod tests {
             assert_eq!(result.generation, 1);
         }
     }
+
+    /// Reject drift in identity, occurrence, scalar cut and quoted source before private mutation.
     #[test]
     fn exact_bindings_scalar_boundaries_and_quote_prevent_cross_scope_copy() {
         let temp = Temp::new();
@@ -626,6 +706,8 @@ pub(super) mod tests {
             assert_eq!(ws.clipboard_page(None, 0, 16).unwrap().total, 0);
         }
     }
+
+    /// Withhold inaccessible cached source and reject unsupported private-record wrappers.
     #[test]
     fn private_record_versions_and_missing_source_fail_closed_without_cached_preview_disclosure() {
         let temp = Temp::new();
@@ -673,6 +755,7 @@ pub(super) mod tests {
         ));
     }
 
+    /// Enforce capture quota atomically and invalidate continuation after private generation changes.
     #[test]
     fn capture_quota_rejects_atomically_and_page_cursors_bind_private_generation() {
         let temp = Temp::new();
@@ -742,6 +825,7 @@ pub(super) mod tests {
         );
     }
 
+    /// Prevent cross-workspace capture and reject stale cached principal authority.
     #[test]
     fn private_capture_cannot_cross_workspace_or_cached_principal_authority() {
         let a = Temp::new();

@@ -1,5 +1,39 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Selected document/assertion incidence. It never turns an n-ary claim into a clique.
+//! # Hypergraph PX — Selected assertion and transformation incidence
+//!
+//! Builds one authorized read view of selected document and assertion nodes.
+//! Keeps n-ary claim participants and ordered synthesis inputs as incidence rather
+//! than inventing pairwise claims.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Browser retrospective/transformational graph queries and
+//! storage integration tests.
+//!
+//! Specification:
+//! - [Graph projection definitions][spec0]
+//! - [Storage query responsibilities][spec1]
+//! - [Domain navigation query contract][spec2]
+//!
+//! Boundary: This is a bounded selected projection, not whole-workspace
+//! discovery. Assertion nodes remain outside text snapshots; external
+//! participants are counted without expanding the selection.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/overlay_graph.rs
+//! [spec0]: ../../../../docs/05-domain/diagrams/graph-projections.c4
+//! [spec1]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md
+
 use super::*;
 use std::collections::BTreeSet;
 pub const MAX_PARTICIPANT_SOURCES: usize = 64;
@@ -21,7 +55,9 @@ pub enum Node {
     Document { context: graph::Node },
     Assertion { context: Box<assertions::Entry> },
 }
+
 impl Node {
+    /// Extract logical identity consistently for duplicate selection checks.
     fn id(&self) -> NodeId {
         match self {
             Self::Document { context } => context.node,
@@ -56,10 +92,15 @@ pub struct Projection {
     pub edges: Vec<Edge>,
     pub outside_selection: usize,
 }
+
 impl Workspace {
+    /// Read selected retrospective assertion/Fork incidence without synthesis Merge expansion.
     pub fn overlay_graph(&mut self, selection: &[Selection]) -> Result<Projection> {
+        // The default checkpoint callback leaves the read view uninterrupted.
         self.overlay_graph_inner(selection, |_| Ok(()))
     }
+
+    /// Delegate retrospective incidence using the supplied read-stage observation hook.
     fn overlay_graph_inner(
         &mut self,
         selection: &[Selection],
@@ -67,9 +108,14 @@ impl Workspace {
     ) -> Result<Projection> {
         self.graph_inner(selection, false, checkpoint)
     }
+
+    /// Include ordered synthesis Merge groups in the selected incidence projection.
     pub fn transformation_graph(&mut self, selection: &[Selection]) -> Result<Projection> {
+        // The default checkpoint callback performs no extra observation or mutation.
         self.graph_inner(selection, true, |_| Ok(()))
     }
+
+    /// Authorize selected nodes and bounded sources in one transaction before emitting incidence.
     fn graph_inner(
         &mut self,
         selection: &[Selection],
@@ -106,6 +152,7 @@ impl Workspace {
                         let exists: bool = tx.query_row(
                             "SELECT EXISTS(SELECT 1 FROM objects WHERE kind=?1 AND id=?2)",
                             params![merges::KIND, merges::address(context.node).as_slice()],
+                            // Read only existence; an existing record must later authenticate.
                             |r| r.get(0),
                         )?;
                         if exists {
@@ -114,7 +161,10 @@ impl Workspace {
                                 &tx,
                                 &catalog,
                                 *document,
+                                // Deduplicate exact serialized source bindings within the shared work cap.
                                 &mut |source| {
+                                    // Treat serialization failure as malformed binding evidence.
+                                    // The error callback rejects an unencodable participant source.
                                     let key =
                                         serde_json::to_vec(source).map_err(|_| Error::Format)?;
                                     if checked_sources.insert(key)
@@ -134,6 +184,7 @@ impl Workspace {
                     let context = assertions::read_entry(&cipher, &tx, self.owner, *node)?;
                     assertions::check_indices(&cipher, &tx, &context)?;
                     for participant in &context.record.participants {
+                        // The error callback rejects an unencodable participant source.
                         let key =
                             serde_json::to_vec(&participant.source).map_err(|_| Error::Format)?;
                         if checked_sources.insert(key) {
@@ -167,6 +218,7 @@ impl Workspace {
             outside_selection += event
                 .inputs
                 .iter()
+                // Count ordered inputs outside selection without inventing extra nodes.
                 .filter(|source| !ids.contains(&source.node.0))
                 .count();
             edges.push(Edge::Merge { event });
@@ -202,10 +254,12 @@ impl Workspace {
         })
     }
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, op, save};
+    /// Create exact Unicode source and a declared n-ary assertion with repeated role occurrences.
     fn setup() -> (Temp, Workspace, EditorState, assertions::Change) {
         let temp = Temp::new();
         let mut ws = Workspace::create(&temp.db(), PASS, "Synthetic").unwrap();
@@ -259,6 +313,8 @@ mod tests {
         };
         (temp, ws, source, assertion)
     }
+
+    /// Keep repeated ordered participant occurrences anchored to historical source after text edits.
     #[test]
     fn nary_incidence_preserves_one_assertion_node_and_parallel_role_occurrences_after_source_edits()
      {
@@ -301,6 +357,8 @@ mod tests {
             source.text
         );
     }
+
+    /// Reject invalid selection and authority while counting deliberately unselected participants.
     #[test]
     fn boundaries_duplicate_scope_unknown_ids_and_authority_fail_without_partial_graph() {
         let (_temp, mut ws, source, assertion) = setup();
@@ -346,6 +404,8 @@ mod tests {
             Err(Error::Integrity)
         ));
     }
+
+    /// Keep selected assertion state coherent while another connection publishes a review.
     #[test]
     fn selected_reviews_and_text_nodes_share_one_read_view_during_concurrent_review() {
         let (temp, mut ws, source, assertion) = setup();
@@ -360,6 +420,7 @@ mod tests {
                         node: assertion.node,
                     },
                 ],
+                // Publish the review after the first selected read on another connection.
                 |index| {
                     if index == 0 {
                         other.execute(
@@ -394,6 +455,8 @@ mod tests {
             assertions::Status::Accepted
         );
     }
+
+    /// Enforce the shared unique-source validation budget before returning graph data.
     #[test]
     fn source_validation_budget_rejects_a_large_induced_view_without_partial_output() {
         let temp = Temp::new();
@@ -417,6 +480,7 @@ mod tests {
         let mut selected = Vec::new();
         for group in 0..9usize {
             let participants = (0..8)
+                // Give each fixture participant a distinct exact one-byte capture.
                 .map(|index| {
                     let start = group * 8 + index;
                     assertions::Input {
@@ -472,6 +536,8 @@ mod tests {
             source.generation
         );
     }
+
+    /// Create a synthesis output using the retained ordered source fixture.
     fn merged(ws: &mut Workspace, source: &EditorState) -> DocumentId {
         match ws
             .execute(
@@ -487,6 +553,8 @@ mod tests {
             _ => panic!(),
         }
     }
+
+    /// Preserve one ordered synthesis group and its historical context across edits and partial selection.
     #[test]
     fn merge_is_one_ordered_group_with_partial_boundary_and_retained_source_context() {
         let (_temp, mut ws, source, _) = setup();
@@ -522,6 +590,8 @@ mod tests {
         assert_eq!(graph.outside_selection, 2);
         assert!(ws.overlay_graph(&selected).unwrap().edges.is_empty());
     }
+
+    /// Fail closed on damaged synthesis evidence and invalid authority.
     #[test]
     fn damaged_existing_merge_never_becomes_an_unrelated_document_and_authority_is_checked() {
         let (_temp, mut ws, source, _) = setup();
@@ -543,6 +613,8 @@ mod tests {
         assert!(ws.transformation_graph(&selected).is_err());
         assert!(ws.overlay_graph(&selected).is_ok());
     }
+
+    /// Keep the complete graph in its original SQL read view during concurrent source publication.
     #[test]
     fn merge_graph_keeps_one_read_view_while_a_separate_writer_edits_an_input() {
         let (temp, mut ws, source, _) = setup();
@@ -556,6 +628,7 @@ mod tests {
         let before = serde_json::to_value(ws.transformation_graph(&selected).unwrap()).unwrap();
         let mut writer = Workspace::open(&temp.db(), PASS).unwrap();
         let graph = ws
+            // Change source state after the first read without changing this transaction view.
             .graph_inner(&selected, true, |i| {
                 if i == 0 {
                     writer.execute(op(191), save(&source, "Separate writer"))?;
@@ -571,12 +644,15 @@ mod tests {
             before
         );
     }
+
+    /// Count synthesis input bindings across selected outputs against one shared cap.
     #[test]
     fn merge_sources_share_the_64_binding_work_budget() {
         let (_temp, mut ws, source, _) = setup();
         let boundaries: Vec<_> = source
             .text
             .char_indices()
+            // Keep valid UTF8 cuts for later source-range fixture generation.
             .map(|(i, _)| i)
             .chain([source.text.len()])
             .collect();
@@ -584,6 +660,7 @@ mod tests {
         for group in 0..8 {
             let mut plan = merges::tests::request(&source);
             plan.inputs = (0..8)
+                // Generate distinct exact bindings across each ordered synthesis group.
                 .map(|offset| {
                     let mut input = plan.inputs[0].clone();
                     input.source.start_byte = boundaries[group];

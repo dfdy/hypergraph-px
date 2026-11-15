@@ -1,14 +1,50 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Read-only immediate-record audit. No repair, closure scan, receipt or freshness claim.
+//! # Hypergraph PX — Read-only immediate publication audit
+//!
+//! Check the selected original branch's immediate editor/publication records
+//! under current authority and a charged ciphertext budget. Report the failing
+//! record role without returning source, titles, credentials or extra identifiers.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace document-audit API and its runtime/browser diagnostic view.
+//!
+//! Specification:
+//! - [Audit/repair authority boundary][spec0]
+//! - [Bounded audit scope][spec1]
+//! - [Authoritative state versus repair][spec2]
+//!
+//! Boundary: This bounded check performs no repair, recursive closure scan,
+//! receipt proof or whole-workspace freshness validation. Success means
+//! only that this selected slice completed.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/audit.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/08-assurance/recovery.md#initial-bounded-read-only-audit-slice
+//! [spec2]: ../../../../docs/08-assurance/recovery.md#authoritative-state-and-repair-boundary
+
 use super::*;
 
+/// Maximum caller-selected ciphertext allowance for the bounded audit slice.
 pub const MAX_READ_BYTES: usize = 16 * 1024 * 1024;
+/// Stable machine-visible statement of the exact audit scope.
 pub const SCOPE: &str = "original_branch_immediate_editor_and_publication_records";
 
 #[cfg_attr(feature = "api-schema", derive(utoipa::ToSchema))]
 #[cfg_attr(feature="api-schema", schema(as=AuditRecordRole))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
+// Audit phase identifies the selected immediate record, not an arbitrary graph scan.
 pub enum RecordRole {
     Catalog,
     Document,
@@ -19,10 +55,12 @@ pub enum RecordRole {
     Revision,
     Publication,
 }
+
 #[cfg_attr(feature = "api-schema", derive(utoipa::ToSchema))]
 #[cfg_attr(feature="api-schema", schema(as=AuditProblem))]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
+// Distinguish bounded findings without revealing protected source or backend diagnostics.
 pub enum Problem {
     Missing,
     UnreadableEncryptedRecord,
@@ -30,13 +68,16 @@ pub enum Problem {
     Inconsistent,
     Budget,
 }
+
 #[cfg_attr(feature = "api-schema", derive(utoipa::ToSchema))]
 #[cfg_attr(feature="api-schema", schema(as=AuditFinding))]
 #[derive(Debug, PartialEq, Eq, Serialize)]
+// One checked record role and its categorized failure; no payload is included.
 pub struct Finding {
     pub record: RecordRole,
     pub problem: Problem,
 }
+
 /// Contains no source, title, annotation body, credentials or unrequested identifiers.
 #[cfg_attr(feature = "api-schema", derive(utoipa::ToSchema))]
 #[cfg_attr(feature="api-schema", schema(as=DocumentAuditReport))]
@@ -49,10 +90,12 @@ pub struct Report {
     pub scope: &'static str,
     pub authenticated_records: usize,
     pub encrypted_bytes: usize,
+
     /// None means this bounded slice completed, not that the entire workspace is sound.
     pub finding: Option<Finding>,
 }
 
+/// Publish the exact existing scope string as the generated audit-schema enum.
 #[cfg(feature = "api-schema")]
 fn audit_scope_schema() -> utoipa::openapi::RefOr<utoipa::openapi::schema::Schema> {
     use utoipa::openapi::schema::{ObjectBuilder, Type};
@@ -69,7 +112,9 @@ struct Reader<'a, 'key> {
     remaining: usize,
     authenticated: usize,
 }
+
 impl Reader<'_, '_> {
+    /// Charge stored envelope length before reading/decrypting a selected object or slot.
     fn charge(&mut self, slot: bool, kind: i32, id: [u8; 32]) -> Result<()> {
         let sql = if slot {
             "SELECT length(envelope) FROM slots WHERE kind=?1 AND id=?2"
@@ -78,9 +123,11 @@ impl Reader<'_, '_> {
         };
         let length: i64 = self
             .db
+            // Obtain ciphertext size without first materializing its full payload.
             .query_row(sql, params![kind, id.as_slice()], |row| row.get(0))
             .optional()?
             .ok_or(Error::NotFound)?;
+        // Treat an invalid stored length as integrity failure, never as free work.
         let length = usize::try_from(length).map_err(|_| Error::Integrity)?;
         if length > self.remaining {
             return Err(Error::Limit);
@@ -88,6 +135,8 @@ impl Reader<'_, '_> {
         self.remaining -= length;
         Ok(())
     }
+
+    /// Track the current audit phase and count an immutable object only after authentication.
     fn object<T: DeserializeOwned>(
         &mut self,
         role: RecordRole,
@@ -100,6 +149,8 @@ impl Reader<'_, '_> {
         self.authenticated += 1;
         Ok(value)
     }
+
+    /// Track the current phase and authenticate a charged mutable slot without changing it.
     fn slot<T: DeserializeOwned>(
         &mut self,
         role: RecordRole,
@@ -120,6 +171,7 @@ impl Workspace {
         if !(1..=MAX_READ_BYTES).contains(&max_bytes) {
             return Err(Error::Invalid);
         }
+
         let tx = self.db.transaction()?;
         let cipher = Cipher {
             key: &self.key,
@@ -138,6 +190,7 @@ impl Workspace {
             return Err(Error::Integrity);
         }
         authority::document(&catalog, document)?;
+        // Capture this bounded validation result so only authorized diagnostics become findings.
         let result = (|| {
             let doc: Document = reader.object(RecordRole::Document, DOCUMENT, document.0)?;
             if doc.id != document {
@@ -197,6 +250,7 @@ impl Workspace {
             }
             Ok(())
         })();
+
         let finding = match result {
             Ok(()) => None,
             Err(error) => Some(Finding {
@@ -211,6 +265,7 @@ impl Workspace {
                 },
             }),
         };
+
         let report = Report {
             document,
             scope: SCOPE,
@@ -218,7 +273,9 @@ impl Workspace {
             encrypted_bytes: max_bytes - reader.remaining,
             finding,
         };
+
         tx.commit()?;
+
         Ok(report)
     }
 }
@@ -228,6 +285,7 @@ mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, create, op, save};
 
+    /// Verify successful immediate audit is read-only and never discloses pending source text.
     #[test]
     fn bounded_audit_checks_immediate_publication_without_saving_or_disclosing_pending_text() {
         let temp = Temp::new();
@@ -253,6 +311,7 @@ mod tests {
         assert_eq!(ws.db.total_changes(), changes);
     }
 
+    /// Guard pre-read budget charging and explicit incomplete audit findings at exact boundaries.
     #[test]
     fn encrypted_budget_is_charged_before_read_and_never_claims_a_complete_partial_audit() {
         let temp = Temp::new();
@@ -281,6 +340,7 @@ mod tests {
         ));
     }
 
+    /// Distinguish missing/AEAD/format/context failures without mutating the workspace.
     #[test]
     fn missing_authentication_format_and_context_failures_are_separate_nonmutating_findings() {
         for problem in [
@@ -344,6 +404,7 @@ mod tests {
         }
     }
 
+    /// Current scope must be established before diagnostics reveal known missing records.
     #[test]
     fn current_authority_precedes_diagnostics_for_even_a_known_missing_document() {
         let temp = Temp::new();
@@ -375,6 +436,7 @@ mod tests {
         ));
     }
 
+    /// Reject validly encrypted but substituted closed-snapshot/publication context.
     #[test]
     fn authenticated_closed_snapshot_and_publication_context_cannot_be_substituted() {
         for role in [RecordRole::Snapshot, RecordRole::Publication] {

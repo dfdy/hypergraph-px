@@ -1,5 +1,40 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Immutable retrospective comments with an append-only document paging chain.
+//! # Hypergraph PX — Immutable retrospective comments
+//!
+//! Stores comments as separate immutable nodes anchored to exact historical
+//! source,
+//! with an append-only document chain for bounded stable paging.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace command executor, browser comment queries and storage
+//! integration tests.
+//!
+//! Specification:
+//! - [Storage responsibilities][spec0]
+//! - [Relationship definitions][spec1]
+//! - [Navigation query contract][spec2]
+//!
+//! Boundary: Comment paging links are not same-node revision ancestry.
+//! Comments are excluded from text snapshot reconstruction; current
+//! single-owner catalogue checks do not implement the full multi-user
+//! policy.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/comments.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/05-domain/diagrams/relationships.c4
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md
+
 use super::*;
 use hypergraph_domain::comment as domain;
 
@@ -33,6 +68,7 @@ pub struct Record {
     #[serde(with = "encoding::identity")]
     pub operation: OperationId,
     pub ordinal: u64,
+
     /// Paging linkage between distinct comments, never same-node ancestry.
     #[serde(with = "encoding::optional_identity")]
     pub previous_document_comment: Option<RevisionId>,
@@ -68,12 +104,16 @@ pub struct Page {
     #[serde(with = "encoding::optional_identity")]
     pub next: Option<RevisionId>,
 }
+
+/// Derive the document-specific comment index slot without conflating comment identities.
 fn address(document: DocumentId) -> [u8; 32] {
     let mut h = Sha256::new();
     h.update(b"hpx/document-comments/v1\0");
     h.update(document.0);
     h.finalize().into()
 }
+
+/// Reject invalid captured coordinates, empty bodies and oversized comment text.
 pub(super) fn validate(request: &Request) -> Result<()> {
     clipboard::validate_capture(
         &request.source,
@@ -88,6 +128,8 @@ pub(super) fn validate(request: &Request) -> Result<()> {
     }
     Ok(())
 }
+
+/// Read the optional encrypted paging head and verify generation/count agreement.
 fn index(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -108,6 +150,8 @@ fn index(
         Err(error) => Err(error),
     }
 }
+
+/// Authenticate a comment, its source and its frozen command receipt before disclosure.
 fn record(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -152,12 +196,14 @@ fn record(
             body: record.body.clone(),
         },
     };
+    // The callback maps serialization failure to invalid command representation.
     let bytes = Zeroizing::new(serde_json::to_vec(&command).map_err(|_| Error::Format)?);
     if <[u8; 32]>::from(Sha256::digest(&*bytes)) != receipt.digest {
         return Err(Error::Integrity);
     }
     Ok(record)
 }
+/// Append a separately identified immutable comment and advance its document index atomically.
 #[allow(clippy::too_many_arguments)]
 pub(super) fn apply(
     cipher: &Cipher<'_>,
@@ -196,6 +242,7 @@ pub(super) fn apply(
         &request.quote,
         &request.body,
     )
+    // Reject any captured-source anchor that the pure planner cannot validate.
     .map_err(|_| Error::Invalid)?;
     let previous = index(cipher, db, doc.id)?;
     if let Some((_, head)) = &previous {
@@ -204,6 +251,7 @@ pub(super) fn apply(
             return Err(Error::Integrity);
         }
     }
+    // The optional-head callback assigns the next ordinal without creating ancestry.
     let ordinal = previous.as_ref().map_or(1, |(_, head)| head.count + 1);
     if ordinal > JS_MAX {
         return Err(Error::Limit);
@@ -218,6 +266,7 @@ pub(super) fn apply(
         device,
         operation,
         ordinal,
+        // Link only the prior document comment; this is a separate immutable node.
         previous_document_comment: previous.as_ref().map(|(_, head)| head.head),
     };
     cipher.insert(db, KIND, value.revision.0, &value)?;
@@ -240,7 +289,9 @@ pub(super) fn apply(
         ordinal,
     })
 }
+
 impl Workspace {
+    /// Return a bounded stable comment chain after current document/snapshot authorization.
     pub fn comments_page(
         &mut self,
         document: DocumentId,
@@ -273,6 +324,7 @@ impl Workspace {
             return Err(Error::Integrity);
         }
         let head = index(&cipher, &tx, document)?;
+        // Lazily begin at the current head; the nested mapping extracts only its identity.
         let mut cursor = next.or_else(|| head.as_ref().map(|(_, h)| h.head));
         if next.is_some() && head.is_none() {
             return Err(Error::Integrity);
@@ -288,6 +340,7 @@ impl Workspace {
                 Some(value) => value,
                 None => record(&cipher, &tx, &catalog, document, revision)?,
             };
+            // These predicates reject head/count drift and broken descending ordinals.
             if head.as_ref().is_none_or(|(_, h)| value.ordinal > h.count)
                 || expected.is_some_and(|n| value.ordinal != n)
                 || next.is_none()
@@ -295,6 +348,7 @@ impl Workspace {
                     && head.as_ref().is_none_or(|(_, h)| value.ordinal != h.count)
                 || entries
                     .iter()
+                    // Reject duplicate identity or revision within the returned page.
                     .any(|e| e.node == value.node || e.revision == value.revision)
             {
                 return Err(Error::Integrity);
@@ -325,6 +379,7 @@ impl Workspace {
 pub(super) mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
+    /// Capture the complete committed fixture source with an exact multiline Unicode comment body.
     pub(crate) fn request(s: &EditorState) -> Request {
         Request {
             source: clipboard::Source {
@@ -341,6 +396,8 @@ pub(super) mod tests {
             body: "  Comment 😀e\u{301}\r\nExact body\r\n ".into(),
         }
     }
+
+    /// Keep comment identity, original body and paging stable across text Commit and reopen.
     #[test]
     fn immutable_comments_and_stable_pages_survive_text_edits_and_restart() {
         let t = Temp::new();
@@ -390,6 +447,8 @@ pub(super) mod tests {
             3
         );
     }
+
+    /// Prove transaction rollback and identical receipt retry never duplicate a comment.
     #[test]
     fn atomic_comment_faults_and_lost_acknowledgements_reconcile_one_record() {
         for point in ["comment", "comment_index", "heads", "receipt", "committed"] {
@@ -399,6 +458,7 @@ pub(super) mod tests {
             let s = w.open_document(d).unwrap();
             let command = Command::Comment { plan: request(&s) };
             assert!(
+                // Fail only the selected stage, including the uncertain post-commit point.
                 w.execute_inner(op(2), command.clone(), |at| if at == point {
                     Err(Error::Io)
                 } else {
@@ -425,6 +485,8 @@ pub(super) mod tests {
             assert_eq!(w.open_document(d).unwrap().generation, s.generation);
         }
     }
+
+    /// Reject altered intent, stale source, cross-document cursors and invalid query authority.
     #[test]
     fn scope_stale_draft_quotes_limits_and_reused_operations_fail_closed() {
         let t = Temp::new();
@@ -490,6 +552,8 @@ pub(super) mod tests {
         assert!(w.execute(op(2), Command::Comment { plan }).is_err());
         w.owner = owner;
     }
+
+    /// Reject authenticated payloads whose body, receipt, source or paging evidence disagrees.
     #[test]
     fn authenticated_body_receipt_and_paging_link_corruption_are_rejected() {
         for fault in ["body", "receipt", "link", "ordinal", "source"] {

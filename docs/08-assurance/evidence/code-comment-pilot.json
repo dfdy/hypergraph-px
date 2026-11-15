@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "scope": "Programme infrastructure, seven-file pilot and three-file domain batch; whole-codebase rollout remains incomplete",
+  "inventory": "shared/tooling/code-comment-inventory.json",
+  "coverage": {
+    "maintained_files": 263,
+    "reviewed": 10,
+    "pending": 248,
+    "generated_exclusions": 5
+  },
+  "reviewed_sources": [
+    {
+      "path": "backend/crates/domain/src/comment.rs",
+      "sha256": "4c14c9abb5c7c31c27e30e9eba838ae5a9e43cdbbe3fd73a7be957da5435d9e0",
+      "review_notes": "Read all validation branches and context/range/body tests; documented validation order, no quote search, whitespace-only rejection without normalization, byte budget and adapter authority boundary."
+    },
+    {
+      "path": "backend/crates/domain/src/fork.rs",
+      "sha256": "a509c6309a9ab4385e0ee1e195b1c75b7062b2a150bd4bef82b37d9a7ee7e055",
+      "review_notes": "Read identity/revision/occurrence checks, scalar validation before slicing, exact borrowed result and exhaustive scalar/context tests; added compiler missing_docs gate."
+    },
+    {
+      "path": "backend/crates/domain/src/merge.rs",
+      "sha256": "f130ac4b549dd7c99056adf7401aa3cfdbe028998eb6ed28cbd18953710064cf",
+      "review_notes": "Read input count, exact Fork-based validation, independent output semantics and checked selected-byte sum; documented non-attribution, repeated inputs, no implicit copy mapping and distinction from parent Merge."
+    },
+    {
+      "path": "backend/crates/domain/src/working.rs",
+      "sha256": "70c447beb1c23e6f96f84e4483a81cf9cd3f2d74f030390ca5ea535453e457a9",
+      "review_notes": "Read full-buffer equality, scalar checks, nonempty exact quote and repeated-passage tests; documented acknowledgement versus matching text, byte coordinates and no persistence/history side effect."
+    },
+    {
+      "path": "backend/proofs/lean/Hypergraph/Expansion.lean",
+      "sha256": "202226ce97ea6616ac8d9e3040046ffb21ddc04179ec870fdb28ddea36c4d95d",
+      "review_notes": "Read Path constructors and each proof: strict rank induction, contradiction, insertion disjunction and positive/negative examples; qualified DAG projection versus cyclic inclusion and lack of Rust correspondence."
+    },
+    {
+      "path": "frontend/src/owned-source.js",
+      "sha256": "f8479bdd4d935d29fef4d2416abc19b10d924367b414d453607866850ae582bd",
+      "review_notes": "Read every helper, CodeMirror state update and copy/cut/paste handler; explained raw UTF16 versus persistent UTF8, exact-insertion rejection, CRLF mapping and inverse effects."
+    },
+    {
+      "path": "shared/tooling/check_code_comments.mjs",
+      "sha256": "ea00ce4dd2e5079c6eeaee278fb5c4b6bb63f6ad5fb03ed44866f3f3859860a4",
+      "review_notes": "Reviewed direct, named local/aliased, destructured and default export discovery, attached JSDoc checks and forwarding-only re-export handling; source is parsed, never evaluated."
+    },
+    {
+      "path": "shared/tooling/check_code_comments.py",
+      "sha256": "bb738f86d5aa1d1a7630affb9c4223baa50b31feb543ba975de155fd2093486a",
+      "review_notes": "Reviewed the completed incremental/closeout paths, resolved-Git-object baseline protection, date/evidence validation and explicit open-findings handling. Presence never promotes pending files."
+    },
+    {
+      "path": "shared/tooling/development-launch.mjs",
+      "sha256": "2001fe39c229e758b5ac1eace221eee6a8d6cf68df7b71fd3f6e308cdebb5ddd",
+      "review_notes": "Read decoder buffering, complete-line recognition, frontend port substitution, raw passthrough and final flush; explained token confidentiality and formatting-only authority."
+    },
+    {
+      "path": "shared/tooling/tests/test_code_comments.py",
+      "sha256": "cdd7da0941cba294fd6256a250884a3f3a48c5bd8e125a5e093e0e7ffbbf104a",
+      "review_notes": "Reviewed all19 isolated fixture scenarios, including malformed inventory, open findings, regression downgrades, and alternative JavaScript export forms; assertions check actual failure/success, not quality scores."
+    }
+  ],
+  "proof_comment_refresh": {
+    "source": "backend/proofs/lean/Hypergraph/Expansion.lean",
+    "before_sha256": "ff74aa4802f979d79e9c25e69f514379148abf890e58619dc916aa77214c3f7d",
+    "after_sha256": "202226ce97ea6616ac8d9e3040046ffb21ddc04179ec870fdb28ddea36c4d95d",
+    "command": "lake env lean -DwarningAsError=true Hypergraph/Expansion.lean",
+    "toolchain": "Existing pinned Lean 4.35.0",
+    "outcome": "pass",
+    "axiom_reports": [
+      "'Hypergraph.path_increases' does not depend on any axioms",
+      "'Hypergraph.rank_implies_acyclic' does not depend on any axioms",
+      "'Hypergraph.forward_insertion_preserves_rank' does not depend on any axioms",
+      "'Hypergraph.forward_insertion_preserves_acyclic' does not depend on any axioms"
+    ],
+    "declarations_unchanged": true,
+    "comparison": "Exact nonblank non-comment lines with indentation retained; only full-line comments were removed for comparison",
+    "limits": "Direct Expansion check only; no new full lake build, leanchecker, CycleState/SourceEmission replay or extracted-Rust replay claimed."
+  },
+  "checks": [
+    {
+      "name": "comment checker fixtures",
+      "outcome": "pass",
+      "tests": 19
+    },
+    {
+      "name": "domain library tests",
+      "outcome": "pass",
+      "tests": 47
+    },
+    {
+      "name": "frontend Node tests",
+      "outcome": "pass",
+      "tests": 194
+    },
+    {
+      "name": "Rust documentation build and broken-link lint",
+      "outcome": "pass"
+    },
+    {
+      "name": "JS/TS parsed syntax equivalence for two existing modules",
+      "outcome": "pass"
+    },
+    {
+      "name": "Rust/Lean existing declaration equivalence",
+      "outcome": "pass",
+      "exception": "Explicit Rust missing_docs documentation lint attribute only"
+    },
+    {
+      "name": "incremental inventory and HEAD baseline check",
+      "outcome": "pass"
+    },
+    {
+      "name": "whole-programme closeout",
+      "outcome": "fail",
+      "expected": true,
+      "reason": "248 files and coverage finding COMMENTS-001 remain pending"
+    },
+    {
+      "name": "full Python tooling suite",
+      "outcome": "pass",
+      "tests": 221
+    }
+  ],
+  "limitations": "Presence/freshness checks cannot establish teaching quality. No application behaviour, format, provider/trust/workspace, branch or publication action.",
+  "decisions": [
+    "Continue on the existing dirty/staged checkout without pulling or changing branches, preserving owner work",
+    "Use the existing pinned TypeScript parser and Python stdlib; add no runtime dependencies",
+    "Keep generated bindings and extracted Lean inventoried with origins; omit unadopted frontend intake from maintained-source scope",
+    "Use module-local Rust missing_docs gates until whole-crate review permits a broader gate",
+    "Do not mark pending source reviewed by comment counts or scanner success"
+  ],
+  "open_questions": []
+}

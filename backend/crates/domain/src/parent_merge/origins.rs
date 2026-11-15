@@ -1,29 +1,83 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Retained passage age from supplied immediate-base mapping evidence.
-//! No clock allocation, diff inference, authorship, serialization or persistence.
+//! # Hypergraph PX — Retained passage origins from exact evidence
+//!
+//! Plan per-passage origin runs and deletion evidence when an exact working
+//! trace becomes a new same-node revision, preserving established passage age.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build: unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision: unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Experimental temporal Commit/origin-history adapters and versioned origin
+//! record codecs, plus lineage/Merge tests using supplied passage mappings.
+//!
+//! Specification:
+//! - [Domain origin responsibilities][domain]
+//! - [Retained origin and Merge rules][merge]
+//! - [Experimental publication scope][publication]
+//!
+//! Boundary: publish returns a new pure map; it writes no storage and allocates no clock.
+//! Adapters supply authenticated context, authorized new order and actual Fresh/Copy
+//! evidence. Equal text or newer publication alone does not prove origin or mapping.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/domain/src/parent_merge/origins.rs
+//! [domain]: ../../../../../docs/06-subsystems/diagrams/pure-domain.c4
+//! [merge]: ../../../../../docs/07-implementation/algorithms/parent-merge.md
+//! [publication]: ../../../../../docs/07-implementation/protocols/draft-publication.md
 use super::{
     Base, Budget, Limits, Mapping, Origin,
     lineage::{Change, Trace},
 };
 use crate::records::{NodeId, RangeError, RevisionId, validate_byte_range};
 
+/// One current-source interval with retained passage origins and mapping confidence.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Run {
+    /// Inclusive UTF8 cut in this revision’s full current text.
     pub start: usize,
+
+    /// Exclusive current-source cut; nonempty runs partition emitted source.
     pub end: usize,
+
+    /// Retained passage-change identities/ages; not current-text authorship claims.
     pub origins: Vec<Origin>,
+
+    /// Exact or explicitly unknown inherited positional correspondence.
     pub mapping: Mapping,
+
     /// Exact immediate-parent coordinate, not inferred from equal text.
+    /// Optional exact cut in the immediate parent; new/unknown pieces use None.
     pub parent_start: Option<usize>,
 }
+
+/// Removed immediate-parent interval with the new change’s retained origin.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Deletion {
+    /// Exact immediate-parent revision whose range was removed.
     pub base: RevisionId,
+
+    /// Inclusive byte cut in that parent source.
     pub start: usize,
+
+    /// Exclusive parent cut; the removed interval has no current-source run.
     pub end: usize,
+
+    /// New publication’s change identity/order for this removal.
     pub origin: Origin,
+
+    /// Supplied confidence in correspondence for this removed interval.
     pub mapping: Mapping,
 }
+
+/// One exact revision’s source and immediate-parent origin/change evidence.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Map {
     node: NodeId,
@@ -35,6 +89,8 @@ pub struct Map {
     deletions: Vec<Deletion>,
     changes: Vec<Change>,
 }
+
+/// Supplied interpretation of one replacement piece, not inferred from equal text.
 #[derive(Clone, Copy, Debug)]
 pub enum Source {
     /// Supplied evidence establishes an actual newly changed passage.
@@ -44,28 +100,54 @@ pub enum Source {
     /// Publication is known; its passage mapping is not established.
     Unknown,
 }
+
+/// One contiguous piece of a replacement and its explicit source evidence.
 pub struct Piece {
+    /// Inclusive cut relative to this replacement string, not the full document.
     pub start: usize,
+
+    /// Exclusive replacement-relative UTF8 cut.
     pub end: usize,
+
+    /// Fresh, same-locus inherited or unknown mapping evidence supplied by caller.
     pub source: Source,
 }
+
+/// Complete piece partition and removed-range confidence for one trace change.
 pub struct Evidence<'a> {
+    /// Ordered nonempty partition covering all replacement bytes exactly.
     pub pieces: &'a [Piece],
+
     /// Confidence in mapping the removed interval, including tombstones.
+    /// Supplied confidence for removed parent intervals and tombstones.
     pub deletion_mapping: Mapping,
 }
+
+/// Why a new origin map cannot be justified from the supplied exact evidence.
 #[derive(Debug, PartialEq, Eq)]
 pub enum Error {
+    /// Trace node/base/text do not match this exact parent map.
     Scope,
+    /// The trace has no actual immediate-base changes to publish.
     NoChange,
+    /// Zero/non-increasing/reused revision or inconsistent retained-origin order.
     Order,
+    /// An evidence piece has invalid or split-scalar UTF8 cuts.
     Range(RangeError),
+    /// Piece coverage/copy locus/content or evidence count cannot be established.
     Evidence,
+    /// Declared logical work/text allowance is exceeded or arithmetic overflows.
     Limit,
 }
+
+/// Debit logical accounting and translate exhaustion into the origin-map error.
 fn spend(budget: &mut Budget, n: usize) -> Result<(), Error> {
+    // Preserve explicit accounting exhaustion in this module’s error vocabulary.
     budget.spend(n).map_err(|_| Error::Limit)
 }
+
+/// Append a nonempty output run, coalescing only adjacent equal evidence with
+/// contiguous parent coordinates so distinct provenance is not silently erased.
 fn emit(
     runs: &mut Vec<Run>,
     start: usize,
@@ -104,7 +186,10 @@ fn emit(
     });
     Ok(())
 }
+
 impl Map {
+    /// Create an initial map for an exact supplied root source and optional known
+    /// order; reject zero known order and bound work/text before copying source.
     pub fn root(base: &Base<'_>, order: Option<u64>, limits: Limits) -> Result<Self, Error> {
         if order == Some(0) {
             return Err(Error::Order);
@@ -138,30 +223,49 @@ impl Map {
             changes: Vec::new(),
         })
     }
+
+    /// Return the logical node identity whose same-node passage history is represented.
     pub fn node(&self) -> NodeId {
         self.node
     }
+
+    /// Return this map’s exact retained revision, independent of a moving head.
     pub fn revision(&self) -> RevisionId {
         self.revision
     }
+
+    /// Return the immediate same-node parent, or None for the initial root map.
     pub fn parent(&self) -> Option<RevisionId> {
         self.parent
     }
+
+    /// Return this revision’s supplied order, not the age of each retained passage.
     pub fn publication_order(&self) -> Option<u64> {
         self.publication_order
     }
+
+    /// Borrow exact current revision bytes without normalization or rendering.
     pub fn text(&self) -> &str {
         &self.text
     }
+
+    /// Borrow current-source passage runs and their retained origin/mapping evidence.
     pub fn runs(&self) -> &[Run] {
         &self.runs
     }
+
+    /// Borrow the canonical changes against the immediate parent, not inferred history.
     pub fn changes(&self) -> &[Change] {
         &self.changes
     }
+
+    /// Borrow intervals removed in this publication, not a cumulative deletion log.
     pub fn deletions(&self) -> &[Deletion] {
         &self.deletions
     }
+
+    /// Carry a validated parent interval into output at a new byte position while
+    /// retaining each run’s origin/confidence and exact immediate-parent cut.
     fn copy(
         &self,
         start: usize,
@@ -174,6 +278,7 @@ impl Map {
             return Ok(());
         }
         spend(budget, 1)?;
+        // Skip runs wholly before this exact parent-source interval.
         let first = self.runs.partition_point(|run| run.end <= start);
         for run in &self.runs[first..] {
             spend(budget, 1)?;
@@ -194,8 +299,12 @@ impl Map {
         }
         Ok(())
     }
+
     /// The new order must come from an authorized atomic node allocator.
     /// Evidence is explicit; equal bytes alone never establish a Copy.
+    /// Plan a new revision map from an exact trace and explicit piece evidence;
+    /// preserve same-locus inherited age and mark genuinely new or unknown pieces
+    /// without mutating the old map, allocating order or writing storage.
     pub fn publish(
         &self,
         trace: &Trace<'_>,
@@ -224,6 +333,7 @@ impl Map {
             return Err(Error::NoChange);
         }
         if order == 0
+            // Require the supplied new publication order to advance its known parent.
             || self.publication_order.is_some_and(|old| old >= order)
             || revision == self.revision
         {
@@ -236,11 +346,14 @@ impl Map {
             spend(&mut budget, 1)?;
             for origin in &run.origins {
                 spend(&mut budget, 1)?;
+                // Reject reuse or a retained origin whose known order is not earlier.
                 if origin.revision == revision || origin.order.is_some_and(|old| old >= order) {
                     return Err(Error::Order);
                 }
             }
         }
+
+        // This evidence identifies the actual new change, not every retained byte.
         let origin = Origin {
             revision,
             order: Some(order),
@@ -253,6 +366,9 @@ impl Map {
             spend(&mut budget, change.replacement.len())?;
             self.copy(cursor, change.start, output, &mut runs, &mut budget)?;
             output += change.start - cursor;
+
+            // Require exact replacement coverage and monotone same-locus copies
+            // within this changed parent interval; matching bytes alone are insufficient.
             let mut part_cursor = 0;
             let mut copy_cursor = change.start;
             for piece in proof.pieces {
@@ -333,6 +449,8 @@ impl Map {
             output += change.replacement.len();
             cursor = change.end;
         }
+
+        // Unchanged trailing source retains its original passage evidence.
         self.copy(cursor, self.text.len(), output, &mut runs, &mut budget)?;
         Ok(Self {
             node: self.node,
@@ -351,9 +469,13 @@ impl Map {
 mod tests {
     use super::*;
     use crate::parent_merge::{Edit, Outcome, Reason, Side, lineage::Splice, plan};
+
+    /// Make deterministic distinct retained-revision identities for origin tests.
     fn id(n: u8) -> RevisionId {
         RevisionId([n; 32])
     }
+
+    /// Bind a test source to one fixed logical node and initial revision.
     fn base(text: &str) -> Base<'_> {
         Base {
             node: NodeId([9; 32]),
@@ -361,12 +483,16 @@ mod tests {
             text,
         }
     }
+
+    /// Provide a generous logical allowance so origin tests isolate semantic rules.
     fn limits() -> Limits {
         Limits {
             text_bytes: 4096,
             work: 100_000,
         }
     }
+
+    /// Describe the entire replacement as supplied newly changed source evidence.
     fn fresh(end: usize) -> [Piece; 1] {
         [Piece {
             start: 0,
@@ -374,6 +500,9 @@ mod tests {
             source: Source::Fresh,
         }]
     }
+
+    /// Verify unrelated newer publication does not retag an older passage and
+    /// Merge still selects by the actual retained passage-change order.
     #[test]
     fn unrelated_later_publication_keeps_the_date_age_and_selects_the_real_later_date() {
         let b = base("Monday\r\nOriginal");
@@ -501,6 +630,9 @@ mod tests {
         assert_eq!(result.text, "Wednesday\r\nLater");
         assert_eq!(root.text(), b.text);
     }
+
+    /// Verify explicit same-locus copied pieces retain age/parent offsets and
+    /// only the genuinely replaced parent interval is recorded as removed.
     #[test]
     fn explicit_inherited_pieces_keep_age_and_are_not_recorded_as_deleted() {
         let b = base("ABCD");
@@ -558,6 +690,9 @@ mod tests {
         assert_eq!(map.runs()[2].origins[0].order, Some(1));
         assert_eq!((map.deletions()[0].start, map.deletions()[0].end), (2, 3));
     }
+
+    /// Verify known publication order cannot upgrade uncertain passage mapping
+    /// or win distinct competition, while equal bytes retain unknown confidence.
     #[test]
     fn unknown_mapping_does_not_win_even_when_publication_order_is_known() {
         let b = base("A");
@@ -664,6 +799,9 @@ mod tests {
         };
         assert_eq!(result.edits[0].mapping, Mapping::Unknown);
     }
+
+    /// Verify a committed reversion receives new change evidence and a later
+    /// deletion records its immediate-parent interval without mutating old maps.
     #[test]
     fn deletion_and_genuine_reversion_keep_new_edge_evidence_and_old_history() {
         let b = base("Tuesday");
@@ -738,6 +876,9 @@ mod tests {
         assert_eq!(root.text(), "Tuesday");
         assert_eq!(reverted.text(), "Monday");
     }
+
+    /// Check wrong context, order, partition, scalar bounds and resource limits
+    /// fail explicitly while the earlier origin map remains unchanged.
     #[test]
     fn malformed_evidence_scope_orders_and_limits_fail_without_changing_the_map() {
         let b = base("A😀B");
@@ -818,6 +959,9 @@ mod tests {
             Err(Error::NoChange)
         );
     }
+
+    /// Verify equal text from another original locus cannot be used as false
+    /// Copy evidence to preserve unrelated passage age.
     #[test]
     fn copying_equal_bytes_from_another_locus_cannot_forge_inheritance() {
         let b = base("AA");

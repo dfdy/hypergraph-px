@@ -1,5 +1,37 @@
+//! # Hypergraph PX — Envelope confidentiality and binding tests
+//!
+//! Exercise object encryption, exact context authentication and passphrase-wrapper
+//! compatibility using independent synthetic keys and bounded byte fixtures.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Cargo integration-test runner for the crypto envelope adapter.
+//!
+//! Specification:
+//! - [Crypto responsibilities][spec0]
+//! - [Envelope adapter contract][spec1]
+//! - [HGOB/HGWK byte format][spec2]
+//!
+//! Boundary: These are executable examples and corruption/resource checks, not a proof of cryptographic primitives or hostile-host confidentiality.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/crypto/tests/envelopes.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/06-subsystems/interfaces/crypto-adapter.md
+//! [spec2]: ../../../../docs/06-subsystems/formats/crypto-envelopes.md
+
 use hypergraph_crypto::{Context, Error, MAX_PLAINTEXT, Purpose, SecretKey, storage_address};
 
+/// Supply one fixed synthetic expected context so each binding dimension can be varied.
 fn context() -> Context {
     Context {
         workspace: [0x51; 16],
@@ -9,6 +41,7 @@ fn context() -> Context {
     }
 }
 
+/// Check nonce-separated ciphertext and rejection of wrong keys, contexts and mutated bytes.
 #[test]
 fn encryption_hides_equal_content_and_binds_every_context_field() {
     let key = SecretKey::generate().unwrap();
@@ -16,12 +49,15 @@ fn encryption_hides_equal_content_and_binds_every_context_field() {
     let plaintext = b"A private revision with retained provenance.";
     let a = key.seal(expected, plaintext).unwrap();
     let b = key.seal(expected, plaintext).unwrap();
+
     assert_eq!(&key.open(expected, &a).unwrap()[..], plaintext);
     assert_eq!(&key.open(expected, &b).unwrap()[..], plaintext);
     assert_ne!(a, b);
     assert_ne!(storage_address(&a), storage_address(&b));
     assert_eq!(a.len(), plaintext.len() + 46);
+    // Search ciphertext windows only to detect an accidentally exposed fixture payload.
     assert!(!a.windows(plaintext.len()).any(|bytes| bytes == plaintext));
+
     for changed in [
         Context {
             workspace: [0x52; 16],
@@ -55,6 +91,7 @@ fn encryption_hides_equal_content_and_binds_every_context_field() {
             "accepted byte {position}"
         );
     }
+
     for length in 0..a.len() {
         assert!(key.open(expected, &a[..length]).is_err());
     }
@@ -63,6 +100,7 @@ fn encryption_hides_equal_content_and_binds_every_context_field() {
     assert_eq!(key.open(expected, &extended), Err(Error::Authentication));
 }
 
+/// Check empty payload support and framing/passphrase bounds without panics or KDF abuse.
 #[test]
 fn explicit_resource_limits_and_empty_payload() {
     let key = SecretKey::generate().unwrap();
@@ -97,6 +135,7 @@ fn explicit_resource_limits_and_empty_payload() {
     ));
 }
 
+/// Check rewrapping preserves object access and old wrappers while rejecting substituted profiles.
 #[test]
 fn passphrase_rewrap_keeps_existing_objects_and_rejects_substitution() {
     // Deliberately synthetic fixtures, unrelated to any user's credentials.
@@ -192,6 +231,7 @@ fn passphrase_rewrap_keeps_existing_objects_and_rejects_substitution() {
             Err(Error::Authentication)
         ));
     }
+
     // Valid old encrypted envelopes cannot be revoked by simply replacing the wrapper.
     let old = SecretKey::unlock(
         b"synthetic old storage phrase",
@@ -204,6 +244,7 @@ fn passphrase_rewrap_keeps_existing_objects_and_rejects_substitution() {
         &old.open(expected, &sealed).unwrap()[..],
         b"A revision created before passphrase change."
     );
+
     // Unknown profiles/suites are rejected before any attacker-selected KDF execution.
     for position in 0..18 {
         let mut unsupported = second.clone();

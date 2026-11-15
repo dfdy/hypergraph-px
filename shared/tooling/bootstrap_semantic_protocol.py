@@ -1,10 +1,27 @@
 #!/usr/bin/env python3
-"""Fail-closed dual-hash HPX-SCP bootstrap (operates outside agent context).
+"""Hypergraph PX — Fail-closed legacy semantic bootstrap
 
-Two hashes in an external integrity manifest cover the canonical prose and semantic
-YAML independently; regenerated projection equivalence binds their meanings.
-This retained HPX-SCP checker is not the active Vernaculum reader; use
-shared/tooling/vernaculum_protocol.py for the installed pinned specification.
+Verify canonical legacy prose and its deterministic semantic appendix as a bound pair before any scoped packet or historical record checker consumes it.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/bootstrap_semantic_protocol.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Legacy semantic-context, recovery, wire/record tools and their isolated bootstrap tests.
+
+Specification:
+- [Active protocol installation and legacy boundary](../../docs/09-guides/developers/vernaculum/UPGRADE_2.0.0.md)
+- [Commenting and exact-source review](../../docs/09-guides/developers/code-comments.md)
+
+Boundary: The historical HPX-SCP format is separate from active Vernaculum. This checker establishes internal byte/projection consistency, not peer trust or approval.
 """
 from __future__ import annotations
 import argparse
@@ -35,7 +52,10 @@ class BootstrapError(ValueError):
 
 
 def strict_object(pairs):
+    """Reject duplicate JSON properties so a later key cannot silently replace an earlier authority claim."""
+
     result = {}
+
     for k, v in pairs:
         if k in result:
             raise BootstrapError(f'duplicate JSON key: {k}')
@@ -47,6 +67,8 @@ class StrictYAMLLoader(yaml.SafeLoader):
     """YAML subset: plain mappings/sequences/scalars; no aliases or duplicate keys."""
 
     def compose_node(self, parent, index):
+        """Reject YAML aliases and anchors before normal safe-loader composition can hide shared or recursive content."""
+
         if self.check_event(yaml.AliasEvent):
             raise BootstrapError('YAML aliases are not supported')
         event = self.peek_event()
@@ -56,7 +78,10 @@ class StrictYAMLLoader(yaml.SafeLoader):
 
 
 def unique_yaml_mapping(loader, node):
+    """Require string mapping keys and reject duplicates while constructing the restricted YAML tree."""
+
     out = {}
+
     for key_node, value_node in node.value:
         key = loader.construct_object(key_node, deep=True)
         if not isinstance(key, str):
@@ -71,6 +96,8 @@ StrictYAMLLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
 
 
 def strict_yaml(raw: bytes) -> dict:
+    """Decode strict UTF8 into the restricted YAML mapping form, refusing malformed or nonmapping payloads."""
+
     try:
         parsed = yaml.load(raw.decode('utf-8', 'strict'), Loader=StrictYAMLLoader)
     except (yaml.YAMLError, UnicodeError, ValueError) as exc:
@@ -81,14 +108,18 @@ def strict_yaml(raw: bytes) -> dict:
 
 
 def yaml_bytes(value: dict) -> bytes:
+    """Produce the deterministic indented YAML encoding used for appendix equality and wire output."""
+
     return yaml.safe_dump(value, allow_unicode=True, sort_keys=False, width=140).encode('utf-8')
 
 
 def machine_from_projection(projection: dict) -> dict:
     """A concise, indented, self-describing semantic form, generated solely from canonical prose."""
+
     ordered_scopes = ['kernel', 'baseline', 'negotiation', 'exchange', 'records', 'plan', 'implement', 'verify',
                       'handoff', 'amend', 'recovery', 'preflight']
     scopes = {}
+
     for scope in ordered_scopes:
         matching = {r['id']: r['directive'] for r in projection['rules'] if r['scope'] == scope}
         if matching:
@@ -117,11 +148,14 @@ def machine_from_projection(projection: dict) -> dict:
 
 
 def natural_prefix(data: bytes) -> bytes:
+    """Extract exactly one canonical-prose prefix while enforcing framing, UTF8 and original LF bytes."""
+
     if data.startswith(b'\xef\xbb\xbf') or b'\r' in data:
         raise BootstrapError('BOM or CR/CRLF prohibited')
     if data.count(DELIMITER) != 1:
         raise BootstrapError('semantic appendix delimiter must appear exactly once')
     natural = data.split(DELIMITER, 1)[0]
+
     try:
         natural.decode('utf-8', errors='strict')
     except UnicodeError as exc:
@@ -132,7 +166,10 @@ def natural_prefix(data: bytes) -> bytes:
 
 
 def parse_table(src: str, header: tuple[str, ...]):
+    """Read the exact expected canonical table vocabulary and reject malformed headers or row widths."""
+
     rows = []
+
     for line in src.splitlines():
         if not line.startswith('|') or not line.endswith('|'):
             continue
@@ -147,6 +184,7 @@ def parse_table(src: str, header: tuple[str, ...]):
 
 def semantic_projection(natural: bytes) -> dict:
     """Derive only semantic instructions and integrity indexes, never duplicate full prose."""
+
     content = natural.decode('utf-8', errors='strict')
     v = VERSION_PATTERN.search(content)
     if not v:
@@ -155,6 +193,7 @@ def semantic_projection(natural: bytes) -> dict:
     rules = []
     in_code = False
     byte_pos = 0
+
     for line_num, line in enumerate(content.splitlines(keepends=True), 1):
         stripped = line.rstrip('\n')
         if stripped.startswith('```'):
@@ -181,6 +220,7 @@ def semantic_projection(natural: bytes) -> dict:
     if not section_starts or section_starts[0][0] != 0:
         raise BootstrapError('cannot partition canonical source')
     source_sections = {}
+
     for i, (start, title, level) in enumerate(section_starts):
         end = section_starts[i+1][0] if i+1 < len(section_starts) else len(natural)
         chunk = natural[start:end]
@@ -191,11 +231,13 @@ def semantic_projection(natural: bytes) -> dict:
     if not required_sections.issubset(source_sections):
         raise BootstrapError('missing typed vocabulary sections')
     message_envelope = []
+
     for field, meaning in parse_table(source_sections['1.2 Message envelope fields'], ('Field', 'Meaning')):
         if not re.fullmatch(r'`[a-z_]+`', field):
             raise BootstrapError('invalid message envelope field')
         message_envelope.append({'name': field[1:-1], 'meaning': meaning})
     message_types = []
+
     for kind, required, meaning in parse_table(source_sections['1.3 Message kinds'], ('Kind', 'Required body', 'Meaning')):
         if not re.fullmatch(r'`[a-z_]+`', kind):
             raise BootstrapError('invalid message kind')
@@ -203,28 +245,33 @@ def semantic_projection(natural: bytes) -> dict:
     if len(message_envelope) != 10 or len(message_types) < 9 or len({e['kind'] for e in message_types}) != len(message_types):
         raise BootstrapError('incomplete or duplicate message vocabulary')
     envelope = []
+
     for field, meaning in parse_table(source_sections['5.1 Required record envelope'], ('Field', 'Meaning')):
         if not field.startswith('`') or not field.endswith('`'):
             raise BootstrapError('invalid envelope field marker')
         envelope.append({'name': field[1:-1], 'meaning': meaning})
     record_kinds = []
+
     for kind, statuses, required, meaning in parse_table(source_sections['5.2 Record kinds'], ('Kind', 'Statuses', 'Required content', 'Meaning')):
         if not re.fullmatch(r'`[a-z_]+`', kind):
             raise BootstrapError('invalid record kind identifier')
         record_kinds.append({'kind': kind[1:-1], 'statuses': re.findall(r'`([^`]+)`', statuses),
                              'required_content_fields': re.findall(r'`([^`]+)`', required), 'meaning': meaning})
     relationships = []
+
     for line in source_sections['5.3 Relationships'].splitlines():
         m = re.fullmatch(r'- `([a-z_]+)`: (.+)', line)
         if m:
             relationships.append({'name': m.group(1), 'meaning': m.group(2)})
     classes = []
+
     for kind, examples, activation in parse_table(source_sections['7.1 Change classes'], ('Class', 'Examples', 'Activation')):
         if not re.fullmatch(r'\*\*[A-Za-z]+\*\*', kind):
             raise BootstrapError('invalid amendment class')
         classes.append({'name': kind.strip('*').lower(), 'examples': examples, 'activation': activation})
     if len(rules) < 20 or len(record_kinds) != 8 or len(relationships) < 8 or len(classes) != 3:
         raise BootstrapError('incomplete canonical semantic vocabulary')
+
     for needed in ('SCP-PRIME-001','SCP-PRIME-002','SCP-PRIME-003','SCP-CONTEXT-001', 'SCP-BOOT-003'):
         if needed not in {r['id'] for r in rules}:
             raise BootstrapError('missing necessary rule: ' + needed)
@@ -243,6 +290,8 @@ def semantic_projection(natural: bytes) -> dict:
 
 
 def parse_appendix(data: bytes) -> tuple[dict, bytes, dict]:
+    """Separate strictly framed semantic YAML and integrity-manifest blocks without permitting trailing bytes."""
+
     prefix = natural_prefix(data)
     remainder = data[len(prefix) + len(DELIMITER):]
     if remainder.count(MANIFEST_DELIMITER) != 1:
@@ -260,10 +309,13 @@ def parse_appendix(data: bytes) -> tuple[dict, bytes, dict]:
 
 
 def verify_document(data: bytes, trusted_sha256: str | None = None) -> dict:
+    """Check both byte digests and optional external anchor, then require exact semantic equivalence and deterministic encoding."""
+
     natural = natural_prefix(data)
     appendix, raw_machine, manifest = parse_appendix(data)
     if set(manifest) != {'natural_sha256', 'machine_sha256'}:
         raise BootstrapError('integrity manifest must contain exactly two SHA-256 digests')
+
     for label, raw in (('natural', natural), ('machine', raw_machine)):
         claimed = manifest[label + '_sha256']
         actual = hashlib.sha256(raw).hexdigest()
@@ -275,6 +327,7 @@ def verify_document(data: bytes, trusted_sha256: str | None = None) -> dict:
             type(appendix['HPX-SCP'].get('format')) is not int or
             appendix['HPX-SCP']['format'] != FORMAT_VERSION):
         raise BootstrapError('unsupported appendix format version')
+
     for trusted in (trusted_sha256, os.environ.get('HPX_SCP_TRUSTED_SHA256')):
         if trusted is None:
             continue
@@ -293,15 +346,20 @@ def verify_document(data: bytes, trusted_sha256: str | None = None) -> dict:
 
 
 def verify_path(path: Path = PROTOCOL, trusted_sha256: str | None = None) -> dict:
+    """Read the explicitly selected protocol file and apply the complete byte/projection verification gate."""
+
     return verify_document(path.read_bytes(), trusted_sha256)
 
 
 def main():
+    """Run the fail-closed bootstrap and emit a bounded status, exposing the full digest only when explicitly requested."""
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--protocol', type=Path, default=PROTOCOL)
     parser.add_argument('--trusted-sha256')
     parser.add_argument('--show-digest', action='store_true', help='diagnostics only: output full canonical digest')
     args = parser.parse_args()
+
     try:
         result = verify_path(args.protocol, args.trusted_sha256)
     except (BootstrapError, OSError) as exc:

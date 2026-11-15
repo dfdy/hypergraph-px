@@ -1,7 +1,27 @@
 #!/usr/bin/env python3
-"""Validate HPX-SCP records: JSON, schema, ID/link integrity and supersession cycles.
+"""Hypergraph PX — Historical semantic-record integrity validation
 
-Requires `jsonschema>=4.18,<5`. Execute from anywhere; paths derive from this file.
+Validate legacy JSON record schemas, local registered extensions, source approval references and acyclic supersession links after canonical bootstrap.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/validate_semantic_records.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Explicit historical record validation and isolated schema/extension/relation fixtures.
+
+Specification:
+- [Active protocol installation and legacy boundary](../../docs/09-guides/developers/vernaculum/UPGRADE_2.0.0.md)
+- [Commenting and exact-source review](../../docs/09-guides/developers/code-comments.md)
+
+Boundary: These legacy records are not active agent instructions or product permissions. No archived records or schemas are opened during this comment-only review.
 """
 from __future__ import annotations
 
@@ -24,11 +44,16 @@ EXTENSION_REGISTRY = BASE / 'extensions' / 'registry.json'
 
 
 class DuplicateKeyError(ValueError):
+    """Reject ambiguous JSON objects before duplicated keys can overwrite recorded semantic meaning."""
+
     pass
 
 
 def no_duplicate_keys(pairs):
+    """Reject duplicate JSON properties rather than allowing a later value to overwrite recorded meaning."""
+
     out = {}
+
     for key, value in pairs:
         if key in out:
             raise DuplicateKeyError(f'duplicate JSON property: {key}')
@@ -37,16 +62,20 @@ def no_duplicate_keys(pairs):
 
 
 def read_json(path: Path):
+    """Load one record or schema through duplicate-property rejection using its original UTF8 text."""
+
     with path.open(encoding='utf-8') as fh:
         return json.load(fh, object_pairs_hook=no_duplicate_keys)
 
 
 def load_extensions():
     """Load registered namespaced field validators; only local schemas under BASE."""
+
     registry = read_json(EXTENSION_REGISTRY)
     if registry.get('registry_version') != 1 or not isinstance(registry.get('extensions'), list):
         raise ValueError('invalid extension registry header')
     out = {}
+
     for item in registry['extensions']:
         if not isinstance(item, dict) or set(item) != {'key', 'description', 'schema', 'introduced_in', 'status'}:
             raise ValueError('invalid extension registry entry')
@@ -70,6 +99,8 @@ def load_extensions():
         Draft202012Validator.check_schema(extension_schema)
         # External $ref would require network/schema resolution; not supported here.
         def refs(value):
+            """Reject external/nonlocal schema references recursively so extension validation cannot fetch arbitrary material."""
+
             if isinstance(value, dict):
                 for k, v in value.items():
                     if k == '$ref' and isinstance(v, str) and not v.startswith('#/'):
@@ -84,20 +115,25 @@ def load_extensions():
 
 
 def check_set(paths: list[Path], validator: Draft202012Validator, label: str, extension_validators=None):
+    """Validate record shapes, IDs, extensions, approval-reference consistency and cross-record supersession for one declared set."""
+
     errors = []
     documents = {}
     if extension_validators is None:
         extension_validators = load_extensions()
+
     for path in paths:
         try:
             name = str(path.relative_to(ROOT))
         except ValueError:
             name = str(path)
+
         try:
             record = read_json(path)
         except (OSError, ValueError, json.JSONDecodeError) as exc:
             errors.append(f'{name}: invalid JSON: {exc}')
             continue
+
         for err in validator.iter_errors(record):
             at = '/'.join(map(str, err.absolute_path)) or '(root)'
             errors.append(f'{name}: {at}: {err.message}')
@@ -118,6 +154,7 @@ def check_set(paths: list[Path], validator: Draft202012Validator, label: str, ex
         if rid in documents:
             errors.append(f'{name}: duplicate record ID {rid}')
         documents[rid] = record
+
     for rid, rec in documents.items():
         for rel in (rec.get('relations') if isinstance(rec.get('relations'), list) else []):
             if not isinstance(rel, dict):
@@ -143,18 +180,22 @@ def check_set(paths: list[Path], validator: Draft202012Validator, label: str, ex
                 errors.append(f'{rid}: decision approval_ref must match a source_refs approval reference')
     # Supersedes must be acyclic. Traverse graph; no external graph library required.
     edges = defaultdict(list)
+
     for rid, rec in documents.items():
         for rel in (rec.get('relations') if isinstance(rec.get('relations'), list) else []):
             if isinstance(rel, dict) and rel.get('type') == 'supersedes' and rel.get('target') in documents:
                 edges[rid].append(rel['target'])
     colors = {}
     def visit(node, stack):
+        """Detect a back-edge in supersession using entered/completed colours and retain the exact reported cycle path."""
+
         if colors.get(node) == 1:
             errors.append('supersedes cycle: ' + ' -> '.join(stack + [node]))
             return
         if colors.get(node) == 2:
             return
         colors[node] = 1
+
         for child in edges[node]:
             visit(child, stack + [node])
         colors[node] = 2
@@ -166,6 +207,7 @@ def check_set(paths: list[Path], validator: Draft202012Validator, label: str, ex
 
 def enforce_protocol_bootstrap():
     """Load no record schema or semantic records until the canonical prose gate passes."""
+
     implementation = ROOT / 'shared/tooling' / 'bootstrap_semantic_protocol.py'
     spec = importlib.util.spec_from_file_location('hpx_scp_bootstrap_gate', implementation)
     module = importlib.util.module_from_spec(spec)
@@ -174,6 +216,8 @@ def enforce_protocol_bootstrap():
 
 
 def validate(include_examples=True):
+    """Bootstrap authority first, then validate requested canonical/example folders against checked schemas and extensions."""
+
     enforce_protocol_bootstrap()
     schema = read_json(SCHEMA)
     Draft202012Validator.check_schema(schema)
@@ -181,6 +225,7 @@ def validate(include_examples=True):
     errors = []
     counts = {}
     extensions = load_extensions()
+
     for label, folder in [('canonical', CANONICAL), ('examples', EXAMPLES)]:
         if label == 'examples' and not include_examples:
             continue
@@ -192,14 +237,18 @@ def validate(include_examples=True):
 
 
 def main():
+    """Run record validation and report actual counts/errors, refusing malformed bootstrap or schema material."""
+
     p = argparse.ArgumentParser()
     p.add_argument('--no-examples', action='store_true', help='check canonical records only')
     args = p.parse_args()
+
     try:
         errors, counts = validate(not args.no_examples)
     except (ValueError, OSError) as exc:
         print(f'BOOTSTRAP REFUSED: {exc}', file=sys.stderr)
         return 1
+
     for error in errors:
         print('ERROR:', error, file=sys.stderr)
     print('HPX-SCP records:', ', '.join(f'{key}={val}' for key, val in counts.items()), f'; errors={len(errors)}')

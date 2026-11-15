@@ -1,5 +1,40 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Versioned retrospective assertion overlays. Text snapshots are never modified.
+//! # Hypergraph PX — Versioned retrospective assertion overlays
+//!
+//! Captures exact role-labelled source participants and pinned predicate
+//! definitions,
+//! then retains each review judgement as an immutable assertion revision.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace assertion commands, browser assertion/history queries
+//! and selected incidence graph adapters.
+//!
+//! Specification:
+//! - [Assertion relationship definitions][spec0]
+//! - [Storage responsibilities][spec1]
+//! - [Assertion and predicate contracts][spec2]
+//!
+//! Boundary: Assertions remain outside text snapshot composition. Declared
+//! meanings are not proofs; review status is retained evidence, not
+//! inferred acceptance from recency. Current owner checks do not implement
+//! full multi-user policy.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/assertions.rs
+//! [spec0]: ../../../../docs/05-domain/diagrams/relationships.c4
+//! [spec1]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec2]: ../../../../docs/05-domain/assertions-and-predicates.md
+
 use super::*;
 use hypergraph_domain::assertion as domain;
 use std::collections::BTreeSet;
@@ -18,7 +53,9 @@ pub enum Status {
     Rejected,
     Superseded,
 }
+
 impl Status {
+    /// Translate stored review state without inferring a different authority or acceptance level.
     fn domain(&self) -> domain::ReviewState {
         match self {
             Self::Proposed => domain::ReviewState::Proposed,
@@ -185,6 +222,8 @@ pub struct Page {
     pub entries: Vec<Entry>,
     pub next: Option<usize>,
 }
+
+/// Bound qualifier fields in their specified units and reject silently trimmable input.
 fn valid_properties(p: &Properties) -> Result<()> {
     if p.attribution.encode_utf16().count() > 200
         || p.scope.encode_utf16().count() > 500
@@ -195,6 +234,8 @@ fn valid_properties(p: &Properties) -> Result<()> {
     }
     Ok(())
 }
+
+/// Validate retained predicate meaning, role uniqueness and binary role shape.
 fn valid_definition(d: &predicates::Definition) -> Result<()> {
     if d.registry_version != 1
         || d.predicate_id.is_empty()
@@ -228,6 +269,8 @@ fn valid_definition(d: &predicates::Definition) -> Result<()> {
     }
     Ok(())
 }
+
+/// Reject malformed create/review intent and excessive combined quoted-source bytes.
 pub(super) fn validate(m: &Mutation) -> Result<()> {
     match m {
         Mutation::Create {
@@ -281,14 +324,19 @@ pub(super) fn validate(m: &Mutation) -> Result<()> {
     }
     Ok(())
 }
+
+/// Authenticate pinned predicate content against its recorded semantic version hash.
 fn read_definition(cipher: &Cipher<'_>, db: &Connection, id: [u8; 32]) -> Result<DefinitionRecord> {
     let record: DefinitionRecord = cipher.object(db, DEFINITION, id)?;
+    // Invalid persisted definition shape is corruption rather than fresh user input.
     valid_definition(&record.definition).map_err(|_| Error::Integrity)?;
     if record.version != record.definition.version()? {
         return Err(Error::Integrity);
     }
     Ok(record)
 }
+
+/// Reuse identical captured meaning or append a new bounded definition object/index entry.
 fn capture_definition(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -318,11 +366,16 @@ fn capture_definition(
     if index
         .entries
         .iter()
+        // Reject duplicate meaning hashes and object identities in the definition index.
         .any(|entry| !versions.insert(entry.version) || !objects.insert(entry.object))
     {
         return Err(Error::Integrity);
     }
-    if let Some(entry) = index.entries.iter().find(|e| e.version == version) {
+    if let Some(entry) = index
+        .entries
+        .iter() // Locate only the exact captured semantic version for content verification.
+        .find(|e| e.version == version)
+    {
         if read_definition(cipher, db, entry.object)?.definition != definition {
             return Err(Error::Integrity);
         }
@@ -349,6 +402,8 @@ fn capture_definition(
     }
     Ok(object)
 }
+
+/// Load a bounded document overlay index and reject duplicate assertion identities.
 fn index(cipher: &Cipher<'_>, db: &Connection, document: DocumentId) -> Result<(bool, u64, Index)> {
     let (exists, generation, index) = match cipher.slot::<Index>(db, OVERLAY, document.0) {
         Ok((g, index)) => (true, g, index),
@@ -368,12 +423,15 @@ fn index(cipher: &Cipher<'_>, db: &Connection, document: DocumentId) -> Result<(
         || index
             .assertions
             .iter()
+            // Reject duplicate logical assertion identities in a document index.
             .any(|entry| !nodes.insert(entry.node.0))
     {
         return Err(Error::Integrity);
     }
     Ok((exists, generation, index))
 }
+
+/// Create the optional overlay slot if needed and advance its generation consistently.
 fn update_index(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -395,6 +453,8 @@ fn update_index(
     cipher.update(db, OVERLAY, index.document.0, generation, index)?;
     Ok(())
 }
+
+/// Resolve the current assertion revision and verify head/receipt generation agreement.
 pub(super) fn read_entry(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -411,6 +471,8 @@ pub(super) fn read_entry(
     }
     Ok(entry)
 }
+
+/// Validate an exact immutable judgement and its immediate parent transition evidence.
 fn revision_entry(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -426,8 +488,11 @@ fn revision_entry(
     {
         return Err(Error::Integrity);
     }
+    // Invalid persisted qualifiers invalidate historical judgement evidence.
     valid_properties(&record.properties).map_err(|_| Error::Integrity)?;
     let definition = read_definition(cipher, db, record.definition)?;
+    // Role predicates require each declared role to occur and every participant role to be declared.
+    // Their nested predicates compare exact role IDs without expanding an n-ary claim.
     if !(2..=domain::MAX_PARTICIPANTS).contains(&record.participants.len())
         || definition
             .definition
@@ -509,6 +574,8 @@ fn revision_entry(
         definition,
     })
 }
+
+/// Require every participant document index to contain this exact assertion fingerprint.
 pub(super) fn check_indices(cipher: &Cipher<'_>, db: &Connection, entry: &Entry) -> Result<()> {
     let fingerprint = identity(
         &entry.definition,
@@ -521,6 +588,7 @@ pub(super) fn check_indices(cipher: &Cipher<'_>, db: &Connection, entry: &Entry)
             || !index
                 .assertions
                 .iter()
+                // Require the exact node-and-semantic fingerprint in each participant document.
                 .any(|item| item.node == entry.record.node && item.identity == fingerprint)
         {
             return Err(Error::Integrity);
@@ -528,6 +596,8 @@ pub(super) fn check_indices(cipher: &Cipher<'_>, db: &Connection, entry: &Entry)
     }
     Ok(())
 }
+
+/// Hash pinned meaning, ordered participants and qualifiers for semantic deduplication.
 fn identity(
     definition: &DefinitionRecord,
     participants: &[Participant],
@@ -535,13 +605,18 @@ fn identity(
 ) -> Result<[u8; 32]> {
     Ok(Sha256::digest(
         serde_json::to_vec(&(definition.version, participants, properties))
+            // Reject unencodable exact fingerprint material.
             .map_err(|_| Error::Format)?,
     )
     .into())
 }
+
+/// Collect distinct participant documents for consistent cross-document overlay updates.
 fn documents(participants: &[Participant]) -> BTreeSet<DocumentId> {
+    // Collect participant document IDs while the set removes repeated document occurrences.
     participants.iter().map(|p| p.source.document).collect()
 }
+/// Create or review an assertion atomically after exact source and present authority checks.
 #[allow(clippy::too_many_arguments)]
 pub(super) fn apply(
     cipher: &Cipher<'_>,
@@ -590,13 +665,16 @@ pub(super) fn apply(
                 }
             };
             if definition.participant_mode == predicates::ParticipantMode::Binary {
+                // Separate predicates count source and target occurrences before canonical ordering.
                 if participants.len() != 2
                     || participants.iter().filter(|p| p.role == "source").count() != 1
                     || participants.iter().filter(|p| p.role == "target").count() != 1
                 {
                     return Err(Error::Invalid);
                 }
+                // Order binary input roles before applying registered inverse/symmetric canonicalization.
                 participants.sort_by_key(|p| if p.role == "source" { 0 } else { 1 });
+                // Each serialization error callback rejects non-encodable exact participant context.
                 let source_key =
                     serde_json::to_vec(&participants[0].source).map_err(|_| Error::Format)?;
                 let target_key =
@@ -635,6 +713,7 @@ pub(super) fn apply(
                 .iter()
                 .zip(&revisions)
                 .zip(&anchors)
+                // Borrow authenticated exact source and anchor data for pure participant validation.
                 .map(|((p, r), a)| domain::Participant {
                     role: &p.role,
                     node: r.node,
@@ -650,15 +729,18 @@ pub(super) fn apply(
                 &definition
                     .roles
                     .iter()
+                    // Supply only the pinned role identifiers to domain validation.
                     .map(|r| r.id.as_str())
                     .collect::<Vec<_>>(),
                 &planned,
             )
+            // A domain participant/anchor violation rejects the proposed assertion.
             .map_err(|_| Error::Invalid)?;
             let definition = capture_definition(cipher, db, owner, definition)?;
             let captured = read_definition(cipher, db, definition)?;
             let participants: Vec<_> = participants
                 .into_iter()
+                // Retain ordered role/source captures without stale editor preconditions or duplicate quotes.
                 .map(|p| Participant {
                     role: p.role,
                     source: p.source,
@@ -671,6 +753,7 @@ pub(super) fn apply(
             if let Some(prior) = initial
                 .assertions
                 .iter()
+                // Locate a prior exact semantic claim without resetting its retained review state.
                 .find(|e| e.identity == fingerprint)
             {
                 let entry = read_entry(cipher, db, owner, prior.node)?;
@@ -745,6 +828,7 @@ pub(super) fn apply(
                 return Err(Error::Conflict);
             }
             domain::review(entry.record.status.domain(), status.domain())
+                // A forbidden review transition conflicts with the retained judgement.
                 .map_err(|_| Error::Conflict)?;
             check_indices(cipher, db, &entry)?;
             let docs = documents(&entry.record.participants);
@@ -775,6 +859,7 @@ pub(super) fn apply(
             )?;
             for doc in docs {
                 let (exists, g, idx) = index(cipher, db, doc)?;
+                // The predicate requires existing node membership before advancing this review index.
                 if !exists || !idx.assertions.iter().any(|e| e.node == node) {
                     return Err(Error::Integrity);
                 }
@@ -791,10 +876,15 @@ pub(super) fn apply(
         }
     }
 }
+
+/// Render random declared-predicate identity bytes without replacing their logical uniqueness.
 fn hex_id(id: [u8; 32]) -> String {
+    // Format each random identity byte into the declared predicate key.
     id.iter().map(|b| format!("{b:02x}")).collect()
 }
+
 impl Workspace {
+    /// Read an exact historical judgement under present source authority without falling back to current status.
     pub fn assertion_revision(&mut self, node: NodeId, revision: RevisionId) -> Result<Entry> {
         let tx = self.db.transaction()?;
         let cipher = Cipher {
@@ -820,6 +910,8 @@ impl Workspace {
         tx.commit()?;
         Ok(entry)
     }
+
+    /// Page current assertion heads against a stable overlay generation and authorized text snapshot.
     pub fn assertion_page(
         &mut self,
         document: DocumentId,
@@ -852,6 +944,7 @@ impl Workspace {
         }
         snapshot_revision(&cipher, &tx, &doc, snapshot)?;
         let (_, actual, index) = index(&cipher, &tx, document)?;
+        // Require optional page generation to match the current overlay index.
         if generation.is_some_and(|g| g != actual) {
             return Err(Error::Conflict);
         }
@@ -871,6 +964,7 @@ impl Workspace {
                     .record
                     .participants
                     .iter()
+                    // Require a returned assertion to actually include this document as a participant.
                     .any(|p| p.source.document == document)
             {
                 return Err(Error::Integrity);
@@ -902,7 +996,9 @@ impl Workspace {
 pub(super) mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, op, save};
+    /// Build a symmetric binary fixture claim using exact scalar-safe source captures.
     pub(crate) fn create(editor: &EditorState) -> Mutation {
+        // Construct exact fixture source bindings for each participant byte interval.
         let source = |start, end| clipboard::Source {
             document: editor.document,
             node: editor.node,
@@ -916,6 +1012,7 @@ pub(super) mod tests {
             .text
             .char_indices()
             .nth(1)
+            // Extract a scalar-safe first-character boundary for the fixture split.
             .map(|(i, _)| i)
             .unwrap_or(editor.text.len());
         Mutation::Create {
@@ -950,6 +1047,8 @@ pub(super) mod tests {
             },
         }
     }
+
+    /// Create isolated multiline Unicode source for retrospective overlay scenarios.
     fn setup() -> (Temp, Workspace, EditorState) {
         let temp = Temp::new();
         let mut ws = Workspace::create(&temp.db(), PASS, "Synthetic").unwrap();
@@ -970,18 +1069,24 @@ pub(super) mod tests {
         let editor = ws.open_document(doc).unwrap();
         (temp, ws, editor)
     }
+
+    /// Extract an assertion result from its successful command receipt.
     fn change(receipt: Receipt) -> Change {
         match receipt.outcome {
             Outcome::Assertion { state } => state,
             _ => panic!(),
         }
     }
+
+    /// Execute a synthetic assertion mutation and expose its versioned result.
     fn execute(ws: &mut Workspace, operation: u8, mutation: Mutation) -> Change {
         change(
             ws.execute(op(operation), Command::Assertion { mutation })
                 .unwrap(),
         )
     }
+
+    /// Retain all review versions across restart without modifying text snapshots or draft generations.
     #[test]
     fn overlays_review_and_restart_preserve_text_snapshots_and_all_previous_judgements() {
         let (temp, mut ws, editor) = setup();
@@ -1064,6 +1169,8 @@ pub(super) mod tests {
         assert_eq!(page.entries[0].record.parent, Some(accepted.revision));
         assert_eq!(page.entries[0].revision, rejected.revision);
     }
+
+    /// Canonicalize registered inverse/symmetric wording while preserving review and qualifier distinctions.
     #[test]
     fn inverse_and_symmetric_wordings_deduplicate_without_resetting_review_but_qualifiers_stay_distinct()
      {
@@ -1119,6 +1226,8 @@ pub(super) mod tests {
         }
         assert_ne!(execute(&mut ws, 7, qualified).node, c.node);
     }
+
+    /// Preserve n-ary participant occurrences and distinct owner-declared meanings despite matching labels.
     #[test]
     fn declared_nary_roles_remain_one_entity_and_same_words_do_not_unify_new_declarations() {
         let (_temp, mut ws, editor) = setup();
@@ -1166,6 +1275,8 @@ pub(super) mod tests {
         );
         assert_eq!(ws.list_documents().unwrap().len(), 1);
     }
+
+    /// Reject stale editor captures while permitting explicitly historical exact source anchors.
     #[test]
     fn uncommitted_stale_and_wrong_quotes_reject_while_historical_overlay_pins_exact_old_source() {
         let (_temp, mut ws, editor) = setup();
@@ -1199,6 +1310,7 @@ pub(super) mod tests {
         ));
         assert_eq!(
             ws.db
+                // The SQL callback checks that rejected proposals left no overlay objects.
                 .query_row("SELECT count(*) FROM objects WHERE kind>=12", [], |r| r
                     .get::<_, i64>(0))
                 .unwrap(),
@@ -1227,6 +1339,8 @@ pub(super) mod tests {
             editor.text
         );
     }
+
+    /// Roll back partial overlay creation and reconcile one durable assertion after reply loss.
     #[test]
     fn creation_faults_are_atomic_and_unknown_commit_reply_replays_one_assertion() {
         for phase in ["objects", "assertions", "heads", "receipt", "committed"] {
@@ -1235,6 +1349,7 @@ pub(super) mod tests {
                 mutation: create(&editor),
             };
             assert!(matches!(
+                // Inject the selected command boundary, including reply loss after commit.
                 ws.execute_inner(op(2), command.clone(), |p| if p == phase {
                     Err(Error::Io)
                 } else {
@@ -1260,6 +1375,8 @@ pub(super) mod tests {
             );
         }
     }
+
+    /// Invalidate stale overlay paging and reject unsupported records or inaccessible source evidence.
     #[test]
     fn pagination_review_cursors_missing_source_and_future_records_fail_closed() {
         let (_temp, mut ws, editor) = setup();
@@ -1335,6 +1452,7 @@ pub(super) mod tests {
         ));
     }
 
+    /// Recheck current authority and exact frozen intent before assertion retry disclosure.
     #[test]
     fn current_authority_and_changed_operation_reuse_guard_assertion_replay() {
         let (_temp, mut ws, editor) = setup();
@@ -1365,6 +1483,8 @@ pub(super) mod tests {
             Err(Error::Conflict)
         ));
     }
+
+    /// Require consistent fingerprints in every participant document index for reads, reuse and review.
     #[test]
     fn cross_document_overlay_membership_is_consistent_for_reads_deduplication_and_review() {
         let (_temp, mut ws, first) = setup();
@@ -1451,6 +1571,8 @@ pub(super) mod tests {
             Err(Error::Integrity)
         ));
     }
+
+    /// Read exact prior judgements independently of later review and source publication.
     #[test]
     fn exact_old_review_revisions_reconstruct_after_later_judgements_source_changes_and_restart() {
         let (temp, mut ws, source) = setup();
@@ -1502,6 +1624,8 @@ pub(super) mod tests {
             "New unrelated source"
         );
     }
+
+    /// Reject unrelated historical revisions and revoked current scope despite known IDs.
     #[test]
     fn history_ids_do_not_grant_current_scope_or_allow_a_revision_from_another_assertion() {
         let (_temp, mut ws, source) = setup();
@@ -1534,6 +1658,8 @@ pub(super) mod tests {
             Err(Error::NotFound)
         ));
     }
+
+    /// Fail when original judgement evidence is missing instead of substituting current state.
     #[test]
     fn missing_historical_publication_receipts_never_fall_back_to_the_current_judgement() {
         let (_temp, mut ws, source) = setup();

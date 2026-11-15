@@ -1,7 +1,42 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Current sole-owner scope is independent of retained identifiers and receipts.
+//! # Hypergraph PX — Current workspace scope before reads and replay
+//!
+//! Check the implemented owner/device catalogue and the document scope of command
+//! inputs and receipt outputs. Retained IDs or a previously successful operation
+//! do not override the current scope check when protected data is released.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace dispatch/receipt recovery, assertion readers and
+//! protected storage queries.
+//!
+//! Specification:
+//! - [Authority concepts and distinctions][spec0]
+//! - [Shared operation coordination][spec1]
+//! - [Current and candidate authority boundaries][spec2]
+//!
+//! Boundary: This is the bounded sole-owner implementation, not the
+//! candidate general workspace-user policy. Mutable write preconditions
+//! stay separate so a valid frozen retry can reconcile.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/authority.rs
+//! [spec0]: ../../../../docs/05-domain/diagrams/authority-distinction.c4
+//! [spec1]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec2]: ../../../../docs/06-subsystems/contracts/authority-lifecycle.md
+
 use super::*;
 
+/// Authenticate the stored current catalogue against this open workspace's owner/device.
 pub(super) fn catalog(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -12,21 +47,26 @@ pub(super) fn catalog(
     if value.owner != owner || value.device != device {
         return Err(Error::Integrity);
     }
+
     Ok(value)
 }
 
+/// Require present membership in the current catalogue without implying source validity.
 pub(super) fn document(catalog: &Catalog, id: DocumentId) -> Result<()> {
     if !catalog.documents.contains(&id) {
         return Err(Error::NotFound);
     }
+
     Ok(())
 }
 
+/// Require current document scope for every participant of the retained assertion.
 fn assertion(cipher: &Cipher<'_>, db: &Connection, catalog: &Catalog, node: NodeId) -> Result<()> {
     let entry = assertions::read_entry(cipher, db, catalog.owner, node)?;
     for input in &entry.record.participants {
         document(catalog, input.source.document)?;
     }
+
     Ok(())
 }
 
@@ -46,6 +86,7 @@ pub(super) fn command(
             for input in &plan.inputs {
                 document(catalog, input.source.document)?;
             }
+
             Ok(())
         }
         Command::Comment { plan } => document(catalog, plan.source.document),
@@ -54,6 +95,7 @@ pub(super) fn command(
                 for input in participants {
                     document(catalog, input.source.document)?;
                 }
+
                 Ok(())
             }
             assertions::Mutation::Review { node, .. } => assertion(cipher, db, catalog, *node),
@@ -91,6 +133,7 @@ pub(super) fn outcome(
             for input in event.inputs {
                 document(catalog, input.document)?;
             }
+
             Ok(())
         }
         Outcome::Merged { document: id, .. } => {
@@ -101,6 +144,7 @@ pub(super) fn outcome(
             for input in event.inputs {
                 document(catalog, input.document)?;
             }
+
             Ok(())
         }
         Outcome::WorkingForked { state } => {
@@ -128,18 +172,21 @@ mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
 
+    /// Remove one document from a synthetic catalogue to challenge retained-handle access.
     fn revoke(ws: &mut Workspace, document: DocumentId) {
         let cipher = Cipher {
             key: &ws.key,
             workspace: ws.workspace,
         };
         let (generation, mut catalog): (_, Catalog) = cipher.slot(&ws.db, CATALOG, ROOT).unwrap();
+        // Keep all other catalogue members while revoking this exact document identity.
         catalog.documents.retain(|id| *id != document);
         cipher
             .update(&ws.db, CATALOG, ROOT, generation, &catalog)
             .unwrap();
     }
 
+    /// Verify cached editor/snapshot/receipt handles cannot bypass later scope removal.
     #[test]
     fn retained_editor_snapshot_and_receipts_do_not_override_revoked_document_scope() {
         let temp = Temp::new();
@@ -152,7 +199,9 @@ mod tests {
         let publication = commit(&saved);
         ws.execute(op(3), publication.clone()).unwrap();
         let published = ws.open_document(document).unwrap();
+
         revoke(&mut ws, document);
+
         let changes = ws.db.total_changes();
         assert!(ws.list_documents().unwrap().is_empty());
         assert!(matches!(ws.open_document(document), Err(Error::NotFound)));
@@ -177,6 +226,7 @@ mod tests {
         assert_eq!(ws.db.total_changes(), changes);
     }
 
+    /// Verify derivation/comment/assertion/clipboard retries reauthorize every protected input.
     #[test]
     fn retained_legacy_derivation_annotation_and_assertion_replays_recheck_all_input_scope() {
         let temp = Temp::new();
@@ -267,7 +317,9 @@ mod tests {
             },
         };
         ws.execute(op(5), capture.clone()).unwrap();
+
         revoke(&mut ws, document);
+
         let changes = ws.db.total_changes();
         // Independent output remains authorized; its retained input and receipt grant no source access.
         assert_eq!(ws.open_document(fork_id).unwrap().text, editor.text);
@@ -290,6 +342,7 @@ mod tests {
         assert_eq!(ws.db.total_changes(), changes);
     }
 
+    /// Verify receipt output scope is current even when its original input remains allowed.
     #[test]
     fn replay_result_scope_is_current_even_when_original_input_remains_authorized() {
         let temp = Temp::new();
@@ -322,6 +375,7 @@ mod tests {
         assert!(matches!(ws.receipt(op(2)), Err(Error::NotFound)));
     }
 
+    /// Reject cached-principal/device mismatches before returning protected legacy data.
     #[test]
     fn legacy_reads_recheck_cached_principal_and_device_before_returning_protected_data() {
         let temp = Temp::new();

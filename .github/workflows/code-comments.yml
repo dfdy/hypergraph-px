@@ -1,0 +1,30 @@
+name: Code comment programme
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  reviewed-comments:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm --prefix frontend ci --ignore-scripts
+      - run: python3 -m unittest discover -s shared/tooling/tests -p test_code_comments.py
+      - name: Check inventory and preserve completed coverage
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -n "$BASE_REF" ] && [ "$BASE_REF" != "0000000000000000000000000000000000000000" ]; then
+            python3 shared/tooling/check_code_comments.py --json --base-ref "$BASE_REF"
+          else
+            python3 shared/tooling/check_code_comments.py --json
+          fi

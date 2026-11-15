@@ -1,27 +1,117 @@
+/**
+ * # Hypergraph PX — Source exact-source regression scenarios
+ *
+ * Checks editor source and display boundaries with isolated Unicode, newline,
+ * Markdown and structural fixtures.
+ *
+ * Source: [Latest source on GitHub][source]
+ *
+ * Agent provenance: Agent creation unverified; original creator not recorded.
+ * Created: Unknown (not recorded).
+ * Creation harness: Unknown (not recorded).
+ * Creation model: Unknown (not recorded).
+ *
+ * Latest editing agent: Codex (OpenAI coding agent), /root/frontend_comments.
+ * Latest editing harness: Codex; version/build: unknown.
+ * Latest editing model: OpenAI; exact model identifier/revision: unknown.
+ * Last edited: 2026-11-15 (UTC).
+ *
+ * Used by: Frontend development validation — Node unit-test runner and regression
+ * suite.
+ *
+ * Specification:
+ * - [Browser component responsibilities][spec-1]
+ * - [Exact text and anchors][spec-2]
+ * - [Frontend interaction contract][spec-3]
+ *
+ * Boundary: Assertions cover isolated editor models, not integrated persistence or
+ * browser acceptance. Original fixture text and all executable assertions remain
+ * unchanged.
+ *
+ * [source]: https://github.com/dfdy/hypergraph-px/blob/main/frontend/tests/source.test.js
+ * [spec-1]: ../../docs/06-subsystems/diagrams/browser/interface.c4
+ * [spec-2]: ../../docs/05-domain/text-and-anchors.md
+ * [spec-3]: ../../docs/06-subsystems/frontend-interaction.md
+ */
+
 import {test} from 'node:test';import assert from 'node:assert/strict';import {mathExpressions} from '../src/math.js';import {documentHeadings} from '../src/context-actions.js';import {parseTables,editTable} from '../src/tables.js';import {ChangeSet} from '@codemirror/state';import {mapAuthorship,currentAuthor,currentAgent} from '../src/authorship.js';
-test('math parsing preserves exact source and excludes code/fences',()=>{const source=String.raw`Text \(a\,b\) and `+'`\\(hidden\\)`\n```tex\n\\[hidden\\]\n```\n'+String.raw`\[\frac{1}{2}\]`;const expressions=mathExpressions(source);assert.equal(expressions.length,2);assert.equal(expressions[0].tex,String.raw`a\,b`);assert.equal(source.slice(expressions[1].from,expressions[1].to),String.raw`\[\frac{1}{2}\]`);});
-test('heading outline ignores fenced examples and distinguishes duplicated labels',()=>{const hs=documentHeadings('# Same\n```\n# Hidden\n```\n# Same');assert.deepEqual(hs.map(h=>h.label),['Same','Same']);assert.notEqual(hs[0].anchor,hs[1].anchor);});
-test('table cell edit preserves other repeated cells and escapes separators',()=>{const t=parseTables('| A | B |\n| --- | --- |\n| same | same |')[0];const changed=editTable(t,'cell',1,1,'new | value');assert.equal(parseTables(changed)[0].rows[1][0],'same');assert.equal(parseTables(changed)[0].rows[1][1],'new \\| value');});
-test('insert attribution does not relabel untouched agent bytes',()=>{const spans=[{from:0,to:3,author:currentAgent}],changes=ChangeSet.of({from:1,insert:'🧭'},3);const mapped=mapAuthorship(spans,changes);assert.deepEqual(mapped.map(s=>[s.from,s.to,s.author.id]),[[0,1,currentAgent.id],[1,3,currentAuthor.id],[3,5,currentAgent.id]]);});
+
+test('math parsing preserves exact source and excludes code/fences',/* Verify math parsing preserves exact TeX and excludes inline/fenced code. */ ()=>{const source=String.raw`Text \(a\,b\) and `+'`\\(hidden\\)`\n```tex\n\\[hidden\\]\n```\n'+String.raw`\[\frac{1}{2}\]`;
+
+ const expressions=mathExpressions(source);
+
+ assert.equal(expressions.length,2);assert.equal(expressions[0].tex,String.raw`a\,b`);assert.equal(source.slice(expressions[1].from,expressions[1].to),String.raw`\[\frac{1}{2}\]`);});
+
+test('heading outline ignores fenced examples and distinguishes duplicated labels',/* Verify outlines ignore fenced examples and disambiguate repeated heading labels. */ ()=>{const hs=documentHeadings('# Same\n```\n# Hidden\n```\n# Same');
+
+ assert.deepEqual(hs.map(/* Collect heading labels independently of generated anchors. */ h=>h.label),['Same','Same']);assert.notEqual(hs[0].anchor,hs[1].anchor);});
+
+test('table cell edit preserves other repeated cells and escapes separators',/* Verify editing one repeated table cell leaves its neighbour intact and escapes separators. */ ()=>{const t=parseTables('| A | B |\n| --- | --- |\n| same | same |')[0];
+
+ const changed=editTable(t,'cell',1,1,'new | value');
+
+ assert.equal(parseTables(changed)[0].rows[1][0],'same');assert.equal(parseTables(changed)[0].rows[1][1],'new \\| value');});
+
+test('insert attribution does not relabel untouched agent bytes',/* Verify insertion attribution covers only inserted text and retains untouched agent ownership. */ ()=>{const spans=[{from:0,to:3,author:currentAgent}],changes=ChangeSet.of({from:1,insert:'🧭'},3);
+
+ const mapped=mapAuthorship(spans,changes);
+
+ assert.deepEqual(mapped.map(/* Extract exact attribution bounds and author identities for comparison. */ s=>[s.from,s.to,s.author.id]),[[0,1,currentAgent.id],[1,3,currentAuthor.id],[3,5,currentAgent.id]]);});
+
 import {clickRange,gestureRange,paragraphAt,sentenceAt} from '../src/selection.js';
-test('source multi-click units distinguish word, sentence, paragraph and section',()=>{const s='# Heading\n\nFirst sentence. Second sentence.\n\nNext paragraph.\n\n# Other\n\nEnd.',at=s.indexOf('Second')+2;const selected=count=>{const r=clickRange(s,at,count);return s.slice(r.from,r.to)};assert.equal(selected(2),'Second');assert.equal(selected(3),'Second sentence.');assert.equal(selected(4),'First sentence. Second sentence.');assert.equal(selected(5),s.slice(0,s.indexOf('# Other')));});
+
+test('source multi-click units distinguish word, sentence, paragraph and section',/* Verify increasing multi-click counts select word, sentence, paragraph and section. */ ()=>{const s='# Heading\n\nFirst sentence. Second sentence.\n\nNext paragraph.\n\n# Other\n\nEnd.',at=s.indexOf('Second')+2;/* Read selected source for each click count. */
+
+ const selected=count=>{const r=clickRange(s,at,count);
+
+  return s.slice(r.from,r.to)};
+
+ assert.equal(selected(2),'Second');assert.equal(selected(3),'Second sentence.');assert.equal(selected(4),'First sentence. Second sentence.');assert.equal(selected(5),s.slice(0,s.indexOf('# Other')));});
+
 import {cellSourceRange} from '../src/tables.js';
-test('exact table cell ranges distinguish duplicate text and ignore escaped/code pipes',()=>{const source='| A | B | C |\n| --- | --- | --- |\n| same | same | `x|y` \\| z |',table=parseTables(source)[0],a=cellSourceRange(table,1,0),b=cellSourceRange(table,1,1),c=cellSourceRange(table,1,2);assert.notEqual(a.from,b.from);assert.equal(source.slice(a.from,a.to),'same');assert.equal(source.slice(b.from,b.to),'same');assert.equal(source.slice(c.from,c.to),'`x|y` \\| z');const empty=cellSourceRange(parseTables('| A | B |\n| --- | --- |\n|   | value |')[0],1,0);assert.equal(empty.from,empty.to);});
+
+test('exact table cell ranges distinguish duplicate text and ignore escaped/code pipes',/* Verify table ranges distinguish repeated cells and preserve escaped/code pipes, including empty cells. */ ()=>{const source='| A | B | C |\n| --- | --- | --- |\n| same | same | `x|y` \\| z |',table=parseTables(source)[0],a=cellSourceRange(table,1,0),b=cellSourceRange(table,1,1),c=cellSourceRange(table,1,2);
+
+ assert.notEqual(a.from,b.from);assert.equal(source.slice(a.from,a.to),'same');assert.equal(source.slice(b.from,b.to),'same');assert.equal(source.slice(c.from,c.to),'`x|y` \\| z');
+
+ const empty=cellSourceRange(parseTables('| A | B |\n| --- | --- |\n|   | value |')[0],1,0);
+
+ assert.equal(empty.from,empty.to);});
+
 import {EditorState} from '@codemirror/state';
 import {markdown,markdownLanguage} from '@codemirror/lang-markdown';
 import {markdownMarkerRanges} from '../src/source-markers.js';
-test('muted ranges distinguish Markdown markers from prose, escaped literals, code and math content',()=>{const source='# Heading\n\n**bold** ~~strike~~ [label](target) `*literal*` \\*escaped \\(a * b\\)\n\n- [x] task\n\n| A | B |\n| --- | --- |\n| 1 | 2 |',state=EditorState.create({doc:source,extensions:[markdown({base:markdownLanguage})]}),ranges=markdownMarkerRanges(state),muted=position=>ranges.some(r=>position>=r.from&&position<r.to);assert.equal(muted(0),true);assert.equal(muted(source.indexOf('Heading')),false);assert.equal(muted(source.indexOf('**')),true);assert.equal(muted(source.indexOf('bold')),false);assert.equal(muted(source.indexOf('~~')),true);assert.equal(muted(source.indexOf('`*')),true);assert.equal(muted(source.indexOf('`*')+1),false);assert.equal(muted(source.indexOf('\\*escaped')),true);assert.equal(muted(source.indexOf('\\*escaped')+1),false);assert.equal(muted(source.indexOf('a * b')+2),false);assert.equal(muted(source.indexOf('\\(')),true);assert.equal(muted(source.indexOf('[x]')),true);assert.equal(muted(source.indexOf('| A')),true);assert.equal(muted(source.indexOf('| A')+2),false);});
-import {documentPresentation} from '../src/document-presentation.js';
-test('visual block spacing distinguishes soft lines from semantic blocks without altering source',()=>{const source='# Title\nFirst line\nSoft continuation\n## Next\nMore prose\n\nNew paragraph',state=EditorState.create({doc:source,extensions:[markdown({base:markdownLanguage})]}),model=documentPresentation(state);assert.equal(model.gaps.has(source.indexOf('First line')),true);assert.equal(model.gaps.has(source.indexOf('Soft continuation')),false);assert.equal(model.gaps.has(source.indexOf('## Next')),true);assert.equal(model.gaps.has(source.indexOf('More prose')),true);assert.equal(model.gaps.has(source.indexOf('New paragraph')),false);assert.equal(state.doc.toString(),source);assert.equal(documentPresentation(state.update({selection:{anchor:8}}).state),model);});
 
-test('a drag starting exactly at a paragraph/sentence end stays in the preceding unit',()=>{
+test('muted ranges distinguish Markdown markers from prose, escaped literals, code and math content',/* Verify muted syntax ranges exclude prose and literal code/math contents. */ ()=>{const source='# Heading\n\n**bold** ~~strike~~ [label](target) `*literal*` \\*escaped \\(a * b\\)\n\n- [x] task\n\n| A | B |\n| --- | --- |\n| 1 | 2 |',state=EditorState.create({doc:source,extensions:[markdown({base:markdownLanguage})]}),ranges=markdownMarkerRanges(state),muted=/* Query whether a source position belongs to any muted syntax range. */ position=>ranges.some(/* Test one muted range’s half-open position membership. */ r=>position>=r.from&&position<r.to);
+
+ assert.equal(muted(0),true);assert.equal(muted(source.indexOf('Heading')),false);assert.equal(muted(source.indexOf('**')),true);assert.equal(muted(source.indexOf('bold')),false);assert.equal(muted(source.indexOf('~~')),true);assert.equal(muted(source.indexOf('`*')),true);assert.equal(muted(source.indexOf('`*')+1),false);assert.equal(muted(source.indexOf('\\*escaped')),true);assert.equal(muted(source.indexOf('\\*escaped')+1),false);assert.equal(muted(source.indexOf('a * b')+2),false);assert.equal(muted(source.indexOf('\\(')),true);assert.equal(muted(source.indexOf('[x]')),true);assert.equal(muted(source.indexOf('| A')),true);assert.equal(muted(source.indexOf('| A')+2),false);});
+
+import {documentPresentation} from '../src/document-presentation.js';
+
+test('visual block spacing distinguishes soft lines from semantic blocks without altering source',/* Verify semantic block gaps differ from soft lines without changing source or selection-only cache identity. */ ()=>{const source='# Title\nFirst line\nSoft continuation\n## Next\nMore prose\n\nNew paragraph',state=EditorState.create({doc:source,extensions:[markdown({base:markdownLanguage})]}),model=documentPresentation(state);
+
+ assert.equal(model.gaps.has(source.indexOf('First line')),true);assert.equal(model.gaps.has(source.indexOf('Soft continuation')),false);assert.equal(model.gaps.has(source.indexOf('## Next')),true);assert.equal(model.gaps.has(source.indexOf('More prose')),true);assert.equal(model.gaps.has(source.indexOf('New paragraph')),false);assert.equal(state.doc.toString(),source);assert.equal(documentPresentation(state.update({selection:{anchor:8}}).state),model);});
+
+test('a drag starting exactly at a paragraph/sentence end stays in the preceding unit',/* Verify drags starting at an exact unit end stay attached to the preceding unit. */ ()=>{
  const text='First sentence. Last words here.\n\nNext paragraph.',end=text.indexOf('\n'),start=text.indexOf('words');
+
+
  assert.deepEqual(paragraphAt(text,end),{from:0,to:end});assert.equal(sentenceAt(text,end).from,text.indexOf('Last'));
- const backward=gestureRange(text,end,start);assert.deepEqual(backward,{anchor:end,head:start});assert.equal(text.slice(backward.head,backward.anchor),'words here.');
+
+
+ const backward=gestureRange(text,end,start);
+
+ assert.deepEqual(backward,{anchor:end,head:start});assert.equal(text.slice(backward.head,backward.anchor),'words here.');
  assert.deepEqual(gestureRange(text,start,end),{anchor:start,head:end});
 });
 
-test('drag snapping keeps blank separator space with the preceding unit until the pointer enters the next',()=>{
+test('drag snapping keeps blank separator space with the preceding unit until the pointer enters the next',/* Verify separator whitespace snaps to the previous unit until the next unit is entered. */ ()=>{
  const text='Alpha one. Beta two.\n\n## Next section\n\nGamma three.',gap=text.indexOf('\n')+1;
- assert.equal(paragraphAt(text,gap).from,0);const range=gestureRange(text,2,gap);assert.equal(text.slice(range.anchor,range.head),'Alpha one. Beta two.');assert.ok(range.head<text.indexOf('##'));
+
+
+ assert.equal(paragraphAt(text,gap).from,0);
+
+ const range=gestureRange(text,2,gap);
+
+ assert.equal(text.slice(range.anchor,range.head),'Alpha one. Beta two.');assert.ok(range.head<text.indexOf('##'));
 });

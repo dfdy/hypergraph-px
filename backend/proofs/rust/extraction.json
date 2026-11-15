@@ -5,10 +5,10 @@
   "rust_toolchain": "nightly-2026-09-17",
   "lean_toolchain": "leanprover/lean4:v4.35.0",
   "source": "crates/domain/src/expansion.rs",
-  "source_sha256": "74f2cc79679f4cc3a397f81ce68a3c758c24a520948a1954de391770c3f6b6ad",
+  "source_sha256": "a4ce8f0e965ebada46a1268dd62d3be01723e784103d343a0f0a061911975d49",
   "start_from": "crate::expansion::spend",
-  "generated_sha256": "feef095d9ad83706fa45ff0112cf40a9cced536527db7d7e48d200855b32cc9b",
-  "proof_sha256": "e61df9d66ff4da04af2e6ca860a8a01eab195811d7562032fc0732d2578e0875",
+  "generated_sha256": "02bcbf3f0b66388b2e1de3bb37b435ae04e06262873ab2465df18d8d1db44f20",
+  "proof_sha256": "1d2fa2858b2eddc7984271b3432963dd88f881036bd2ec50c94030eb0d114ad6",
   "dependencies": [
     {
       "name": "mathlib",

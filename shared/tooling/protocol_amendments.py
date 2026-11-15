@@ -1,8 +1,27 @@
 #!/usr/bin/env python3
-"""Validate and maintain the shared HPX-SCP amendment index outside model context.
+"""Hypergraph PX — Legacy protocol amendment registry validation
 
-Routine output contains identifiers/versions, not SHA-256 digests. Sync is an
-explicit maintenance step, never an implicit way to make stale records valid.
+Cross-check applied legacy protocol-change records and their registry, allowing only explicit compatible synchronization after reviewed canonical changes.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/protocol_amendments.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Legacy bootstrap/context/recovery tools and amendment fixtures.
+
+Specification:
+- [Current protocol installation and historical boundary](../../docs/09-guides/developers/vernaculum/UPGRADE_2.0.0.md)
+- [Commenting standard](../../docs/09-guides/developers/code-comments.md)
+
+Boundary: Historical amendment files are optional archive inputs. This code does not adopt or amend active Vernaculum, and is not executed here.
 """
 from __future__ import annotations
 
@@ -22,6 +41,8 @@ ID_PATTERN = re.compile(r'HPX-PROTO-\d{8}-[a-z0-9][a-z0-9-]*$')
 
 
 def load_json(path: Path) -> dict:
+    """Read duplicate-key-safe amendment JSON and require an object with a uniform refusal on malformed material."""
+
     try:
         value = json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=strict_object)
     except (ValueError, UnicodeError, OSError) as exc:
@@ -32,7 +53,10 @@ def load_json(path: Path) -> dict:
 
 
 def canonical_records(base: Path) -> dict:
+    """Collect applied change records only after identity, validation and authority-basis checks."""
+
     records = {}
+
     for path in sorted((base / 'records').glob('*.json')):
         obj = load_json(path)
         if obj.get('kind') != 'protocol_change' or obj.get('status') != 'applied':
@@ -56,6 +80,7 @@ def canonical_records(base: Path) -> dict:
 
 def validate_registry(projection: dict, *, root: Path | None = None, allow_unindexed: set[str] | None = None, allow_stale_version: bool = False) -> dict:
     """Return verified registry; abort on stale/missing/extra applied records."""
+
     base = (root or ROOT) / '.provenance' / 'docs-reorganisation' / 'historical-docs' / 'docs' / 'engineering' / 'semantic-protocol'
     registry = load_json(base / 'amendments' / 'registry.json')
     if set(registry) != {'registry_version','protocol_version','amendments'}:
@@ -67,6 +92,8 @@ def validate_registry(projection: dict, *, root: Path | None = None, allow_unind
         if not allow_stale_version:
             raise BootstrapError('shared amendment registry version mismatch')
         def semver(v):
+            """Parse a complete numeric semantic version so explicit synchronization cannot move the registry backwards."""
+
             if not isinstance(v, str) or not re.fullmatch(r'\d+\.\d+\.\d+', v):
                 raise BootstrapError('invalid shared amendment registry protocol version')
             return tuple(map(int, v.split('.')))
@@ -77,6 +104,7 @@ def validate_registry(projection: dict, *, root: Path | None = None, allow_unind
         raise BootstrapError('invalid shared amendment list')
     applied = canonical_records(base)
     found = set()
+
     for entry in entries:
         if not isinstance(entry, dict) or set(entry) != {'id','record_path','introduced_in','status'}:
             raise BootstrapError('invalid shared amendment registry entry')
@@ -97,8 +125,11 @@ def validate_registry(projection: dict, *, root: Path | None = None, allow_unind
 
 
 def atomic_json(path: Path, obj: dict):
+    """Publish a registry through an fsynced temporary file and atomic replace, cleaning abandoned temporaries."""
+
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, temp = tempfile.mkstemp(prefix='.amend-registry-', dir=path.parent)
+
     try:
         with os.fdopen(fd,'w',encoding='utf-8') as out:
             json.dump(obj,out,indent=2,ensure_ascii=False)
@@ -117,6 +148,7 @@ def sync(projection: dict, *, register: str | None = None, root: Path = ROOT) ->
     Only the version and an explicitly chosen *applied* change are synced.
     Concurrent modifications must additionally be protected by repository review.
     """
+
     base = root / '.provenance' / 'docs-reorganisation' / 'historical-docs' / 'docs' / 'engineering' / 'semantic-protocol'
     old = validate_registry(projection, root=root, allow_unindexed={register} if register else None, allow_stale_version=True)
     amended = dict(old)
@@ -133,6 +165,7 @@ def sync(projection: dict, *, register: str | None = None, root: Path = ROOT) ->
                 'introduced_in': applied[register]['protocol_version'],
                 'status': 'applied'
             })
+            # Sort registered amendments by stable identity so explicit synchronization has deterministic output.
             amended['amendments'].sort(key=lambda e: e['id'])
     # Check all invariant constraints without touching committed registry until valid.
     tmp = base / 'amendments' / 'registry.json'
@@ -147,11 +180,14 @@ def sync(projection: dict, *, register: str | None = None, root: Path = ROOT) ->
 
 
 def main():
+    """Run explicit validate/list/sync commands while keeping ordinary output free of full trust digests."""
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action', nargs='?', choices=['validate','list','sync'], default='validate')
     parser.add_argument('--register', help='ID of newly applied canonical protocol_change (with sync)')
     parser.add_argument('--trusted-sha256',help='external trust anchor; never emitted in ordinary output')
     args = parser.parse_args()
+
     try:
         projection=verify_path(PROTOCOL,args.trusted_sha256)
         if args.action=='sync':

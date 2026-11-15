@@ -21,7 +21,7 @@ set_option maxRecDepth 2048
 namespace hypergraph_domain
 
 /-- [hypergraph_domain::expansion::Error]
-    Source: 'crates/domain/src/expansion.rs', lines 21:0-26:1
+    Source: 'crates/domain/src/expansion.rs', lines 54:0-63:1
     Visibility: public -/
 @[discriminant isize]
 inductive expansion.Error where
@@ -31,7 +31,7 @@ inductive expansion.Error where
 | Cycle : expansion.Error
 
 /-- [hypergraph_domain::expansion::spend]:
-    Source: 'crates/domain/src/expansion.rs', lines 35:0-41:1 -/
+    Source: 'crates/domain/src/expansion.rs', lines 80:0-86:1 -/
 def expansion.spend
   (work : Std.Usize) (budget : Std.Usize) :
   Result ((core.result.Result Unit expansion.Error) × Std.Usize)

@@ -1,8 +1,45 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+//! # Hypergraph PX — Experimental temporal publication evidence
+//!
+//! Exercises atomic publication, exact origin reconstruction and separately
+//! acknowledged private-reference replacement in disposable experimental
+//! workspaces.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Rust storage test runner for experimental temporal Commit and
+//! reference batches.
+//!
+//! Specification:
+//! - [Storage transaction responsibilities][spec0]
+//! - [Experimental temporal publication contract][spec1]
+//! - [Candidate record contracts][spec2]
+//!
+//! Boundary: Fixture-only schema3 enrollment and test-only opener do not
+//! implement a public upgrade/unlock route. Reconnect tests and crash
+//! workers establish their stated scope, not real-data acceptance or
+//! whole-product proof.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/temporal_commit/tests.rs
+//! [spec0]: ../../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../../docs/07-implementation/protocols/draft-publication.md#experimental-single-parent-temporal-commit-transaction
+//! [spec2]: ../../../../../docs/07-implementation/data-structures/sqlite-records.md
+
 use super::*;
 use crate::tests::{PASS, Temp, create, op};
 const SAVE_WORK: usize = 16 * 1024 * 1024;
 
+/// Install explicit seed, clock and feature markers only in the disposable fixture database.
 fn install(ws: &mut Workspace, state: &EditorState) {
     let cipher = Cipher {
         key: &ws.key,
@@ -31,6 +68,8 @@ fn install(ws: &mut Workspace, state: &EditorState) {
     tx.execute_batch("PRAGMA user_version=3").unwrap();
     tx.commit().unwrap();
 }
+
+/// Create isolated encrypted source and opt only that fixture into experimental storage.
 fn setup() -> (Temp, Workspace, EditorState) {
     let temp = Temp::new();
     let mut ws = Workspace::create(&temp.db(), PASS, "Synthetic").unwrap();
@@ -39,6 +78,8 @@ fn setup() -> (Temp, Workspace, EditorState) {
     install(&mut ws, &state);
     (temp, ws, state)
 }
+
+/// Acknowledge one exact splice and return the selected branch updated draft state.
 fn save(
     ws: &mut Workspace,
     state: &EditorState,
@@ -71,6 +112,8 @@ fn save(
     .unwrap();
     ws.open_branch(state.document, state.branch).unwrap()
 }
+
+/// Freeze current acknowledged source and mark each replacement fresh for publication evidence.
 fn request(ws: &mut Workspace, state: &EditorState) -> Request {
     let trace = ws
         .temporal_lineage(state.document, state.branch, SAVE_WORK)
@@ -86,6 +129,7 @@ fn request(ws: &mut Workspace, state: &EditorState) -> Request {
         evidence: trace
             .changes
             .iter()
+            // Associate each exact splice replacement with fresh evidence; deletions have no replacement pieces.
             .map(|change| origin_record::Evidence {
                 pieces: if change.replacement.is_empty() {
                     vec![]
@@ -101,9 +145,14 @@ fn request(ws: &mut Workspace, state: &EditorState) -> Request {
             .collect(),
     }
 }
+
+/// Capture every encrypted record/generation for exact no-write and rollback comparisons.
 fn rows(ws: &Workspace) -> Vec<(i32, Vec<u8>, i64, Vec<u8>)> {
+    // The SQL callback reads complete encrypted rows without normalizing record bytes.
     ws.db.prepare("SELECT kind,id,-1,envelope FROM objects UNION ALL SELECT kind,id,generation,envelope FROM slots ORDER BY kind,id,3").unwrap().query_map([],|r|Ok((r.get(0)?,r.get(1)?,r.get(2)?,r.get(3)?))).unwrap().collect::<std::result::Result<_,_>>().unwrap()
 }
+
+/// Create retained private evidence and its receipt using the existing adapter in a fixture transaction.
 fn checkpoint(ws: &mut Workspace, state: &EditorState, operation: u8) -> working::Source {
     // Fixture invokes the existing adapter inside a transaction. The normal
     // schema1/2 dispatcher deliberately remains closed to experimental3.
@@ -117,6 +166,7 @@ fn checkpoint(ws: &mut Workspace, state: &EditorState, operation: u8) -> working
     };
     let tx = ws.db.transaction().unwrap();
     let catalog = authority::catalog(&cipher, &tx, ws.owner, ws.device).unwrap();
+    // The no-op checkpoint callback leaves fault injection to the enclosing publication tests.
     let change = working::apply(&cipher, &tx, &catalog, operation, plan, &mut |_| Ok(())).unwrap();
     cipher
         .insert(
@@ -137,6 +187,7 @@ fn checkpoint(ws: &mut Workspace, state: &EditorState, operation: u8) -> working
     tx.commit().unwrap();
     change.source(state.occurrence, 0, state.text.len())
 }
+/// Verify exact publication and original frozen replay after later changes and same-key reconnect.
 #[test]
 fn changed_publication_is_exact_and_replays_after_newer_text_and_same_key_reconnect() {
     let (temp, mut ws, initial) = setup();
@@ -174,6 +225,7 @@ fn changed_publication_is_exact_and_replays_after_newer_text_and_same_key_reconn
             .unwrap()
             .origins
             .iter()
+            // Every inherited legacy origin remains explicitly unknown in chronology.
             .all(|o| o.order.is_none())
     );
     assert!(
@@ -182,6 +234,7 @@ fn changed_publication_is_exact_and_replays_after_newer_text_and_same_key_reconn
             .unwrap()
             .origins
             .iter()
+            // Every freshly inserted origin receives this single changed publication order.
             .all(|o| o.order == Some(1))
     );
     let newer = save(&mut ws, &state, 4, 0, 0, "Later\n");
@@ -203,6 +256,7 @@ fn changed_publication_is_exact_and_replays_after_newer_text_and_same_key_reconn
         Err(Error::Format)
     ));
 }
+/// Ensure unchanged/reverted source creates receipt evidence without publication order or private promotion.
 #[test]
 fn unchanged_and_exact_reversion_freeze_only_receipts_without_clock_or_promotion() {
     let (_temp, mut ws, initial) = setup();
@@ -215,6 +269,7 @@ fn unchanged_and_exact_reversion_freeze_only_receipts_without_clock_or_promotion
     assert_eq!(
         after
             .iter()
+            // Compare every non-receipt row to prove a no-op leaves publication state untouched.
             .filter(|row| row.0 != temporal_commit_record::CANDIDATE_KIND)
             .cloned()
             .collect::<Vec<_>>(),
@@ -247,6 +302,7 @@ fn unchanged_and_exact_reversion_freeze_only_receipts_without_clock_or_promotion
         .unwrap();
     assert_eq!(generation, 0);
 }
+/// Exercise every write/readback fault boundary and reconcile one publication after lost reply.
 #[test]
 fn every_write_fault_rolls_back_and_lost_reply_reconciles_one_order_and_promotion() {
     for phase in [
@@ -270,6 +326,7 @@ fn every_write_fault_rolls_back_and_lost_reply_reconciles_one_order_and_promotio
         let before = rows(&ws);
         assert!(
             matches!(
+                // Fail exactly this stage, including the uncertain post-commit acknowledgement.
                 ws.temporal_commit_inner(op(4), frozen.clone(), WORK, |stage| if stage == phase {
                     Err(Error::Invalid)
                 } else {
@@ -302,6 +359,7 @@ fn every_write_fault_rolls_back_and_lost_reply_reconciles_one_order_and_promotio
         );
     }
 }
+/// Reject stale binding, false mapping, changed intent and cross-family operation collisions atomically.
 #[test]
 fn stale_mapping_scope_and_cross_family_intents_never_publish() {
     let (_temp, mut ws, initial) = setup();
@@ -362,6 +420,7 @@ fn stale_mapping_scope_and_cross_family_intents_never_publish() {
     ));
     assert_eq!(rows(&ws), before);
 }
+/// Require explicit experimental enrollment, retained seed and valid work allowance.
 #[test]
 fn required_seed_and_work_limits_fail_closed_and_normal_schema_is_not_opted_in() {
     let temp = Temp::new();
@@ -407,6 +466,7 @@ fn required_seed_and_work_limits_fail_closed_and_normal_schema_is_not_opted_in()
     assert_eq!(rows(&ws), before);
 }
 
+/// Allocate one node passage order across branches while preserving other branch drafts.
 #[test]
 fn separate_branch_heads_share_changed_passage_order_without_touching_other_drafts() {
     let temp = Temp::new();
@@ -448,6 +508,7 @@ fn separate_branch_heads_share_changed_passage_order_without_touching_other_draf
     assert_eq!(rows(&ws), before);
 }
 
+/// Preserve inherited known/unknown age and confidence through exact inner-copy evidence.
 #[test]
 fn copied_and_unknown_mapping_evidence_preserve_ages_without_inventing_legacy_order() {
     let (_temp, mut ws, initial) = setup();
@@ -490,11 +551,13 @@ fn copied_and_unknown_mapping_evidence_preserve_ages_without_inventing_legacy_or
     assert!(
         map.runs()
             .iter()
+            // Find a run with a retained legacy origin; the inner predicate checks unknown age.
             .any(|r| r.origins.iter().any(|o| o.order.is_none()))
     );
     assert!(
         map.runs()
             .iter()
+            // Find a copied previously published origin; the inner predicate checks its original order.
             .any(|r| r.origins.iter().any(|o| o.order == Some(1)))
     );
     assert_eq!(map.runs().first().unwrap().origins[0].order, Some(2));
@@ -507,6 +570,7 @@ fn copied_and_unknown_mapping_evidence_preserve_ages_without_inventing_legacy_or
     assert_eq!(rows(&ws), before);
 }
 
+/// Keep unmatched checkpoint private and reject altered origin transition on receipt replay.
 #[test]
 fn nonmatching_private_checkpoint_stays_private_and_invalid_origin_replay_fails() {
     let (_temp, mut ws, initial) = setup();
@@ -525,6 +589,7 @@ fn nonmatching_private_checkpoint_stays_private_and_invalid_origin_replay_fails(
         .query_row(
             "SELECT envelope FROM objects WHERE kind=?1 AND id=?2",
             params![origin_record::CANDIDATE_KIND, head.base.0.as_slice()],
+            // Read the targeted encrypted candidate envelope for controlled fixture corruption.
             |r| r.get(0),
         )
         .unwrap();
@@ -562,6 +627,7 @@ fn nonmatching_private_checkpoint_stays_private_and_invalid_origin_replay_fails(
     assert_eq!(rows(&ws), before);
 }
 
+/// Allow receipt-only no-op at maximum order but reject another content change without writes.
 #[test]
 fn exhausted_node_order_allows_noop_but_rejects_changed_text_atomically() {
     let (_temp, mut ws, initial) = setup();
@@ -583,6 +649,7 @@ fn exhausted_node_order_allows_noop_but_rejects_changed_text_atomically() {
             .query_row(
                 "SELECT envelope FROM objects WHERE kind=?1 AND id=?2",
                 params![kind, id.as_slice()],
+                // Read the targeted encrypted candidate envelope for controlled fixture corruption.
                 |r| r.get(0),
             )
             .unwrap();
@@ -646,12 +713,14 @@ fn exhausted_node_order_allows_noop_but_rejects_changed_text_atomically() {
 }
 
 // Deliberately test-only loader. It does not change marker3 or add a public opener.
+/// Unlock an explicitly experimental test database without adding or changing production open semantics.
 fn open_fixture(path: &Path) -> Workspace {
     let db = connect(path).unwrap();
     let (workspace, wrapper): (Vec<u8>, Vec<u8>) = db
         .query_row(
             "SELECT workspace,wrapper FROM bootstrap WHERE singleton=1",
             [],
+            // Read the workspace identity and retained passphrase wrapper for test-only unlock.
             |r| Ok((r.get(0)?, r.get(1)?)),
         )
         .unwrap();
@@ -666,6 +735,7 @@ fn open_fixture(path: &Path) -> Workspace {
     ws
 }
 
+/// Use real subprocess exits to check WAL atomicity and exact original publication retry.
 #[test]
 fn process_exit_at_each_write_preserves_wal_recovery_and_original_operation() {
     let (temp, mut ws, initial) = setup();
@@ -736,6 +806,7 @@ fn process_exit_at_each_write_preserves_wal_recovery_and_original_operation() {
     }
 }
 
+/// Terminate only the isolated temporal publication subprocess at its designated fault stage.
 #[test]
 #[ignore = "subprocess fault-injection worker, launched by temporal process-exit test"]
 fn crash_worker() {
@@ -745,6 +816,7 @@ fn crash_worker() {
     let doc = ws.list_documents().unwrap()[0].document;
     let state = ws.open_document(doc).unwrap();
     let frozen = request(&mut ws, &state);
+    // Exit exactly at the parent-selected publication stage to test process-crash recovery.
     ws.temporal_commit_inner(op(4), frozen, WORK, |at| {
         if at == phase {
             std::process::exit(86)
@@ -755,6 +827,7 @@ fn crash_worker() {
     panic!("fault checkpoint was not reached");
 }
 
+/// Create one exact retained private copy and original receipt inside the synthetic transaction.
 fn copy_fixture(
     ws: &mut Workspace,
     state: &EditorState,
@@ -774,6 +847,7 @@ fn copy_fixture(
     };
     let tx = ws.db.transaction().unwrap();
     let catalog = authority::catalog(&cipher, &tx, ws.owner, ws.device).unwrap();
+    // The fixture checkpoint callback never injects a pre-copy failure.
     let checkpoint = working::apply(&cipher, &tx, &catalog, operation, plan.clone(), &mut |_| {
         Ok(())
     })
@@ -811,6 +885,7 @@ fn copy_fixture(
     copy
 }
 
+/// Keep acknowledged text durable while separately replacing private references and retaining original evidence.
 #[test]
 fn separate_reference_replacement_retains_originals_and_reconciles_faults_after_publication() {
     for phase in ["references", "receipt", "committed"] {
@@ -829,6 +904,8 @@ fn separate_reference_replacement_retains_originals_and_reconciles_faults_after_
         ));
         let before = rows(&ws);
         assert!(matches!(
+            // Fail the selected independent replacement stage without undoing publication.
+            // Exit exactly at the selected reference-batch stage.
             ws.temporal_replace_references_inner(op(5), op(4), 1, |at| if at == phase {
                 Err(Error::Invalid)
             } else {
@@ -898,6 +975,7 @@ fn separate_reference_replacement_retains_originals_and_reconciles_faults_after_
     }
 }
 
+/// Reject invalid replacement generations, publication kinds, operation reuse and revoked authority atomically.
 #[test]
 fn replacement_rejects_stale_cross_family_noop_and_current_authority_without_writes() {
     let (_temp, mut ws, initial) = setup();
@@ -958,6 +1036,7 @@ fn replacement_rejects_stale_cross_family_noop_and_current_authority_without_wri
     assert_eq!(rows(&ws), before);
 }
 
+/// Check subprocess crashes in private replacement preserve prior text and retained original references.
 #[test]
 fn reference_batch_process_exit_never_undoes_acknowledged_text_or_rewrites_originals() {
     let (temp, mut ws, initial) = setup();
@@ -1010,12 +1089,14 @@ fn reference_batch_process_exit_never_undoes_acknowledged_text_or_rewrites_origi
     }
 }
 
+/// Terminate only the isolated reference-batch subprocess at the requested write stage.
 #[test]
 #[ignore = "subprocess worker, launched by reference batch process-exit test"]
 fn reference_crash_worker() {
     let path = std::path::PathBuf::from(std::env::var_os("HPX_TEMPORAL_TEST_DB").unwrap());
     let phase = std::env::var("HPX_TEMPORAL_TEST_PHASE").unwrap();
     let mut ws = open_fixture(&path);
+    // Exit exactly at the selected reference-batch stage.
     ws.temporal_replace_references_inner(op(5), op(4), 1, |at| {
         if at == phase {
             std::process::exit(86)
@@ -1026,6 +1107,7 @@ fn reference_crash_worker() {
     panic!("fault checkpoint was not reached");
 }
 
+/// Keep maximum raw-source capacity usable despite successive heavily escaped JSON records.
 #[test]
 fn full_raw_source_capacity_survives_successive_json_escaped_publications() {
     let (_temp, mut ws, initial) = setup();
@@ -1052,6 +1134,7 @@ fn full_raw_source_capacity_survives_successive_json_escaped_publications() {
     assert_eq!(rows(&ws), before);
 }
 
+/// Reject capacity overflow before publishing an unreconstructable head while retaining no-op/retry support.
 #[test]
 fn publication_reserves_the_last_history_slot_and_never_creates_an_unreadable_head() {
     let (_temp, mut ws, initial) = setup();

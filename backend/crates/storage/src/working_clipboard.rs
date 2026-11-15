@@ -1,5 +1,39 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Private working references; promotion appends replacements, retaining originals.
+//! # Hypergraph PX — Private retained working-source references
+//!
+//! Captures private references to exact acknowledged checkpoints and explicitly
+//! replaces eligible live references after publication while retaining
+//! their originals.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace WorkingCopy/working-clipboard commands, browser
+//! reference reads and storage tests.
+//!
+//! Specification:
+//! - [Working-source definitions][spec0]
+//! - [Storage responsibilities][spec1]
+//! - [Working-source boundary][spec2]
+//!
+//! Boundary: Replacement is a separately acknowledged private mutation, not
+//! automatic Commit side effect or cross-identity ancestry. Current bounded
+//! owner-private state is not a general multi-user authority mechanism.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/working_clipboard.rs
+//! [spec0]: ../../../../docs/05-domain/diagrams/provenance-working.c4
+//! [spec1]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md#working-source-boundary
+
 use super::*;
 use clipboard::EntryId;
 pub const INDEX_KIND: i32 = 25;
@@ -89,12 +123,16 @@ pub struct Page {
     pub entries: Vec<Entry>,
     pub next: Option<usize>,
 }
+
+/// Reject a private generation that cannot advance safely for browser transport.
 pub(super) fn validate_generation(generation: u64) -> Result<()> {
     if generation >= JS_MAX {
         return Err(Error::Limit);
     }
     Ok(())
 }
+
+/// Validate the generation precondition shared by every private mutation.
 pub(super) fn validate(mutation: &Mutation) -> Result<()> {
     match mutation {
         Mutation::Promote { generation, .. }
@@ -102,9 +140,12 @@ pub(super) fn validate(mutation: &Mutation) -> Result<()> {
         | Mutation::Clear { generation } => validate_generation(*generation),
     }
 }
+
+/// Read a bounded owner index and reject zero/stale shape or duplicate reference IDs.
 fn load(cipher: &Cipher<'_>, db: &Connection, owner: PrincipalId) -> Result<(bool, u64, Index)> {
     match cipher.slot::<Index>(db, INDEX_KIND, owner.0) {
         Ok((generation, index)) => {
+            // The mapping callback compares exact private reference bytes for duplicate IDs.
             let distinct: std::collections::BTreeSet<_> =
                 index.entries.iter().map(|id| id.0).collect();
             if index.owner != owner
@@ -128,6 +169,8 @@ fn load(cipher: &Cipher<'_>, db: &Connection, owner: PrincipalId) -> Result<(boo
         Err(error) => Err(error),
     }
 }
+
+/// Persist a generation-checked private index, creating generation one for its first mutation.
 fn write(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -147,6 +190,7 @@ fn write(
         Ok(1)
     }
 }
+/// Add an immutable working reference to a newly acknowledged checkpoint under the private quota.
 #[allow(clippy::too_many_arguments)]
 pub(super) fn capture(
     cipher: &Cipher<'_>,
@@ -194,6 +238,8 @@ pub(super) fn capture(
         count: index.entries.len(),
     })
 }
+
+/// Authenticate the original capture receipt, current source authority and exact cached preview.
 fn original(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -229,6 +275,8 @@ fn original(
     }
     Ok((reference, view))
 }
+
+/// Validate working or committed references against retained originals and exact promotion evidence.
 fn read(cipher: &Cipher<'_>, db: &Connection, catalog: &Catalog, id: EntryId) -> Result<Reference> {
     let reference: Reference = cipher.object(db, REFERENCE_KIND, id.0)?;
     if reference.id != id || reference.actor != catalog.owner || reference.device != catalog.device
@@ -265,6 +313,8 @@ fn read(cipher: &Cipher<'_>, db: &Connection, catalog: &Catalog, id: EntryId) ->
     }
     Ok(reference)
 }
+
+/// Carry the identical captured range into its verified published revision/snapshot.
 fn committed(source: &working::Source, promotion: &working::Promotion) -> clipboard::Source {
     clipboard::Source {
         document: source.document,
@@ -276,6 +326,8 @@ fn committed(source: &working::Source, promotion: &working::Promotion) -> clipbo
         end_byte: source.end_byte,
     }
 }
+
+/// Apply private removal, clear or explicit promoted-reference replacement at one expected generation.
 pub(super) fn apply(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -299,6 +351,7 @@ pub(super) fn apply(
             let position = index
                 .entries
                 .iter()
+                // Remove only the requested live private reference identity.
                 .position(|id| *id == entry)
                 .ok_or(Error::NotFound)?;
             index.entries.remove(position);
@@ -319,6 +372,8 @@ pub(super) fn apply(
         count: index.entries.len(),
     })
 }
+
+/// Require present document/branch authority before accepting a publication-driven replacement.
 pub(super) fn authorize(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -348,6 +403,8 @@ pub(super) fn authorize(
     }
     Ok(())
 }
+
+/// Read the original legacy receipt or dedicated experimental publication without fabricating an alias.
 fn publication_receipt(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -362,6 +419,7 @@ fn publication_receipt(
         Err(error) => Err(error),
     }
 }
+/// Append eligible committed references while preserving originals and updating only live index entries.
 #[allow(clippy::too_many_arguments)]
 fn replace_promoted(
     cipher: &Cipher<'_>,
@@ -440,7 +498,9 @@ fn replace_promoted(
         count: index.entries.len(),
     })
 }
+
 impl Workspace {
+    /// Read a retained private reference after current catalogue and source checks.
     pub fn working_reference(&mut self, id: EntryId) -> Result<Entry> {
         let cipher = Cipher {
             key: &self.key,
@@ -460,6 +520,8 @@ impl Workspace {
         tx.commit()?;
         Ok(entry)
     }
+
+    /// Return bounded authenticated references from one stable private index generation.
     pub fn working_clipboard_page(
         &mut self,
         expected: Option<u64>,
@@ -479,6 +541,7 @@ impl Workspace {
             return Err(Error::Integrity);
         }
         let (_, generation, index) = load(&cipher, &tx, catalog.owner)?;
+        // The optional predicate binds a continuation to its original private generation.
         if expected.is_some_and(|value| value != generation) {
             return Err(Error::Conflict);
         }
@@ -510,6 +573,7 @@ impl Workspace {
 mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
+    /// Execute a synthetic checkpoint-and-copy command and extract its acknowledged private result.
     fn copy(ws: &mut Workspace, editor: &EditorState, operation: u8, generation: u64) -> Copied {
         match ws
             .execute(
@@ -526,6 +590,8 @@ mod tests {
             _ => panic!(),
         }
     }
+
+    /// Keep original working evidence through explicit replacement, restart and live-index clear.
     #[test]
     fn private_copy_survives_restart_and_exact_commit_appends_replacement_retaining_original() {
         let temp = Temp::new();
@@ -605,6 +671,8 @@ mod tests {
             Target::Committed { .. }
         ));
     }
+
+    /// Reject stale copy generation atomically and avoid promoting changed text to the earlier capture.
     #[test]
     fn changed_text_keeps_working_link_and_copy_generation_conflicts_roll_back_checkpoint() {
         let temp = Temp::new();
@@ -627,6 +695,7 @@ mod tests {
             .query_row(
                 "SELECT count(*) FROM objects WHERE kind=?1",
                 params![working::CHECKPOINT_KIND],
+                // Count checkpoints to detect a stale private-copy partial write.
                 |r| r.get(0),
             )
             .unwrap();
@@ -638,6 +707,8 @@ mod tests {
         assert_eq!(page.entries[0].id, copied.entry);
         assert!(matches!(page.entries[0].target, Target::Working { .. }));
     }
+
+    /// Verify copy/replacement rollback and original-result retries across all command fault stages.
     #[test]
     fn copy_and_replacements_are_atomic_at_fault_boundaries_and_replay_original_receipts() {
         for phase in ["objects", "heads", "receipt", "committed"] {
@@ -650,6 +721,7 @@ mod tests {
                 generation: 0,
             };
             assert!(matches!(
+                // Fail the selected copy stage, including a lost post-commit reply.
                 ws.execute_inner(op(2), command.clone(), |at| if at == phase {
                     Err(Error::Io)
                 } else {
@@ -673,6 +745,7 @@ mod tests {
                 },
             };
             assert!(matches!(
+                // Fail the selected replacement stage without changing the earlier publication.
                 ws.execute_inner(op(4), replace.clone(), |at| if at == phase {
                     Err(Error::Io)
                 } else {
@@ -692,6 +765,8 @@ mod tests {
             );
         }
     }
+
+    /// Reject changed source/preview/index evidence and revoked scope instead of disclosing or retargeting.
     #[test]
     fn authenticated_reference_changes_and_scope_revocation_do_not_disclose_or_retarget() {
         for fault in ["range", "preview", "duplicate", "revoked"] {

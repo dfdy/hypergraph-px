@@ -1,8 +1,27 @@
 #!/usr/bin/env python3
-"""Explicitly restore hash-bound public historical fixtures from local Git objects.
+"""Hypergraph PX — Explicit historical fixture restoration
 
-Never fetches, changes the index or overwrites differing local history. Normal
-current-documentation checks do not call this optional historical operation.
+Restore a named public historical fixture group from hash-bound local Git objects without fetching or replacing differing bytes.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/restore_documentation_history.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Explicit historical protocol recovery and fixture tests; normal current-documentation checks do not call this tool.
+
+Specification:
+- [Source-aware documentation checks](../../docs/08-assurance/source-traceability.md)
+- [Protocol installation and agreement boundary](../../docs/09-guides/developers/vernaculum/UPGRADE_2.0.0.md)
+
+Boundary: Historical restoration is opt-in; it neither adopts an old protocol nor authorizes publication or archive access.
 """
 import argparse
 import hashlib
@@ -17,12 +36,15 @@ GROUPS = {'legacy-semantic-protocol': 'docs/engineering/semantic-protocol/'}
 
 
 def restore(root, group):
+    """Verify every selected Git payload and destination before creating only missing historical fixture files."""
+
     prefix = GROUPS[group]
     index = json.loads((root / INDEX).read_text())
     entries = [e for e in index['files'] if e['original_path'].startswith(prefix)]
     if not entries:
         raise ValueError('Historical fixture group is empty')
     prepared = []
+
     for entry in entries:
         destination = root / entry['current_path']
         if not entry['current_path'].startswith('.provenance/docs-reorganisation/historical-docs/' + prefix):
@@ -39,10 +61,14 @@ def restore(root, group):
             raise ValueError('Refusing to overwrite differing local history')
         prepared.append((destination, data))
     created = 0
+
     for destination, data in prepared:
-        if destination.exists(): continue
+        if destination.exists():
+            continue
         destination.parent.mkdir(parents=True, exist_ok=True)
-        with destination.open('xb') as target: target.write(data)
+
+        with destination.open('xb') as target:
+            target.write(data)
         created += 1
     return {'group': group, 'verified': len(entries), 'created': created,
             'limits': 'Historical fixtures only; no current protocol adoption or source publication.'}

@@ -1,21 +1,69 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Compact immediate-base working lineage from supplied exact UTF8 splices.
-//! No serialization, clocks, historical diff inference or persistent mutation.
+//! # Hypergraph PX — Immediate-base working-source lineage
+//!
+//! Compose exact sequential UTF8 splices into a compact immediate-base trace,
+//! retaining original source offsets without guessing historical character origins.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build: unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision: unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Experimental storage temporal Save/Commit and versioned lineage/origin
+//! adapters, plus the domain trace/Merge test suites.
+//!
+//! Specification:
+//! - [Domain lineage responsibility][domain]
+//! - [Parent-Merge planning][merge]
+//! - [Scoped temporal publication][publication]
+//!
+//! Boundary: Adapters authenticate source/context before restoring a trace. The trace
+//! records uncommitted changes against one immediate base; it allocates no clocks,
+//! infers no authorship and publishes no history. Work limits are logical charges.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/domain/src/parent_merge/lineage.rs
+//! [domain]: ../../../../../docs/06-subsystems/diagrams/pure-domain.c4
+//! [merge]: ../../../../../docs/07-implementation/algorithms/parent-merge.md
+//! [publication]: ../../../../../docs/07-implementation/protocols/draft-publication.md
 use super::{Base, Budget, Limits};
 use crate::records::{NodeId, RangeError, RevisionId, validate_byte_range};
 
+/// One canonical immediate-base replacement, not a historical authorship claim.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Change {
+    /// Inclusive UTF8 cut in the full immediate-base source.
     pub start: usize,
+
+    /// Exclusive immediate-base cut; equal cuts denote insertion.
     pub end: usize,
+
+    /// Exact replacement text, retaining all Unicode and newline forms.
     pub replacement: String,
 }
+
+/// One exact edit in the preceding intermediate text’s UTF8 coordinates.
 pub struct Splice<'a> {
+    /// Inclusive byte cut in the current intermediate text, not the batch’s initial text.
     pub start: usize,
+
+    /// Exclusive current-text cut; every sequential splice rebinds its coordinates.
     pub end: usize,
+
+    /// Exact bytes that must occupy this current-text range.
     pub expected: &'a str,
+
+    /// Exact insertion text; empty text performs a deletion.
     pub replacement: &'a str,
 }
+
+/// Immutable-result working trace: exact base/context, current bytes and compact changes.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Trace<'a> {
     node: NodeId,
@@ -24,21 +72,33 @@ pub struct Trace<'a> {
     text: String,
     changes: Vec<Change>,
 }
+
+/// Why a proposed trace/edit cannot preserve exact immediate-base correspondence.
 #[derive(Debug, PartialEq, Eq)]
 pub enum Error {
+    /// Expected pre-edit text differs from this trace’s exact current bytes.
     Stale,
+    /// A splice/change has invalid or split-scalar byte cuts.
     Range(RangeError),
+    /// A splice’s expected bytes differ from its exact current-text range.
     Quote,
+    /// Supplied full text does not equal the trace/splice result.
     Reconstruction,
+    /// Change ordering or compact representation is not canonical for this immediate base.
     NonCanonical,
+    /// Size/work accounting exceeds the declared allowance or overflows.
     Limit,
 }
 #[derive(Clone, Copy)]
+// Borrow base ranges and inserted slices separately so splice composition can
+// preserve an exact original locus even when equal text appears elsewhere.
 enum Piece<'a> {
     Base { start: usize, end: usize },
     Added(&'a str),
 }
+
 impl Piece<'_> {
+    /// Return this piece’s UTF8 byte length without rendering or normalizing it.
     fn len(self) -> usize {
         match self {
             Self::Base { start, end } => end - start,
@@ -46,9 +106,15 @@ impl Piece<'_> {
         }
     }
 }
+
+/// Charge shared logical work and translate exhaustion into the trace error type.
 fn spend(budget: &mut Budget, amount: usize) -> Result<(), Error> {
+    // Translate accounting exhaustion without hiding another domain outcome.
     budget.spend(amount).map_err(|_| Error::Limit)
 }
+
+/// Bound and charge the complete byte size before rendering borrowed base and
+/// added pieces into exact current text.
 fn render(
     base: &str,
     pieces: &[Piece<'_>],
@@ -73,6 +139,9 @@ fn render(
     }
     Ok(text)
 }
+
+/// Build an ordered borrowed piece sequence from base-relative replacements;
+/// restoration later checks that the whole representation is canonical.
 fn pieces<'a>(
     base: &str,
     changes: &'a [Change],
@@ -108,6 +177,9 @@ fn pieces<'a>(
     }
     Ok(result)
 }
+
+/// Select an exact interval across already validated current-text pieces,
+/// keeping base loci and inserted-source cuts rather than searching by content.
 fn slice<'a>(
     input: &[Piece<'a>],
     start: usize,
@@ -137,6 +209,9 @@ fn slice<'a>(
     }
     Ok(result)
 }
+
+/// Emit one compact base-relative replacement, or cancel it when it exactly
+/// restores this immediate-base interval; no retained history is removed.
 fn flush(
     base: &str,
     start: usize,
@@ -159,6 +234,9 @@ fn flush(
     });
     Ok(())
 }
+
+/// Coalesce pending inserted text around monotone base pieces into canonical
+/// immediate-base changes, cancelling only exact immediate-base restoration.
 fn normalize(base: &str, input: &[Piece<'_>], budget: &mut Budget) -> Result<Vec<Change>, Error> {
     let mut changes = Vec::new();
     let mut pending = String::new();
@@ -187,6 +265,8 @@ fn normalize(base: &str, input: &[Piece<'_>], budget: &mut Budget) -> Result<Vec
     Ok(changes)
 }
 impl<'a> Trace<'a> {
+    /// Create an unchanged trace borrowing one exact base and charging its owned
+    /// current-text copy before returning the initial empty change set.
     pub fn new(base: &Base<'a>, limits: Limits) -> Result<Self, Error> {
         if base.text.len() > limits.text_bytes || limits.work == 0 {
             return Err(Error::Limit);
@@ -201,22 +281,35 @@ impl<'a> Trace<'a> {
             changes: Vec::new(),
         })
     }
+
+    /// Return the logical node to which this working trace is bound.
     pub fn node(&self) -> NodeId {
         self.node
     }
+
+    /// Return the exact immediate-base revision; it does not advance with a head.
     pub fn base_revision(&self) -> RevisionId {
         self.revision
     }
+
+    /// Borrow the full exact source against which canonical changes are expressed.
     pub fn base_text(&self) -> &str {
         self.base
     }
+
+    /// Borrow the current rendered source, retaining original Unicode/newline forms.
     pub fn text(&self) -> &str {
         &self.text
     }
+
+    /// Borrow the compact base-relative changes; these do not certify historical age.
     pub fn changes(&self) -> &[Change] {
         &self.changes
     }
+
     /// Adapter restores a compact trace only after record/context authentication.
+    /// Rebuild and validate supplied trace state after adapter authentication,
+    /// rejecting a noncanonical representation rather than silently rewriting it.
     pub fn restore(
         base: &Base<'a>,
         text: &str,
@@ -246,8 +339,11 @@ impl<'a> Trace<'a> {
             changes: canonical,
         })
     }
+
     /// Each splice addresses the preceding intermediate text, not the original
     /// batch buffer. A failure returns no new trace and leaves self untouched.
+    /// Apply exact sequential current-text splices and return a new validated trace
+    /// only when final bytes match; any error leaves the original trace untouched.
     pub fn apply(
         &self,
         expected_current: &str,
@@ -262,6 +358,7 @@ impl<'a> Trace<'a> {
             expected_after.len(),
         ]
         .iter()
+        // Bound every full input before composing intermediate pieces.
         .any(|&size| size > limits.text_bytes)
             || limits.work == 0
         {
@@ -272,6 +369,8 @@ impl<'a> Trace<'a> {
         if expected_current != self.text {
             return Err(Error::Stale);
         }
+
+        // Splice coordinates advance with each rendered intermediate result.
         let mut current = pieces(self.base, &self.changes, &mut budget)?;
         for edit in splices {
             spend(&mut budget, 1)?;
@@ -287,6 +386,7 @@ impl<'a> Trace<'a> {
             let size = text
                 .len()
                 .checked_sub(edit.end - edit.start)
+                // Add replacement size only after checked subtraction of removed bytes.
                 .and_then(|n| n.checked_add(edit.replacement.len()))
                 .ok_or(Error::Limit)?;
             if size > limits.text_bytes {
@@ -305,6 +405,8 @@ impl<'a> Trace<'a> {
         if text != expected_after {
             return Err(Error::Reconstruction);
         }
+
+        // Compact only after exact final reconstruction is established.
         let changes = normalize(self.base, &current, &mut budget)?;
         Ok(Self {
             node: self.node,
@@ -320,6 +422,8 @@ impl<'a> Trace<'a> {
 mod tests {
     use super::*;
     use crate::parent_merge::{Edit, Mapping, Origin, Outcome, Side, plan};
+
+    /// Bind a synthetic base/source to fixed node and revision fixtures.
     fn base(text: &str) -> Base<'_> {
         Base {
             node: NodeId([1; 32]),
@@ -327,12 +431,17 @@ mod tests {
             text,
         }
     }
+
+    /// Provide a generous logical allowance for semantic trace tests.
     fn limits() -> Limits {
         Limits {
             text_bytes: 4096,
             work: 100_000,
         }
     }
+
+    /// Verify repeated equal passages retain their exact original loci through
+    /// Unicode/newline edits, restore and context accessors.
     #[test]
     fn repeated_passages_keep_exact_owned_base_offsets_and_mixed_bytes() {
         let b = base("A😀\r\n中\rA😀");
@@ -367,6 +476,9 @@ mod tests {
             next
         );
     }
+
+    /// Verify each splice uses the preceding intermediate text, composing edits
+    /// across inserted/base pieces and matching sequential versus batched results.
     #[test]
     fn sequential_splices_compose_across_inserted_and_copied_fragments() {
         let b = base("ABCDE");
@@ -431,6 +543,9 @@ mod tests {
             .unwrap();
         assert_eq!(batch, final_trace);
     }
+
+    /// Verify adjacent edits coalesce and exact immediate-base restoration cancels
+    /// private changes without treating history as deletable.
     #[test]
     fn deletion_and_adjacent_splices_are_compact_and_immediate_base_restore_cancels() {
         let b = base("ABCD");
@@ -494,6 +609,9 @@ mod tests {
             .unwrap();
         assert_eq!(no_op, trace);
     }
+
+    /// Verify reverting an already committed value is a new change against its new
+    /// base and can feed supplied origin evidence into later Merge planning.
     #[test]
     fn a_reversion_after_a_commit_is_a_new_immediate_base_change() {
         let b = base("Tuesday");
@@ -522,6 +640,8 @@ mod tests {
         let edits: Vec<_> = reverted
             .changes()
             .iter()
+            // Project an exact private trace region into a Merge fixture with
+            // separately supplied historical origins, not inferred authorship.
             .map(|change| Edit {
                 start: change.start,
                 end: change.end,
@@ -549,6 +669,9 @@ mod tests {
         assert_eq!(result.text, "Monday");
         assert_eq!(result.edits[0].origins, origins);
     }
+
+    /// Check stale/incorrect inputs, invalid cuts, final mismatch and resource limits
+    /// reject new traces while preserving the original exact state.
     #[test]
     fn stale_quotes_split_scalars_final_mismatch_and_limits_leave_original_untouched() {
         let b = base("😀B");
@@ -639,6 +762,9 @@ mod tests {
         assert_eq!(trace.text(), b.text);
         assert!(trace.changes().is_empty());
     }
+
+    /// Verify restored no-op, adjacent, reversed or inconsistent changes are rejected
+    /// instead of being silently accepted through normalization.
     #[test]
     fn restore_rejects_noncanonical_or_inconsistent_state_instead_of_rewriting_it() {
         let b = base("AB");
@@ -688,6 +814,9 @@ mod tests {
             Err(Error::Reconstruction)
         );
     }
+
+    /// Enumerate ASCII base ranges and representative insertions, then apply the
+    /// exact inverse to check restored source and compact trace identity.
     #[test]
     fn exhaustive_single_splice_and_exact_inverse_preserve_the_original_trace() {
         let b = base("ABA");

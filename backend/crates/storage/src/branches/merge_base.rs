@@ -1,20 +1,59 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Authenticated bounded legacy ancestry. Read-only; no inferred passage order.
+//! # Hypergraph PX — Authenticated bounded parent common-base inspection
+//!
+//! Capture exact committed source/parent heads in one authorized read view,
+//! authenticate their retained legacy ancestry and ask the pure domain model
+//! for a unique maximal common base without changing either draft or head.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace parent-comparison API and browser common-base inspection.
+//!
+//! Specification:
+//! - [History-planning implementation responsibilities][spec0]
+//! - [Authenticated common-base query][spec1]
+//! - [Per-node parent Merge protocol][spec2]
+//!
+//! Boundary: Read-only legacy ancestry is not passage-order inference, a
+//! merge publication or a format upgrade. Missing, cyclic, ambiguous or
+//! work-limited evidence never falls back to branch creation.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/branches/merge_base.rs
+//! [spec0]: ../../../../../docs/06-subsystems/diagrams/pure-domain.c4
+//! [spec1]: ../../../../../docs/06-subsystems/interfaces/domain-navigation.md#authenticated-bounded-common-base-inspection
+//! [spec2]: ../../../../../docs/07-implementation/protocols/draft-publication.md
+
 use super::*;
 use hypergraph_domain::parent_merge::ancestry;
 use std::collections::BTreeMap;
 
+/// Maximum authenticated ancestry records for one complete inspection.
 pub const MAX_REVISIONS: usize = 1024;
+/// Maximum charged ciphertext bytes, shared by comparison and ancestry loading.
 pub const MAX_BYTES: usize = 64 * 1024 * 1024;
+/// Maximum pure ancestry-selection work; not a measured execution-time promise.
 pub const MAX_WORK: usize = 1024 * 1024;
 
+/// Independent caller limits, all checked against the supported upper bounds.
 #[derive(Clone, Copy)]
 pub struct Limits {
     pub revisions: usize,
     pub bytes: usize,
     pub work: usize,
 }
+
 impl Default for Limits {
+    /// Select the existing bounded revision/byte/work ceilings without reading storage.
     fn default() -> Self {
         Self {
             revisions: MAX_REVISIONS,
@@ -23,6 +62,8 @@ impl Default for Limits {
         }
     }
 }
+
+/// Exact unique-base, unrelated or ambiguous result; no heuristic winner is invented.
 #[derive(Debug, Serialize)]
 #[serde(tag = "result", rename_all = "snake_case")]
 pub enum Selection {
@@ -40,6 +81,8 @@ pub enum Selection {
         revisions: Vec<RevisionId>,
     },
 }
+
+/// Captured committed comparison, complete selection result and authenticated read count.
 #[derive(Debug, Serialize)]
 pub struct View {
     pub comparison: Comparison,
@@ -48,14 +91,18 @@ pub struct View {
 }
 
 impl Workspace {
+    /// Inspect exact committed parent ancestry using the ordinary no-injection read path.
     pub fn parent_merge_base(
         &mut self,
         document: DocumentId,
         branch: BranchId,
         limits: Limits,
     ) -> Result<View> {
+        // The ordinary read does not trigger a concurrent-writer test action.
         self.parent_merge_base_inner(document, branch, limits, || Ok(()))
     }
+
+    /// Capture and authenticate one consistent bounded graph before pure base selection.
     fn parent_merge_base_inner(
         &mut self,
         document: DocumentId,
@@ -85,6 +132,7 @@ impl Workspace {
             &mut remaining,
             after_source,
         )?;
+
         let mut entries = BTreeMap::new();
         let mut pending = vec![comparison.parent_revision, comparison.source_revision];
         while let Some(id) = pending.pop() {
@@ -100,14 +148,17 @@ impl Workspace {
             }
             entries.insert(id, entry);
         }
+
         let records: Vec<_> = entries
             .values()
+            // Pass only authenticated same-node parent descriptors into pure planning.
             .map(|entry| ancestry::Record {
                 revision: entry.revision,
                 node: doc.node,
                 parents: entry.parent.as_slice(),
             })
             .collect();
+
         let selection = match ancestry::common_base(
             doc.node,
             comparison.source_revision,
@@ -131,7 +182,9 @@ impl Workspace {
             selection,
             revisions_read: entries.len(),
         };
+
         tx.commit()?;
+
         Ok(view)
     }
 }
@@ -141,6 +194,7 @@ mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
 
+    /// Create a synthetic child branch at the exact supplied retained parent context.
     fn child(ws: &mut Workspace, state: &EditorState, n: u8) -> BranchId {
         match ws
             .execute(
@@ -162,6 +216,8 @@ mod tests {
             _ => panic!(),
         }
     }
+
+    /// Capture a branch Save with this exact acknowledged base/generation/sequence.
     fn write(state: &EditorState, text: &str) -> Command {
         Command::Branch {
             mutation: Mutation::Save {
@@ -175,6 +231,8 @@ mod tests {
             },
         }
     }
+
+    /// Capture a branch Commit of the exact acknowledged synthetic editor state.
     fn publish(state: &EditorState) -> Command {
         Command::Branch {
             mutation: Mutation::Commit {
@@ -186,6 +244,8 @@ mod tests {
             },
         }
     }
+
+    /// Require a unique base result before extracting its exact identity/context flags.
     fn base(view: &View) -> (RevisionId, SnapshotId, bool, bool) {
         match view.selection {
             Selection::Base {
@@ -197,6 +257,8 @@ mod tests {
             _ => panic!(),
         }
     }
+
+    /// Guard unique base selection across divergence/restart without touching either pending draft.
     #[test]
     fn divergent_committed_histories_select_exact_base_without_reading_or_changing_drafts() {
         let temp = Temp::new();
@@ -249,6 +311,8 @@ mod tests {
         assert_eq!(nested.comparison.parent, branch);
         assert_eq!(base(&nested), (source.base, source.snapshot, true, true));
     }
+
+    /// Ensure a concurrent Commit cannot mix ancestry from two different read views.
     #[test]
     fn source_and_parent_ancestry_share_one_read_view_during_a_concurrent_commit() {
         let temp = Temp::new();
@@ -262,6 +326,7 @@ mod tests {
             .unwrap();
         let pending = writer.open_document(doc).unwrap();
         let view = ws
+            // Advance a separate writer after source capture to test snapshot consistency.
             .parent_merge_base_inner(doc, branch, Limits::default(), || {
                 writer.execute(op(4), commit(&pending))?;
                 Ok(())
@@ -279,6 +344,8 @@ mod tests {
             view.comparison.parent_revision
         );
     }
+
+    /// Reject exceeded bounds and lost scope without a partial selection or write.
     #[test]
     fn budgets_and_current_authority_fail_without_partial_selection_or_sql_writes() {
         let temp = Temp::new();
@@ -359,6 +426,8 @@ mod tests {
             Err(Error::NotFound)
         ));
     }
+
+    /// Reject missing, cross-node, cyclic or oversized evidence rather than guessing a base.
     #[test]
     fn missing_corrupt_cross_node_and_cyclic_evidence_never_fall_back_to_branch_creation() {
         let temp = Temp::new();
@@ -376,6 +445,7 @@ mod tests {
             .query_row(
                 "SELECT envelope FROM objects WHERE kind=?1 AND id=?2",
                 params![REVISION, initial.base.0.as_slice()],
+                // Retain original fixture ciphertext so a deliberately missing record can be restored.
                 |r| r.get(0),
             )
             .unwrap();
@@ -395,6 +465,7 @@ mod tests {
                 params![REVISION, initial.base.0.as_slice(), original],
             )
             .unwrap();
+        // Re-seal controlled semantic faults to isolate binding/cycle checks from AEAD failure.
         let mutate = |ws: &Workspace, wrong_node: bool, cycle: bool| {
             let cipher = Cipher {
                 key: &ws.key,

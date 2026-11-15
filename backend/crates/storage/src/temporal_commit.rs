@@ -1,5 +1,39 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Experimental single-parent publication. No public opener, upgrade or runtime route.
+//! # Hypergraph PX — Atomic experimental temporal publication
+//!
+//! Publishes exact acknowledged draft lineage, origin evidence and node
+//! commit order
+//! together, or returns the original frozen result for an identical retry.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Guarded storage temporal Commit integration tests and
+//! separately acknowledged temporal reference publication.
+//!
+//! Specification:
+//! - [Storage transaction responsibilities][spec0]
+//! - [Experimental temporal Commit transaction][spec1]
+//! - [Candidate storage records][spec2]
+//!
+//! Boundary: No public schema3 opener, upgrade or runtime route exists.
+//! No-op publication writes a receipt alone; immutable history is created
+//! by explicit changed Commit, not by autosave cadence.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/temporal_commit.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/07-implementation/protocols/draft-publication.md#experimental-single-parent-temporal-commit-transaction
+//! [spec2]: ../../../../docs/07-implementation/data-structures/sqlite-records.md
+
 use super::*;
 use hypergraph_domain::parent_merge::{Base, Limits, lineage::Trace};
 use temporal_commit_record::{Frozen, Request};
@@ -8,6 +42,7 @@ const READ_BYTES: usize = origin_history::READ_BYTES;
 const WORK: usize = 5 * origin_history::WORK;
 const RECORDS: usize = 64;
 
+/// Encrypt and insert one immutable experimental object at generation zero.
 fn insert_raw(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -23,7 +58,8 @@ fn insert_raw(
     Ok(())
 }
 
-// Replay validates immutable outcome/intent, never a newer mutable draft or clock.
+/// Authenticate an earlier frozen publication against immutable outcome evidence.
+/// Replay validates immutable outcome/intent, never a newer mutable draft or clock.
 fn replay(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -65,6 +101,7 @@ fn replay(
         let envelope: Vec<u8> = db.query_row(
             "SELECT envelope FROM objects WHERE kind=?1 AND id=?2",
             params![origin_record::CANDIDATE_KIND, revision.0.as_slice()],
+            // Retrieve only the already budgeted encrypted candidate object.
             |row| row.get(0),
         )?;
         let plain = cipher.key.open(
@@ -99,6 +136,7 @@ fn replay(
             None,
             limits,
         )
+        // A bounded domain map/trace cannot be constructed with this resource allowance.
         .map_err(|_| Error::Limit)?;
         origin_record::decode(
             &plain,
@@ -120,6 +158,7 @@ pub(super) fn publication_receipt(
     catalog: &Catalog,
     operation: OperationId,
 ) -> Result<Receipt> {
+    // The SQL callback reads the scalar schema marker without opening any records.
     let schema: i32 = db.query_row("PRAGMA user_version", [], |r| r.get(0))?;
     if schema != temporal_save::EXPERIMENTAL_SCHEMA {
         return Err(Error::NotFound);
@@ -141,6 +180,7 @@ pub(super) fn publication_receipt(
             temporal_commit_record::CANDIDATE_KIND,
             operation.0.as_slice()
         ],
+        // Read the already charged dedicated publication-receipt envelope.
         |r| r.get(0),
     )?;
     let plain = cipher.key.open(
@@ -173,6 +213,8 @@ pub(super) fn publication_receipt(
 }
 
 impl Workspace {
+    /// Commit an exact acknowledged experimental draft in one immediate transaction.
+    ///
     /// Marker3/feature32 only. Ordinary schema1/2 commands are unchanged.
     pub fn temporal_commit(
         &mut self,
@@ -180,8 +222,12 @@ impl Workspace {
         request: Request,
         work: usize,
     ) -> Result<Receipt> {
+        // The callback deliberately injects no production write-stage failure.
         self.temporal_commit_inner(operation, request, work, |_| Ok(()))
     }
+
+    /// Authorize and reconcile retries before atomically publishing all dependent records.
+    /// Fault hooks expose rollback and uncertain-after-commit boundaries to tests.
     fn temporal_commit_inner(
         &mut self,
         operation: OperationId,
@@ -230,6 +276,7 @@ impl Workspace {
                     temporal_commit_record::CANDIDATE_KIND,
                     operation.0.as_slice()
                 ],
+                // Retrieve only the already budgeted encrypted candidate object.
                 |row| row.get(0),
             )?;
             let plain = cipher.key.open(
@@ -314,6 +361,7 @@ impl Workspace {
                 },
                 limits,
             )
+            // A bounded domain map/trace cannot be constructed with this resource allowance.
             .map_err(|_| Error::Limit)?;
             let lineage = Zeroizing::new(lineage_record::encode(
                 &reset,

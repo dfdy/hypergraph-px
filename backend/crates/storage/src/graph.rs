@@ -1,7 +1,43 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Read-only induced document/Fork projection in one SQLite read view.
+//! # Hypergraph PX — Bounded document and Fork graph projection
+//!
+//! Read current committed node contexts and induced historical Fork edges for
+//! one explicit document selection in one SQLite read view. Equal titles remain
+//! distinct identities; historical edges do not move when document heads change.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Runtime document/Fork graph query and higher-level
+//! provenance-overlay projections.
+//!
+//! Specification:
+//! - [Graph projection responsibilities][spec0]
+//! - [Current independent Fork provenance][spec1]
+//! - [Domain/navigation interfaces][spec2]
+//!
+//! Boundary: No unselected-document graph scan, traversal expansion or
+//! mutation is performed. Missing optional edges differ from corrupted
+//! existing derivations.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/graph.rs
+//! [spec0]: ../../../../docs/05-domain/diagrams/graph-projections.c4
+//! [spec1]: ../../../../docs/05-domain/provenance-model.md#current-independent-fork-projection
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md
+
 use super::*;
+/// Maximum explicit document selection per bounded graph query.
 pub const MAX_NODES: usize = 16;
+/// Current committed context for one selected document, distinct from historical edges.
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Node {
@@ -15,19 +51,31 @@ pub struct Node {
     pub snapshot: SnapshotId,
     pub title: String,
 }
+
+/// Induced selected graph plus a count of known incoming edges from outside selection.
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Projection {
     pub projection: String,
+
+    /// Requested documents in input order, each with a checked committed context.
     pub nodes: Vec<Node>,
+
+    /// Pinned Fork derivations whose input and output documents are both selected.
     pub edges: Vec<forks::Derivation>,
+
     /// Only incoming forks of selected outputs; no scan of unselected documents.
     pub inputs_outside_selection: usize,
 }
+
 impl Workspace {
+    /// Read one fully authorized bounded selection without injected query checkpoints.
     pub fn document_fork_graph(&mut self, documents: &[DocumentId]) -> Result<Projection> {
+        // The normal query has no concurrency/fault injection callback.
         self.document_fork_graph_inner(documents, |_| Ok(()))
     }
+
+    /// Validate all requested scope first, then collect nodes/edges in one consistent view.
     fn document_fork_graph_inner(
         &mut self,
         documents: &[DocumentId],
@@ -42,6 +90,7 @@ impl Workspace {
                 return Err(Error::Invalid);
             }
         }
+
         let tx = self.db.transaction()?;
         let cipher = Cipher {
             key: &self.key,
@@ -52,9 +101,11 @@ impl Workspace {
             return Err(Error::Integrity);
         }
         // Validate the complete requested authority scope before returning any projection.
+        // Fail the entire query if any requested document is outside current scope.
         if documents.iter().any(|id| !catalog.documents.contains(id)) {
             return Err(Error::NotFound);
         }
+
         let mut nodes = Vec::new();
         let mut edges = Vec::new();
         let mut inputs_outside_selection = 0;
@@ -71,7 +122,9 @@ impl Workspace {
             }
             checkpoint(index)?;
         }
+
         tx.commit()?;
+
         Ok(Projection {
             projection: "document_forks".into(),
             nodes,
@@ -80,6 +133,8 @@ impl Workspace {
         })
     }
 }
+
+/// Verify the selected document's current head, closed snapshot, revision and publication agree.
 pub(super) fn document_node(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -120,6 +175,7 @@ pub(super) fn document_node(
     })
 }
 
+/// Distinguish absent optional provenance from an existing derivation that fails validation.
 pub(super) fn optional_fork(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -130,6 +186,7 @@ pub(super) fn optional_fork(
     let exists: bool = db.query_row(
         "SELECT EXISTS(SELECT 1 FROM objects WHERE kind=?1 AND id=?2)",
         params![forks::KIND, forks::address(node).as_slice()],
+        // Decode only the existence flag before deciding whether full validation is needed.
         |row| row.get(0),
     )?;
     if exists {
@@ -143,6 +200,7 @@ pub(super) fn optional_fork(
 mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, op, save};
+    /// Create a synthetic source/Fork pair sharing labels but never logical identities.
     fn setup() -> (Temp, Workspace, DocumentId, DocumentId) {
         let temp = Temp::new();
         let mut ws = Workspace::create(&temp.db(), PASS, "Synthetic").unwrap();
@@ -169,6 +227,8 @@ mod tests {
         };
         (temp, ws, source, fork)
     }
+
+    /// Guard identity separation and immutable Fork endpoints after edits and restart.
     #[test]
     fn induced_selection_keeps_equal_labels_distinct_and_pins_historical_fork_after_edits_restart()
     {
@@ -197,6 +257,8 @@ mod tests {
             graph.edges
         );
     }
+
+    /// Guard selection limits, duplicate rejection and whole-query current-authority checks.
     #[test]
     fn bounded_selection_and_current_authority_reject_invalid_partial_scope() {
         let (_temp, mut ws, source, fork) = setup();
@@ -225,6 +287,8 @@ mod tests {
             Err(Error::Integrity)
         ));
     }
+
+    /// Ensure damaged provenance fails rather than becoming a falsely disconnected graph.
     #[test]
     fn damaged_existing_edge_is_not_reported_as_disconnected() {
         let (_temp, mut ws, source, fork) = setup();
@@ -237,12 +301,15 @@ mod tests {
             .unwrap();
         assert!(ws.document_fork_graph(&[source, fork]).is_err());
     }
+
+    /// Ensure one read view does not mix contexts when a second writer advances a head.
     #[test]
     fn one_query_keeps_a_consistent_view_while_another_writer_commits() {
         let (temp, mut ws, source, fork) = setup();
         let initial = ws.open_document(source).unwrap();
         let mut other = Workspace::open(&temp.db(), PASS).unwrap();
         let graph = ws
+            // Advance the other writer after the first node to challenge read-view consistency.
             .document_fork_graph_inner(&[fork, source], |index| {
                 if index == 0 {
                     other.execute(op(3), save(&initial, "Concurrent newer source"))?;

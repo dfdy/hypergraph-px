@@ -1,8 +1,27 @@
 #!/usr/bin/env python3
-"""Inspect fetched dependency manifests and refresh the resolved licence inventory.
+"""Hypergraph PX — Resolved Rust dependency provenance inventory
 
-This reports manifests, not an automated legal/security approval. Inspect new
-upstream source/build scripts and bundled components before compilation.
+Inspect fetched registry manifests for the exact lockfile packages and write their declared licences, selected alternatives and source checksums.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/review_rust_dependencies.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Developers reviewing Rust dependencies before compilation.
+
+Specification:
+- [Licence and dependency provenance](../../docs/02-governance/licensing-policy.md)
+- [Repository development workflow](../../docs/09-guides/developers/repository-development.md)
+
+Boundary: This script writes the licence inventory; manifest inspection is not legal/security approval and this documentation update does not run it.
 """
 import json
 from pathlib import Path
@@ -12,6 +31,7 @@ root = Path(__file__).resolve().parents[2]
 lock = tomllib.loads((root / 'Cargo.lock').read_text())
 roots = list((Path.home() / '.cargo/registry/src').glob('*'))
 review = []
+
 for package in lock['package']:
     if 'source' not in package:
         continue

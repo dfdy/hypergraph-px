@@ -1,372 +1,1118 @@
-import {cargoExecutable} from '../../shared/tooling/cargo-path.mjs';
-import {assertComponent,typedBindings,assertBoundPayload} from './assert-api-schema.mjs';
-import {exerciseTextRelations} from './text-relations-workflow.mjs';
-import {exerciseHeadingLink} from './heading-link-workflow.mjs';
-import {exerciseDeparture} from './departure-workflow.mjs';
-import {exerciseHistoryIsolation} from './history-isolation-workflow.mjs';
-import {exerciseWorkingBranches} from './working-branches-workflow.mjs';
-import {measureRuntimeWorkload} from './measure-runtime-workload.mjs';
-import {exerciseDocumentAudit} from './audit-workflow.mjs';
-import {exerciseComments} from './comments-workflow.mjs';
-import {exerciseContributors} from './contributors-workflow.mjs';
-import {exerciseMergeGraph} from './merge-graph-workflow.mjs';
-import {exerciseReviewedMerge} from './merge-workflow.mjs';
-import {exerciseAssertionOverlay} from './assertion-workflow.mjs';
-import {binaryFingerprint,refreshManualRuntime} from './manual-runtime-update.mjs';
-import {testBrowser} from './browser-session.mjs';
-import {createDevelopmentServer} from './dev-server.mjs';
 // SPDX-License-Identifier: AGPL-3.0-only
+/**
+ * Hypergraph PX — Owned synthetic browser and runtime integration harness
+ *
+ * Exercise exact-buffer Save/Commit/recovery, historical sources, independent
+ * derivation, semantic overlays, bounded graphs and authenticated encryption
+ * through owned headless browser/runtime processes.
+ *
+ * Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/frontend/scripts/check-runtime-workflow.mjs)
+ *
+ * Agent provenance: Agent creation unverified; original creator not recorded.
+ * Created: Unknown (not recorded).
+ * Creation harness: Unknown (not recorded).
+ * Creation model: Unknown (not recorded).
+ *
+ * Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+ * Latest editing harness: Codex; version/build: Unknown (not exposed).
+ * Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+ * Last edited: 2026-11-15 (UTC).
+ *
+ * Used by: Explicit current/older-reader runtime integration commands and
+ * assurance workflow.
+ *
+ * Specification:
+ * - [Browser runtime interface](../../docs/06-subsystems/interfaces/browser-runtime.md)
+ * - [Evidence and isolated test workflow](../../docs/09-guides/reference/development-evidence.md)
+ * - [Security threat model](../../docs/08-assurance/security-threat-model.md)
+ * - [Keychain unlock policy](../../docs/04-architecture/decisions/0014-keychain-unlock-policy.md)
+ *
+ * Boundary: This harness uses disposable synthetic workspaces. Supported native
+ * enrollment is a consequential integration action requiring its own
+ * authorization; uncertain cleanup retains evidence. Defining or documenting
+ * scenarios does not execute them or establish acceptance; optional handoff
+ * remains explicitly guarded.
+ */
+import { cargoExecutable } from '../../shared/tooling/cargo-path.mjs';
+
+import { assertComponent, typedBindings, assertBoundPayload } from './assert-api-schema.mjs';
+
+import { exerciseTextRelations } from './text-relations-workflow.mjs';
+
+import { exerciseHeadingLink } from './heading-link-workflow.mjs';
+
+import { exerciseDeparture } from './departure-workflow.mjs';
+
+import { exerciseHistoryIsolation } from './history-isolation-workflow.mjs';
+
+import { exerciseWorkingBranches } from './working-branches-workflow.mjs';
+
+import { measureRuntimeWorkload } from './measure-runtime-workload.mjs';
+
+import { exerciseDocumentAudit } from './audit-workflow.mjs';
+
+import { exerciseComments } from './comments-workflow.mjs';
+
+import { exerciseContributors } from './contributors-workflow.mjs';
+
+import { exerciseMergeGraph } from './merge-graph-workflow.mjs';
+
+import { exerciseReviewedMerge } from './merge-workflow.mjs';
+
+import { exerciseAssertionOverlay } from './assertion-workflow.mjs';
+
+import { binaryFingerprint, refreshManualRuntime } from './manual-runtime-update.mjs';
+
+import { testBrowser } from './browser-session.mjs';
+
+import { createDevelopmentServer } from './dev-server.mjs';
+
 // Real HTTPS/SQLite acceptance with synthetic documents only. Never bypass TLS.
-import {spawn,execFileSync} from 'node:child_process';
-import {mkdtemp,rm,readFile,readdir,stat,mkdir,writeFile} from 'node:fs/promises';
-import {resolve,join} from 'node:path';
-import {createHash,randomBytes} from 'node:crypto';
-import {createServer} from 'node:net';
-import {chromium,webkit,expect} from '@playwright/test';
-const compatAt=process.argv.indexOf('--compat-reader'),compatReader=compatAt<0?null:process.argv[compatAt+1];
-const engine=process.argv[2]??'chromium';if(!['chromium','webkit'].includes(engine))throw Error('Expected browser: chromium or webkit');
-const root=resolve(import.meta.dirname,'../..'),approved='05865badace97aad0cb8abf4460e12f6a1574b812759780052e8ffb486bf8428';
-const passphrase='SYNTHETIC-ONLY-runtime-validation-2026',checks=[];
-let directory,runtime,browser,page,developmentProxy,nativeEnrollmentAttempted=false,keepDirectory=false,passed=false,validateCurrentContract=true;
-const binaryAt=process.argv.indexOf('--binary'),testedExecutable=binaryAt<0?cargoExecutable():resolve(root,process.argv[binaryAt+1]);
-if(binaryAt>=0&&process.argv.includes('--handoff'))throw Error('Explicit binaries cannot use the debug-only manual handoff helper');
-const testedSha=await binaryFingerprint(testedExecutable);
-const check=(condition,message)=>{if(!condition)throw Error(message);};
-const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
-const testedSpecSha=digest(await readFile(resolve(root,'shared/openapi.json')));
-async function start(create,executable=testedExecutable){
- // The retained older executable has its own historical DTO contract. Its
- // compatibility checks remain active, but it must not claim current-schema conformance.
- validateCurrentContract=resolve(executable)===testedExecutable;
- const probe=createServer();await new Promise((yes,no)=>{probe.once('error',no);probe.listen(0,'127.0.0.1',yes);});const port=probe.address().port;await new Promise((yes,no)=>probe.close(error=>error?no(error):yes()));
- runtime=spawn(executable,['--workspace',join(directory,'synthetic.hpx'),...(create?['--create']:[]),'--cert',resolve(root,'.local/credentials/tls/localhost.pem'),'--key',resolve(root,'.local/credentials/tls/localhost-key.pem'),'--port',String(port)],{cwd:directory,env:process.argv.includes('--isolated-runtime')?{...process.env,PATH:directory}:process.env,stdio:['ignore','pipe','pipe']});
- const launch=await new Promise((yes,no)=>{let output='';const timer=setTimeout(()=>no(Error('Runtime startup timed out')),10000);runtime.once('error',()=>{clearTimeout(timer);no(Error('Runtime could not start'));});runtime.once('exit',()=>{clearTimeout(timer);no(Error('Runtime exited during startup'));});runtime.stdout.on('data',bytes=>{output+=bytes.toString();const match=output.match(/https:\/\/127\.0\.0\.1:\d+\/#launch=[a-f0-9]+/);if(match){clearTimeout(timer);yes(match[0]);}});});
- if(!process.argv.includes('--dev-proxy'))return launch;
- developmentProxy=await createDevelopmentServer({assets:resolve(root,'frontend/dist'),port:0,backend:new URL(launch).origin,cert:resolve(root,'.local/credentials/tls/localhost.pem'),key:resolve(root,'.local/credentials/tls/localhost-key.pem'),ca:resolve(root,'.local/credentials/tls/localhost.pem')});
- return developmentProxy.url+'/'+new URL(launch).hash;
-}
-async function stop(signal='SIGTERM'){
- if(developmentProxy){await developmentProxy.close();developmentProxy=null;}
- if(runtime?.pid&&runtime.exitCode===null&&runtime.signalCode===null){const exited=new Promise(resolve=>runtime.once('exit',resolve));runtime.kill(signal);await exited;}runtime=null;
-}
-async function open(url){
- try{await page.goto(url,{waitUntil:'networkidle'});}catch(error){const code=String(error.message).match(/net::ERR_[A-Z_]+/)?.[0]??'navigation_failed';throw Error('Authenticated browser navigation failed: '+code);}
-}
-async function api(path,body){
- return page.evaluate(async({path,body})=>{const response=await fetch('/api/v1/'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',headers:body===undefined?{}:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'});return {status:response.status,body:await response.json()};},{path,body});
-}
-async function ok(path,body){const result=await api(path,body);check(result.status===200,'Unexpected API status for '+path+': '+result.status+' '+(result.body?.error??'')+' '+(body?.request?.command??'')+' '+(body?.request?.mutation?.action??''));return result.body;}
-async function unlock(create=false){
- for(let attempt=0;attempt<2;attempt++){
-   await page.getByLabel('Workspace passphrase',{exact:true}).fill(passphrase);
-   const response=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/v1/unlock'&&response.request().method()==='POST');
-   await page.getByRole('button',{name:create?'Create workspace':'Unlock workspace',exact:true}).click();
-   if((await response).status()!==429)return;
-   // Release builds can reach passphrase fallback within the native unlock throttle.
-   await page.waitForTimeout(1000);
-  }
-  throw Error('Unlock remained rate-limited after the enforced one-second interval');
-}
-async function paste(source){
- await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toHaveAttribute('contenteditable','true');
- const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+A');
- await editor.evaluate((element,text)=>{const data=new DataTransfer();data.setData('text/plain',text);element.dispatchEvent(new ClipboardEvent('paste',{bubbles:true,cancelable:true,clipboardData:data}));},source);
-}
-async function dropReplies(command,count){
- await page.evaluate(({command,count})=>{const actual=window.fetch.bind(window);window.__acceptanceRestoreFetch=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const inputUrl=args[0] instanceof Request?args[0].url:String(args[0]);const inputBody=args[0] instanceof Request?await args[0].clone().text():args[1]?.body;const response=await actual(...args);if(inputUrl.endsWith('/api/v1/commands')&&JSON.parse(inputBody).request.command===command&&count-->0)throw new TypeError('Synthetic lost acknowledgement');return response;};},{command,count});
-}
-async function restoreReplies(){await page.evaluate(()=>{window.__acceptanceRestoreFetch?.();delete window.__acceptanceRestoreFetch;});}
-async function run(){
- const der=execFileSync('/usr/bin/openssl',['x509','-in',resolve(root,'.local/credentials/tls/localhost.pem'),'-outform','DER']);check(digest(der)===approved,'Certificate differs from approved fingerprint; runtime not started');
- await mkdir(resolve(root,'.local/artifacts'),{recursive:true});directory=await mkdtemp(resolve(root,'.local/artifacts/runtime-workflow-'));
- const launch=await start(true);browser=engine==='chromium'?await testBrowser():await webkit.launch({headless:true});const context=browser.contexts()[0]??await browser.newContext();page=context.pages()[0]??await context.newPage();await page.bringToFront();await page.setViewportSize({width:1600,height:1000});page.on('dialog',dialog=>dialog.accept());
- const commands=[];
- await page.exposeFunction('__observeAcceptanceCommand',command=>commands.push(command));
- await page.exposeFunction('__checkTypedPayload',({path,method,direction,value})=>{if(validateCurrentContract)assertBoundPayload(path,method,direction,value);});
- // Chromium's network event can omit a streamed Request body. Observe the exact
- // Request passed to native fetch instead; do not change its bytes or retry path.
- await page.addInitScript(bindings=>{const actual=window.fetch.bind(window);window.fetch=(...args)=>{
-  const url=args[0] instanceof Request?args[0].url:String(args[0]);
-  const path=new URL(url,location.origin).pathname,method=args[0] instanceof Request?args[0].method:args[1]?.method??'GET';
-  const binding=bindings.find(b=>b.path===path&&b.method===method),command=path==='/api/v1/commands';
-  if(!binding&&!command)return actual(...args);
-  const body=binding?.request||command?(args[0] instanceof Request?args[0].clone().text():Promise.resolve(args[1]?.body)):Promise.resolve(null);
-  const observed=body.then(async body=>{if(command)await window.__observeAcceptanceCommand(JSON.parse(body));return body;});
-  // Observe without delaying native dispatch or changing bytes. Validate successful
-  // pairs only, so intentional malformed requests still reach backend rejection.
-  // Credentials/source are transient; only synthetic commands support retry checks.
-  return Promise.all([actual(...args),observed]).then(async([response,body])=>{
-   if(binding&&response.ok){
-    if(binding.request)await window.__checkTypedPayload({path,method,direction:'request',value:JSON.parse(body)});
-    await window.__checkTypedPayload({path,method,direction:'response',value:await response.clone().json()});
-   }
-   return response;
-  });
- };},typedBindings);
- await open(launch);await expect(page.getByRole('button',{name:'Create workspace',exact:true})).toBeVisible();check(!new URL(page.url()).hash,'Launch capability retained in URL');
- const cookie=(await context.cookies()).find(cookie=>cookie.name==='__Host-hpx');check(cookie?.secure&&cookie.httpOnly&&cookie.sameSite==='Strict','Session cookie restrictions missing');checks.push('verified TLS, bootstrap fragment removal and restricted session cookie');
- const builtVersion=await page.evaluate(async()=>{const response=await fetch('/build-version.json',{cache:'no-store'});if(!response.ok)throw Error('Build version unavailable');return (await response.json()).version;});check(/^\d+\.\d+\.\d+\.[1-9]\d*$/.test(builtVersion),'Compiled build version must have four numeric parts');await expect(page.locator('#buildVersion')).toHaveText('v'+builtVersion);await expect(page.locator('#buildVersion')).toBeVisible();const versionBox=await page.locator('#buildVersion').boundingBox();check(versionBox&&versionBox.x<=20&&versionBox.y+versionBox.height>=980,'Build version is not at the bottom left');checks.push('executable embeds four-part test build version and footer shows it at bottom left while locked');
- const lockedMetadata=await ok('runtime');check(lockedMetadata.locked&&lockedMetadata.create&&lockedMetadata.contract===1&&lockedMetadata.mode==='trusted_server'&&lockedMetadata.ownership==='whole_document','Locked metadata changed API1 semantics');checks.push('generated runtime metadata schema matches the authenticated locked/create response without unlocking the workspace');
- const canonicalStatus=await ok('keychain/status',{}),legacyStatus=await ok('keychain/status',[]);check(JSON.stringify(canonicalStatus)===JSON.stringify(legacyStatus),'Legacy empty-sequence request changed status');check((await api('keychain/status',{unexpected:true})).status===400,'Keychain status accepted unknown fields');checks.push('typed keychain status preserves canonical and legacy empty bodies; unknown fields reject while the workspace stays locked');
- await unlock(true);await page.getByLabel('Document name',{exact:true}).fill('First synthetic document');await page.getByRole('button',{name:'Create document',exact:true}).click();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();
- const summaries=await ok('documents',{}),first=summaries[0].document,initial=await ok('editor',{document:first});check(initial.text==='','Unexpected initial source');
- for(const problem of [false,true]){
-  const response=await page.evaluate(async problem=>{const response=await fetch('/api/v1/commands',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json',Accept:problem?'application/problem+json':'application/json'},body:'{"operation":[],"request":{"command":"fork"}}'});return {status:response.status,type:response.headers.get('content-type'),bytes:await response.text()};},problem);
-  check(response.status===400,'Malformed Fork accepted');assertComponent(problem?'Problem':'LegacyError',JSON.parse(response.bytes));check(response.type===(problem?'application/problem+json':'application/json; charset=utf-8'),'Error negotiation changed legacy MIME');
-  if(problem)check(JSON.parse(response.bytes).status===response.status,'Problem status differs from HTTP');else check(Object.keys(JSON.parse(response.bytes)).join(',')==='error','Legacy error fields changed');
- }
- check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(initial),'Malformed Fork changed source');
- checks.push('generated Fork error schemas match actual HTTPS responses; strict malformed input preserves source and legacy JSON negotiation');
+import { spawn, execFileSync } from 'node:child_process';
 
- if(process.argv.includes('--audit-only')){
-  const source='# Audit contract\r\n\r\n| Claim | Value |\r\n| --- | --- |\r\n| 😀 | é |\r\n\r\n$$\r\nE=mc^2\r\n$$\r\n\r\n## Below audit widgets\r\n\r\nExact 中\rfinal';
-  await paste(source);const commit=page.getByRole('button',{name:'Commit',exact:true});await commit.click();await expect(commit).toBeEnabled();
-  const stored=await ok('editor',{document:first});check((await ok('snapshot',{document:first,snapshot:stored.snapshot})).text===source,'Audit setup changed exact source');
-  await page.locator('#runtimeBranches').click();const branches=page.getByRole('dialog',{name:'Document branches'});await branches.getByLabel('New branch name').fill('Audit child');await branches.getByRole('button',{name:'Create child branch',exact:true}).click();await expect(branches).toHaveCount(0);
-  await page.getByLabel('Maths display',{exact:true}).selectOption('rendered');await page.getByRole('button',{name:'Below audit widgets',exact:true}).click();
-  await exerciseDocumentAudit({page,ok,api,root,checks,database:join(directory,'synthetic.hpx'),unlock});
-  await writeFile(resolve(root,'.local/artifacts/runtime-audit-workflow.json'),JSON.stringify({checks,synthetic:true,binary_sha256:testedSha,version:builtVersion,openapi_sha256:testedSpecSha},null,2));passed=true;console.log('PASS: isolated audit workflow ('+checks.length+' checks); cleaning test resources');return;
- }
- if(process.argv.includes('--working-branches-only')){
- await exerciseHeadingLink({page,root,ok,paste,checks,document:first});
- await exerciseTextRelations({page,root,ok,api,checks,database:join(directory,'synthetic.hpx'),restart:async()=>{await stop('SIGKILL');await open(await start(false));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
- await exerciseDeparture({page,root,ok,paste,checks,dropReplies,restoreReplies,commands,restart:async()=>{await stop('SIGKILL');await open(await start(false));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
-  await exerciseWorkingBranches({page,root,checks,ok,api,paste,dropReplies,restoreReplies,compatReader,database:join(directory,'synthetic.hpx'),restart:async executable=>{await stop('SIGKILL');await open(await start(false,executable));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
-  await writeFile(resolve(root,'.local/artifacts/runtime-working-workflow.json'),JSON.stringify({checks,synthetic:true,advertisedCapabilities:true,binary_sha256:testedSha,version:builtVersion,openapi_sha256:testedSpecSha},null,2));passed=true;console.log('PASS: isolated working-branch workflow ('+checks.length+' checks); cleaning test resources');return;
- }
- const original='SYNTHETIC-CUSTODY-SENTINEL 😀e\u0301\r\nSecond line\nThird\rFourth';await paste(original);
- await expect.poll(async()=>(await ok('editor',{document:first})).text,{timeout:15000}).toBe(original);let state=await ok('editor',{document:first});check(JSON.stringify(state.snapshot)===JSON.stringify(initial.snapshot),'Autosave published immutable history');checks.push('five-second autosave preserves mixed newline/Unicode bytes without committing');
- const offset=commands.length,lost='Lost-save 😀\r\nAcknowledgement',latest='Later typing e\u0301\r\nExact source\n';
- await dropReplies('save',2);await paste(lost);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect(page.locator('#draftStatus')).toContainText('Save needs attention');check((await ok('editor',{document:first})).text===lost,'Dropped acknowledgement did not reach durable storage');
- await restoreReplies();await paste(latest);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(latest);
- const retries=commands.slice(offset);await writeFile(resolve(root,'.local/artifacts/runtime-save-retry-observation.json'),JSON.stringify(retries,null,2));check(retries.length>=4,'Missing retry observations');check(JSON.stringify(retries[0])===JSON.stringify(retries[1])&&JSON.stringify(retries[0])===JSON.stringify(retries[2]),'Unknown save changed operation identity or request');checks.push('lost save replies retry exact operation before queued newer source');
- await dropReplies('commit',2);await page.getByRole('button',{name:'Commit',exact:true}).click();await expect(page.locator('#draftStatus')).toContainText('Save needs attention');const committed=await ok('editor',{document:first}),commitRequest=commands.filter(c=>c.request.command==='commit').at(-1);await restoreReplies();await page.getByRole('button',{name:'Commit',exact:true}).click();
- await expect(page.locator('#draftStatus')).not.toContainText('Save needs attention');state=await ok('editor',{document:first});check(JSON.stringify(state.snapshot)===JSON.stringify(committed.snapshot),'Uncertain commit retry created another snapshot');check(JSON.stringify(commands.filter(c=>c.request.command==='commit').at(-1))===JSON.stringify(commitRequest),'Commit retry changed operation identity');check((await ok('snapshot',{document:first,snapshot:committed.snapshot})).text===latest,'Committed snapshot differs from exact source');checks.push('unknown commit reconciles one immutable revision/snapshot');
- const creationOffset=commands.length;await page.evaluate(()=>{window.__creationWindowSentinel=true;});await dropReplies('create',2);
- page.removeAllListeners('dialog');page.once('dialog',dialog=>dialog.accept('Second synthetic document'));await page.getByRole('button',{name:'New document',exact:true}).click();await expect(page.getByRole('button',{name:'Retry new document',exact:true})).toBeVisible();page.on('dialog',dialog=>dialog.accept());
- for(const theme of ['dark','light']){if(theme==='light')await page.evaluate(()=>document.body.classList.toggle('light'));for(const width of [1280,2000]){await page.setViewportSize({width,height:1000});await page.screenshot({path:resolve(root,`.local/artifacts/runtime-create-retry-${theme}-${width}.png`),animations:'disabled'});}}await page.evaluate(()=>document.body.classList.toggle('light'));await page.setViewportSize({width:1600,height:1000});
- const typingDuringCreation=latest+'Typing during uncertain creation 😀\r\n';await paste(typingDuringCreation);await restoreReplies();await page.getByRole('button',{name:'Retry new document',exact:true}).click();await expect(page.getByRole('button',{name:'Second synthetic document',exact:true})).toBeVisible();
- check(await page.evaluate(()=>window.__creationWindowSentinel===true),'Document creation reloaded the page');const creations=commands.slice(creationOffset).filter(c=>c.request.command==='create');check(creations.length===3&&creations.every(c=>JSON.stringify(c)===JSON.stringify(creations[0])),'Creation retry changed frozen operation');check((await ok('documents',{})).length===2,'Creation retry duplicated documents');
- await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(typingDuringCreation);check((await ok('snapshot',{document:first,snapshot:committed.snapshot})).text===latest,'Creating a document implicitly committed the source');
- checks.push('unknown new-document replies reconcile without reload, duplicate creation or losing later source typing');
- await page.getByRole('button',{name:'Second synthetic document',exact:true}).click();const other='Independent second document 😀\r\n';await paste(other);await page.getByRole('button',{name:'Save draft',exact:true}).click();const all=await ok('documents',{}),second=all.find(item=>item.title==='Second synthetic document').document;check((await ok('editor',{document:second})).text===other,'Second document source differs');await page.getByRole('button',{name:'First synthetic document',exact:true}).click();check((await ok('editor',{document:first})).text===typingDuringCreation,'Document switch lost typing during creation');await paste(latest);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(latest);checks.push('document creation and switching preserve independent owned buffers');
- await page.getByRole('button',{name:'Lock',exact:true}).click();await expect(page.getByRole('button',{name:'Unlock workspace',exact:true})).toBeVisible();check((await api('editor',{document:first})).status===423,'Locked runtime still exposes editor data');await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();checks.push('lock drops runtime authority; passphrase unlock restores acknowledged source');
- const recovery='SYNTHETIC-CUSTODY-SENTINEL recovery 😀\r\nUncommitted e\u0301\n';await paste(recovery);await expect.poll(async()=>(await ok('editor',{document:first})).text,{timeout:15000}).toBe(recovery);await stop('SIGKILL');const restarted=await start(false);await open(restarted);await expect(page.getByRole('button',{name:'Unlock workspace',exact:true})).toBeVisible();await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();check((await ok('editor',{document:first})).text===recovery,'Abrupt restart lost acknowledged draft');check((await ok('editor',{document:second})).text===other,'Restart changed other document');checks.push('abrupt process restart recovers acknowledged uncommitted drafts');
- check((await ok('snapshot',{document:first,snapshot:initial.snapshot})).text==='','Initial historical snapshot changed');check((await ok('snapshot',{document:first,snapshot:committed.snapshot})).text===latest,'Committed historical snapshot changed');const receipt=await ok('commands',commitRequest);check(JSON.stringify(receipt.outcome.snapshot)===JSON.stringify(committed.snapshot),'Persisted retry receipt changed after restart');check((await ok('editor',{document:first})).text===recovery,'Historical receipt retry altered current draft');checks.push('exact old/new historical reconstruction and receipt retry survive restart');
- // Populate a second immutable page, then reload the adapter's exact current base.
- for(let i=0;i<14;i++){const current=await ok('editor',{document:first});await ok('commands',{operation:[...randomBytes(32)],request:{command:'commit',document:first,generation:current.generation,base:current.base,sequence:current.acknowledged_sequence}});}
- await page.reload({waitUntil:'networkidle'});await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();
- const beforeHistory=await ok('editor',{document:first});
- await page.locator('[data-investigation="History"]').click();await expect(page.locator('#investigationBody')).toContainText('History page 1');
- check(await page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true}).count()===12,'History did not bound its first page');
- let observedHistory=0;const observe=request=>{if((request.url().endsWith('/api/v1/history')||request.url().endsWith('/api/v1/branches/history/page')))observedHistory++;};page.on('request',observe);
- await page.getByRole('textbox',{name:'Markdown document editor'}).click();await page.keyboard.press('ArrowRight');await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));check(observedHistory===0,'Selection changes refetched retained history');page.off('request',observe);
- await page.evaluate(()=>{const actual=window.fetch.bind(window);let delay=true;let started;window.__historyStarted=new Promise(resolve=>{started=resolve;});window.__restoreHistoryFetch=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const inputUrl=args[0] instanceof Request?args[0].url:String(args[0]);const inputBody=args[0] instanceof Request?await args[0].clone().text():args[1]?.body;const response=await actual(...args);if((inputUrl.endsWith('/api/v1/history')||inputUrl.endsWith('/api/v1/branches/history/page'))&&delay){delay=false;started();await new Promise(resolve=>{window.__releaseHistory=resolve;});}return response;};});
- try{
-  await page.getByRole('button',{name:'Refresh',exact:true}).click();await page.evaluate(()=>Promise.race([window.__historyStarted,new Promise((_,reject)=>setTimeout(()=>reject(Error('History refresh interception timed out')),10000))]));
-  await page.getByRole('button',{name:'Second synthetic document',exact:true}).click();await expect(page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true})).toHaveCount(2);
-  await page.evaluate(()=>window.__releaseHistory());await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));await expect(page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true})).toHaveCount(2);
- }finally{await page.evaluate(()=>{window.__releaseHistory?.();window.__restoreHistoryFetch?.();delete window.__releaseHistory;delete window.__restoreHistoryFetch;delete window.__historyStarted;});}
- await page.getByRole('button',{name:'First synthetic document',exact:true}).click();await expect(page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true})).toHaveCount(12);
- checks.push('selection changes do not refetch history; stale replies cannot replace another document history');
- await page.getByRole('button',{name:'Older',exact:true}).click();await expect(page.locator('#investigationBody')).toContainText('History page 2');
- const olderPage=await ok('history',{document:first,next:(await ok('history',{document:first,next:null,limit:12})).next,limit:12});
- const historicalIndex=olderPage.entries.findIndex(entry=>JSON.stringify(entry.snapshot)===JSON.stringify(committed.snapshot));check(historicalIndex>=0,'Original committed snapshot not retained on older page');
- await page.locator('#investigationBody').getByRole('button',{name:'View snapshot',exact:true}).nth(historicalIndex).click();
- const historicalDialog=page.getByRole('dialog');await expect(historicalDialog).toContainText('Historical snapshot · read only');check(await historicalDialog.locator('pre').textContent()===latest,'Historical UI substituted current source');
- const downloading=page.waitForEvent('download');await historicalDialog.getByRole('button',{name:'Download snapshot',exact:true}).click();const download=await downloading;check((await readFile(await download.path())).equals(Buffer.from(latest)),'Historical download normalized exact bytes');
- await historicalDialog.getByRole('button',{name:'Close',exact:true}).click();
- await page.locator('#investigationBody').getByRole('button',{name:'Compare with latest committed',exact:true}).nth(historicalIndex).click();
- const comparison=page.getByRole('dialog');await expect(comparison).toContainText('Compare committed snapshots');check(await comparison.getByLabel('Selected historical snapshot',{exact:true}).textContent()===latest,'Comparison changed historical bytes');check(await comparison.getByLabel('Latest committed snapshot',{exact:true}).textContent()===recovery,'Comparison substituted current draft or wrong committed snapshot');
- for(const theme of ['dark','light']){if(theme==='light')await page.evaluate(()=>document.body.classList.toggle('light'));await page.screenshot({path:resolve(root,`.local/artifacts/runtime-history-comparison-${theme}.png`),animations:'disabled'});}await page.evaluate(()=>document.body.classList.toggle('light'));
- await comparison.getByRole('button',{name:'Close',exact:true}).click();
- checks.push('read-only exact historical/current committed snapshot comparison excludes draft edits');
- check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeHistory),'History browsing changed the current editor state');
- await page.getByRole('button',{name:'Newer',exact:true}).click();await expect(page.locator('#investigationBody')).toContainText('History page 1');checks.push('bounded two-page history UI and exact historical download leave current state unchanged');
- await exerciseHistoryIsolation({page,root,checks});check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeHistory),'History inspection isolation changed editor state');
+import { mkdtemp, rm, readFile, readdir, stat, mkdir, writeFile } from 'node:fs/promises';
 
- const clipboardRequest={generation:null,offset:0,limit:16};check((await ok('clipboard',clipboardRequest)).total===0,'Fresh private clipboard is not empty');
- const copyOffset=commands.length;await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');
- await dropReplies('clipboard',2);await page.getByRole('button',{name:'Copy source reference',exact:true}).click();await expect(page.getByRole('button',{name:'Retry clipboard operation',exact:true})).toBeVisible();
- const captured=await ok('clipboard',clipboardRequest);check(captured.total===1&&captured.generation===1,'Lost capture reply did not reach private storage');
- await restoreReplies();await page.getByRole('button',{name:'Retry clipboard operation',exact:true}).click();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
- const copies=commands.slice(copyOffset).filter(command=>command.request.command==='clipboard');check(copies.length===3&&copies.every(copy=>JSON.stringify(copy)===JSON.stringify(copies[0])),'Clipboard retry changed its frozen operation');
- check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeHistory),'Clipboard capture modified source state or history');
- await page.locator('.clipboard .clip-chip > button').first().click();check(await page.getByRole('dialog').locator('pre').textContent()===recovery,'Captured source preview changed exact bytes');await page.getByRole('button',{name:'Close',exact:true}).click();
- await paste('Uncommitted clipboard source 😀\r\n');await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe('Uncommitted clipboard source 😀\r\n');
- await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');await page.getByRole('button',{name:'Copy source reference',exact:true}).click();await expect(page.locator('.working-references .clip-chip')).toHaveCount(1);check((await ok('clipboard',clipboardRequest)).generation===1,'Working copy changed committed private state');await page.getByRole('button',{name:'Clear working references',exact:true}).click();await expect(page.locator('.working-references .clip-chip')).toHaveCount(0);
- await paste(recovery);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(recovery);
- await stop();await open(await start(false));await expect(page.getByRole('button',{name:'Unlock workspace',exact:true})).toBeVisible();check((await api('clipboard',clipboardRequest)).status===423,'Locked runtime exposes private clipboard');await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
- const restartedClipboard=await ok('clipboard',clipboardRequest);check(JSON.stringify(restartedClipboard.entries[0].id)===JSON.stringify(captured.entries[0].id),'Restart replaced captured reference identity');
- await page.getByRole('button',{name:'Remove captured source from First synthetic document',exact:true}).click();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(0);check((await ok('snapshot',{document:first,snapshot:captured.entries[0].source.snapshot})).text===recovery,'Clipboard removal deleted source history');
- await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');await page.getByRole('button',{name:'Copy source reference',exact:true}).click();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
- await page.locator('.clipboard').getByRole('button',{name:'Clear all',exact:true}).click();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(0);
- await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');await page.getByRole('button',{name:'Copy source reference',exact:true}).click();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
- checks.push('private clipboard exact capture/retry, separate working-source capture, locked restart recovery, removal and clear retain source history');
- const forkSource=await ok('editor',{document:first}),forkOffset=commands.length;
- await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');
- await page.locator('#forkSelection').click();await page.getByLabel('Fork name',{exact:true}).fill('Durable synthetic fork');
- check(await page.getByRole('dialog').locator('pre').textContent()===recovery,'Fork review normalized source bytes');
- await page.screenshot({path:resolve(root,'.local/artifacts/runtime-fork-review.png'),animations:'disabled'});
- await page.evaluate(()=>document.body.classList.toggle('light'));await page.screenshot({path:resolve(root,'.local/artifacts/runtime-fork-review-light.png'),animations:'disabled'});await page.evaluate(()=>document.body.classList.toggle('light'));
- await dropReplies('fork',2);await page.getByRole('button',{name:'Create fork',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('Synthetic lost acknowledgement');
- await page.getByRole('button',{name:'Cancel',exact:true}).click();await expect(page.getByRole('button',{name:'Retry fork',exact:true})).toBeVisible();
- const createdForks=(await ok('documents',{})).filter(d=>d.title==='Durable synthetic fork');check(createdForks.length===1,'Unknown fork reply duplicated output');const forkDocument=createdForks[0].document;
- await restoreReplies();await page.getByRole('button',{name:'Retry fork',exact:true}).click();await expect(page.locator('#documentTitle')).toHaveText('Durable synthetic fork');
- const forkCommands=commands.slice(forkOffset).filter(c=>c.request.command==='fork');for(const command of forkCommands)assertComponent('ForkExecute',command);
- const forkReceipt=await ok('commands',forkCommands[0]);assertComponent('ForkReceipt',forkReceipt);check(JSON.stringify(forkReceipt.operation)===JSON.stringify(forkCommands[0].operation),'Fork receipt operation changed');
- check(forkCommands.length===3&&forkCommands.every(c=>JSON.stringify(c)===JSON.stringify(forkCommands[0])),'Fork retry changed frozen intent');
- const initialFork=await ok('editor',{document:forkDocument}),derivation=await ok('derivation',{document:forkDocument});
- check(initialFork.text===recovery&&JSON.stringify(initialFork.node)!==JSON.stringify(forkSource.node),'Fork lost independent identity or exact source');
- check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(forkSource),'Fork mutated source draft/history');
- check(derivation.kind==='fork'&&JSON.stringify(derivation.inputs[0].snapshot)===JSON.stringify(forkSource.snapshot)&&JSON.stringify(derivation.outputs[0].snapshot)===JSON.stringify(initialFork.snapshot),'Fork derivation is not pinned');
- const firstForkHistory=await ok('history',{document:forkDocument,next:null,limit:12});check(firstForkHistory.entries.length===1&&firstForkHistory.entries[0].parent===null,'Fork incorrectly shares source revision ancestry');
- await page.locator('[data-investigation="Provenance"]').click();await expect(page.getByRole('button',{name:'Inspect exact fork source',exact:true})).toBeVisible();await page.getByRole('button',{name:'Inspect exact fork source',exact:true}).click();check(await page.getByRole('dialog').locator('pre').textContent()===recovery,'Fork provenance resolved current draft instead of captured source');await page.getByRole('button',{name:'Close',exact:true}).click();
- const editedFork='Independent fork edit 😀\r\n';await paste(editedFork);await page.getByRole('button',{name:'Commit',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:forkDocument})).text).toBe(editedFork);
- check(JSON.stringify(await ok('derivation',{document:forkDocument}))===JSON.stringify(derivation),'Later revision rewrote original derivation');check((await ok('editor',{document:first})).text===recovery,'Destination edit changed source');
- await stop();await open(await start(false));await expect(page.getByRole('button',{name:'Unlock workspace',exact:true})).toBeVisible();check((await api('derivation',{document:forkDocument})).status===423,'Locked runtime exposes derivation');await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();
- check(JSON.stringify(await ok('derivation',{document:forkDocument}))===JSON.stringify(derivation),'Restart lost derivation');check((await ok('snapshot',{document:forkDocument,snapshot:initialFork.snapshot})).text===recovery,'Restart lost initial fork snapshot');
- checks.push('durable independent fork with frozen lost-reply recovery, exact provenance inspection, separate edits/history and locked restart recovery');
- const assertionBaseline=await exerciseAssertionOverlay({page,ok,first,recovery,paste,dropReplies,restoreReplies,commands,check,root,checks});
- const mergeBaseline=await exerciseReviewedMerge({page,ok,api,first,forkDocument,recovery,root,commands,dropReplies,restoreReplies,start,stop,open,unlock,check,checks});
- const commentBaseline=await exerciseComments({page,ok,api,first,second,recovery,commands,dropReplies,restoreReplies,root,check,checks});
- const capability=await ok('runtime');
- if(capability.keychain_supported){
-  await page.getByRole('button',{name:'Keychain',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('Keep your passphrase for recovery');
-  await page.screenshot({path:resolve(root,'.local/artifacts/runtime-keychain-before-enrollment.png'),animations:'disabled'});
-  nativeEnrollmentAttempted=true;await page.getByRole('button',{name:'Enable keychain unlock',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('Keychain enrollment confirmed',{timeout:30000});await page.getByRole('button',{name:'Close',exact:true}).click();
-  check((await ok('keychain/status',{})).enrolled,'UI enrollment was not durable');
-  await page.getByRole('button',{name:'Lock',exact:true}).click();await expect(page.getByRole('button',{name:'Unlock with macOS Keychain',exact:true})).toBeVisible();
-  await page.screenshot({path:resolve(root,'.local/artifacts/runtime-keychain-unlock.png'),animations:'disabled'});
-  await page.getByRole('button',{name:'Unlock with macOS Keychain',exact:true}).click();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible({timeout:30000});
-  check((await ok('editor',{document:first})).text===beforeHistory.text,'Native UI unlock changed source');
-  await page.getByRole('button',{name:'Lock',exact:true}).click();await expect(page.getByRole('button',{name:'Unlock workspace',exact:true})).toBeVisible();await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();
-  await page.getByRole('button',{name:'Keychain',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('Your passphrase remains available');await page.screenshot({path:resolve(root,'.local/artifacts/runtime-keychain-enrolled.png'),animations:'disabled'});
-  await page.getByRole('button',{name:'Remove keychain unlock',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('Keychain enrollment removed.');nativeEnrollmentAttempted=false;await page.getByRole('button',{name:'Close',exact:true}).click();
-  check(!(await ok('keychain/status',{})).enrolled,'UI removal retained enrollment');checks.push('explicit keychain UI enrollment, native unlock, passphrase fallback and scoped removal');
- }
- if(compatReader){
-  check(digest(await readFile(compatReader))===compatReader.split('/').at(-1),'Compatibility binary does not match its immutable snapshot name');
-  const privateHash=()=>execFileSync('python3',['-c','import sqlite3,sys,pathlib,hashlib; db=sqlite3.connect(pathlib.Path(sys.argv[1]).as_uri()+"?mode=ro",uri=True); rows=db.execute("SELECT id,generation,envelope FROM slots WHERE kind>=10 UNION ALL SELECT id,0,envelope FROM objects WHERE kind>=10 ORDER BY id").fetchall(); h=hashlib.sha256(); [(h.update(i),h.update(g.to_bytes(8,"big")),h.update(e)) for i,g,e in rows]; print(h.hexdigest())',join(directory,'synthetic.hpx')],{encoding:'utf8'}).trim();
-  const protectedBefore=privateHash(),before=await ok('clipboard',clipboardRequest);
-  await stop();await open(await start(false,compatReader));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();
-  check(!(await ok('runtime')).capabilities.includes('private_clipboard'),'Compatibility reader already implements the new clipboard');
-  const old=await ok('editor',{document:first});check(old.text===recovery,'Old reader changed current source');
-  const saved=await ok('commands',{operation:[...randomBytes(32)],request:{command:'save',document:first,generation:old.generation,base:old.base,previous_sequence:old.acknowledged_sequence,sequence:old.acknowledged_sequence+1,text:old.text}});
-  await ok('commands',{operation:[...randomBytes(32)],request:{command:'commit',document:first,generation:saved.outcome.generation,base:old.base,sequence:saved.outcome.sequence}});
-  const oldFork=await ok('editor',{document:forkDocument});check(oldFork.text===editedFork,'Old reader lost fork content');
-  const oldForkSaved=await ok('commands',{operation:[...randomBytes(32)],request:{command:'save',document:forkDocument,generation:oldFork.generation,base:oldFork.base,previous_sequence:oldFork.acknowledged_sequence,sequence:oldFork.acknowledged_sequence+1,text:oldFork.text}});
-  await ok('commands',{operation:[...randomBytes(32)],request:{command:'commit',document:forkDocument,generation:oldForkSaved.outcome.generation,base:oldFork.base,sequence:oldForkSaved.outcome.sequence}});
-  const oldMerge=await ok('editor',{document:mergeBaseline.document});check(oldMerge.text===mergeBaseline.text,'Old reader lost reviewed synthesis content');
-  const oldMergeSaved=await ok('commands',{operation:[...randomBytes(32)],request:{command:'save',document:mergeBaseline.document,generation:oldMerge.generation,base:oldMerge.base,previous_sequence:oldMerge.acknowledged_sequence,sequence:oldMerge.acknowledged_sequence+1,text:oldMerge.text}});
-  await ok('commands',{operation:[...randomBytes(32)],request:{command:'commit',document:mergeBaseline.document,generation:oldMergeSaved.outcome.generation,base:oldMerge.base,sequence:oldMergeSaved.outcome.sequence}});
-  check(privateHash()===protectedBefore,'Old reader rewrote optional protected clipboard/derivation state');
-  await stop();await open(await start(false));await unlock();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
-  check(JSON.stringify(await ok('clipboard',clipboardRequest))===JSON.stringify(before),'Old reader changed the pinned private reference');
-  check(JSON.stringify(await ok('derivation',{document:forkDocument}))===JSON.stringify(derivation),'Old reader changed pinned derivation');
-  check(JSON.stringify(await ok('assertions',assertionBaseline.input))===JSON.stringify(assertionBaseline.view),'Old reader changed versioned assertion overlay');
-  check(JSON.stringify(await ok('merge',{document:mergeBaseline.document}))===JSON.stringify(mergeBaseline.event),'Old reader changed reviewed synthesis evidence');
-  check(JSON.stringify(await ok('comments',commentBaseline.input))===JSON.stringify(commentBaseline.view),'Old reader changed immutable retrospective comments');
-  checks.push('pre-clipboard/fork/assertion reader opens/saves/commits both documents while preserving optional ciphertext and exact overlays byte-for-byte');
- }
- await page.locator('[data-investigation="History"]').click();await expect(page.locator('#investigationBody')).toContainText('History page 1');
+import { resolve, join } from 'node:path';
 
+import { createHash, randomBytes } from 'node:crypto';
 
- const capturedBeforeFork=await ok('clipboard',clipboardRequest),newerSource='Newer uncommitted source 😀\r\n';
- await paste(newerSource);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(newerSource);
- const newerEditor=await ok('editor',{document:first});
- await page.locator('[data-interaction="Comments"]').click();await expect(page.locator('.comment-card')).toHaveCount(8);await page.locator('#interactionBody').getByRole('button',{name:'Inspect comment passage',exact:true}).first().click();check(await page.getByRole('dialog',{name:'Comment passage · read only'}).locator('pre').textContent()===recovery,'Retained comment followed changed draft text');await page.keyboard.press('Escape');check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(newerEditor),'Comment inspection changed newer draft');checks.push('retained comments inspect exact earlier passages after newer source edits without relocating anchors');
- await page.locator('[data-investigation="History"]').click();await page.locator('#investigationBody').getByRole('button',{name:'Compare with latest committed',exact:true}).first().click();await expect(page.getByRole('dialog')).toContainText('These snapshots contain exactly the same bytes.');check(await page.getByRole('dialog').getByLabel('Latest committed snapshot',{exact:true}).textContent()===recovery,'Comparison included newer uncommitted draft');check((await ok('editor',{document:first})).text===newerSource,'Read-only comparison changed draft');await page.getByRole('dialog').getByRole('button',{name:'Close',exact:true}).click();
+import { createServer } from 'node:net';
 
- await page.locator('.clipboard .clip-chip > button').first().click();check(await page.getByRole('dialog').locator('pre').textContent()===recovery,'Captured fork review followed newer source');await page.getByLabel('Fork name',{exact:true}).fill('Captured historic fork');
- for(const theme of ['dark','light']){if(theme==='light')await page.evaluate(()=>document.body.classList.toggle('light'));await page.screenshot({path:resolve(root,`.local/artifacts/runtime-captured-fork-${theme}.png`),animations:'disabled'});}await page.evaluate(()=>document.body.classList.toggle('light'));
- await page.getByRole('button',{name:'Fork captured source',exact:true}).click();await expect(page.locator('#documentTitle')).toHaveText('Captured historic fork');
- const historicFork=(await ok('documents',{})).find(d=>d.title==='Captured historic fork').document;
- check((await ok('editor',{document:historicFork})).text===recovery,'Captured-reference fork changed exact historical bytes');
- const departedSource=await ok('editor',{document:first});check(departedSource.text===newerEditor.text,'Captured-reference Fork departure changed newer source bytes');check((await ok('snapshot',{document:first,snapshot:departedSource.snapshot})).text===newerSource,'Leaving source for captured-reference Fork did not publish current text');check((await ok('snapshot',{document:first,snapshot:newerEditor.snapshot})).text===recovery,'Departure changed the earlier source snapshot');
- check(JSON.stringify(await ok('clipboard',clipboardRequest))===JSON.stringify(capturedBeforeFork),'Fork consumed or changed protected reference');
- const historicDerivation=await ok('derivation',{document:historicFork});check(JSON.stringify(historicDerivation.inputs[0])===JSON.stringify(capturedBeforeFork.entries[0].source),'Captured-reference fork changed pinned binding');
- await stop();await open(await start(false));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();check(JSON.stringify(await ok('derivation',{document:historicFork}))===JSON.stringify(historicDerivation),'Restart changed captured-reference derivation');
- await paste(recovery);await page.getByRole('button',{name:'Save draft',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:first})).text).toBe(recovery);
- checks.push('reviewed historical clipboard Fork retains pinned input/private reference across restart while departure publishes newer source without changing its bytes');
+import { chromium, webkit, expect } from '@playwright/test';
 
- const widgetSource='# Widget capture\r\n\r\nBefore the table.\r\n\r\n| Term | Value |\r\n| --- | --- |\r\n| Exact 😀 | e\u0301 |\r\n\r\n$$\r\nE=mc^2\r\n$$\r\n\r\n## After widgets\r\n\r\nExact text below table and maths.\r\n';
- await page.getByRole('button',{name:'Second synthetic document',exact:true}).click();await paste(widgetSource);await page.getByRole('button',{name:'Commit',exact:true}).click();await expect.poll(async()=>(await ok('editor',{document:second})).text).toBe(widgetSource);
- await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');await page.getByRole('button',{name:'Copy source reference',exact:true}).click();await expect(page.locator('.clipboard .clip-chip')).toHaveCount(2);
- await page.getByRole('button',{name:'First synthetic document',exact:true}).click();
- const beforeGraph=await ok('editor',{document:first});
- await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await page.keyboard.press('ControlOrMeta+A');
- await page.locator('[data-lens="Graph"]').click();await page.getByRole('button',{name:'Choose graph nodes',exact:true}).click();
- const graphDialog=page.getByRole('dialog');await expect(graphDialog).toContainText('Role lines identify historical participants');
- for(const box of await graphDialog.getByRole('checkbox').all())await box.check();
- await graphDialog.getByRole('button',{name:'Show graph',exact:true}).click();await expect(graphDialog.locator('.graph-node')).toHaveCount(5);await expect(graphDialog.locator('.graph-edge')).toHaveCount(2);
- const graphIds=(await ok('documents',{})).map(d=>d.document),graphProjection=await ok('graph',{documents:graphIds});check(graphProjection.nodes.length===5&&graphProjection.edges.length===2,'Graph query lost selected document/fork scope');
- await graphDialog.locator('.graph-edge').first().focus();await page.keyboard.press('Enter');await expect(graphDialog.locator('.graph-inspection')).toContainText('Recorded Fork');await graphDialog.getByRole('button',{name:'Inspect exact fork source',exact:true}).click();check(await page.getByRole('dialog').filter({hasText:'Graph fork source · read only'}).locator('pre').textContent()===recovery,'Graph replaced pinned source with current document');await page.getByRole('button',{name:'Close source',exact:true}).click();
- for(const theme of ['dark','light']){if(theme==='light')await page.evaluate(()=>document.body.classList.toggle('light'));for(const width of [1280,1600,2000]){await page.setViewportSize({width,height:1000});await page.screenshot({path:resolve(root,`.local/artifacts/runtime-graph-${theme}-${width}.png`),animations:'disabled'});check(await graphDialog.evaluate(d=>{const r=d.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight;}),'Graph dialog exceeds desktop bounds');}}await page.evaluate(()=>document.body.classList.toggle('light'));await page.setViewportSize({width:1600,height:1000});
- await page.evaluate(()=>{const actual=window.fetch.bind(window);window.__restoreGraphFetch=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const inputUrl=args[0] instanceof Request?args[0].url:String(args[0]);const inputBody=args[0] instanceof Request?await args[0].clone().text():args[1]?.body;const response=await actual(...args);if(inputUrl.endsWith('/api/v1/graph')){window.__graphStarted=true;await new Promise(resolve=>{window.__releaseGraph=resolve;});}return response;};});
- try{
-  await graphDialog.getByRole('button',{name:'Show graph',exact:true}).click();await expect.poll(()=>page.evaluate(()=>!!window.__graphStarted)).toBe(true);
-  const firstBox=graphDialog.getByRole('checkbox').first();await firstBox.uncheck();await expect(graphDialog.locator('.graph-node')).toHaveCount(0);await page.evaluate(()=>window.__releaseGraph());await expect(graphDialog.getByRole('status')).toContainText('Selection changed');await firstBox.check();
- }finally{await page.evaluate(()=>{window.__releaseGraph?.();window.__restoreGraphFetch?.();delete window.__releaseGraph;delete window.__restoreGraphFetch;delete window.__graphStarted;});}
- await graphDialog.getByRole('button',{name:'Close',exact:true}).click();
- const selectedAfterGraph=await page.getByRole('textbox',{name:'Markdown document editor'}).evaluate(element=>{const data=new DataTransfer();element.dispatchEvent(new ClipboardEvent('copy',{bubbles:true,cancelable:true,clipboardData:data}));return data.getData('text/plain');});check(selectedAfterGraph===recovery,'Graph changed exact editor selection');
- check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeGraph),'Graph inspection mutated editor/head/history');
- await page.locator('[data-lens="Workspace"]').click();checks.push('read-only selected document/Fork graph with labelled nodes/direction, exact source inspection, stale-result isolation and desktop themes/widths preserves source/selection');
- await page.locator('[data-lens="Graph"]').click();await page.getByRole('button',{name:'Choose graph nodes',exact:true}).click();const semanticGraphDialog=page.getByRole('dialog');
- await semanticGraphDialog.getByRole('button',{name:'Load retained assertions',exact:true}).click();await semanticGraphDialog.getByRole('checkbox',{name:/Grouped claims/}).check();await semanticGraphDialog.getByRole('button',{name:'Show graph',exact:true}).click();
- await expect(semanticGraphDialog.locator('.graph-node')).toHaveCount(2);await expect(semanticGraphDialog.locator('.graph-node[data-kind="assertion"]')).toHaveCount(1);await expect(semanticGraphDialog.locator('.graph-edge[data-kind="participant"]')).toHaveCount(3);check(await semanticGraphDialog.locator('.graph-edge[data-kind="participant"] [marker-end]').count()===0,'Role incidence was rendered as an inferred causal/logical arrow');
- const overlayProjection=await ok('graph/overlay',{nodes:[{kind:'document',document:first},{kind:'assertion',node:assertionBaseline.nary}]});check(overlayProjection.edges.length===3&&overlayProjection.nodes.length===2,'N-ary projection became independent binary facts');
- await semanticGraphDialog.locator('.graph-edge[data-kind="participant"]').first().focus();await page.keyboard.press('Enter');await semanticGraphDialog.getByRole('button',{name:'Inspect exact participant source',exact:true}).click();check(await page.getByRole('dialog').filter({hasText:'Graph assertion participant · read only'}).locator('pre').textContent()===assertionBaseline.narySource,'Graph incidence substituted current source text');await page.getByRole('button',{name:'Close source',exact:true}).click();
- await semanticGraphDialog.locator('.graph-node[data-kind="assertion"]').focus();await page.keyboard.press('Enter');await expect(semanticGraphDialog.locator('.graph-inspection')).toContainText('not a checked proof');
- for(const theme of ['dark','light']){if(theme==='light')await page.evaluate(()=>document.body.classList.toggle('light'));for(const width of [1280,1600,2000]){await page.setViewportSize({width,height:1000});await page.screenshot({path:resolve(root,`.local/artifacts/runtime-overlay-graph-${theme}-${width}.png`),animations:'disabled'});}}await page.evaluate(()=>document.body.classList.toggle('light'));await page.setViewportSize({width:1600,height:1000});
- await page.evaluate(()=>{const actual=window.fetch.bind(window);window.__restoreOverlayGraph=()=>{window.fetch=actual;};window.fetch=async(...args)=>{const inputUrl=args[0] instanceof Request?args[0].url:String(args[0]);const inputBody=args[0] instanceof Request?await args[0].clone().text():args[1]?.body;const response=await actual(...args);if(inputUrl.endsWith('/api/v1/graph/overlay')){window.__overlayGraphStarted=true;await new Promise(resolve=>{window.__releaseOverlayGraph=resolve;});}return response;};});
- try{await semanticGraphDialog.getByRole('button',{name:'Show graph',exact:true}).click();await expect.poll(()=>page.evaluate(()=>!!window.__overlayGraphStarted)).toBe(true);await semanticGraphDialog.getByRole('checkbox',{name:/Grouped claims/}).uncheck();await page.evaluate(()=>window.__releaseOverlayGraph());await expect(semanticGraphDialog.locator('.graph-node')).toHaveCount(0);await expect(semanticGraphDialog.getByRole('status')).toContainText('Selection changed');}
- finally{await page.evaluate(()=>{window.__releaseOverlayGraph?.();window.__restoreOverlayGraph?.();delete window.__releaseOverlayGraph;delete window.__restoreOverlayGraph;delete window.__overlayGraphStarted;});}
- await semanticGraphDialog.getByRole('button',{name:'Close',exact:true}).click();await page.locator('[data-lens="Workspace"]').click();check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeGraph),'Semantic graph mutated source/head/history');
- const selectedAfterSemanticGraph=await page.getByRole('textbox',{name:'Markdown document editor'}).evaluate(element=>{const data=new DataTransfer();element.dispatchEvent(new ClipboardEvent('copy',{bubbles:true,cancelable:true,clipboardData:data}));return data.getData('text/plain');});check(selectedAfterSemanticGraph===recovery,'Semantic graph changed exact editor selection');
- checks.push('selected assertion node graph preserves three ordered n-ary incidences, exact historical ranges, evidence status and stale-view isolation in desktop themes/widths');
- await exerciseMergeGraph({page,ok,first,mergeBaseline,recovery,root,check,checks});
- for(let index=(await ok('documents',{})).length+1;index<=17;index++)await ok('commands',{operation:[...randomBytes(32)],request:{command:'create',title:`Graph boundary node ${index}`,text:'Synthetic graph boundary only.'}});
- const boundaryDocuments=(await ok('documents',{})).map(d=>d.document);check((await api('graph',{documents:boundaryDocuments})).status===400,'Graph accepted more than 16 selected nodes');
- await page.reload({waitUntil:'networkidle'});await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();await page.locator('[data-lens="Graph"]').click();await page.getByRole('button',{name:'Choose graph nodes',exact:true}).click();
- const boundaryDialog=page.getByRole('dialog');for(const box of await boundaryDialog.getByRole('checkbox').all())await box.check();await boundaryDialog.getByRole('button',{name:'Show graph',exact:true}).click();await expect(boundaryDialog.getByRole('status')).toContainText('between 1 and 16');await expect(boundaryDialog.locator('.graph-node')).toHaveCount(0);
- await boundaryDialog.getByRole('checkbox').last().uncheck();await boundaryDialog.getByRole('button',{name:'Show graph',exact:true}).click();await expect(boundaryDialog.locator('.graph-node')).toHaveCount(16);
- for(const theme of ['dark','light']){if(theme==='light')await page.evaluate(()=>document.body.classList.toggle('light'));await page.screenshot({path:resolve(root,`.local/artifacts/runtime-graph-limit-${theme}.png`),animations:'disabled'});}await page.evaluate(()=>document.body.classList.toggle('light'));
- await boundaryDialog.getByRole('button',{name:'Close',exact:true}).click();await page.locator('[data-lens="Workspace"]').click();check(JSON.stringify(await ok('editor',{document:first}))===JSON.stringify(beforeGraph),'Bounded graph query changed source or history');
- checks.push('graph 16-node boundary renders, while 17-node selections reject without partial output or source writes');
- await exerciseContributors({page,ok,api,first,second,start,stop,open,unlock,root,check,checks});
- for(const file of ['app.js','styles.css','assets/logo.png']){const served=await page.evaluate(async file=>{const bytes=await(await fetch('/'+file)).arrayBuffer();return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(b=>b.toString(16).padStart(2,'0')).join('');},file);check(served===digest(await readFile(resolve(root,'frontend/dist',file))),'Embedded/development asset mismatch: '+file);}check(await page.locator('.brand img').evaluate(img=>img.complete&&img.naturalWidth===1245&&img.naturalHeight===1254),'Provided logo failed to render');check(await page.evaluate(async()=>(await fetch('/assets/logo.png')).headers.get('content-type'))==='image/png','Logo MIME type is incorrect');checks.push('embedded application/style/logo assets match built development assets and supplied logo renders');
- await expect(page.locator('.document-bar .subtle')).toHaveText('Local workspace');
- for(const theme of ['dark','light']){
-  if(theme==='light')await page.getByRole('button',{name:'Switch theme',exact:true}).click();
-  for(const width of [1280,1600,2000]){
-   await page.setViewportSize({width,height:1000});
-      // Dockview schedules its ResizeObserver layout and overlays on separate frames.
-      await expect.poll(()=>page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,right:document.querySelector('.right-sidebar').getBoundingClientRect().right})),{message:'Live runtime Dockview geometry must settle without overflow'}).toEqual({overflow:false,right:width});
-   await page.screenshot({path:resolve(root,`.local/artifacts/runtime-workflow-${engine}-${theme}-${width}.png`),animations:'disabled'});
-   if(width===1600){
-    await page.getByRole('button',{name:'Second synthetic document',exact:true}).click();await page.getByLabel('Maths display',{exact:true}).selectOption('rendered');await page.getByRole('button',{name:'After widgets',exact:true}).click();
-    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));await page.screenshot({path:resolve(root,`.local/artifacts/runtime-clipboard-widgets-${theme}.png`),animations:'disabled'});
-    check((await ok('editor',{document:second})).text===widgetSource,'Private clipboard or rendered widgets changed exact source');await page.getByRole('button',{name:'First synthetic document',exact:true}).click();
-   }
-   if(width!==1600){await page.getByRole('button',{name:'Keychain',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();const box=await page.getByRole('dialog').boundingBox();check(box&&box.x>=0&&box.y>=0&&box.x+box.width<=width,'Keychain dialog exceeds desktop viewport');await page.screenshot({path:resolve(root,`.local/artifacts/runtime-keychain-${theme}-${width}.png`),animations:'disabled'});await page.getByRole('button',{name:'Close',exact:true}).click();}
+const compatAt = process.argv.indexOf('--compat-reader'), compatReader = compatAt < 0 ? null : process.argv[compatAt + 1];
 
-  }
- }
- checks.push('live runtime labels, private clipboard and layout at 1280/1600/2000 in both themes, including below table/math replacements');
- if(process.argv.includes('--working-branches'))await exerciseWorkingBranches({page,root,checks,ok,api,paste,dropReplies,restoreReplies,compatReader,database:join(directory,'synthetic.hpx'),restart:async executable=>{await stop('SIGKILL');await open(await start(false,executable));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
- await exerciseDocumentAudit({page,ok,api,root,checks,database:join(directory,'synthetic.hpx'),unlock});
- await exerciseDeparture({page,root,ok,paste,checks,dropReplies,restoreReplies,commands,restart:async()=>{await stop('SIGKILL');await open(await start(false));await unlock();await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();}});
- if(process.argv.includes('--measure-workload'))await measureRuntimeWorkload({ok,page,database:join(directory,'synthetic.hpx'),root,checks});
- for(const name of await readdir(directory)){const file=join(directory,name);if(!(await stat(file)).isFile())continue;const bytes=await readFile(file);for(const needle of ['SYNTHETIC-COMMENT','SYNTHETIC-REVIEWED-MERGE','SYNTHETIC-CUSTODY-SENTINEL',passphrase,'First synthetic document'])check(!bytes.includes(Buffer.from(needle)),'Plaintext sentinel present in encrypted workspace files');}checks.push('workspace/database sidecars contain no tested plaintext sentinels');
- await writeFile(resolve(root,'.local/artifacts/runtime-workflow-'+engine+'.json'),JSON.stringify({browser:engine,checks,synthetic:true,binary_sha256:testedSha,version:builtVersion,openapi_sha256:testedSpecSha,trust:'approved user leaf SSL across localhost/127.0.0.1 SANs; validation enabled'},null,2));passed=true;console.log('PASS: '+engine+' real HTTPS/SQLite workflow ('+checks.length+' checks, synthetic documents only); validation complete, cleaning isolated test resources');
-}
-try{await run();}catch(error){await writeFile(resolve(root,'.local/artifacts/runtime-api-failure.json'),JSON.stringify({checks,error:error.stack},null,2));await page?.screenshot({path:resolve(root,'.local/artifacts/runtime-workflow-failure.png'),animations:'disabled'}).catch(()=>{});console.error('FAIL after '+checks.length+' completed checks: '+String(error.message).replace(/#launch=[a-f0-9]+/g,'#launch=[redacted]'));process.exitCode=1;}finally{
- if(nativeEnrollmentAttempted){
-  try{const status=await ok('keychain/status',{});if(!status.enrolled&&!status.cleanup_pending)throw Error('Unconfirmed native outcome');if((await ok('runtime')).locked)await ok('unlock',{passphrase});await ok('keychain/remove',{});nativeEnrollmentAttempted=false;}
-  catch{keepDirectory=true;process.exitCode=1;console.error('Synthetic native cleanup needs attention; retained isolated .local/artifacts/runtime-workflow-* workspace for scoped recovery.');}
- }
- await browser?.close();await stop();if(directory&&!keepDirectory)await rm(directory,{recursive:true,force:true});
+const engine = process.argv[2] ?? 'chromium';
+
+if (!['chromium', 'webkit'].includes(engine))
+    throw Error('Expected browser: chromium or webkit');
+
+const root = resolve(import.meta.dirname, '../..'), approved = '05865badace97aad0cb8abf4460e12f6a1574b812759780052e8ffb486bf8428';
+
+const passphrase = 'SYNTHETIC-ONLY-runtime-validation-2026', checks = [];
+
+let directory, runtime, browser, page, developmentProxy, nativeEnrollmentAttempted = false, keepDirectory = false, passed = false, validateCurrentContract = true;
+
+const binaryAt = process.argv.indexOf('--binary'), testedExecutable = binaryAt < 0 ? cargoExecutable() : resolve(root, process.argv[binaryAt + 1]);
+
+if (binaryAt >= 0 && process.argv.includes('--handoff'))
+    throw Error('Explicit binaries cannot use the debug-only manual handoff helper');
+
+const testedSha = await binaryFingerprint(testedExecutable);
+
+const check = /** Fail immediately when an observed workflow invariant differs from its expected scoped behavior. */ (condition, message) => {
+    if (!condition)
+        throw Error(message);
+};
+
+const digest = /** Hash certificate, schema or asset bytes for exact run identity comparisons. */    bytes => createHash('sha256').update(bytes).digest('hex');
+
+const testedSpecSha = digest(await readFile(resolve(root, 'shared/openapi.json')));
+
+/** Start the selected current or immutable older runtime against the isolated workspace, optionally exposing its verified development bridge. */
+async function start(create, executable = testedExecutable) {
+    // The retained older executable has its own historical DTO contract. Its
+    // compatibility checks remain active, but it must not claim current-schema conformance.
+    validateCurrentContract = resolve(executable) === testedExecutable;
+    const probe = createServer();
+
+    await new Promise(/** Wait for the ephemeral loopback port probe to bind before choosing a runtime port. */ (yes, no) => { probe.once('error', no); probe.listen(0, '127.0.0.1', yes); });
+    const port = probe.address().port;
+
+    await new Promise(/** Close the port probe before launching the runtime listener. */ (yes, no) => probe.close(/** Propagate port-probe close errors rather than assuming the listener was released. */    error => error ? no(error) : yes()));
+    runtime = spawn(executable, ['--workspace', join(directory, 'synthetic.hpx'), ...(create ? ['--create'] : []), '--cert', resolve(root, '.local/credentials/tls/localhost.pem'), '--key', resolve(root, '.local/credentials/tls/localhost-key.pem'), '--port', String(port)], { cwd: directory, env: process.argv.includes('--isolated-runtime') ? { ...process.env, PATH: directory } : process.env, stdio: ['ignore', 'pipe', 'pipe'] });
+    const launch = await new Promise(/** Wait for a complete private launch URL while bounding runtime startup and rejecting process failure. */ (yes, no) => {
+        let output = '';
+        const timer = setTimeout(/** Reject a runtime that fails to announce readiness by the startup deadline. */ () => no(Error('Runtime startup timed out')), 10000);
+        runtime.once('error', /** Cancel readiness timeout and report runtime spawn failure. */ () => { clearTimeout(timer); no(Error('Runtime could not start')); });
+        runtime.once('exit', /** Reject a runtime that exits before authenticated browser navigation can begin. */ () => { clearTimeout(timer); no(Error('Runtime exited during startup')); });
+        runtime.stdout.on('data', /** Accumulate stdout chunks until the complete private HTTPS launch capability is available. */    bytes => {
+            output += bytes.toString();
+            const match = output.match(/https:\/\/127\.0\.0\.1:\d+\/#launch=[a-f0-9]+/);
+
+            if (match) {
+                clearTimeout(timer);
+                yes(match[0]);
+            }
+        });
+    });
+
+    if (!process.argv.includes('--dev-proxy'))
+        return launch;
+    developmentProxy = await createDevelopmentServer({ assets: resolve(root, 'frontend/dist'), port: 0, backend: new URL(launch).origin, cert: resolve(root, '.local/credentials/tls/localhost.pem'), key: resolve(root, '.local/credentials/tls/localhost-key.pem'), ca: resolve(root, '.local/credentials/tls/localhost.pem') });
+
+    return developmentProxy.url + '/' + new URL(launch).hash;
 }
 
-if(passed&&!process.exitCode){check(testedSpecSha===digest(await readFile(resolve(root,'shared/openapi.json'))),'Generated schema changed during integration');if(binaryAt<0)await refreshManualRuntime(testedSha,'check-runtime-workflow.mjs');else check(testedSha===await binaryFingerprint(testedExecutable),'Explicit executable changed during verification');}
+/** Close the owned development proxy and terminate the owned runtime with the requested signal before cleanup/restart. */
+async function stop(signal = 'SIGTERM') {
+    if (developmentProxy) {
+        await developmentProxy.close();
+        developmentProxy = null;
+    }
+
+    if (runtime?.pid && runtime.exitCode === null && runtime.signalCode === null) {
+        const exited = new Promise(/** Complete runtime cleanup only after the child exit is observed. */    resolve => runtime.once('exit', resolve));
+        runtime.kill(signal);
+        await exited;
+    }
+    runtime = null;
+}
+
+/** Navigate the test browser through authenticated HTTPS, reporting safe TLS failure codes without private launch material. */
+async function open(url) {
+    try {
+        await page.goto(url, { waitUntil: 'networkidle' });
+    }
+    catch (error) {
+        const code = String(error.message).match(/net::ERR_[A-Z_]+/)?.[0] ?? 'navigation_failed';
+        throw Error('Authenticated browser navigation failed: ' + code);
+    }
+}
+
+/** Execute a same-origin browser API request and retain both status and JSON body for assertions. */
+async function api(path, body) {
+    return page.evaluate(/** Send GET or JSON POST through the authenticated browser session without adding authority or normalizing payloads. */ async ({ path, body }) => { const response = await fetch('/api/v1/' + path, { method: body === undefined ? 'GET' : 'POST', credentials: 'same-origin', headers: body === undefined ? {} : { 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body), cache: 'no-store' }); return { status: response.status, body: await response.json() }; }, { path, body });
+}
+
+/** Require a successful API result with scoped diagnostics before returning its response body. */
+async function ok(path, body) { const result = await api(path, body); check(result.status === 200, 'Unexpected API status for ' + path + ': ' + result.status + ' ' + (result.body?.error ?? '') + ' ' + (body?.request?.command ?? '') + ' ' + (body?.request?.mutation?.action ?? '')); return result.body; }
+
+/** Initialize or unlock the synthetic workspace through passphrase UI, respecting the enforced rate-limit interval. */
+async function unlock(create = false) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+        await page.getByLabel('Workspace passphrase', { exact: true }).fill(passphrase);
+        const response = page.waitForResponse(/** Identify the actual POST unlock response before deciding whether throttle retry is needed. */    response => new URL(response.url()).pathname === '/api/v1/unlock' && response.request().method() === 'POST');
+
+        await page.getByRole('button', { name: create ? 'Create workspace' : 'Unlock workspace', exact: true }).click();
+
+        if ((await response).status() !== 429)
+            return;
+        // Release builds can reach passphrase fallback within the native unlock throttle.
+        await page.waitForTimeout(1000);
+    }
+    throw Error('Unlock remained rate-limited after the enforced one-second interval');
+}
+
+/** Replace the current owned editor selection through a plain-text clipboard paste event. */
+async function paste(source) {
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toHaveAttribute('contenteditable', 'true');
+    const editor = page.getByRole('textbox', { name: 'Markdown document editor' });
+
+    await editor.focus();
+    await page.keyboard.press('ControlOrMeta+A');
+    await editor.evaluate(/** Dispatch exact supplied text to the editor paste path instead of reconstructing its rendered document. */ (element, text) => { const data = new DataTransfer(); data.setData('text/plain', text); element.dispatchEvent(new ClipboardEvent('paste', { bubbles: true, cancelable: true, clipboardData: data })); }, source);
+}
+
+/** Install a controlled lost-acknowledgement failure after the selected command has actually reached the server. */
+async function dropReplies(command, count) {
+    await page.evaluate(/** Capture original fetch and configure the selected command/count acknowledgement failure experiment. */ ({ command, count }) => {
+        const actual = window.fetch.bind(window);
+        window.__acceptanceRestoreFetch = /** Restore the browser original fetch implementation after synthetic dropped replies. */
+            () => { window.fetch = actual; };
+        window.fetch = /** Return real server responses except for the chosen completed command acknowledgements deliberately reported as lost. */
+            async (...args) => {
+                const inputUrl = args[0] instanceof Request ? args[0].url : String(args[0]);
+                const inputBody = args[0] instanceof Request ? await args[0].clone().text() : args[1]?.body;
+                const response = await actual(...args);
+
+                if (inputUrl.endsWith('/api/v1/commands') && JSON.parse(inputBody).request.command === command && count-- > 0)
+                    throw new TypeError('Synthetic lost acknowledgement');
+
+                return response;
+            };
+    }, { command, count });
+}
+
+/** Remove the dropped-reply interceptor and its test-only restoration state. */
+async function restoreReplies() {
+    await page.evaluate(/** Restore original fetch and delete the synthetic reply-interception hook. */ () => { window.__acceptanceRestoreFetch?.(); delete window.__acceptanceRestoreFetch; });
+}
+
+/** Run the selected isolated HTTPS/SQLite workflow, retaining exact source/schema/binary evidence and cleaning owned resources. */
+async function run() {
+    const der = execFileSync('/usr/bin/openssl', ['x509', '-in', resolve(root, '.local/credentials/tls/localhost.pem'), '-outform', 'DER']);
+    check(digest(der) === approved, 'Certificate differs from approved fingerprint; runtime not started');
+    await mkdir(resolve(root, '.local/artifacts'), { recursive: true });
+    directory = await mkdtemp(resolve(root, '.local/artifacts/runtime-workflow-'));
+    const launch = await start(true);
+    browser = engine === 'chromium' ? await testBrowser() : await webkit.launch({ headless: true });
+    const context = browser.contexts()[0] ?? await browser.newContext();
+    page = context.pages()[0] ?? await context.newPage();
+    await page.bringToFront();
+    await page.setViewportSize({ width: 1600, height: 1000 });
+    page.on('dialog', /** Accept ordinary fixture dialogs without introducing owner-browser interaction. */    dialog => dialog.accept());
+    const commands = [];
+
+    await page.exposeFunction('__observeAcceptanceCommand', /** Collect exact synthetic command bodies so frozen retries can be compared later. */    command => commands.push(command));
+    await page.exposeFunction('__checkTypedPayload', /** Validate actual generated request/response payloads only when the current executable contract is under test. */ ({ path, method, direction, value }) => {
+        if (validateCurrentContract)
+            assertBoundPayload(path, method, direction, value);
+    });
+    // Chromium's network event can omit a streamed Request body. Observe the exact
+    // Request passed to native fetch instead; do not change its bytes or retry path.
+    await page.addInitScript(/** Install transient fetch observation before browser application code starts, preserving dispatch bytes and retry behavior. */    bindings => {
+        const actual = window.fetch.bind(window);
+        window.fetch = /** Observe covered API request/response pairs without delaying native request dispatch. */
+            (...args) => {
+                const url = args[0] instanceof Request ? args[0].url : String(args[0]);
+                const path = new URL(url, location.origin).pathname, method = args[0] instanceof Request ? args[0].method : args[1]?.method ?? 'GET';
+                const binding = bindings.find(/** Find the generated route-and-method binding for the actual browser request. */    b => b.path === path && b.method === method), command = path === '/api/v1/commands';
+
+                if (!binding && !command)
+                    return actual(...args);
+                const body = binding?.request || command ? (args[0] instanceof Request ? args[0].clone().text() : Promise.resolve(args[1]?.body)) : Promise.resolve(null);
+                const observed = body.then(/** Record exact command intent after reading a cloned request body, returning unchanged body text. */ async (body) => {
+                    if (command)
+                        await window.__observeAcceptanceCommand(JSON.parse(body));
+
+                    return body;
+                });
+
+                // Observe without delaying native dispatch or changing bytes. Validate successful
+                // pairs only, so intentional malformed requests still reach backend rejection.
+                // Credentials/source are transient; only synthetic commands support retry checks.
+                return Promise.all([actual(...args), observed]).then(/** Validate only successful typed response pairs while preserving original HTTP responses and intentional rejection tests. */ async ([response, body]) => {
+                    if (binding && response.ok) {
+                        if (binding.request)
+                            await window.__checkTypedPayload({ path, method, direction: 'request', value: JSON.parse(body) });
+                        await window.__checkTypedPayload({ path, method, direction: 'response', value: await response.clone().json() });
+                    }
+
+                    return response;
+                });
+            };
+    }, typedBindings);
+    await open(launch);
+    await expect(page.getByRole('button', { name: 'Create workspace', exact: true })).toBeVisible();
+    check(!new URL(page.url()).hash, 'Launch capability retained in URL');
+    const cookie = (await context.cookies()).find(/** Find the protected runtime session cookie by its exact name. */    cookie => cookie.name === '__Host-hpx');
+    check(cookie?.secure && cookie.httpOnly && cookie.sameSite === 'Strict', 'Session cookie restrictions missing');
+    checks.push('verified TLS, bootstrap fragment removal and restricted session cookie');
+    const builtVersion = await page.evaluate(/** Read the executable embedded build version over the authenticated origin without cached metadata. */ async () => {
+        const response = await fetch('/build-version.json', { cache: 'no-store' });
+
+        if (!response.ok)
+            throw Error('Build version unavailable');
+
+        return (await response.json()).version;
+    });
+    check(/^\d+\.\d+\.\d+\.[1-9]\d*$/.test(builtVersion), 'Compiled build version must have four numeric parts');
+    await expect(page.locator('#buildVersion')).toHaveText('v' + builtVersion);
+    await expect(page.locator('#buildVersion')).toBeVisible();
+    const versionBox = await page.locator('#buildVersion').boundingBox();
+    check(versionBox && versionBox.x <= 20 && versionBox.y + versionBox.height >= 980, 'Build version is not at the bottom left');
+    checks.push('executable embeds four-part test build version and footer shows it at bottom left while locked');
+    const lockedMetadata = await ok('runtime');
+    check(lockedMetadata.locked && lockedMetadata.create && lockedMetadata.contract === 1 && lockedMetadata.mode === 'trusted_server' && lockedMetadata.ownership === 'whole_document', 'Locked metadata changed API1 semantics');
+    checks.push('generated runtime metadata schema matches the authenticated locked/create response without unlocking the workspace');
+    const canonicalStatus = await ok('keychain/status', {}), legacyStatus = await ok('keychain/status', []);
+    check(JSON.stringify(canonicalStatus) === JSON.stringify(legacyStatus), 'Legacy empty-sequence request changed status');
+    check((await api('keychain/status', { unexpected: true })).status === 400, 'Keychain status accepted unknown fields');
+    checks.push('typed keychain status preserves canonical and legacy empty bodies; unknown fields reject while the workspace stays locked');
+    await unlock(true);
+    await page.getByLabel('Document name', { exact: true }).fill('First synthetic document');
+    await page.getByRole('button', { name: 'Create document', exact: true }).click();
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+    const summaries = await ok('documents', {}), first = summaries[0].document, initial = await ok('editor', { document: first });
+    check(initial.text === '', 'Unexpected initial source');
+
+    for (const problem of [false, true]) {
+        const response = await page.evaluate(/** Send a deliberately malformed Fork body with either legacy JSON or problem JSON error negotiation. */ async (problem) => { const response = await fetch('/api/v1/commands', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', Accept: problem ? 'application/problem+json' : 'application/json' }, body: '{"operation":[],"request":{"command":"fork"}}' }); return { status: response.status, type: response.headers.get('content-type'), bytes: await response.text() }; }, problem);
+        check(response.status === 400, 'Malformed Fork accepted');
+        assertComponent(problem ? 'Problem' : 'LegacyError', JSON.parse(response.bytes));
+        check(response.type === (problem ? 'application/problem+json' : 'application/json; charset=utf-8'), 'Error negotiation changed legacy MIME');
+
+        if (problem)
+            check(JSON.parse(response.bytes).status === response.status, 'Problem status differs from HTTP');
+        else
+            check(Object.keys(JSON.parse(response.bytes)).join(',') === 'error', 'Legacy error fields changed');
+    }
+    check(JSON.stringify(await ok('editor', { document: first })) === JSON.stringify(initial), 'Malformed Fork changed source');
+    checks.push('generated Fork error schemas match actual HTTPS responses; strict malformed input preserves source and legacy JSON negotiation');
+
+    if (process.argv.includes('--audit-only')) {
+        const source = '# Audit contract\r\n\r\n| Claim | Value |\r\n| --- | --- |\r\n| 😀 | é |\r\n\r\n$$\r\nE=mc^2\r\n$$\r\n\r\n## Below audit widgets\r\n\r\nExact 中\rfinal';
+
+        await paste(source);
+        const commit = page.getByRole('button', { name: 'Commit', exact: true });
+
+        await commit.click();
+        await expect(commit).toBeEnabled();
+        const stored = await ok('editor', { document: first });
+        check((await ok('snapshot', { document: first, snapshot: stored.snapshot })).text === source, 'Audit setup changed exact source');
+        await page.locator('#runtimeBranches').click();
+        const branches = page.getByRole('dialog', { name: 'Document branches' });
+
+        await branches.getByLabel('New branch name').fill('Audit child');
+        await branches.getByRole('button', { name: 'Create child branch', exact: true }).click();
+        await expect(branches).toHaveCount(0);
+        await page.getByLabel('Maths display', { exact: true }).selectOption('rendered');
+        await page.getByRole('button', { name: 'Below audit widgets', exact: true }).click();
+        await exerciseDocumentAudit({ page, ok, api, root, checks, database: join(directory, 'synthetic.hpx'), unlock });
+        await writeFile(resolve(root, '.local/artifacts/runtime-audit-workflow.json'), JSON.stringify({ checks, synthetic: true, binary_sha256: testedSha, version: builtVersion, openapi_sha256: testedSpecSha }, null, 2));
+        passed = true;
+        console.log('PASS: isolated audit workflow (' + checks.length + ' checks); cleaning test resources');
+
+        return;
+    }
+
+    if (process.argv.includes('--working-branches-only')) {
+        await exerciseHeadingLink({ page, root, ok, paste, checks, document: first });
+        await exerciseTextRelations({ page, root, ok, api, checks, database: join(directory, 'synthetic.hpx'), restart: /** Abruptly restart and unlock the owned runtime for text-relation durability checks. */ async () => { await stop('SIGKILL'); await open(await start(false)); await unlock(); await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible(); } });
+        await exerciseDeparture({ page, root, ok, paste, checks, dropReplies, restoreReplies, commands, restart: /** Abruptly restart and unlock the owned runtime for departure durability checks. */ async () => { await stop('SIGKILL'); await open(await start(false)); await unlock(); await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible(); } });
+        await exerciseWorkingBranches({ page, root, checks, ok, api, paste, dropReplies, restoreReplies, compatReader, database: join(directory, 'synthetic.hpx'), restart: /** Restart the owned runtime with an explicitly selected current/older reader for working-branch compatibility checks. */ async (executable) => { await stop('SIGKILL'); await open(await start(false, executable)); await unlock(); await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible(); } });
+        await writeFile(resolve(root, '.local/artifacts/runtime-working-workflow.json'), JSON.stringify({ checks, synthetic: true, advertisedCapabilities: true, binary_sha256: testedSha, version: builtVersion, openapi_sha256: testedSpecSha }, null, 2));
+        passed = true;
+        console.log('PASS: isolated working-branch workflow (' + checks.length + ' checks); cleaning test resources');
+
+        return;
+    }
+    const original = 'SYNTHETIC-CUSTODY-SENTINEL 😀e\u0301\r\nSecond line\nThird\rFourth';
+
+    await paste(original);
+    await expect.poll(/** Wait until five-second autosave acknowledges the exact mixed-newline fixture source. */ async () => (await ok('editor', { document: first })).text, { timeout: 15000 }).toBe(original);
+    let state = await ok('editor', { document: first });
+    check(JSON.stringify(state.snapshot) === JSON.stringify(initial.snapshot), 'Autosave published immutable history');
+    checks.push('five-second autosave preserves mixed newline/Unicode bytes without committing');
+    const offset = commands.length, lost = 'Lost-save 😀\r\nAcknowledgement', latest = 'Later typing e\u0301\r\nExact source\n';
+
+    await dropReplies('save', 2);
+    await paste(lost);
+    await page.getByRole('button', { name: 'Save draft', exact: true }).click();
+    await expect(page.locator('#draftStatus')).toContainText('Save needs attention');
+    check((await ok('editor', { document: first })).text === lost, 'Dropped acknowledgement did not reach durable storage');
+    await restoreReplies();
+    await paste(latest);
+    await page.getByRole('button', { name: 'Save draft', exact: true }).click();
+    await expect.poll(/** Wait until newer typing is durably acknowledged after the lost Save is reconciled. */ async () => (await ok('editor', { document: first })).text).toBe(latest);
+    const retries = commands.slice(offset);
+
+    await writeFile(resolve(root, '.local/artifacts/runtime-save-retry-observation.json'), JSON.stringify(retries, null, 2));
+    check(retries.length >= 4, 'Missing retry observations');
+    check(JSON.stringify(retries[0]) === JSON.stringify(retries[1]) && JSON.stringify(retries[0]) === JSON.stringify(retries[2]), 'Unknown save changed operation identity or request');
+    checks.push('lost save replies retry exact operation before queued newer source');
+    await dropReplies('commit', 2);
+    await page.getByRole('button', { name: 'Commit', exact: true }).click();
+    await expect(page.locator('#draftStatus')).toContainText('Save needs attention');
+    const committed = await ok('editor', { document: first }), commitRequest = commands.filter(/** Select Commit attempts to capture the uncertain operation before its retry. */    c => c.request.command === 'commit').at(-1);
+
+    await restoreReplies();
+    await page.getByRole('button', { name: 'Commit', exact: true }).click();
+    await expect(page.locator('#draftStatus')).not.toContainText('Save needs attention');
+    state = await ok('editor', { document: first });
+    check(JSON.stringify(state.snapshot) === JSON.stringify(committed.snapshot), 'Uncertain commit retry created another snapshot');
+    check(JSON.stringify(commands.filter(/** Select Commit attempts after reconciliation to compare against the original frozen intent. */    c => c.request.command === 'commit').at(-1)) === JSON.stringify(commitRequest), 'Commit retry changed operation identity');
+    check((await ok('snapshot', { document: first, snapshot: committed.snapshot })).text === latest, 'Committed snapshot differs from exact source');
+    checks.push('unknown commit reconciles one immutable revision/snapshot');
+    const creationOffset = commands.length;
+
+    await page.evaluate(/** Mark the live browser window so creation recovery can prove it did not reload the page. */ () => { window.__creationWindowSentinel = true; });
+    await dropReplies('create', 2);
+    page.removeAllListeners('dialog');
+    page.once('dialog', /** Answer the new-document fixture prompt with the unique second document title. */    dialog => dialog.accept('Second synthetic document'));
+    await page.getByRole('button', { name: 'New document', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Retry new document', exact: true })).toBeVisible();
+    page.on('dialog', /** Restore ordinary prompt acceptance after the uncertain creation request. */    dialog => dialog.accept());
+
+    for (const theme of ['dark', 'light']) {
+        if (theme === 'light')
+            await page.evaluate(/** Switch to light theme for the uncertain-creation retry screenshot. */ () => document.body.classList.toggle('light'));
+
+        for (const width of [1280, 2000]) {
+            await page.setViewportSize({ width, height: 1000 });
+            await page.screenshot({ path: resolve(root, `.local/artifacts/runtime-create-retry-${theme}-${width}.png`), animations: 'disabled' });
+        }
+    }
+    await page.evaluate(/** Restore dark theme after creation-retry geometry capture. */ () => document.body.classList.toggle('light'));
+    await page.setViewportSize({ width: 1600, height: 1000 });
+    const typingDuringCreation = latest + 'Typing during uncertain creation 😀\r\n';
+
+    await paste(typingDuringCreation);
+    await restoreReplies();
+    await page.getByRole('button', { name: 'Retry new document', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Second synthetic document', exact: true })).toBeVisible();
+    check(await page.evaluate(/** Check the browser-window sentinel survived new-document acknowledgement recovery. */ () => window.__creationWindowSentinel === true), 'Document creation reloaded the page');
+    const creations = commands.slice(creationOffset).filter(/** Select creation attempts after the synthetic lost-acknowledgement boundary. */    c => c.request.command === 'create');
+    check(creations.length === 3 && creations.every(/** Require all new-document retries to preserve the original frozen command body. */    c => JSON.stringify(c) === JSON.stringify(creations[0])), 'Creation retry changed frozen operation');
+    check((await ok('documents', {})).length === 2, 'Creation retry duplicated documents');
+    await expect.poll(/** Wait until typing made during uncertain document creation is acknowledged in the outgoing buffer. */ async () => (await ok('editor', { document: first })).text).toBe(typingDuringCreation);
+    check((await ok('snapshot', { document: first, snapshot: committed.snapshot })).text === latest, 'Creating a document implicitly committed the source');
+    checks.push('unknown new-document replies reconcile without reload, duplicate creation or losing later source typing');
+    await page.getByRole('button', { name: 'Second synthetic document', exact: true }).click();
+    const other = 'Independent second document 😀\r\n';
+
+    await paste(other);
+    await page.getByRole('button', { name: 'Save draft', exact: true }).click();
+    const all = await ok('documents', {}), second = all.find(/** Find the independent second fixture document by its unique title. */    item => item.title === 'Second synthetic document').document;
+    check((await ok('editor', { document: second })).text === other, 'Second document source differs');
+    await page.getByRole('button', { name: 'First synthetic document', exact: true }).click();
+    check((await ok('editor', { document: first })).text === typingDuringCreation, 'Document switch lost typing during creation');
+    await paste(latest);
+    await page.getByRole('button', { name: 'Save draft', exact: true }).click();
+    await expect.poll(/** Wait for the restored first-document draft after switching independent buffers. */ async () => (await ok('editor', { document: first })).text).toBe(latest);
+    checks.push('document creation and switching preserve independent owned buffers');
+    await page.getByRole('button', { name: 'Lock', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Unlock workspace', exact: true })).toBeVisible();
+    check((await api('editor', { document: first })).status === 423, 'Locked runtime still exposes editor data');
+    await unlock();
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+    checks.push('lock drops runtime authority; passphrase unlock restores acknowledged source');
+    const recovery = 'SYNTHETIC-CUSTODY-SENTINEL recovery 😀\r\nUncommitted e\u0301\n';
+
+    await paste(recovery);
+    await expect.poll(/** Wait for the recovery draft to be acknowledged before abruptly killing the runtime. */ async () => (await ok('editor', { document: first })).text, { timeout: 15000 }).toBe(recovery);
+    await stop('SIGKILL');
+    const restarted = await start(false);
+
+    await open(restarted);
+    await expect(page.getByRole('button', { name: 'Unlock workspace', exact: true })).toBeVisible();
+    await unlock();
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+    check((await ok('editor', { document: first })).text === recovery, 'Abrupt restart lost acknowledged draft');
+    check((await ok('editor', { document: second })).text === other, 'Restart changed other document');
+    checks.push('abrupt process restart recovers acknowledged uncommitted drafts');
+    check((await ok('snapshot', { document: first, snapshot: initial.snapshot })).text === '', 'Initial historical snapshot changed');
+    check((await ok('snapshot', { document: first, snapshot: committed.snapshot })).text === latest, 'Committed historical snapshot changed');
+    const receipt = await ok('commands', commitRequest);
+    check(JSON.stringify(receipt.outcome.snapshot) === JSON.stringify(committed.snapshot), 'Persisted retry receipt changed after restart');
+    check((await ok('editor', { document: first })).text === recovery, 'Historical receipt retry altered current draft');
+    checks.push('exact old/new historical reconstruction and receipt retry survive restart');
+
+    // Populate a second immutable page, then reload the adapter's exact current base.
+    for (let i = 0; i < 14; i++) {
+        const current = await ok('editor', { document: first });
+
+        await ok('commands', { operation: [...randomBytes(32)], request: { command: 'commit', document: first, generation: current.generation, base: current.base, sequence: current.acknowledged_sequence } });
+    }
+    await page.reload({ waitUntil: 'networkidle' });
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+    const beforeHistory = await ok('editor', { document: first });
+
+    await page.locator('[data-investigation="History"]').click();
+    await expect(page.locator('#investigationBody')).toContainText('History page 1');
+    check(await page.locator('#investigationBody').getByRole('button', { name: 'View snapshot', exact: true }).count() === 12, 'History did not bound its first page');
+    let observedHistory = 0;
+    const observe = /** Count history endpoint requests to verify ordinary selection movement does not refetch history. */    request => {
+        if ((request.url().endsWith('/api/v1/history') || request.url().endsWith('/api/v1/branches/history/page')))
+            observedHistory++;
+    };
+    page.on('request', observe);
+    await page.getByRole('textbox', { name: 'Markdown document editor' }).click();
+    await page.keyboard.press('ArrowRight');
+    await page.evaluate(/** Wait for UI selection processing over two animation frames before checking request count. */ () => new Promise(/** Coordinate the selection settlement two-frame wait. */    resolve => requestAnimationFrame(/** Advance the second frame before checking history request stability. */ () => requestAnimationFrame(resolve))));
+    check(observedHistory === 0, 'Selection changes refetched retained history');
+    page.off('request', observe);
+    await page.evaluate(/** Install a one-shot delayed history response to test cross-document isolation. */ () => {
+        const actual = window.fetch.bind(window);
+        let delay = true;
+        let started;
+        window.__historyStarted = new Promise(/** Publish readiness when the selected history response has been intercepted. */    resolve => { started = resolve; });
+        window.__restoreHistoryFetch = /** Restore original browser fetch after delayed history testing. */
+            () => { window.fetch = actual; };
+        window.fetch = /** Delay the first actual history-page response while preserving its content and pinning. */
+            async (...args) => {
+                const inputUrl = args[0] instanceof Request ? args[0].url : String(args[0]);
+                const inputBody = args[0] instanceof Request ? await args[0].clone().text() : args[1]?.body;
+                const response = await actual(...args);
+
+                if ((inputUrl.endsWith('/api/v1/history') || inputUrl.endsWith('/api/v1/branches/history/page')) && delay) {
+                    delay = false;
+                    started();
+                    await new Promise(/** Expose the history response release callback for deliberate cross-document delivery. */    resolve => { window.__releaseHistory = resolve; });
+                }
+
+                return response;
+            };
+    });
+
+    try {
+        await page.getByRole('button', { name: 'Refresh', exact: true }).click();
+        await page.evaluate(/** Wait for history interception readiness with an explicit deadline. */ () => Promise.race([window.__historyStarted, new Promise(/** Create the bounded failure path for a history request that never reaches interception. */ (_, reject) => setTimeout(/** Reject history refresh interception that fails to become ready. */ () => reject(Error('History refresh interception timed out')), 10000))]));
+        await page.getByRole('button', { name: 'Second synthetic document', exact: true }).click();
+        await expect(page.locator('#investigationBody').getByRole('button', { name: 'View snapshot', exact: true })).toHaveCount(2);
+        await page.evaluate(/** Release the captured old-document history response after changing documents. */ () => window.__releaseHistory());
+        await page.evaluate(/** Wait for UI stale-response handling to settle over two frames. */ () => new Promise(/** Coordinate the stale-history two-frame settlement wait. */    resolve => requestAnimationFrame(/** Advance the second frame before asserting the current document retained its history. */ () => requestAnimationFrame(resolve))));
+        await expect(page.locator('#investigationBody').getByRole('button', { name: 'View snapshot', exact: true })).toHaveCount(2);
+    }
+    finally {
+        await page.evaluate(/** Release any pending history reply and remove interception state even after failure. */ () => { window.__releaseHistory?.(); window.__restoreHistoryFetch?.(); delete window.__releaseHistory; delete window.__restoreHistoryFetch; delete window.__historyStarted; });
+    }
+    await page.getByRole('button', { name: 'First synthetic document', exact: true }).click();
+    await expect(page.locator('#investigationBody').getByRole('button', { name: 'View snapshot', exact: true })).toHaveCount(12);
+    checks.push('selection changes do not refetch history; stale replies cannot replace another document history');
+    await page.getByRole('button', { name: 'Older', exact: true }).click();
+    await expect(page.locator('#investigationBody')).toContainText('History page 2');
+    const olderPage = await ok('history', { document: first, next: (await ok('history', { document: first, next: null, limit: 12 })).next, limit: 12 });
+    const historicalIndex = olderPage.entries.findIndex(/** Find the exact previously committed snapshot on the older bounded history page. */    entry => JSON.stringify(entry.snapshot) === JSON.stringify(committed.snapshot));
+    check(historicalIndex >= 0, 'Original committed snapshot not retained on older page');
+    await page.locator('#investigationBody').getByRole('button', { name: 'View snapshot', exact: true }).nth(historicalIndex).click();
+    const historicalDialog = page.getByRole('dialog');
+
+    await expect(historicalDialog).toContainText('Historical snapshot · read only');
+    check(await historicalDialog.locator('pre').textContent() === latest, 'Historical UI substituted current source');
+    const downloading = page.waitForEvent('download');
+
+    await historicalDialog.getByRole('button', { name: 'Download snapshot', exact: true }).click();
+    const download = await downloading;
+    check((await readFile(await download.path())).equals(Buffer.from(latest)), 'Historical download normalized exact bytes');
+    await historicalDialog.getByRole('button', { name: 'Close', exact: true }).click();
+    await page.locator('#investigationBody').getByRole('button', { name: 'Compare with latest committed', exact: true }).nth(historicalIndex).click();
+    const comparison = page.getByRole('dialog');
+
+    await expect(comparison).toContainText('Compare committed snapshots');
+    check(await comparison.getByLabel('Selected historical snapshot', { exact: true }).textContent() === latest, 'Comparison changed historical bytes');
+    check(await comparison.getByLabel('Latest committed snapshot', { exact: true }).textContent() === recovery, 'Comparison substituted current draft or wrong committed snapshot');
+
+    for (const theme of ['dark', 'light']) {
+        if (theme === 'light')
+            await page.evaluate(/** Switch to light theme for exact historical comparison capture. */ () => document.body.classList.toggle('light'));
+        await page.screenshot({ path: resolve(root, `.local/artifacts/runtime-history-comparison-${theme}.png`), animations: 'disabled' });
+    }
+    await page.evaluate(/** Restore dark theme after comparison screenshot. */ () => document.body.classList.toggle('light'));
+    await comparison.getByRole('button', { name: 'Close', exact: true }).click();
+    checks.push('read-only exact historical/current committed snapshot comparison excludes draft edits');
+    check(JSON.stringify(await ok('editor', { document: first })) === JSON.stringify(beforeHistory), 'History browsing changed the current editor state');
+    await page.getByRole('button', { name: 'Newer', exact: true }).click();
+    await expect(page.locator('#investigationBody')).toContainText('History page 1');
+    checks.push('bounded two-page history UI and exact historical download leave current state unchanged');
+    await exerciseHistoryIsolation({ page, root, checks });
+    check(JSON.stringify(await ok('editor', { document: first })) === JSON.stringify(beforeHistory), 'History inspection isolation changed editor state');
+    const clipboardRequest = { generation: null, offset: 0, limit: 16 };
+    check((await ok('clipboard', clipboardRequest)).total === 0, 'Fresh private clipboard is not empty');
+    const copyOffset = commands.length;
+
+    await page.getByRole('textbox', { name: 'Markdown document editor' }).focus();
+    await page.keyboard.press('ControlOrMeta+A');
+    await dropReplies('clipboard', 2);
+    await page.getByRole('button', { name: 'Copy source reference', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Retry clipboard operation', exact: true })).toBeVisible();
+    const captured = await ok('clipboard', clipboardRequest);
+    check(captured.total === 1 && captured.generation === 1, 'Lost capture reply did not reach private storage');
+    await restoreReplies();
+    await page.getByRole('button', { name: 'Retry clipboard operation', exact: true }).click();
+    await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
+    const copies = commands.slice(copyOffset).filter(/** Select private clipboard commands after the capture lost-acknowledgement boundary. */    command => command.request.command === 'clipboard');
+    check(copies.length === 3 && copies.every(/** Require every protected capture retry to preserve its original operation and source. */    copy => JSON.stringify(copy) === JSON.stringify(copies[0])), 'Clipboard retry changed its frozen operation');
+    check(JSON.stringify(await ok('editor', { document: first })) === JSON.stringify(beforeHistory), 'Clipboard capture modified source state or history');
+    await page.locator('.clipboard .clip-chip > button').first().click();
+    check(await page.getByRole('dialog').locator('pre').textContent() === recovery, 'Captured source preview changed exact bytes');
+    await page.getByRole('button', { name: 'Close', exact: true }).click();
+    await paste('Uncommitted clipboard source 😀\r\n');
+    await page.getByRole('button', { name: 'Save draft', exact: true }).click();
+    await expect.poll(/** Wait until uncommitted working source is acknowledged before testing separate capture behavior. */ async () => (await ok('editor', { document: first })).text).toBe('Uncommitted clipboard source 😀\r\n');
+    await page.getByRole('textbox', { name: 'Markdown document editor' }).focus();
+    await page.keyboard.press('ControlOrMeta+A');
+    await page.getByRole('button', { name: 'Copy source reference', exact: true }).click();
+    await expect(page.locator('.working-references .clip-chip')).toHaveCount(1);
+    check((await ok('clipboard', clipboardRequest)).generation === 1, 'Working copy changed committed private state');
+    await page.getByRole('button', { name: 'Clear working references', exact: true }).click();
+    await expect(page.locator('.working-references .clip-chip')).toHaveCount(0);
+    await paste(recovery);
+    await page.getByRole('button', { name: 'Save draft', exact: true }).click();
+    await expect.poll(/** Wait until the recovery draft is restored before locked clipboard restart checks. */ async () => (await ok('editor', { document: first })).text).toBe(recovery);
+    await stop();
+    await open(await start(false));
+    await expect(page.getByRole('button', { name: 'Unlock workspace', exact: true })).toBeVisible();
+    check((await api('clipboard', clipboardRequest)).status === 423, 'Locked runtime exposes private clipboard');
+    await unlock();
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+    await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
+    const restartedClipboard = await ok('clipboard', clipboardRequest);
+    check(JSON.stringify(restartedClipboard.entries[0].id) === JSON.stringify(captured.entries[0].id), 'Restart replaced captured reference identity');
+    await page.getByRole('button', { name: 'Remove captured source from First synthetic document', exact: true }).click();
+    await expect(page.locator('.clipboard .clip-chip')).toHaveCount(0);
+    check((await ok('snapshot', { document: first, snapshot: captured.entries[0].source.snapshot })).text === recovery, 'Clipboard removal deleted source history');
+    await page.getByRole('textbox', { name: 'Markdown document editor' }).focus();
+    await page.keyboard.press('ControlOrMeta+A');
+    await page.getByRole('button', { name: 'Copy source reference', exact: true }).click();
+    await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
+    await page.locator('.clipboard').getByRole('button', { name: 'Clear all', exact: true }).click();
+    await expect(page.locator('.clipboard .clip-chip')).toHaveCount(0);
+    await page.getByRole('textbox', { name: 'Markdown document editor' }).focus();
+    await page.keyboard.press('ControlOrMeta+A');
+    await page.getByRole('button', { name: 'Copy source reference', exact: true }).click();
+    await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
+    checks.push('private clipboard exact capture/retry, separate working-source capture, locked restart recovery, removal and clear retain source history');
+    const forkSource = await ok('editor', { document: first }), forkOffset = commands.length;
+
+    await page.getByRole('textbox', { name: 'Markdown document editor' }).focus();
+    await page.keyboard.press('ControlOrMeta+A');
+    await page.locator('#forkSelection').click();
+    await page.getByLabel('Fork name', { exact: true }).fill('Durable synthetic fork');
+    check(await page.getByRole('dialog').locator('pre').textContent() === recovery, 'Fork review normalized source bytes');
+    await page.screenshot({ path: resolve(root, '.local/artifacts/runtime-fork-review.png'), animations: 'disabled' });
+    await page.evaluate(/** Switch to light theme for exact-source Fork review screenshot. */ () => document.body.classList.toggle('light'));
+    await page.screenshot({ path: resolve(root, '.local/artifacts/runtime-fork-review-light.png'), animations: 'disabled' });
+    await page.evaluate(/** Restore dark theme after Fork review capture. */ () => document.body.classList.toggle('light'));
+    await dropReplies('fork', 2);
+    await page.getByRole('button', { name: 'Create fork', exact: true }).click();
+    await expect(page.getByRole('dialog')).toContainText('Synthetic lost acknowledgement');
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Retry fork', exact: true })).toBeVisible();
+    const createdForks = (await ok('documents', {})).filter(/** Locate the durable synthetic Fork output and detect duplicate creation. */    d => d.title === 'Durable synthetic fork');
+    check(createdForks.length === 1, 'Unknown fork reply duplicated output');
+    const forkDocument = createdForks[0].document;
+
+    await restoreReplies();
+    await page.getByRole('button', { name: 'Retry fork', exact: true }).click();
+    await expect(page.locator('#documentTitle')).toHaveText('Durable synthetic fork');
+    const forkCommands = commands.slice(forkOffset).filter(/** Select Fork attempts after the synthetic lost-acknowledgement boundary. */    c => c.request.command === 'fork');
+
+    for (const command of forkCommands)
+        assertComponent('ForkExecute', command);
+    const forkReceipt = await ok('commands', forkCommands[0]);
+    assertComponent('ForkReceipt', forkReceipt);
+    check(JSON.stringify(forkReceipt.operation) === JSON.stringify(forkCommands[0].operation), 'Fork receipt operation changed');
+    check(forkCommands.length === 3 && forkCommands.every(/** Require every Fork retry to preserve the original reviewed intent. */    c => JSON.stringify(c) === JSON.stringify(forkCommands[0])), 'Fork retry changed frozen intent');
+    const initialFork = await ok('editor', { document: forkDocument }), derivation = await ok('derivation', { document: forkDocument });
+    check(initialFork.text === recovery && JSON.stringify(initialFork.node) !== JSON.stringify(forkSource.node), 'Fork lost independent identity or exact source');
+    check(JSON.stringify(await ok('editor', { document: first })) === JSON.stringify(forkSource), 'Fork mutated source draft/history');
+    check(derivation.kind === 'fork' && JSON.stringify(derivation.inputs[0].snapshot) === JSON.stringify(forkSource.snapshot) && JSON.stringify(derivation.outputs[0].snapshot) === JSON.stringify(initialFork.snapshot), 'Fork derivation is not pinned');
+    const firstForkHistory = await ok('history', { document: forkDocument, next: null, limit: 12 });
+    check(firstForkHistory.entries.length === 1 && firstForkHistory.entries[0].parent === null, 'Fork incorrectly shares source revision ancestry');
+    await page.locator('[data-investigation="Provenance"]').click();
+    await expect(page.getByRole('button', { name: 'Inspect exact fork source', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Inspect exact fork source', exact: true }).click();
+    check(await page.getByRole('dialog').locator('pre').textContent() === recovery, 'Fork provenance resolved current draft instead of captured source');
+    await page.getByRole('button', { name: 'Close', exact: true }).click();
+    const editedFork = 'Independent fork edit 😀\r\n';
+
+    await paste(editedFork);
+    await page.getByRole('button', { name: 'Commit', exact: true }).click();
+    await expect.poll(/** Wait for the independent Fork edit to be acknowledged before checking original derivation retention. */ async () => (await ok('editor', { document: forkDocument })).text).toBe(editedFork);
+    check(JSON.stringify(await ok('derivation', { document: forkDocument })) === JSON.stringify(derivation), 'Later revision rewrote original derivation');
+    check((await ok('editor', { document: first })).text === recovery, 'Destination edit changed source');
+    await stop();
+    await open(await start(false));
+    await expect(page.getByRole('button', { name: 'Unlock workspace', exact: true })).toBeVisible();
+    check((await api('derivation', { document: forkDocument })).status === 423, 'Locked runtime exposes derivation');
+    await unlock();
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+    check(JSON.stringify(await ok('derivation', { document: forkDocument })) === JSON.stringify(derivation), 'Restart lost derivation');
+    check((await ok('snapshot', { document: forkDocument, snapshot: initialFork.snapshot })).text === recovery, 'Restart lost initial fork snapshot');
+    checks.push('durable independent fork with frozen lost-reply recovery, exact provenance inspection, separate edits/history and locked restart recovery');
+    const assertionBaseline = await exerciseAssertionOverlay({ page, ok, first, recovery, paste, dropReplies, restoreReplies, commands, check, root, checks });
+    const mergeBaseline = await exerciseReviewedMerge({ page, ok, api, first, forkDocument, recovery, root, commands, dropReplies, restoreReplies, start, stop, open, unlock, check, checks });
+    const commentBaseline = await exerciseComments({ page, ok, api, first, second, recovery, commands, dropReplies, restoreReplies, root, check, checks });
+    const capability = await ok('runtime');
+
+    if (capability.keychain_supported) {
+        await page.getByRole('button', { name: 'Keychain', exact: true }).click();
+        await expect(page.getByRole('dialog')).toContainText('Keep your passphrase for recovery');
+        await page.screenshot({ path: resolve(root, '.local/artifacts/runtime-keychain-before-enrollment.png'), animations: 'disabled' });
+        nativeEnrollmentAttempted = true;
+        await page.getByRole('button', { name: 'Enable keychain unlock', exact: true }).click();
+        await expect(page.getByRole('dialog')).toContainText('Keychain enrollment confirmed', { timeout: 30000 });
+        await page.getByRole('button', { name: 'Close', exact: true }).click();
+        check((await ok('keychain/status', {})).enrolled, 'UI enrollment was not durable');
+        await page.getByRole('button', { name: 'Lock', exact: true }).click();
+        await expect(page.getByRole('button', { name: 'Unlock with macOS Keychain', exact: true })).toBeVisible();
+        await page.screenshot({ path: resolve(root, '.local/artifacts/runtime-keychain-unlock.png'), animations: 'disabled' });
+        await page.getByRole('button', { name: 'Unlock with macOS Keychain', exact: true }).click();
+        await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible({ timeout: 30000 });
+        check((await ok('editor', { document: first })).text === beforeHistory.text, 'Native UI unlock changed source');
+        await page.getByRole('button', { name: 'Lock', exact: true }).click();
+        await expect(page.getByRole('button', { name: 'Unlock workspace', exact: true })).toBeVisible();
+        await unlock();
+        await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+        await page.getByRole('button', { name: 'Keychain', exact: true }).click();
+        await expect(page.getByRole('dialog')).toContainText('Your passphrase remains available');
+        await page.screenshot({ path: resolve(root, '.local/artifacts/runtime-keychain-enrolled.png'), animations: 'disabled' });
+        await page.getByRole('button', { name: 'Remove keychain unlock', exact: true }).click();
+        await expect(page.getByRole('dialog')).toContainText('Keychain enrollment removed.');
+        nativeEnrollmentAttempted = false;
+        await page.getByRole('button', { name: 'Close', exact: true }).click();
+        check(!(await ok('keychain/status', {})).enrolled, 'UI removal retained enrollment');
+        checks.push('explicit keychain UI enrollment, native unlock, passphrase fallback and scoped removal');
+    }
+
+    if (compatReader) {
+        check(digest(await readFile(compatReader)) === compatReader.split('/').at(-1), 'Compatibility binary does not match its immutable snapshot name');
+        const privateHash = /** Fingerprint optional protected SQLite records read-only before and after immutable older-reader writes. */ () => execFileSync('python3', ['-c', 'import sqlite3,sys,pathlib,hashlib; db=sqlite3.connect(pathlib.Path(sys.argv[1]).as_uri()+"?mode=ro",uri=True); rows=db.execute("SELECT id,generation,envelope FROM slots WHERE kind>=10 UNION ALL SELECT id,0,envelope FROM objects WHERE kind>=10 ORDER BY id").fetchall(); h=hashlib.sha256(); [(h.update(i),h.update(g.to_bytes(8,"big")),h.update(e)) for i,g,e in rows]; print(h.hexdigest())', join(directory, 'synthetic.hpx')], { encoding: 'utf8' }).trim();
+        const protectedBefore = privateHash(), before = await ok('clipboard', clipboardRequest);
+
+        await stop();
+        await open(await start(false, compatReader));
+        await unlock();
+        await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+        check(!(await ok('runtime')).capabilities.includes('private_clipboard'), 'Compatibility reader already implements the new clipboard');
+        const old = await ok('editor', { document: first });
+        check(old.text === recovery, 'Old reader changed current source');
+        const saved = await ok('commands', { operation: [...randomBytes(32)], request: { command: 'save', document: first, generation: old.generation, base: old.base, previous_sequence: old.acknowledged_sequence, sequence: old.acknowledged_sequence + 1, text: old.text } });
+
+        await ok('commands', { operation: [...randomBytes(32)], request: { command: 'commit', document: first, generation: saved.outcome.generation, base: old.base, sequence: saved.outcome.sequence } });
+        const oldFork = await ok('editor', { document: forkDocument });
+        check(oldFork.text === editedFork, 'Old reader lost fork content');
+        const oldForkSaved = await ok('commands', { operation: [...randomBytes(32)], request: { command: 'save', document: forkDocument, generation: oldFork.generation, base: oldFork.base, previous_sequence: oldFork.acknowledged_sequence, sequence: oldFork.acknowledged_sequence + 1, text: oldFork.text } });
+
+        await ok('commands', { operation: [...randomBytes(32)], request: { command: 'commit', document: forkDocument, generation: oldForkSaved.outcome.generation, base: oldFork.base, sequence: oldForkSaved.outcome.sequence } });
+        const oldMerge = await ok('editor', { document: mergeBaseline.document });
+        check(oldMerge.text === mergeBaseline.text, 'Old reader lost reviewed synthesis content');
+        const oldMergeSaved = await ok('commands', { operation: [...randomBytes(32)], request: { command: 'save', document: mergeBaseline.document, generation: oldMerge.generation, base: oldMerge.base, previous_sequence: oldMerge.acknowledged_sequence, sequence: oldMerge.acknowledged_sequence + 1, text: oldMerge.text } });
+
+        await ok('commands', { operation: [...randomBytes(32)], request: { command: 'commit', document: mergeBaseline.document, generation: oldMergeSaved.outcome.generation, base: oldMerge.base, sequence: oldMergeSaved.outcome.sequence } });
+        check(privateHash() === protectedBefore, 'Old reader rewrote optional protected clipboard/derivation state');
+        await stop();
+        await open(await start(false));
+        await unlock();
+        await expect(page.locator('.clipboard .clip-chip')).toHaveCount(1);
+        check(JSON.stringify(await ok('clipboard', clipboardRequest)) === JSON.stringify(before), 'Old reader changed the pinned private reference');
+        check(JSON.stringify(await ok('derivation', { document: forkDocument })) === JSON.stringify(derivation), 'Old reader changed pinned derivation');
+        check(JSON.stringify(await ok('assertions', assertionBaseline.input)) === JSON.stringify(assertionBaseline.view), 'Old reader changed versioned assertion overlay');
+        check(JSON.stringify(await ok('merge', { document: mergeBaseline.document })) === JSON.stringify(mergeBaseline.event), 'Old reader changed reviewed synthesis evidence');
+        check(JSON.stringify(await ok('comments', commentBaseline.input)) === JSON.stringify(commentBaseline.view), 'Old reader changed immutable retrospective comments');
+        checks.push('pre-clipboard/fork/assertion reader opens/saves/commits both documents while preserving optional ciphertext and exact overlays byte-for-byte');
+    }
+    await page.locator('[data-investigation="History"]').click();
+    await expect(page.locator('#investigationBody')).toContainText('History page 1');
+    const capturedBeforeFork = await ok('clipboard', clipboardRequest), newerSource = 'Newer uncommitted source 😀\r\n';
+
+    await paste(newerSource);
+    await page.getByRole('button', { name: 'Save draft', exact: true }).click();
+    await expect.poll(/** Wait until the newer draft is acknowledged before inspecting historical comments and captured-source Fork. */ async () => (await ok('editor', { document: first })).text).toBe(newerSource);
+    const newerEditor = await ok('editor', { document: first });
+
+    await page.locator('[data-interaction="Comments"]').click();
+    await expect(page.locator('.comment-card')).toHaveCount(8);
+    await page.locator('#interactionBody').getByRole('button', { name: 'Inspect comment passage', exact: true }).first().click();
+    check(await page.getByRole('dialog', { name: 'Comment passage · read only' }).locator('pre').textContent() === recovery, 'Retained comment followed changed draft text');
+    await page.keyboard.press('Escape');
+    check(JSON.stringify(await ok('editor', { document: first })) === JSON.stringify(newerEditor), 'Comment inspection changed newer draft');
+    checks.push('retained comments inspect exact earlier passages after newer source edits without relocating anchors');
+    await page.locator('[data-investigation="History"]').click();
+    await page.locator('#investigationBody').getByRole('button', { name: 'Compare with latest committed', exact: true }).first().click();
+    await expect(page.getByRole('dialog')).toContainText('These snapshots contain exactly the same bytes.');
+    check(await page.getByRole('dialog').getByLabel('Latest committed snapshot', { exact: true }).textContent() === recovery, 'Comparison included newer uncommitted draft');
+    check((await ok('editor', { document: first })).text === newerSource, 'Read-only comparison changed draft');
+    await page.getByRole('dialog').getByRole('button', { name: 'Close', exact: true }).click();
+    await page.locator('.clipboard .clip-chip > button').first().click();
+    check(await page.getByRole('dialog').locator('pre').textContent() === recovery, 'Captured fork review followed newer source');
+    await page.getByLabel('Fork name', { exact: true }).fill('Captured historic fork');
+
+    for (const theme of ['dark', 'light']) {
+        if (theme === 'light')
+            await page.evaluate(/** Switch to light theme for retained historic-Fork review capture. */ () => document.body.classList.toggle('light'));
+        await page.screenshot({ path: resolve(root, `.local/artifacts/runtime-captured-fork-${theme}.png`), animations: 'disabled' });
+    }
+    await page.evaluate(/** Restore dark theme after historic-Fork screenshots. */ () => document.body.classList.toggle('light'));
+    await page.getByRole('button', { name: 'Fork captured source', exact: true }).click();
+    await expect(page.locator('#documentTitle')).toHaveText('Captured historic fork');
+    const historicFork = (await ok('documents', {})).find(/** Find the captured historical Fork by its unique output title. */    d => d.title === 'Captured historic fork').document;
+    check((await ok('editor', { document: historicFork })).text === recovery, 'Captured-reference fork changed exact historical bytes');
+    const departedSource = await ok('editor', { document: first });
+    check(departedSource.text === newerEditor.text, 'Captured-reference Fork departure changed newer source bytes');
+    check((await ok('snapshot', { document: first, snapshot: departedSource.snapshot })).text === newerSource, 'Leaving source for captured-reference Fork did not publish current text');
+    check((await ok('snapshot', { document: first, snapshot: newerEditor.snapshot })).text === recovery, 'Departure changed the earlier source snapshot');
+    check(JSON.stringify(await ok('clipboard', clipboardRequest)) === JSON.stringify(capturedBeforeFork), 'Fork consumed or changed protected reference');
+    const historicDerivation = await ok('derivation', { document: historicFork });
+    check(JSON.stringify(historicDerivation.inputs[0]) === JSON.stringify(capturedBeforeFork.entries[0].source), 'Captured-reference fork changed pinned binding');
+    await stop();
+    await open(await start(false));
+    await unlock();
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+    check(JSON.stringify(await ok('derivation', { document: historicFork })) === JSON.stringify(historicDerivation), 'Restart changed captured-reference derivation');
+    await paste(recovery);
+    await page.getByRole('button', { name: 'Save draft', exact: true }).click();
+    await expect.poll(/** Wait until recovery source is restored after historical-Fork restart. */ async () => (await ok('editor', { document: first })).text).toBe(recovery);
+    checks.push('reviewed historical clipboard Fork retains pinned input/private reference across restart while departure publishes newer source without changing its bytes');
+    const widgetSource = '# Widget capture\r\n\r\nBefore the table.\r\n\r\n| Term | Value |\r\n| --- | --- |\r\n| Exact 😀 | e\u0301 |\r\n\r\n$$\r\nE=mc^2\r\n$$\r\n\r\n## After widgets\r\n\r\nExact text below table and maths.\r\n';
+
+    await page.getByRole('button', { name: 'Second synthetic document', exact: true }).click();
+    await paste(widgetSource);
+    await page.getByRole('button', { name: 'Commit', exact: true }).click();
+    await expect.poll(/** Wait for the widget-rich second document exact source before capturing it. */ async () => (await ok('editor', { document: second })).text).toBe(widgetSource);
+    await page.getByRole('textbox', { name: 'Markdown document editor' }).focus();
+    await page.keyboard.press('ControlOrMeta+A');
+    await page.getByRole('button', { name: 'Copy source reference', exact: true }).click();
+    await expect(page.locator('.clipboard .clip-chip')).toHaveCount(2);
+    await page.getByRole('button', { name: 'First synthetic document', exact: true }).click();
+    const beforeGraph = await ok('editor', { document: first });
+
+    await page.getByRole('textbox', { name: 'Markdown document editor' }).focus();
+    await page.keyboard.press('ControlOrMeta+A');
+    await page.locator('[data-lens="Graph"]').click();
+    await page.getByRole('button', { name: 'Choose graph nodes', exact: true }).click();
+    const graphDialog = page.getByRole('dialog');
+
+    await expect(graphDialog).toContainText('Role lines identify historical participants');
+
+    for (const box of await graphDialog.getByRole('checkbox').all())
+        await box.check();
+    await graphDialog.getByRole('button', { name: 'Show graph', exact: true }).click();
+    await expect(graphDialog.locator('.graph-node')).toHaveCount(5);
+    await expect(graphDialog.locator('.graph-edge')).toHaveCount(2);
+    const graphIds = (await ok('documents', {})).map(/** Extract selected document identities for the bounded document/Fork graph query. */    d => d.document), graphProjection = await ok('graph', { documents: graphIds });
+    check(graphProjection.nodes.length === 5 && graphProjection.edges.length === 2, 'Graph query lost selected document/fork scope');
+    await graphDialog.locator('.graph-edge').first().focus();
+    await page.keyboard.press('Enter');
+    await expect(graphDialog.locator('.graph-inspection')).toContainText('Recorded Fork');
+    await graphDialog.getByRole('button', { name: 'Inspect exact fork source', exact: true }).click();
+    check(await page.getByRole('dialog').filter({ hasText: 'Graph fork source · read only' }).locator('pre').textContent() === recovery, 'Graph replaced pinned source with current document');
+    await page.getByRole('button', { name: 'Close source', exact: true }).click();
+
+    for (const theme of ['dark', 'light']) {
+        if (theme === 'light')
+            await page.evaluate(/** Switch to light theme for document/Fork graph desktop screenshots. */ () => document.body.classList.toggle('light'));
+
+        for (const width of [1280, 1600, 2000]) {
+            await page.setViewportSize({ width, height: 1000 });
+            await page.screenshot({ path: resolve(root, `.local/artifacts/runtime-graph-${theme}-${width}.png`), animations: 'disabled' });
+            check(await graphDialog.evaluate(/** Check that the document/Fork graph dialog remains within the desktop viewport. */    d => { const r = d.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight; }), 'Graph dialog exceeds desktop bounds');
+        }
+    }
+    await page.evaluate(/** Restore dark theme after graph desktop screenshots. */ () => document.body.classList.toggle('light'));
+    await page.setViewportSize({ width: 1600, height: 1000 });
+    await page.evaluate(/** Install a delayed graph response to test selection-change invalidation. */ () => {
+        const actual = window.fetch.bind(window);
+        window.__restoreGraphFetch = /** Restore original browser fetch after document graph response isolation testing. */
+            () => { window.fetch = actual; };
+        window.fetch = /** Retain the actual graph response while exposing readiness for a deliberate selection change. */
+            async (...args) => {
+                const inputUrl = args[0] instanceof Request ? args[0].url : String(args[0]);
+                const inputBody = args[0] instanceof Request ? await args[0].clone().text() : args[1]?.body;
+                const response = await actual(...args);
+
+                if (inputUrl.endsWith('/api/v1/graph')) {
+                    window.__graphStarted = true;
+                    await new Promise(/** Expose the graph response release callback. */    resolve => { window.__releaseGraph = resolve; });
+                }
+
+                return response;
+            };
+    });
+
+    try {
+        await graphDialog.getByRole('button', { name: 'Show graph', exact: true }).click();
+        await expect.poll(/** Poll until the document graph response has been captured. */ () => page.evaluate(/** Read captured graph readiness before changing graph selection. */ () => !!window.__graphStarted)).toBe(true);
+        const firstBox = graphDialog.getByRole('checkbox').first();
+
+        await firstBox.uncheck();
+        await expect(graphDialog.locator('.graph-node')).toHaveCount(0);
+        await page.evaluate(/** Release the obsolete graph response after unselecting a node. */ () => window.__releaseGraph());
+        await expect(graphDialog.getByRole('status')).toContainText('Selection changed');
+        await firstBox.check();
+    }
+    finally {
+        await page.evaluate(/** Release any pending graph response and remove interception state even on failure. */ () => { window.__releaseGraph?.(); window.__restoreGraphFetch?.(); delete window.__releaseGraph; delete window.__restoreGraphFetch; delete window.__graphStarted; });
+    }
+    await graphDialog.getByRole('button', { name: 'Close', exact: true }).click();
+    const selectedAfterGraph = await page.getByRole('textbox', { name: 'Markdown document editor' }).evaluate(/** Copy exact editor selection after graph inspection to detect source/selection changes. */    element => { const data = new DataTransfer(); element.dispatchEvent(new ClipboardEvent('copy', { bubbles: true, cancelable: true, clipboardData: data })); return data.getData('text/plain'); });
+    check(selectedAfterGraph === recovery, 'Graph changed exact editor selection');
+    check(JSON.stringify(await ok('editor', { document: first })) === JSON.stringify(beforeGraph), 'Graph inspection mutated editor/head/history');
+    await page.locator('[data-lens="Workspace"]').click();
+    checks.push('read-only selected document/Fork graph with labelled nodes/direction, exact source inspection, stale-result isolation and desktop themes/widths preserves source/selection');
+    await page.locator('[data-lens="Graph"]').click();
+    await page.getByRole('button', { name: 'Choose graph nodes', exact: true }).click();
+    const semanticGraphDialog = page.getByRole('dialog');
+
+    await semanticGraphDialog.getByRole('button', { name: 'Load retained assertions', exact: true }).click();
+    await semanticGraphDialog.getByRole('checkbox', { name: /Grouped claims/ }).check();
+    await semanticGraphDialog.getByRole('button', { name: 'Show graph', exact: true }).click();
+    await expect(semanticGraphDialog.locator('.graph-node')).toHaveCount(2);
+    await expect(semanticGraphDialog.locator('.graph-node[data-kind="assertion"]')).toHaveCount(1);
+    await expect(semanticGraphDialog.locator('.graph-edge[data-kind="participant"]')).toHaveCount(3);
+    check(await semanticGraphDialog.locator('.graph-edge[data-kind="participant"] [marker-end]').count() === 0, 'Role incidence was rendered as an inferred causal/logical arrow');
+    const overlayProjection = await ok('graph/overlay', { nodes: [{ kind: 'document', document: first }, { kind: 'assertion', node: assertionBaseline.nary }] });
+    check(overlayProjection.edges.length === 3 && overlayProjection.nodes.length === 2, 'N-ary projection became independent binary facts');
+    await semanticGraphDialog.locator('.graph-edge[data-kind="participant"]').first().focus();
+    await page.keyboard.press('Enter');
+    await semanticGraphDialog.getByRole('button', { name: 'Inspect exact participant source', exact: true }).click();
+    check(await page.getByRole('dialog').filter({ hasText: 'Graph assertion participant · read only' }).locator('pre').textContent() === assertionBaseline.narySource, 'Graph incidence substituted current source text');
+    await page.getByRole('button', { name: 'Close source', exact: true }).click();
+    await semanticGraphDialog.locator('.graph-node[data-kind="assertion"]').focus();
+    await page.keyboard.press('Enter');
+    await expect(semanticGraphDialog.locator('.graph-inspection')).toContainText('not a checked proof');
+
+    for (const theme of ['dark', 'light']) {
+        if (theme === 'light')
+            await page.evaluate(/** Switch to light theme for selected semantic assertion graph screenshots. */ () => document.body.classList.toggle('light'));
+
+        for (const width of [1280, 1600, 2000]) {
+            await page.setViewportSize({ width, height: 1000 });
+            await page.screenshot({ path: resolve(root, `.local/artifacts/runtime-overlay-graph-${theme}-${width}.png`), animations: 'disabled' });
+        }
+    }
+    await page.evaluate(/** Restore dark theme after semantic graph capture. */ () => document.body.classList.toggle('light'));
+    await page.setViewportSize({ width: 1600, height: 1000 });
+    await page.evaluate(/** Install a delayed assertion-overlay graph response to test selection isolation. */ () => {
+        const actual = window.fetch.bind(window);
+        window.__restoreOverlayGraph = /** Restore original fetch after semantic graph response testing. */
+            () => { window.fetch = actual; };
+        window.fetch = /** Retain the actual overlay graph response while the selected assertion changes. */
+            async (...args) => {
+                const inputUrl = args[0] instanceof Request ? args[0].url : String(args[0]);
+                const inputBody = args[0] instanceof Request ? await args[0].clone().text() : args[1]?.body;
+                const response = await actual(...args);
+
+                if (inputUrl.endsWith('/api/v1/graph/overlay')) {
+                    window.__overlayGraphStarted = true;
+                    await new Promise(/** Expose the delayed semantic graph response release callback. */    resolve => { window.__releaseOverlayGraph = resolve; });
+                }
+
+                return response;
+            };
+    });
+
+    try {
+        await semanticGraphDialog.getByRole('button', { name: 'Show graph', exact: true }).click();
+        await expect.poll(/** Poll until the semantic graph response reaches its controlled delay. */ () => page.evaluate(/** Read captured semantic-graph readiness before changing the selected assertion. */ () => !!window.__overlayGraphStarted)).toBe(true);
+        await semanticGraphDialog.getByRole('checkbox', { name: /Grouped claims/ }).uncheck();
+        await page.evaluate(/** Release the obsolete semantic graph response after clearing the assertion selection. */ () => window.__releaseOverlayGraph());
+        await expect(semanticGraphDialog.locator('.graph-node')).toHaveCount(0);
+        await expect(semanticGraphDialog.getByRole('status')).toContainText('Selection changed');
+    }
+    finally {
+        await page.evaluate(/** Release pending overlay response and restore fetch even after a failed assertion. */ () => { window.__releaseOverlayGraph?.(); window.__restoreOverlayGraph?.(); delete window.__releaseOverlayGraph; delete window.__restoreOverlayGraph; delete window.__overlayGraphStarted; });
+    }
+    await semanticGraphDialog.getByRole('button', { name: 'Close', exact: true }).click();
+    await page.locator('[data-lens="Workspace"]').click();
+    check(JSON.stringify(await ok('editor', { document: first })) === JSON.stringify(beforeGraph), 'Semantic graph mutated source/head/history');
+    const selectedAfterSemanticGraph = await page.getByRole('textbox', { name: 'Markdown document editor' }).evaluate(/** Copy exact editor selection after semantic graph inspection. */    element => { const data = new DataTransfer(); element.dispatchEvent(new ClipboardEvent('copy', { bubbles: true, cancelable: true, clipboardData: data })); return data.getData('text/plain'); });
+    check(selectedAfterSemanticGraph === recovery, 'Semantic graph changed exact editor selection');
+    checks.push('selected assertion node graph preserves three ordered n-ary incidences, exact historical ranges, evidence status and stale-view isolation in desktop themes/widths');
+    await exerciseMergeGraph({ page, ok, first, mergeBaseline, recovery, root, check, checks });
+
+    for (let index = (await ok('documents', {})).length + 1; index <= 17; index++)
+        await ok('commands', { operation: [...randomBytes(32)], request: { command: 'create', title: `Graph boundary node ${index}`, text: 'Synthetic graph boundary only.' } });
+    const boundaryDocuments = (await ok('documents', {})).map(/** Extract every fixture document identity for the graph selection upper-bound test. */    d => d.document);
+    check((await api('graph', { documents: boundaryDocuments })).status === 400, 'Graph accepted more than 16 selected nodes');
+    await page.reload({ waitUntil: 'networkidle' });
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
+    await page.locator('[data-lens="Graph"]').click();
+    await page.getByRole('button', { name: 'Choose graph nodes', exact: true }).click();
+    const boundaryDialog = page.getByRole('dialog');
+
+    for (const box of await boundaryDialog.getByRole('checkbox').all())
+        await box.check();
+    await boundaryDialog.getByRole('button', { name: 'Show graph', exact: true }).click();
+    await expect(boundaryDialog.getByRole('status')).toContainText('between 1 and 16');
+    await expect(boundaryDialog.locator('.graph-node')).toHaveCount(0);
+    await boundaryDialog.getByRole('checkbox').last().uncheck();
+    await boundaryDialog.getByRole('button', { name: 'Show graph', exact: true }).click();
+    await expect(boundaryDialog.locator('.graph-node')).toHaveCount(16);
+
+    for (const theme of ['dark', 'light']) {
+        if (theme === 'light')
+            await page.evaluate(/** Switch to light theme for the maximum-size graph screenshot. */ () => document.body.classList.toggle('light'));
+        await page.screenshot({ path: resolve(root, `.local/artifacts/runtime-graph-limit-${theme}.png`), animations: 'disabled' });
+    }
+    await page.evaluate(/** Restore dark theme after graph limit capture. */ () => document.body.classList.toggle('light'));
+    await boundaryDialog.getByRole('button', { name: 'Close', exact: true }).click();
+    await page.locator('[data-lens="Workspace"]').click();
+    check(JSON.stringify(await ok('editor', { document: first })) === JSON.stringify(beforeGraph), 'Bounded graph query changed source or history');
+    checks.push('graph 16-node boundary renders, while 17-node selections reject without partial output or source writes');
+    await exerciseContributors({ page, ok, api, first, second, start, stop, open, unlock, root, check, checks });
+
+    for (const file of ['app.js', 'styles.css', 'assets/logo.png']) {
+        const served = await page.evaluate(/** Hash served browser assets inside the authenticated browser for exact embedded/development comparison. */ async (file) => {
+            const bytes = await (await fetch('/' + file)).arrayBuffer();
+
+            return [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(/** Encode one browser asset digest byte as fixed-width hexadecimal. */    b => b.toString(16).padStart(2, '0')).join('');
+        }, file);
+        check(served === digest(await readFile(resolve(root, 'frontend/dist', file))), 'Embedded/development asset mismatch: ' + file);
+    }
+    check(await page.locator('.brand img').evaluate(/** Check the supplied logo finished loading with its expected intrinsic dimensions. */    img => img.complete && img.naturalWidth === 1245 && img.naturalHeight === 1254), 'Provided logo failed to render');
+    check(await page.evaluate(/** Read the served logo MIME type from the actual browser response. */ async () => (await fetch('/assets/logo.png')).headers.get('content-type')) === 'image/png', 'Logo MIME type is incorrect');
+    checks.push('embedded application/style/logo assets match built development assets and supplied logo renders');
+    await expect(page.locator('.document-bar .subtle')).toHaveText('Local workspace');
+
+    for (const theme of ['dark', 'light']) {
+        if (theme === 'light')
+            await page.getByRole('button', { name: 'Switch theme', exact: true }).click();
+
+        for (const width of [1280, 1600, 2000]) {
+            await page.setViewportSize({ width, height: 1000 });
+            // Dockview schedules its ResizeObserver layout and overlays on separate frames.
+            await expect.poll(/** Poll browser layout until workbench overflow and sidebar geometry match the target width. */ () => page.evaluate(/** Measure document overflow and right sidebar position from the live DOM. */ () => ({ overflow: document.documentElement.scrollWidth > innerWidth, right: document.querySelector('.right-sidebar').getBoundingClientRect().right })), { message: 'Live runtime Dockview geometry must settle without overflow' }).toEqual({ overflow: false, right: width });
+            await page.screenshot({ path: resolve(root, `.local/artifacts/runtime-workflow-${engine}-${theme}-${width}.png`), animations: 'disabled' });
+
+            if (width === 1600) {
+                await page.getByRole('button', { name: 'Second synthetic document', exact: true }).click();
+                await page.getByLabel('Maths display', { exact: true }).selectOption('rendered');
+                await page.getByRole('button', { name: 'After widgets', exact: true }).click();
+                await page.evaluate(/** Wait two frames before capturing source below rendered table/math widgets. */ () => new Promise(/** Coordinate the widget-layout two-frame settlement wait. */    resolve => requestAnimationFrame(/** Advance the second frame before widget screenshot capture. */ () => requestAnimationFrame(resolve))));
+                await page.screenshot({ path: resolve(root, `.local/artifacts/runtime-clipboard-widgets-${theme}.png`), animations: 'disabled' });
+                check((await ok('editor', { document: second })).text === widgetSource, 'Private clipboard or rendered widgets changed exact source');
+                await page.getByRole('button', { name: 'First synthetic document', exact: true }).click();
+            }
+
+            if (width !== 1600) {
+                await page.getByRole('button', { name: 'Keychain', exact: true }).click();
+                await expect(page.getByRole('dialog')).toBeVisible();
+                const box = await page.getByRole('dialog').boundingBox();
+                check(box && box.x >= 0 && box.y >= 0 && box.x + box.width <= width, 'Keychain dialog exceeds desktop viewport');
+                await page.screenshot({ path: resolve(root, `.local/artifacts/runtime-keychain-${theme}-${width}.png`), animations: 'disabled' });
+                await page.getByRole('button', { name: 'Close', exact: true }).click();
+            }
+        }
+    }
+    checks.push('live runtime labels, private clipboard and layout at 1280/1600/2000 in both themes, including below table/math replacements');
+
+    if (process.argv.includes('--working-branches'))
+        await exerciseWorkingBranches({ page, root, checks, ok, api, paste, dropReplies, restoreReplies, compatReader, database: join(directory, 'synthetic.hpx'), restart: /** Restart a selected current/older reader for the optional full working-branches scenario. */ async (executable) => { await stop('SIGKILL'); await open(await start(false, executable)); await unlock(); await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible(); } });
+    await exerciseDocumentAudit({ page, ok, api, root, checks, database: join(directory, 'synthetic.hpx'), unlock });
+    await exerciseDeparture({ page, root, ok, paste, checks, dropReplies, restoreReplies, commands, restart: /** Abruptly restart and unlock the owned runtime for the final departure scenario. */ async () => { await stop('SIGKILL'); await open(await start(false)); await unlock(); await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible(); } });
+
+    if (process.argv.includes('--measure-workload'))
+        await measureRuntimeWorkload({ ok, page, database: join(directory, 'synthetic.hpx'), root, checks });
+
+    for (const name of await readdir(directory)) {
+        const file = join(directory, name);
+
+        if (!(await stat(file)).isFile())
+            continue;
+        const bytes = await readFile(file);
+
+        for (const needle of ['SYNTHETIC-COMMENT', 'SYNTHETIC-REVIEWED-MERGE', 'SYNTHETIC-CUSTODY-SENTINEL', passphrase, 'First synthetic document'])
+            check(!bytes.includes(Buffer.from(needle)), 'Plaintext sentinel present in encrypted workspace files');
+    }
+    checks.push('workspace/database sidecars contain no tested plaintext sentinels');
+    await writeFile(resolve(root, '.local/artifacts/runtime-workflow-' + engine + '.json'), JSON.stringify({ browser: engine, checks, synthetic: true, binary_sha256: testedSha, version: builtVersion, openapi_sha256: testedSpecSha, trust: 'approved user leaf SSL across localhost/127.0.0.1 SANs; validation enabled' }, null, 2));
+    passed = true;
+    console.log('PASS: ' + engine + ' real HTTPS/SQLite workflow (' + checks.length + ' checks, synthetic documents only); validation complete, cleaning isolated test resources');
+}
+
+try {
+    await run();
+}
+catch (error) {
+    await writeFile(resolve(root, '.local/artifacts/runtime-api-failure.json'), JSON.stringify({ checks, error: error.stack }, null, 2));
+    await page?.screenshot({ path: resolve(root, '.local/artifacts/runtime-workflow-failure.png'), animations: 'disabled' }).catch(/** Ignore screenshot-capture failure so the original workflow failure remains the reported cause. */ () => { });
+    console.error('FAIL after ' + checks.length + ' completed checks: ' + String(error.message).replace(/#launch=[a-f0-9]+/g, '#launch=[redacted]'));
+    process.exitCode = 1;
+}
+finally {
+    if (nativeEnrollmentAttempted) {
+        try {
+            const status = await ok('keychain/status', {});
+
+            if (!status.enrolled && !status.cleanup_pending)
+                throw Error('Unconfirmed native outcome');
+
+            if ((await ok('runtime')).locked)
+                await ok('unlock', { passphrase });
+            await ok('keychain/remove', {});
+            nativeEnrollmentAttempted = false;
+        }
+        catch {
+            keepDirectory = true;
+            process.exitCode = 1;
+            console.error('Synthetic native cleanup needs attention; retained isolated .local/artifacts/runtime-workflow-* workspace for scoped recovery.');
+        }
+    }
+    await browser?.close();
+    await stop();
+
+    if (directory && !keepDirectory)
+        await rm(directory, { recursive: true, force: true });
+}
+
+if (passed && !process.exitCode) {
+    check(testedSpecSha === digest(await readFile(resolve(root, 'shared/openapi.json'))), 'Generated schema changed during integration');
+
+    if (binaryAt < 0)
+        await refreshManualRuntime(testedSha, 'check-runtime-workflow.mjs');
+    else
+        check(testedSha === await binaryFingerprint(testedExecutable), 'Explicit executable changed during verification');
+}

@@ -8,20 +8,22 @@
 - **Level:** `09-guides`
 - **Status:** `proposed`
 - **Maintainer:** project owner
-- **Applies to:** historical checked source/toolchain evidence; no new replay during migration
+- **Applies to:** scoped historical evidence and current pinned model/helper replay
 - **Upstream authority:** [formal obligations](../../07-implementation/formal-invariants.md), [full digest](../../08-assurance/formal-validation-digest.md)
-- **Downstream dependencies:** existing proofs and shared/tooling/check_rust_proof.py; exact proof bytes unchanged
-- **Verification:** documentation source/link preservation; proof replay is a separate executed check
+- **Downstream dependencies:** existing proofs and shared/tooling/check_rust_proof.py; current exact pins distinguish comment refreshes
+- **Verification:** TEST204 pinned model build/environment and extracted-helper replay; historical checks retain exact original scope
 - **Decision/history:** HPX-SRC-0115 and HPX-SRC-0117, hashes/current locations in source register
-- **Last reviewed:** 2026-10-25
+- **Last reviewed:** 2026-11-15
 
 ## Current Stage1 invocation paths
 
 Proofs now live under `backend/proofs/`; the driver is `shared/tooling/check_rust_proof.py`. Run `lake -d backend/proofs/lean build` and `python3 shared/tooling/check_rust_proof.py` with the pinned tools available. The source guides quoted below preserve their historical path spellings and as-run results; those are not current root invocation paths. TEST176 closes the initial Stage1 tool-availability gate:actual model build/checker/54 axiom reports and extracted-Rust replay pass with project-local `.verification/cargo`, `.verification/rustup` and `.verification/lean-v4.35.0` homes. `artifacts/stage1-proof-replay.py` sets child-only PATH/toolchain variables;it does not modify a shell profile or owner default. Run `lake env lean` model commands from `backend/proofs/lean`;the Rust driver runs from the repository root. Earlier source/theorem/correspondence limits below remain unchanged.
 
+TEST204 records a fresh comment-only whole-source model/build/environment and extracted-helper replay. Current pins include changed comments and translator source spans; frozen prior reports remain unchanged. Tool homes are under `.local/verification/`; set child-only PATH to its `cargo/bin` and `lean-v4.35.0/bin` when the shell lacks rustup or Lake. This changes no owner default toolchain.
+
 ## Scope and limitations
 
-The following source guides retain their original evidence scope. Current uncommitted domain/dependency changes need replay compatibility checks before claiming fresh extraction success. No migration command below was executed as a proof check. Installation may fetch tool/dependency assets; owner publication/privacy restrictions remain in effect.
+The following source guides retain their original evidence scope. Any later domain/dependency changes need replay compatibility checks before claiming fresh extraction success. No migration command below was executed as a proof check. Installation may fetch tool/dependency assets; owner publication/privacy restrictions remain in effect.
 
 
 ## Preserved guide: proofs/README.md

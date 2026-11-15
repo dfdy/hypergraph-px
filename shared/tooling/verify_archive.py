@@ -1,11 +1,27 @@
 #!/usr/bin/env python3
-"""Read-only archival boundary checks (stdlib only).
+"""Hypergraph PX — Historical retention and publication boundary checks
 
-Run from any directory. Default checks metadata and available historical-review bytes; absent local
-archives are explicitly skipped. --check-local requires every registered byte.
-All .provenance content is local-only; historical classifications retain meaning.
-This checker never moves files, changes the index, or establishes supersession
-approval: reviewers must establish that before adding archived-duplicate entries.
+Check explicit historical retention metadata, exact bytes where requested and repository ignore/index boundaries without moving or approving archival content.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/verify_archive.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Explicit archival audits and isolated retention/path/hash/Git-boundary fixtures.
+
+Specification:
+- [Current source-traceability review](../../docs/08-assurance/source-traceability.md)
+- [Commenting and exact-source review](../../docs/09-guides/developers/code-comments.md)
+
+Boundary: Archive access requires its own scope; this comment review does not run the archive verifier or read payloads. Mechanical retention is not semantic supersession approval.
 """
 from __future__ import annotations
 
@@ -36,6 +52,8 @@ DEFENSIVE_PRIVATE_ROOTS = (".oldspecs/", ".archive/", "docproject/public-record/
 
 
 def owned_path(root: Path, value: str) -> Path:
+    """Require canonical repository-relative paths and reject traversal, aliases and symlink escapes before payload access."""
+
     if not isinstance(value, str) or not value:
         raise ValueError("empty/non-string path")
     pure = PurePosixPath(value)
@@ -49,6 +67,7 @@ def owned_path(root: Path, value: str) -> Path:
 
 def current_location(root: Path, value: str) -> Path:
     """Historical original_path is exempt; physical/current references are not."""
+
     path = owned_path(root, value)
     resolved = path.resolve().relative_to(root.resolve()).as_posix()
     if any(candidate == prefix.rstrip("/") or candidate.startswith(prefix)
@@ -58,6 +77,8 @@ def current_location(root: Path, value: str) -> Path:
 
 
 def exact(root: Path, value: str, entry: dict) -> None:
+    """Compare exact retained bytes and length to the registered fingerprint without normalizing source text."""
+
     path = owned_path(root, value)
     data = path.read_bytes()
     if len(data) != entry["bytes"] or hashlib.sha256(data).hexdigest() != entry["sha256"]:
@@ -65,11 +86,14 @@ def exact(root: Path, value: str, entry: dict) -> None:
 
 
 def verify(root: Path, manifest: dict, check_local: bool = False) -> dict:
+    """Check retention classes, provenance/recovery paths, protected archival restrictions, payload membership and aggregate counts."""
+
     if manifest["manifest_version"] != 1:
         raise ValueError("unsupported manifest version")
     seen = set()
     compatibility_paths = set()
     counts = {"checked": 0, "local_skipped": 0, "archived": 0}
+
     for entry in manifest["entries"]:
         current = entry["current_path"]
         current_location(root, current)
@@ -91,6 +115,7 @@ def verify(root: Path, manifest: dict, check_local: bool = False) -> dict:
         refs = entry["recovery_refs"]
         if not isinstance(refs, list) or not refs:
             raise ValueError("missing recovery references: " + current)
+
         for ref in refs:
             if not current_location(root, ref).is_file() and (check_local or not ref.startswith(".provenance/")):
                 raise ValueError("missing recovery reference: " + ref)
@@ -142,12 +167,15 @@ def verify(root: Path, manifest: dict, check_local: bool = False) -> dict:
                 exact(root, current, entry)
                 counts["checked"] += 1
     # A deleted row must not silently remove a retained item from assessment.
+
     for prefix, _, local in CLASSES.values():
         if local and not check_local:
             continue
+
         for path in (root / prefix).rglob("*"):
             if path.is_file() and path.relative_to(root).as_posix() not in seen | compatibility_paths:
                 raise ValueError("unregistered assessed file: " + path.relative_to(root).as_posix())
+
     for path in (root / ARCHIVE_ROOT).rglob("*"):
         if path.is_file() and path.relative_to(root).as_posix() != ARCHIVE_ROOT + "README.md" and path.relative_to(root).as_posix() not in seen:
             raise ValueError("unregistered archive payload: " + path.relative_to(root).as_posix())
@@ -163,16 +191,21 @@ def verify(root: Path, manifest: dict, check_local: bool = False) -> dict:
 
 def verify_sources(root: Path, manifest: dict, check_local: bool) -> int:
     """Retain the existing registers unchanged, including ZIP member identity."""
+
     by_path = {e["current_path"]: e for e in manifest["entries"]}
     moves = json.loads((root / "docs/02-governance/registers/documentation-archive.json").read_text())
+
     for row in moves:
         current_location(root, row["archive_path"])
         entry = by_path[row["archive_path"]]
+
         for key in ("original_path", "sha256", "bytes"):
             if entry[key] != row[key]:
                 raise ValueError("existing archive register drift: " + row["archive_path"])
+
     with (root / "docs/02-governance/registers/source-manifest.csv").open(newline="") as handle:
         sources = list(csv.DictReader(handle))
+
     for row in sources:
         current = row["current_path"]
         current_location(root, current)
@@ -192,6 +225,8 @@ def verify_sources(root: Path, manifest: dict, check_local: bool) -> int:
 
 
 def verify_git(root: Path) -> None:
+    """Read index and ignore rules to detect private provenance publication risks without mutating the Git index."""
+
     private_roots = (*PRIVATE_ROOTS, *DEFENSIVE_PRIVATE_ROOTS)
     tracked = subprocess.check_output(
         ["git", "ls-files", "-z", "--", *(p.rstrip("/") for p in private_roots)], cwd=root
@@ -215,9 +250,12 @@ def verify_git(root: Path) -> None:
 
 
 def main() -> None:
+    """Run the explicit historical manifest/source/Git audit with clear optional-byte limits and fail closed on invalid metadata."""
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check-local", action="store_true", help="Require all local retained and archived bytes")
     args = parser.parse_args()
+
     try:
         manifest = json.loads((ROOT / MANIFEST).read_text())
         counts = verify(ROOT, manifest, args.check_local)

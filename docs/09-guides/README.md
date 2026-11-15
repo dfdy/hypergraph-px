@@ -10,3 +10,7 @@ Unpopulated future topics remain reserved in the [document register](../02-gover
 - [Current development state](reference/DEVELOPMENT_STATE.md) — HPX-GUIDE-007; paused implementation and exact next steps.
 
 - [Formal validation reproduction](developers/formal-validation.md) — HPX-GUIDE-005; complete preserved model/extraction guides.
+
+## Code comment programme
+
+Use the [human-readable commenting guide](developers/code-comments.md) and its exact source inventory for the teaching-oriented rollout, review procedure and incremental/closeout checks. Passing CI protects completed reviews; it does not mean all pending code has been documented.

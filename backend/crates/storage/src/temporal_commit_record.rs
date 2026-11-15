@@ -1,9 +1,46 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Inactive frozen temporal Commit receipt codec; no publication or SQL writes.
+//! # Hypergraph PX — Frozen temporal Commit intent and receipt codec
+//!
+//! Bind an experimental Commit result to the complete exact request, its
+//! namespaced digest, changed/no-op meaning and actual committed-change order.
+//! Validate promotion against that frozen intent rather than fabricating a
+//! legacy command.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Experimental temporal Commit writer, promotion reader and
+//! strict record-codec tests.
+//!
+//! Specification:
+//! - [Temporal publication coordination][spec0]
+//! - [Frozen temporal Commit receipt format][spec1]
+//! - [Single-parent temporal Commit protocol][spec2]
+//!
+//! Boundary: No SQL publication or format activation is performed here.
+//! Caller-owned current authority and exact publication/source checks
+//! remain required before disclosure or reuse.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/temporal_commit_record.rs
+//! [spec0]: ../../../../docs/07-implementation/diagrams/application-coordination.c4
+//! [spec1]: ../../../../docs/07-implementation/data-structures/sqlite-records.md#candidate-temporal-commit-frozen-receipt
+//! [spec2]: ../../../../docs/07-implementation/protocols/draft-publication.md#experimental-single-parent-temporal-commit-transaction
+
 use super::*;
 
+/// Existing experimental frozen-Commit allocation; wrapper/profile versions remain separate.
 pub const CANDIDATE_KIND: i32 = 37;
 const MAX_ORDER: u64 = node_clock::MAX_ORDER;
+/// Frozen exact branch/editor/base/source intent and supplied origin-mapping evidence.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Request {
@@ -11,16 +48,24 @@ pub struct Request {
     pub document: DocumentId,
     #[serde(with = "encoding::identity")]
     pub branch: BranchId,
+
+    /// Expected acknowledged draft generation, not an inferred publication order.
     pub generation: u64,
     #[serde(with = "encoding::identity")]
     pub base: RevisionId,
     #[serde(with = "encoding::identity")]
     pub snapshot: SnapshotId,
+
+    /// Exact acknowledged source sequence captured by this operation.
     pub sequence: u64,
     pub text: String,
+
+    /// Supplied changed-region evidence; absence is reserved for a true unchanged result.
     pub evidence: Vec<origin_record::Evidence>,
 }
+
 impl Request {
+    /// Bound acknowledged counters, source bytes and aggregate evidence shape before encoding.
     pub fn validate(&self) -> Result<()> {
         if self.generation > MAX_ORDER
             || self.sequence > MAX_ORDER
@@ -35,11 +80,14 @@ impl Request {
         for proof in &self.evidence {
             count = count
                 .checked_add(proof.pieces.len())
+                // Bound the aggregate nested evidence count before accepting the request.
                 .filter(|n| *n <= MAX_TEXT_BYTES)
                 .ok_or(Error::Limit)?;
         }
         Ok(())
     }
+
+    /// Hash the exact bounded wrapper plus its temporal-command domain separator.
     pub fn digest(&self) -> Result<[u8; 32]> {
         self.validate()?;
         let bytes = Zeroizing::new(encoding::encode_record_limited(
@@ -47,17 +95,24 @@ impl Request {
             self,
             hypergraph_crypto::MAX_PLAINTEXT,
         )?);
+
         let mut hash = Sha256::new();
         hash.update(b"hpx/temporal-commit/v1\0");
         hash.update(&*bytes);
         Ok(hash.finalize().into())
     }
 }
+
+/// Original operation result paired with its actual request and change/no-op interpretation.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Frozen {
     pub request: Request,
     pub receipt: Receipt,
+
+    /// Per-node committed-change order; a no-op does not allocate another value.
     pub order: u64,
+
+    /// Whether publication created a new revision/snapshot and advanced generation.
     pub changed: bool,
 }
 #[derive(Deserialize)]
@@ -77,7 +132,9 @@ struct StoredRef<'a> {
     order: u64,
     changed: bool,
 }
+
 impl Frozen {
+    /// Require request/receipt branch, document, counters and changed-result evidence to agree.
     pub fn validate(&self) -> Result<()> {
         self.request.validate()?;
         if self.changed && self.request.generation == MAX_ORDER {
@@ -117,6 +174,8 @@ impl Frozen {
         }
         Ok(())
     }
+
+    /// Serialize the validated frozen request/result with its original intent digest.
     pub fn encode(&self) -> Result<Vec<u8>> {
         self.validate()?;
         encoding::encode_record_limited(
@@ -132,10 +191,13 @@ impl Frozen {
         )
     }
 }
+
+/// Decode the expected operation and validate frozen semantics/digest without a fallback receipt.
 pub fn decode(bytes: &[u8], operation: OperationId) -> Result<Frozen> {
     if bytes.len() > hypergraph_crypto::MAX_PLAINTEXT {
         return Err(Error::Limit);
     }
+
     let stored: Stored = encoding::decode_record(CANDIDATE_KIND, bytes)?;
     if stored.receipt.operation != operation {
         return Err(Error::Conflict);
@@ -162,6 +224,7 @@ pub(super) fn promotion_receipt(
     promotion: &working::Promotion,
     source: &working::Request,
 ) -> Result<()> {
+    // Read only the current format marker; this never upgrades or opens a new profile.
     let schema: i32 = db.query_row("PRAGMA user_version", [], |row| row.get(0))?;
     if schema != temporal_save::EXPERIMENTAL_SCHEMA {
         return Err(Error::NotFound);
@@ -180,16 +243,19 @@ pub(super) fn promotion_receipt(
     let envelope: Vec<u8> = db.query_row(
         "SELECT envelope FROM objects WHERE kind=?1 AND id=?2",
         params![CANDIDATE_KIND, promotion.operation.0.as_slice()],
+        // Read the already charged exact stored envelope, not a head-selected substitute.
         |row| row.get(0),
     )?;
     let bytes = cipher.key.open(
         cipher.context(CANDIDATE_KIND, promotion.operation.0, 0),
         &envelope,
     )?;
+    // A persisted promotion referencing another operation is an integrity violation.
     let frozen = decode(&bytes, promotion.operation).map_err(|error| match error {
         Error::Conflict => Error::Integrity,
         other => other,
     })?;
+
     let request = &frozen.request;
     if !frozen.changed
         || request.document != doc.id
@@ -211,6 +277,7 @@ pub(super) fn promotion_receipt(
     if *revision != promotion.revision || *snapshot != promotion.snapshot {
         return Err(Error::Integrity);
     }
+
     let base = history::read_entry(cipher, db, doc, request.base, &mut left)?;
     if base.snapshot != request.snapshot {
         return Err(Error::Integrity);
@@ -230,6 +297,7 @@ pub(super) fn promotion_receipt(
             origin_record::CANDIDATE_KIND,
             promotion.revision.0.as_slice()
         ],
+        // Read the already charged exact stored envelope, not a head-selected substitute.
         |row| row.get(0),
     )?;
     let bytes = cipher.key.open(
@@ -255,6 +323,7 @@ pub(super) fn promotion_receipt(
 #[cfg(test)]
 mod tests {
     use super::*;
+    /// Build an exact changed/no-op synthetic request/result pair for codec invariants.
     fn frozen(changed: bool) -> Frozen {
         let request = Request {
             document: DocumentId([1; 32]),
@@ -307,6 +376,8 @@ mod tests {
             changed,
         }
     }
+
+    /// Guard independent digest vectors, exact bytes and original changed/no-op result identity.
     #[test]
     fn changed_and_unchanged_receipts_retain_exact_request_and_original_result() {
         // Independent Python compact-JSON/SHA256 vector freezes field order and intent bytes.
@@ -355,6 +426,8 @@ mod tests {
         *sequence = MAX_ORDER;
         assert!(maximum.encode().is_ok());
     }
+
+    /// Reject relabelled publication scope, counters, change order or evidence.
     #[test]
     fn changed_result_scope_generation_order_and_evidence_cannot_be_relabelled() {
         let good = frozen(true);
@@ -381,6 +454,8 @@ mod tests {
         unsafe_sequence.request.sequence = MAX_ORDER + 1;
         assert!(matches!(unsafe_sequence.encode(), Err(Error::Limit)));
     }
+
+    /// Reject changed intent, duplicate/unknown/future shapes and excessive payloads.
     #[test]
     fn changed_intent_unknown_fields_duplicates_and_future_shapes_fail_closed() {
         let good = frozen(true);

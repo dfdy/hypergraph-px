@@ -1,3 +1,39 @@
+/**
+ * # Hypergraph PX — Development server developer-boundary scenarios
+ *
+ * Checks development tooling boundaries using explicit output capture, isolated
+ * temporary fixtures and controlled local services where required.
+ *
+ * Source: [Latest source on GitHub][source]
+ *
+ * Agent provenance: Agent creation unverified; original creator not recorded.
+ * Created: Unknown (not recorded).
+ * Creation harness: Unknown (not recorded).
+ * Creation model: Unknown (not recorded).
+ *
+ * Latest editing agent: Codex (OpenAI coding agent), /root/frontend_comments.
+ * Latest editing harness: Codex; version/build: unknown.
+ * Latest editing model: OpenAI; exact model identifier/revision: unknown.
+ * Last edited: 2026-11-15 (UTC).
+ *
+ * Used by: Frontend development validation — Node unit-test runner and
+ * developer-tooling regression suite.
+ *
+ * Specification:
+ * - [Browser component responsibilities][spec-1]
+ * - [Browser runtime and API contract][spec-2]
+ * - [development evidence md][spec-3]
+ *
+ * Boundary: Certificates and data are isolated test fixtures; no owner trust or
+ * manual workspace is enrolled. Embedded fixture strings and executable assertions
+ * remain byte-for-byte unchanged.
+ *
+ * [source]: https://github.com/dfdy/hypergraph-px/blob/main/frontend/tests/development-server.test.js
+ * [spec-1]: ../../docs/06-subsystems/diagrams/browser/interface.c4
+ * [spec-2]: ../../docs/06-subsystems/interfaces/browser-runtime.md
+ * [spec-3]: ../../docs/09-guides/reference/development-evidence.md
+ */
+
 import {test,before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import https from 'node:https';
@@ -7,11 +43,60 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {createDevelopmentServer,backendURL} from '../scripts/dev-server.mjs';
+
 let directory,cert,key,leaf;
-before(async()=>{directory=await mkdtemp(join(tmpdir(),'hpx-dev-boundary-'));cert=join(directory,'cert.pem');key=join(directory,'key.pem');execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',key,'-out',cert,'-days','1','-subj','/CN=127.0.0.1','-addext','subjectAltName=IP:127.0.0.1'],{stdio:'ignore'});leaf=await readFile(cert);await writeFile(join(directory,'index.html'),'<html><head></head><body>fixture</body></html>');});
-after(async()=>{await rm(directory,{recursive:true,force:true});});
-function request(url,{method='GET',headers={},body='',trusted=true}={}){return new Promise((yes,no)=>{const endpoint=new URL(url);const req=(endpoint.protocol==='https:'?https:http).request(endpoint,{method,headers,...(trusted?{ca:leaf}:{}),rejectUnauthorized:true},res=>{const chunks=[];res.on('data',chunk=>chunks.push(chunk));res.on('end',()=>yes({status:res.statusCode,headers:res.headers,text:Buffer.concat(chunks).toString()}));});req.on('error',no);req.end(body);});}
-test('development upstream is exact HTTPS loopback, never credentials, paths or arbitrary remote origins',()=>{assert.equal(backendURL('https://127.0.0.1:8000').origin,'https://127.0.0.1:8000');for(const value of ['http://127.0.0.1:8000','https://example.com','https://localhost:8000','https://user@127.0.0.1:8000','https://127.0.0.1:8000/api','https://127.0.0.1:8000/?x=1'])assert.throws(()=>backendURL(value));});
-test('frontend mock runs independently, serves no sources, rejects authority and marks only development HTML',async()=>{const service=await createDevelopmentServer({assets:directory,port:0,mock:true});try{const page=await request(service.url);assert.equal(page.status,200);assert.match(page.text,/hpx-development-mode/);assert.match(page.headers['content-security-policy'],/connect-src 'self'/);assert.equal((await request(service.url+'/api/v1/runtime')).status,503);assert.equal((await request(service.url+'/src/app.js')).status,404);assert.equal((await request(service.url,{headers:{Host:'evil.example'}})).status,403);assert.equal((await request(service.url,{headers:{Origin:'https://evil.example'}})).status,403);assert.equal((await request(service.url,{headers:{'Sec-Fetch-Site':'cross-site'}})).status,403);}finally{await service.close();}});
-test('HTTPS proxy preserves session authority, checks incoming origin before translating and denies unverified TLS',async()=>{const calls=[];const backend=https.createServer({cert:leaf,key:await readFile(key)},async(req,res)=>{let body='';for await(const chunk of req)body+=chunk;calls.push({url:req.url,headers:req.headers,body});res.writeHead(req.headers.cookie==='__Host-hpx=fixture'?200:401,{'Content-Type':'application/json','Set-Cookie':'__Host-hpx=fixture; Secure; HttpOnly; SameSite=Strict; Path=/'});res.end(JSON.stringify({authenticated:req.headers.cookie==='__Host-hpx=fixture'}));});await new Promise(yes=>backend.listen(0,'127.0.0.1',yes));const upstream='https://127.0.0.1:'+backend.address().port;const service=await createDevelopmentServer({assets:directory,port:0,backend:upstream,cert,key,ca:cert});let untrusted;try{assert.equal((await request(service.url+'/api/v1/runtime')).status,401);assert.equal((await request(service.url+'/api/v1/documents',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})).status,403);assert.equal((await request(service.url+'/api/v1/documents',{method:'POST',headers:{Origin:'https://evil.example','Content-Type':'application/json'},body:'{}'})).status,403);assert.equal(calls.length,1);const result=await request(service.url+'/api/v1/documents',{method:'POST',headers:{Origin:service.url,'Content-Type':'application/json',Cookie:'__Host-hpx=fixture'},body:'{}'});assert.equal(result.status,200);assert.match(result.headers['set-cookie'][0],/Secure; HttpOnly; SameSite=Strict/);assert.equal(calls[1].headers.origin,upstream);assert.equal(calls[1].headers.host,new URL(upstream).host);assert.equal(calls[1].headers.cookie,'__Host-hpx=fixture');assert.equal(calls[1].body,'{}');assert.equal((await request(service.url)).text.includes('hpx-development-mode'),false);assert.equal((await request(service.url+'/build-version.json')).status,401);assert.equal(calls.at(-1).url,'/build-version.json');for(const path of Object.keys(JSON.parse(await readFile(new URL('../../shared/openapi.json',import.meta.url),'utf8')).paths)){assert.equal((await request(service.url+path)).status,401);assert.equal(calls.at(-1).url,path);}assert.equal((await request(service.url+'/api/v1/not-a-contract-route')).status,400);assert.equal((await request(service.url+'/build-version.json',{method:'POST',headers:{Origin:service.url}})).status,400);untrusted=await createDevelopmentServer({assets:directory,port:0,backend:upstream,cert,key});assert.equal((await request(untrusted.url+'/api/v1/runtime')).status,502);await assert.rejects(request(service.url,{trusted:false}),/self.signed|certificate/i);}finally{await service.close();if(untrusted)await untrusted.close();backend.closeAllConnections();await new Promise(yes=>backend.close(yes));}});
-test('connected mode cannot silently use HTTP or attach backend authority to mock fixtures',async()=>{await assert.rejects(createDevelopmentServer({assets:directory,port:0,backend:'https://127.0.0.1:8000'}),/requires/);await assert.rejects(createDevelopmentServer({assets:directory,port:0,mock:true,backend:'https://127.0.0.1:8000'}),/Mock mode/);});
+
+before(/* Create an isolated ephemeral test certificate and asset directory without installing host trust. */ async()=>{directory=await mkdtemp(join(tmpdir(),'hpx-dev-boundary-'));cert=join(directory,'cert.pem');key=join(directory,'key.pem');execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',key,'-out',cert,'-days','1','-subj','/CN=127.0.0.1','-addext','subjectAltName=IP:127.0.0.1'],{stdio:'ignore'});leaf=await readFile(cert);await writeFile(join(directory,'index.html'),'<html><head></head><body>fixture</body></html>');});
+
+after(/* Remove only the isolated certificate/assets created for this test suite. */ async()=>{await rm(directory,{recursive:true,force:true});});
+
+/** Request local test endpoints with explicit certificate verification and collect complete responses. */
+function request(url,{method='GET',headers={},body='',trusted=true}={}){return new Promise(/* Create a verified HTTP/HTTPS request and propagate transport failures to the test. */ (yes,no)=>{const endpoint=new URL(url);
+
+  const req=(endpoint.protocol==='https:'?https:http).request(endpoint,{method,headers,...(trusted?{ca:leaf}:{}),rejectUnauthorized:true},/* Collect response bytes and metadata before resolving the request. */ res=>{const chunks=[];
+
+   res.on('data',/* Retain each response chunk in arrival order. */ chunk=>chunks.push(chunk));res.on('end',/* Resolve only after complete response delivery. */ ()=>yes({status:res.statusCode,headers:res.headers,text:Buffer.concat(chunks).toString()}));});
+
+  req.on('error',no);req.end(body);});}
+
+test('development upstream is exact HTTPS loopback, never credentials, paths or arbitrary remote origins',/* Verify development upstream accepts only exact credential-free HTTPS loopback origins. */ ()=>{assert.equal(backendURL('https://127.0.0.1:8000').origin,'https://127.0.0.1:8000');
+
+ for(const value of ['http://127.0.0.1:8000','https://example.com','https://localhost:8000','https://user@127.0.0.1:8000','https://127.0.0.1:8000/api','https://127.0.0.1:8000/?x=1'])assert.throws(/* Attempt each forbidden upstream URL form. */ ()=>backendURL(value));});
+
+test('frontend mock runs independently, serves no sources, rejects authority and marks only development HTML',/* Verify independent mock assets expose no source or backend authority and reject hostile origin metadata. */ async()=>{const service=await createDevelopmentServer({assets:directory,port:0,mock:true});
+
+ try{const page=await request(service.url);
+
+  assert.equal(page.status,200);assert.match(page.text,/hpx-development-mode/);assert.match(page.headers['content-security-policy'],/connect-src 'self'/);assert.equal((await request(service.url+'/api/v1/runtime')).status,503);assert.equal((await request(service.url+'/src/app.js')).status,404);assert.equal((await request(service.url,{headers:{Host:'evil.example'}})).status,403);assert.equal((await request(service.url,{headers:{Origin:'https://evil.example'}})).status,403);assert.equal((await request(service.url,{headers:{'Sec-Fetch-Site':'cross-site'}})).status,403);}finally{await service.close();}});
+
+test('HTTPS proxy preserves session authority, checks incoming origin before translating and denies unverified TLS',/* Verify proxy preserves session authority, validates incoming origin and rejects unverified TLS. */ async()=>{const calls=[];
+
+ const backend=https.createServer({cert:leaf,key:await readFile(key)},/* Emulate an isolated authenticated backend and record forwarded scope/body/cookie bytes. */ async(req,res)=>{let body='';
+
+  for await(const chunk of req)body+=chunk;
+
+  calls.push({url:req.url,headers:req.headers,body});res.writeHead(req.headers.cookie==='__Host-hpx=fixture'?200:401,{'Content-Type':'application/json','Set-Cookie':'__Host-hpx=fixture; Secure; HttpOnly; SameSite=Strict; Path=/'});res.end(JSON.stringify({authenticated:req.headers.cookie==='__Host-hpx=fixture'}));});
+
+ await new Promise(/* Start the isolated backend on an ephemeral loopback port. */ yes=>backend.listen(0,'127.0.0.1',yes));
+
+ const upstream='https://127.0.0.1:'+backend.address().port;
+
+ const service=await createDevelopmentServer({assets:directory,port:0,backend:upstream,cert,key,ca:cert});
+
+ let untrusted;
+
+ try{assert.equal((await request(service.url+'/api/v1/runtime')).status,401);assert.equal((await request(service.url+'/api/v1/documents',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})).status,403);assert.equal((await request(service.url+'/api/v1/documents',{method:'POST',headers:{Origin:'https://evil.example','Content-Type':'application/json'},body:'{}'})).status,403);assert.equal(calls.length,1);
+
+  const result=await request(service.url+'/api/v1/documents',{method:'POST',headers:{Origin:service.url,'Content-Type':'application/json',Cookie:'__Host-hpx=fixture'},body:'{}'});
+
+  assert.equal(result.status,200);assert.match(result.headers['set-cookie'][0],/Secure; HttpOnly; SameSite=Strict/);assert.equal(calls[1].headers.origin,upstream);assert.equal(calls[1].headers.host,new URL(upstream).host);assert.equal(calls[1].headers.cookie,'__Host-hpx=fixture');assert.equal(calls[1].body,'{}');assert.equal((await request(service.url)).text.includes('hpx-development-mode'),false);assert.equal((await request(service.url+'/build-version.json')).status,401);assert.equal(calls.at(-1).url,'/build-version.json');
+
+  for(const path of Object.keys(JSON.parse(await readFile(new URL('../../shared/openapi.json',import.meta.url),'utf8')).paths)){assert.equal((await request(service.url+path)).status,401);assert.equal(calls.at(-1).url,path);}
+
+  assert.equal((await request(service.url+'/api/v1/not-a-contract-route')).status,400);assert.equal((await request(service.url+'/build-version.json',{method:'POST',headers:{Origin:service.url}})).status,400);untrusted=await createDevelopmentServer({assets:directory,port:0,backend:upstream,cert,key});assert.equal((await request(untrusted.url+'/api/v1/runtime')).status,502);await assert.rejects(request(service.url,{trusted:false}),/self.signed|certificate/i);}finally{await service.close();
+
+  if(untrusted)await untrusted.close();
+
+  backend.closeAllConnections();await new Promise(/* Wait for isolated backend shutdown during cleanup. */ yes=>backend.close(yes));}});
+
+test('connected mode cannot silently use HTTP or attach backend authority to mock fixtures',/* Verify connected mode requires TLS material and cannot attach runtime authority to fixtures. */ async()=>{await assert.rejects(createDevelopmentServer({assets:directory,port:0,backend:'https://127.0.0.1:8000'}),/requires/);await assert.rejects(createDevelopmentServer({assets:directory,port:0,mock:true,backend:'https://127.0.0.1:8000'}),/Mock mode/);});

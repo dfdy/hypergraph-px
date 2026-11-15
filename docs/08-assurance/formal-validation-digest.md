@@ -13,7 +13,7 @@
 - **Downstream dependencies:** pinned proof library plus separately retained extraction scripts
 - **Verification:** current pinned build/model/examples/environment/axiom checks under HPX-TEST-153/155;historical checks retain their original provenance;2026-11-14 unchanged-source replay under HPX-TEST-176/178
 - **Decision/history:** `HPX-SRC-0116`; original `proofs/VALIDATION_DIGEST.md` SHA-256 `69452ea0278fd29685e133c33ed6357c0d281efad623e6b53ba6208a1386c550`
-- **Last reviewed:** 2026-11-14
+- **Last reviewed:** 2026-11-15
 
 ## Current pinned replay — 2026-11-14
 
@@ -23,6 +23,15 @@
 
 The 2026-11-13 missing-tool attempt immediately below is **historical,not a current replay blocker**. This later success does not rewrite that failed attempt or extend the proof boundary:authenticated source acquisition,parser/loader and UTF8/browser correspondence,operational resource bounds,storage/authorization/recovery/UI bridges and whole-product correctness remain unproved as detailed below. No frozen proof,protocol,license or source payload changed for this record update.
 
+
+### Comment-only proof refresh — 2026-11-15
+
+TEST194 adds teaching comments to Expansion.lean without changing its non-comment declarations or proof steps. The [exact current-source evidence](evidence/code-comment-pilot.json) records old/new hashes and a successful pinned Lean4.35.0 direct warnings-as-errors check with the same four axiom-free rank/path reports. This is a fresh check of that file only, not a new whole-library/leanchecker or extracted-Rust replay. The frozen prior reports retain their original hashes and as-run meanings; cycle-aware and application correspondence limits remain unchanged.
+
+
+### Whole-source comment refresh —2026-11-15
+
+TEST204 updates all seven handwritten Lean files and the domain Rust source comments. Exact non-comment declaration/proof tokens remain unchanged. The pinned model build and environment checker pass; the real Rust budget helper was freshly extracted with the existing Charon/Aeneas pins, and its generated output differs only in translator-produced source-line comments. Current source/generated/proof fingerprints in `backend/proofs/rust/extraction.json` identify these new bytes. The full extracted-helper replay, exact generated-byte comparison and environment check pass; `spend_spec` retains `[propext, Classical.choice, Quot.sound]`. [Current rollout evidence](evidence/code-comment-rollout.json) records exact reviewed source hashes. Frozen historical reports retain their original hashes and meanings; no theorem, correspondence bridge or product-proof scope was added.
 
 ## Current cycle-aware evidence and preserved history
 

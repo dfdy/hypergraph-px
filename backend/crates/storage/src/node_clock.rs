@@ -1,24 +1,66 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Inactive committed-change clock codec and immutable next-value planning.
-//! No SQL writes, clock initialization on read, receipt recovery or authorization.
+//! # Hypergraph PX — Bounded committed-change clock plans
+//!
+//! Encode and validate the experimental per-node change counter, and plan an
+//! immutable successor only after the caller establishes an actual changed-text
+//! publication. A missing record is never silently turned into an initial seed.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Experimental temporal Commit transaction and record/clock
+//! acceptance tests.
+//!
+//! Specification:
+//! - [History/publication responsibilities][spec0]
+//! - [Candidate committed-change clock][spec1]
+//! - [Temporal publication protocol][spec2]
+//!
+//! Boundary: This codec/planner performs no SQL writes, authority checks,
+//! wall-clock ordering or receipt recovery and does not activate an
+//! existing workspace format.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/node_clock.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/pure-domain.c4
+//! [spec1]: ../../../../docs/07-implementation/data-structures/sqlite-records.md#candidate-per-node-committed-change-clock-codec
+//! [spec2]: ../../../../docs/07-implementation/protocols/draft-publication.md
+
 use crate::{Error, Result, encoding};
 use hypergraph_domain::records::*;
 use serde::{Deserialize, Serialize};
 
+/// Existing experimental allocation; not an active normal-schema record upgrade.
 pub const CANDIDATE_KIND: i32 = 35;
+/// Upper bound on encoded clock bytes before strict payload decoding.
 pub const MAX_BYTES: usize = 4096;
+/// Largest exact JavaScript-safe integer; exhaustion fails rather than wrapping.
 pub const MAX_ORDER: u64 = (1u64 << 53) - 1;
 
+/// Exact publication identities carried by the last counted committed change.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Change {
     #[serde(with = "encoding::identity")]
+    /// Immutable revision produced by this change.
     pub revision: RevisionId,
     #[serde(with = "encoding::identity")]
+    /// Exact closed snapshot produced by the same publication.
     pub snapshot: SnapshotId,
     #[serde(with = "encoding::identity")]
+    /// Original operation identity, retained independently of retry arrival order.
     pub operation: OperationId,
 }
+
+/// Immutable in-memory clock state bound to one document and logical node.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Clock {
     document: DocumentId,
@@ -36,6 +78,7 @@ struct Payload {
     last_order: u64,
     last_change: Option<Change>,
 }
+
 impl Clock {
     /// Only an authorized new-node/verified upgrade transaction may persist a seed.
     pub fn initial(document: DocumentId, node: NodeId) -> Self {
@@ -46,17 +89,23 @@ impl Clock {
             change: None,
         }
     }
+
+    /// Read the established per-node counter without allocating another value.
     pub fn order(&self) -> u64 {
         self.order
     }
+
+    /// Borrow the last counted publication, or None only for a verified initial seed.
     pub fn change(&self) -> Option<&Change> {
         self.change.as_ref()
     }
+
     /// Caller must recover original receipts and prove changed text before this step.
     pub fn plan_change(&self, expected_order: u64, change: Change) -> Result<Self> {
         if expected_order != self.order {
             return Err(Error::Conflict);
         }
+        // Reject reuse of any established publication identity, not only its counter.
         if self.change.as_ref().is_some_and(|old| {
             old.operation == change.operation
                 || old.revision == change.revision
@@ -67,6 +116,7 @@ impl Clock {
         if self.order == MAX_ORDER {
             return Err(Error::Limit);
         }
+
         Ok(Self {
             document: self.document,
             node: self.node,
@@ -74,6 +124,8 @@ impl Clock {
             change: Some(change),
         })
     }
+
+    /// Serialize this state through the exact bounded candidate wrapper.
     pub fn encode(&self) -> Result<Vec<u8>> {
         encoding::encode_record_limited(
             CANDIDATE_KIND,
@@ -87,10 +139,13 @@ impl Clock {
         )
     }
 }
+
+/// Strictly decode the expected document/node binding and counter/publication consistency.
 pub fn decode(bytes: &[u8], document: DocumentId, node: NodeId) -> Result<Clock> {
     if bytes.len() > MAX_BYTES {
         return Err(Error::Limit);
     }
+
     let value: Payload = encoding::decode_record(CANDIDATE_KIND, bytes)?;
     if value.document != document || value.node != node {
         return Err(Error::Conflict);
@@ -101,6 +156,7 @@ pub fn decode(bytes: &[u8], document: DocumentId, node: NodeId) -> Result<Clock>
     if (value.last_order == 0) != value.last_change.is_none() {
         return Err(Error::Integrity);
     }
+
     Ok(Clock {
         document,
         node,
@@ -114,6 +170,7 @@ mod tests {
     use super::*;
     const DOC: DocumentId = DocumentId([1; 32]);
     const NODE: NodeId = NodeId([2; 32]);
+    /// Supply distinct synthetic publication identities for deterministic clock cases.
     fn change(n: u8) -> Change {
         Change {
             revision: RevisionId([n; 32]),
@@ -121,9 +178,12 @@ mod tests {
             operation: OperationId([n + 2; 32]),
         }
     }
+
+    /// Guard golden initial bytes and successive immutable plans without mutating prior states.
     #[test]
     fn golden_seed_and_successive_change_plans_preserve_the_original_state() {
         let seed = Clock::initial(DOC, NODE);
+        // Render a full fixed-width identity array for the expected golden JSON.
         let array = |n: u8| {
             std::iter::repeat_n(n.to_string(), 32)
                 .collect::<Vec<_>>()
@@ -149,6 +209,8 @@ mod tests {
         assert!(text.contains("\"snapshot\":"));
         assert!(text.contains("\"operation\":"));
     }
+
+    /// Guard stale/reused publication rejection and safe counter exhaustion.
     #[test]
     fn stale_order_duplicate_publication_and_exhaustion_never_advance_a_clock() {
         let first = Clock::initial(DOC, NODE).plan_change(0, change(3)).unwrap();
@@ -178,6 +240,8 @@ mod tests {
         assert_eq!(maximum.order(), MAX_ORDER);
         assert_eq!(maximum.change(), Some(&change(3)));
     }
+
+    /// Reject malformed/mismatched clocks rather than manufacturing zero-state recovery.
     #[test]
     fn context_version_shape_counter_and_byte_failures_cannot_become_zero_seeds() {
         let first = Clock::initial(DOC, NODE).plan_change(0, change(3)).unwrap();

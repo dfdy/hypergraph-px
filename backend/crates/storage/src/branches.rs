@@ -1,5 +1,39 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Optional local branches. The saved Document keeps its original branch forever.
+//! # Hypergraph PX — Independent local branch drafts and history
+//!
+//! Creates same-node child branches with independent mutable drafts, fixed parent
+//! metadata and retained immutable histories; reads comparisons in one
+//! authorized view.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace branch commands, browser branch/history/comparison
+//! queries and common-base adapter.
+//!
+//! Specification:
+//! - [Storage responsibilities][spec0]
+//! - [Branch and checkpoint policy][spec1]
+//! - [Navigation contracts][spec2]
+//!
+//! Boundary: The original Document branch is never replaced. List linkage,
+//! fixed branch parentage and immutable revision ancestry are distinct;
+//! comparison does not itself choose a parent-Merge base.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/branches.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/04-architecture/decisions/0019-working-branches-and-reference-checkpoints.md
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md
+
 use super::*;
 
 pub const KIND: i32 = 20;
@@ -69,6 +103,7 @@ pub struct Record {
     #[serde(with = "encoding::identity")]
     pub operation: OperationId,
     pub ordinal: u64,
+
     /// List linkage only, distinct from branch parentage and revision ancestry.
     #[serde(with = "encoding::optional_identity")]
     pub previous: Option<BranchId>,
@@ -104,8 +139,10 @@ pub enum EditOutcome {
         snapshot: SnapshotId,
     },
 }
+
 impl TryFrom<Outcome> for EditOutcome {
     type Error = Error;
+    /// Translate only draft-edit outcomes into branch-scoped results, rejecting unrelated commands.
     fn try_from(value: Outcome) -> Result<Self> {
         Ok(match value {
             Outcome::Created { document } => Self::Created { document },
@@ -154,6 +191,8 @@ pub struct Page {
     #[serde(with = "encoding::optional_identity")]
     pub next: Option<BranchId>,
 }
+
+/// Validate branch names and reuse exact Save/Commit command shape checks.
 pub(super) fn validate(mutation: &Mutation) -> Result<()> {
     match mutation {
         Mutation::Create { name, .. } => {
@@ -192,6 +231,8 @@ pub(super) fn validate(mutation: &Mutation) -> Result<()> {
     }
     Ok(())
 }
+
+/// Read optional branch paging metadata and verify count/generation consistency.
 fn index(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -212,6 +253,8 @@ fn index(
         Err(error) => Err(error),
     }
 }
+
+/// Authenticate child branch metadata against its immutable creation receipt and snapshot.
 fn record(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -256,6 +299,7 @@ fn record(
             name: value.name.clone(),
         },
     };
+    // Reject an unencodable reconstructed creation command before comparing its receipt digest.
     let bytes = Zeroizing::new(serde_json::to_vec(&command).map_err(|_| Error::Format)?);
     let digest: [u8; 32] = Sha256::digest(&*bytes).into();
     if stored.receipt.operation != value.operation
@@ -266,6 +310,8 @@ fn record(
     }
     Ok(value)
 }
+
+/// Resolve an authorized branch-specific document view without mutating its saved original branch.
 pub(super) fn document(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -287,6 +333,8 @@ pub(super) fn document(
     }
     Ok(doc)
 }
+
+/// Require current membership in the branch or parent targeted by a mutation.
 pub(super) fn authorize(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -307,6 +355,8 @@ pub(super) fn authorize(
     document(cipher, db, catalog, id, branch)?;
     Ok(())
 }
+
+/// Create a child from the captured parent head or delegate independent branch Save/Commit writes.
 pub(super) fn apply(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -339,6 +389,7 @@ pub(super) fn apply(
                 return Err(Error::Limit);
             }
             let prior = index(cipher, db, id)?;
+            // Assign the next paging ordinal from the authenticated existing index.
             let count = prior.as_ref().map_or(1, |(_, i)| i.count + 1);
             if count > JS_MAX {
                 return Err(Error::Limit);
@@ -362,6 +413,7 @@ pub(super) fn apply(
                     device: catalog.device,
                     operation,
                     ordinal: count,
+                    // Preserve only metadata-list linkage, independently of branch parentage.
                     previous: prior.as_ref().map(|(_, i)| i.head),
                 },
             )?;
@@ -503,6 +555,7 @@ pub struct Comparison {
     pub parent_snapshot: SnapshotId,
 }
 // Shared capture keeps comparison and full ancestry loading in one read view.
+/// Capture child and fixed-parent committed heads within the caller pinned read transaction.
 fn capture_comparison(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -556,8 +609,11 @@ fn capture_comparison(
 impl Workspace {
     /// Capture two committed heads together; fixed parentage does not select a Merge base.
     pub fn branch_comparison(&mut self, id: DocumentId, branch: BranchId) -> Result<Comparison> {
+        // The normal after-source callback leaves the read view unchanged.
         self.branch_comparison_inner(id, branch, history::PAGE_BYTES, || Ok(()))
     }
+
+    /// Authorize and return the bounded comparison, exposing an observation hook between head reads.
     fn branch_comparison_inner(
         &mut self,
         id: DocumentId,
@@ -583,6 +639,8 @@ impl Workspace {
         tx.commit()?;
         Ok(result)
     }
+
+    /// Page retained ancestry through encrypted owner/document/branch/snapshot-bound cursors.
     pub fn branch_history_page(
         &mut self,
         id: DocumentId,
@@ -592,6 +650,7 @@ impl Workspace {
         limit: usize,
     ) -> Result<HistoryPage> {
         if !(1..=history::MAX_PAGE).contains(&limit)
+            // Reject empty/oversized encrypted continuation tokens before decryption.
             || cursor.is_some_and(|c| c.is_empty() || c.len() > 4096)
         {
             return Err(Error::Invalid);
@@ -609,6 +668,7 @@ impl Workspace {
         let start = if let Some(cursor) = cursor {
             let token: HistoryCursor = cipher
                 .open(HISTORY_CURSOR_KIND, self.owner.0, 0, cursor)
+                // Treat an unauthentic cursor as invalid query context.
                 .map_err(|_| Error::Invalid)?;
             if token.document != id || token.branch != branch || token.snapshot != snapshot {
                 return Err(Error::Invalid);
@@ -631,10 +691,12 @@ impl Workspace {
             && page
                 .entries
                 .first()
+                // Require a fresh page to start at exactly the selected snapshot.
                 .is_none_or(|entry| entry.snapshot != snapshot)
         {
             return Err(Error::Integrity);
         }
+        // Bind each continuation to this owner, document, branch and pinned snapshot.
         let token = |next| {
             cipher.seal(
                 HISTORY_CURSOR_KIND,
@@ -659,6 +721,8 @@ impl Workspace {
         tx.commit()?;
         Ok(result)
     }
+
+    /// Page immutable child metadata without conflating list order with ancestry.
     pub fn branch_page(
         &mut self,
         id: DocumentId,
@@ -685,8 +749,11 @@ impl Workspace {
             return Err(Error::Integrity);
         }
         let index = index(&cipher, &tx, id)?;
+        // The outer callback starts at the head only when no explicit continuation exists;
+        // its inner mapping extracts the authenticated index head.
         let mut cursor = next.or_else(|| index.as_ref().map(|(_, i)| i.head));
         let mut expected = if next.is_none() {
+            // A fresh page must begin at the index current highest ordinal.
             index.as_ref().map(|(_, i)| i.count)
         } else {
             None
@@ -697,6 +764,7 @@ impl Workspace {
                 break;
             }
             let value = record(&cipher, &tx, &catalog, &doc, branch)?;
+            // Require strictly descending consecutive metadata ordinals.
             if expected.is_some_and(|ordinal| value.ordinal != ordinal) {
                 return Err(Error::Integrity);
             }
@@ -713,6 +781,8 @@ impl Workspace {
         tx.commit()?;
         Ok(page)
     }
+
+    /// Return this branch exact acknowledged editor state after present catalogue checks.
     pub fn open_branch(&mut self, id: DocumentId, branch: BranchId) -> Result<EditorState> {
         let cipher = Cipher {
             key: &self.key,
@@ -728,6 +798,8 @@ impl Workspace {
         tx.commit()?;
         Ok(result)
     }
+
+    /// Read bounded immutable history for an authorized selected branch.
     pub fn branch_history(
         &mut self,
         id: DocumentId,
@@ -757,6 +829,7 @@ pub(super) mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
 
+    /// Freeze child creation intent against the fixture committed parent head.
     pub(crate) fn creation(state: &EditorState) -> Command {
         Command::Branch {
             mutation: Mutation::Create {
@@ -768,12 +841,16 @@ pub(super) mod tests {
             },
         }
     }
+
+    /// Create a synthetic child and extract its independent branch identity.
     fn child(ws: &mut Workspace, state: &EditorState, operation: u8) -> BranchId {
         match ws.execute(op(operation), creation(state)).unwrap().outcome {
             Outcome::Branch { state } => state.branch,
             _ => panic!(),
         }
     }
+
+    /// Build the next acknowledged Save for the selected fixture branch.
     fn write(state: &EditorState, text: &str) -> Command {
         Command::Branch {
             mutation: Mutation::Save {
@@ -787,6 +864,8 @@ pub(super) mod tests {
             },
         }
     }
+
+    /// Build an explicit Commit for the fixture branch current acknowledged draft.
     fn publish(state: &EditorState) -> Command {
         Command::Branch {
             mutation: Mutation::Commit {
@@ -798,6 +877,8 @@ pub(super) mod tests {
             },
         }
     }
+
+    /// Compare committed heads while excluding pending drafts and retaining fixed parent identity.
     #[test]
     fn comparison_excludes_both_drafts_and_follows_fixed_parent_with_exact_committed_snapshots() {
         let temp = Temp::new();
@@ -852,6 +933,8 @@ pub(super) mod tests {
             Err(Error::Integrity)
         ));
     }
+
+    /// Keep comparison coherent across concurrent publication and fail without partial output on budget exhaustion.
     #[test]
     fn comparison_pins_one_read_view_during_parent_commit_and_returns_no_partial_budget_result() {
         let temp = Temp::new();
@@ -866,11 +949,13 @@ pub(super) mod tests {
             (SNAPSHOT, initial.snapshot.0),
         ]
         .iter()
+        // Sum exact encrypted source-page costs to isolate parent-page budget exhaustion.
         .map(|(kind, id)| {
             ws.db
                 .query_row(
                     "SELECT length(envelope) FROM objects WHERE kind=?1 AND id=?2",
                     params![kind, id.as_slice()],
+                    // Read only envelope lengths for deterministic budget accounting.
                     |row| row.get::<_, u32>(0),
                 )
                 .unwrap() as usize
@@ -878,6 +963,7 @@ pub(super) mod tests {
         .sum();
         let visited = std::cell::Cell::new(false);
         assert!(matches!(
+            // Record that source read completed before the parent exhausts the shared allowance.
             ws.branch_comparison_inner(id, branch, source_page_bytes + 1, || {
                 visited.set(true);
                 Ok(())
@@ -895,6 +981,7 @@ pub(super) mod tests {
             .unwrap();
         let pending = writer.open_document(id).unwrap();
         let comparison = ws
+            // Publish parent changes through another connection after the child head was read.
             .branch_comparison_inner(id, branch, history::PAGE_BYTES, || {
                 writer.execute(op(4), commit(&pending))?;
                 Ok(())
@@ -906,6 +993,7 @@ pub(super) mod tests {
             writer.open_document(id).unwrap().snapshot
         );
         assert!(matches!(
+            // The no-op callback isolates initial read-budget rejection.
             ws.branch_comparison_inner(id, branch, 1, || Ok(())),
             Err(Error::Limit)
         ));
@@ -923,6 +1011,8 @@ pub(super) mod tests {
             Err(Error::NotFound)
         ));
     }
+
+    /// Preserve same-node identity with separate child drafts, histories and parentage across restart.
     #[test]
     fn children_keep_identity_and_independent_drafts_histories_and_parentage_after_restart() {
         let temp = Temp::new();
@@ -972,6 +1062,8 @@ pub(super) mod tests {
         assert_eq!(rest.entries[0].snapshot, original.snapshot);
         assert_eq!(ws.history_page(id, None, 32).unwrap().entries.len(), 2);
     }
+
+    /// Roll back incomplete creation and reconcile lost acknowledgement without duplicate child or parent reset.
     #[test]
     fn creation_faults_roll_back_and_lost_ack_replays_one_child_without_resetting_parent() {
         for phase in ["objects", "heads", "receipt", "committed"] {
@@ -981,6 +1073,7 @@ pub(super) mod tests {
             let state = ws.open_document(id).unwrap();
             let command = creation(&state);
             assert!(matches!(
+                // Interrupt the selected creation stage, including a lost post-commit reply.
                 ws.execute_inner(op(2), command.clone(), |at| if at == phase {
                     Err(Error::Io)
                 } else {
@@ -999,6 +1092,8 @@ pub(super) mod tests {
             assert_eq!(ws.open_document(id).unwrap().generation, state.generation);
         }
     }
+
+    /// Reject stale heads/generations, altered intent and revoked document scope.
     #[test]
     fn stale_heads_scope_generations_operation_reuse_and_current_authority_fail_closed() {
         let temp = Temp::new();
@@ -1049,6 +1144,8 @@ pub(super) mod tests {
         assert!(matches!(ws.execute(op(3), command), Err(Error::NotFound)));
         assert!(matches!(ws.open_branch(id, branch), Err(Error::NotFound)));
     }
+
+    /// Fail on authenticated metadata or receipt inconsistency while leaving the original branch readable.
     #[test]
     fn authenticated_metadata_and_receipt_damage_never_guess_a_branch() {
         for field in ["document", "parent", "draft", "name", "ordinal", "receipt"] {
@@ -1105,6 +1202,8 @@ pub(super) mod tests {
             assert_eq!(ws.open_document(id).unwrap().branch, original.branch);
         }
     }
+
+    /// Keep old ancestry cursors stable and reject branch/snapshot/context substitution.
     #[test]
     fn encrypted_history_cursor_stays_pinned_across_commits_and_cannot_cross_branch_or_snapshot() {
         let temp = Temp::new();

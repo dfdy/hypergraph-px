@@ -1,7 +1,37 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Strict candidate draft-lineage codec. No SQL, crypto or active record writes.
-//! The experimental temporal_save driver guards use behind schema3/feature32;
-//! ordinary schema1/2 Save/Commit dispatch remains unchanged.
+//! # Hypergraph PX — Bounded draft-lineage records
+//!
+//! Encodes and restores exact UTF8 draft splice history against its
+//! immutable base.
+//! Strict bindings prevent a trace being reused for a different
+//! acknowledged draft.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Experimental temporal Save and Commit adapters; storage codec tests.
+//!
+//! Specification:
+//! - [Encrypted storage responsibilities][spec0]
+//! - [Draft-lineage codec contract][spec1]
+//!
+//! Boundary: No SQL, crypto or active-record writes occur here. Callers
+//! authorize access; only guarded experimental schema3 drivers use this
+//! candidate kind31 format.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/lineage_record.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/07-implementation/data-structures/sqlite-records.md#draft-lineage-codec-prototype-under-adopted-parent-merge-direction
+
 use crate::{Error, Result, encoding};
 use hypergraph_domain::{
     parent_merge::{
@@ -33,7 +63,9 @@ pub struct Binding {
     pub generation: u64,
     pub sequence: u64,
 }
+
 impl Binding {
+    /// Reject counters that cannot round-trip through browser-safe integers.
     fn valid(&self) -> bool {
         self.generation <= JS_MAX && self.sequence <= JS_MAX
     }
@@ -75,12 +107,15 @@ struct Bounded {
     limit: usize,
     exhausted: bool,
 }
+
 impl Write for Bounded {
+    /// Append a complete chunk only if its bytes fit the record budget.
     fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
         if self
             .bytes
             .len()
             .checked_add(bytes.len())
+            // Treat overflow as exhaustion instead of allocating beyond the output cap.
             .is_none_or(|n| n > self.limit)
         {
             self.exhausted = true;
@@ -89,16 +124,23 @@ impl Write for Bounded {
         self.bytes.extend_from_slice(bytes);
         Ok(bytes.len())
     }
+
+    /// Satisfy the writer interface; the in-memory buffer has no pending I/O.
     fn flush(&mut self) -> io::Result<()> {
         Ok(())
     }
 }
+
+/// Preserve resource exhaustion while treating invalid restored traces as corruption.
 fn trace_error(error: TraceError) -> Error {
     match error {
         TraceError::Limit => Error::Limit,
         _ => Error::Integrity,
     }
 }
+
+/// Serialize a bound trace within work, text and output-byte limits.
+///
 /// Context authorization and any future encrypted slot binding are external.
 pub fn encode(
     binding: &Binding,
@@ -120,6 +162,7 @@ pub fn encode(
             .changes()
             .len()
             .checked_add(trace.text().len())
+            // Count both changes and resulting source against bounded reconstruction work.
             .is_none_or(|n| n > limits.work)
         || trace.changes().len() > max_bytes / 2
     {
@@ -128,6 +171,7 @@ pub fn encode(
     let changes = trace
         .changes()
         .iter()
+        // Borrow exact replacement bytes rather than rebuilding or normalizing text.
         .map(|change| ChangeRef {
             start_byte: change.start,
             end_byte: change.end,
@@ -157,6 +201,8 @@ pub fn encode(
     }
     Ok(output.bytes)
 }
+
+/// Restore exact changes against the expected binding and base, rejecting drift.
 pub fn decode<'a>(
     bytes: &[u8],
     expected: &Binding,
@@ -189,9 +235,12 @@ pub fn decode<'a>(
     let changes = payload
         .changes
         .into_iter()
+        // Reject offsets outside this platform before domain trace validation.
         .map(|change| {
             Ok(Change {
+                // A persisted offset that cannot fit usize is corrupt on this reader.
                 start: usize::try_from(change.start_byte).map_err(|_| Error::Integrity)?,
+                // Apply the same representability check to the exclusive end.
                 end: usize::try_from(change.end_byte).map_err(|_| Error::Integrity)?,
                 replacement: change.replacement,
             })
@@ -209,6 +258,7 @@ pub fn decode<'a>(
 mod tests {
     use super::*;
     use hypergraph_domain::parent_merge::lineage::Splice;
+    /// Supply distinct deterministic identities and acknowledged draft counters.
     fn binding() -> Binding {
         Binding {
             document: DocumentId([1; 32]),
@@ -221,12 +271,16 @@ mod tests {
             sequence: 8,
         }
     }
+
+    /// Give codec fixtures enough text/work capacity without removing bounds.
     fn limits() -> Limits {
         Limits {
             text_bytes: 4096,
             work: 100_000,
         }
     }
+
+    /// Build an exact CRLF/multibyte replacement trace for round-trip assertions.
     fn trace() -> Trace<'static> {
         let b = binding();
         let base = Base {
@@ -249,11 +303,14 @@ mod tests {
             )
             .unwrap()
     }
+
+    /// Lock wrapper bytes, identity arrays and unnormalised source through encoding/restoration.
     #[test]
     fn golden_candidate_wrapper_exact_ids_and_source_bytes_round_trip() {
         let binding = binding();
         let trace = trace();
         let encoded = encode(&binding, &trace, limits(), 4096).unwrap();
+        // Render the exact repeated-byte JSON identity expected by the golden vector.
         let id = |n: u8| {
             format!(
                 "[{}]",
@@ -289,6 +346,8 @@ mod tests {
             encoded
         );
     }
+
+    /// Reject drift in every bound identity/counter and unsafe browser integers.
     #[test]
     fn every_expected_binding_and_unsafe_counter_is_checked() {
         let b = binding();
@@ -379,6 +438,8 @@ mod tests {
             Err(Error::Format)
         ));
     }
+
+    /// Reject unsupported wrappers, malformed fields and traces inconsistent with exact source.
     #[test]
     fn unsupported_malformed_duplicate_and_inconsistent_records_fail_closed() {
         let b = binding();
@@ -470,6 +531,8 @@ mod tests {
             Err(Error::Integrity)
         ));
     }
+
+    /// Exercise output, work and text budgets before accepting any record.
     #[test]
     fn byte_work_and_text_limits_precede_unbounded_or_partial_output() {
         let b = binding();

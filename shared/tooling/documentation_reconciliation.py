@@ -1,7 +1,26 @@
-"""Fail-closed mechanical bindings for explicitly reviewed documentation mappings.
+"""Hypergraph PX — Exact reviewed source-obligation bindings
 
-Fingerprints attest which evidence was assessed, not semantic equivalence or owner
-approval. This module never updates evidence; changing a pin requires re-review.
+Validate explicit source obligations and scoped dispositions against exact public evidence, original source identities and governing authority without refreshing pins.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/documentation_reconciliation.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Current documentation verification and isolated fail-closed reconciliation fixtures.
+
+Specification:
+- [Source-obligation review contract](../../docs/08-assurance/source-traceability.md)
+- [Section ownership and direct links](../../docs/04-architecture/SPECIFICATION.md#explicit-contract-bindings)
+
+Boundary: Fingerprints identify assessed evidence; they are not semantic equivalence, owner approval or permission to erase unresolved obligations. No historical payload is read by this module.
 """
 from pathlib import Path
 import csv
@@ -15,29 +34,42 @@ TABLES = {'coverage': ('claim-coverage.csv', 'section_id'), 'sections': ('source
 
 
 def digest(data):
+    """Hash exact bytes for current evidence identity without normalization."""
+
     return hashlib.sha256(data).hexdigest()
 
 
 def object_digest(value):
+    """Encode a structured assessment deterministically before fingerprinting its complete value."""
+
     return digest(json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode())
 
 
 def nonblank(value):
+    """Recognise nonempty explanatory strings while rejecting nonstring lookalikes."""
+
     return isinstance(value, str) and bool(value.strip())
 
 
 def require(condition, message):
+    """Stop validation on a failed invariant with its bounded mechanical diagnostic."""
+
     if not condition:
         raise ValueError(message)
 
 
 def string_list(value):
+    """Require an actual list of meaningful string references rather than accepting arbitrary iterable metadata."""
+
     require(isinstance(value, list) and all(nonblank(item) for item in value), 'malformed string list')
     return value
 
 
 def unique_object(pairs):
+    """Reject repeated JSON keys so a later entry cannot silently replace reviewed evidence."""
+
     result = {}
+
     for key, value in pairs:
         require(key not in result, 'duplicate JSON key')
         result[key] = value
@@ -45,11 +77,16 @@ def unique_object(pairs):
 
 
 def load_json(path):
+    """Read duplicate-key-safe JSON and reject nonfinite values outside the assessed schema."""
+
     return json.loads(path.read_text(), object_pairs_hook=unique_object,
+                      # Reject NaN/Infinity JSON constants instead of accepting values outside the reviewed data model.
                       parse_constant=lambda _: (_ for _ in ()).throw(ValueError('nonfinite JSON')))
 
 
 def owned(root, value):
+    """Constrain every evidence path to canonical repository-owned syntax and reject symlink/traversal escapes."""
+
     require(nonblank(value) and '\\' not in value and not Path(value).is_absolute()
             and all(p not in ('', '.', '..') for p in value.split('/')), 'invalid evidence path')
     p = root / value
@@ -58,11 +95,14 @@ def owned(root, value):
 
 
 def slug(text):
+    """Match public Markdown heading references to their canonical current fragment spelling."""
+
     return re.sub(r'[^\w\- ]', '', text.lower()).replace(' ', '-')
 
 
 def evidence_bytes(root, ref):
     """Exact Markdown section bytes, or exact whole-file bytes for unanchored refs."""
+
     require(nonblank(ref), 'blank evidence reference')
     path, _, anchor = ref.partition('#')
     p = owned(root, path)
@@ -74,6 +114,7 @@ def evidence_bytes(root, ref):
     lines = data.splitlines(keepends=True)
     headings = []
     fence = None
+
     for i, line in enumerate(lines):
         text = line.decode('utf-8').rstrip('\r\n')
         marker = re.match(r'^ {0,3}(`{3,}|~{3,})(.*)$', text)
@@ -95,7 +136,10 @@ def evidence_bytes(root, ref):
 
 
 def tables(root):
+    """Load each required CSV register with unique headers/IDs and complete row shape before cross-register checks."""
+
     result = {}
+
     for name, (filename, key) in TABLES.items():
         with (root / 'docs/02-governance/registers' / filename).open(newline='') as f:
             reader = csv.DictReader(f)
@@ -110,6 +154,7 @@ def tables(root):
 
 def authority_ref(root, authority, db):
     """Use the explicit owner record's section, not an incidental reference."""
+
     require(nonblank(authority), 'malformed authority reference')
     if authority.startswith('HPX-OWNER-'):
         path = 'docs/02-governance/OWNER_DECISIONS.md'
@@ -119,6 +164,7 @@ def authority_ref(root, authority, db):
                    if re.match(r'^(?:\|\s*)?' + re.escape(authority) + r'(?:\s*\||[: ])', line)]
         require(bool(matches), 'unknown owner authority')
         anchors = set()
+
         for i in matches:
             preceding = [re.match(r'^#{1,6}\s+(.+)', line) for line in lines[:i + 1]]
             heading = next((m[1] for m in reversed(preceding) if m), None)
@@ -133,13 +179,17 @@ def authority_ref(root, authority, db):
 
 def expected_bindings(root, entry, db):
     """Derive required binding identities, never their approved digest values."""
-    sid = entry['section_id']; coverage = db['coverage'][sid]; source = db['sources'][entry['source_id']]
+
+    sid = entry['section_id']
+    coverage = db['coverage'][sid]
+    source = db['sources'][entry['source_id']]
     section = db['sections'][sid]
     require(entry['current_destination'] == {'document_id': coverage['destination_id'], 'path': coverage['destination_path'], 'section': coverage['destination_section']}, 'current destination mismatch')
     require(db['documents'][coverage['destination_id']]['path'] == coverage['destination_path'], 'destination document mismatch')
     checks = {'source_id': 'source_id', 'original_path': 'source_original_path',
               'current_source_path': 'source_current_path', 'archive_member': 'archive_member',
               'source_section_sha256': 'source_section_sha256'}
+
     for column, field in checks.items():
         require(coverage[column] == entry[field], 'coverage/source identity mismatch')
     require(int(coverage['start_line']) == entry['source_start_line'] and int(coverage['end_line']) == entry['source_end_line'], 'source span mismatch')
@@ -151,6 +201,7 @@ def expected_bindings(root, entry, db):
               and int(row['start_line']) <= entry['source_end_line'] and int(row['end_line']) >= entry['source_start_line']}
     require(set(entry['overlapping_claim_ids']) == claims and len(entry['overlapping_claim_ids']) == len(claims), 'claim coverage mismatch')
     mappings = set()
+
     for k, row in db['maps'].items():
         m = re.match(r'L(\d+)-L(\d+):', row['source_section_or_lines'])
         if row['source_id'] == entry['source_id'] and m and int(m[1]) <= entry['source_end_line'] and int(m[2]) >= entry['source_start_line']:
@@ -158,16 +209,22 @@ def expected_bindings(root, entry, db):
     require(set(entry['mapping_ids']) == mappings and len(entry['mapping_ids']) == len(mappings), 'mapping coverage mismatch')
     result = {'coverage:' + sid: object_digest(coverage), 'sections:' + sid: object_digest(section),
               'sources:' + entry['source_id']: object_digest(source)}
+
     for name, keys in [('claims', claims), ('maps', mappings), ('requirements', entry['requirement_refs']), ('scopes', entry['canonical_scope_ids']), ('documents', [coverage['destination_id']])]:
         for key in keys:
             result[name + ':' + key] = object_digest(db[name][key])
     refs = set(entry['current_refs'] + entry['canonical_sources'])
     refs.add(coverage['destination_path'] + '#' + slug(coverage['destination_section']))
     authorities = set(entry['authority_refs'])
+
     for c in entry['postrepair_dispositions']:
-        refs.update(c['current_refs']); authorities.update(c['authority'])
+        refs.update(c['current_refs'])
+        authorities.update(c['authority'])
+
         for part in c['components']:
-            refs.update(part['current_refs']); authorities.update(part['authority'])
+            refs.update(part['current_refs'])
+            authorities.update(part['authority'])
+
     for a in authorities:
         require(nonblank(a), 'malformed authority reference')
         if a.startswith('HPX-SRC-'):
@@ -176,19 +233,25 @@ def expected_bindings(root, entry, db):
             resolved = authority_ref(root, a, db)
             require(bool(resolved), 'unknown authority')
             refs.update(resolved)
+
     for ref in refs:
         result['evidence:' + ref] = digest(evidence_bytes(root, ref))
     return result
 
 
 def assessment_digest(entry):
+    """Fingerprint the reviewed assessment body while excluding the evidence-binding envelope itself."""
+
     return object_digest({k: v for k, v in entry.items() if k != 'review_binding'})
 
 
 def validate_entry(root, entry, db):
+    """Require complete scoped obligations, source/authority relationships and exact current fingerprints for one reviewed source section."""
+
     require(isinstance(entry, dict), 'malformed reviewed entry')
     sid = entry['section_id']
     require(nonblank(sid) and nonblank(entry['source_id']), 'malformed section/source ID')
+
     for key in ('overlapping_claim_ids', 'mapping_ids', 'requirement_refs', 'canonical_scope_ids', 'current_refs', 'canonical_sources', 'authority_refs', 'reviewed_obligations'):
         string_list(entry[key])
     require(all(type(entry[k]) is int and entry[k] > 0 for k in ('source_start_line', 'source_end_line')) and entry['source_end_line'] >= entry['source_start_line'], 'malformed source span')
@@ -199,8 +262,10 @@ def validate_entry(root, entry, db):
     require(isinstance(obligations, list) and bool(obligations), 'missing obligation groups')
     require(len(obligations) == len(entry['reviewed_obligations']), 'incomplete obligation groups')
     seen = set()
+
     for i, c in enumerate(obligations, 1):
         require(isinstance(c, dict), 'malformed obligation group')
+
         for key in ('source_claim_ids', 'source_mapping_ids', 'current_refs', 'authority', 'component_dispositions'):
             string_list(c[key])
         require(nonblank(c['disposition']), 'malformed disposition')
@@ -215,6 +280,7 @@ def validate_entry(root, entry, db):
         require(c['source_claim_ids'] == entry['overlapping_claim_ids'] and c['source_mapping_ids'] == entry['mapping_ids'], 'obligation traceability mismatch')
         parts = c['components']
         require(isinstance(parts, list) and bool(parts), 'missing obligation components')
+
         for part in parts:
             require(isinstance(part, dict) and nonblank(part['disposition']), 'malformed obligation component')
             string_list(part['current_refs'])
@@ -224,6 +290,7 @@ def validate_entry(root, entry, db):
         if 'owner-superseded' in c['component_dispositions']:
             scope = c.get('changed_source_clause_scope')
             require(nonblank(scope) and scope.strip().lower() not in {'all', '*', 'entire section', 'entire obligation'} and scope != c['summary'] and 'retained' in c['component_dispositions'], 'blanket supersession forbidden')
+
         for part in parts:
             require(part['disposition'] in DISPOSITIONS and nonblank(part['scope']) and nonblank(part['basis']), 'invalid component disposition/scope/basis')
             require(isinstance(part['current_refs'], list) and bool(part['current_refs']) and set(part['current_refs']) <= set(c['current_refs']), 'component has no bound current home')
@@ -246,6 +313,7 @@ def validate_entry(root, entry, db):
 
 def validate(root):
     """Return only fully validated section IDs; any malformed record fails closed."""
+
     try:
         db = tables(root)
         marked = {sid for sid, row in db['coverage'].items() if 'source-obligations.json' in row['disposition']}
@@ -262,6 +330,7 @@ def validate(root):
         require(len(ids) == len(set(ids)), 'duplicate reviewed section')
         require(set(ids) == marked, 'missing or unreviewed section mapping')
         require(record['obligation_disposition_count'] == sum(len(e['postrepair_dispositions']) for e in entries), 'obligation count mismatch')
+
         for entry in entries:
             validate_entry(root, entry, db)
         return set(ids), []
@@ -271,8 +340,11 @@ def validate(root):
 
 
 def literal_body_differs(original, destination):
+    """Compare retained body text while ignoring only Markdown link destination relocation, not source wording."""
+
     original = original.strip()
     if re.match(r'^#{1,6}\s', original):
         original = original.split('\n', 1)[1].strip() if '\n' in original else ''
+    # Ignore only Markdown link destinations when checking retained literal body wording.
     normalize = lambda text: re.sub(r'\]\((<[^>]+>|[^\s)]+)\)', ']()', text)
     return bool(original and normalize(original) not in normalize(destination))

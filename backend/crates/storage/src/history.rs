@@ -1,11 +1,48 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Bounded immutable publication history for the initial one-owner document.
+//! # Hypergraph PX — Bounded immutable publication history
+//!
+//! Follow retained same-node revision parents and verify their event/snapshot
+//! bindings while paging in a consistent authorized read view. New commits do
+//! not shift an explicitly retained immutable continuation revision.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace/branch history readers, publication contributors and
+//! bounded ancestry inspection.
+//!
+//! Specification:
+//! - [History/provenance responsibilities][spec0]
+//! - [Historical navigation contract][spec1]
+//! - [Retained-history policy][spec2]
+//!
+//! Boundary: Current one-owner/document scope is implemented here. A
+//! supplied revision is not proof of branch membership; read budgets do not
+//! prune retained history or detect full-workspace rollback.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/history.rs
+//! [spec0]: ../../../../docs/05-domain/diagrams/provenance-working.c4
+//! [spec1]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md#initial-immutable-history-and-anchor-queries-2026-10-25
+//! [spec2]: ../../../../docs/04-architecture/decisions/0011-retained-history.md
+
 use super::*;
 use std::collections::BTreeSet;
 
+/// Maximum returned publication entries per query; not a retained-history cap.
 pub const MAX_PAGE: usize = 32;
+/// Default charged immutable-object ciphertext budget for one page.
 pub(super) const PAGE_BYTES: usize = 16 * 1024 * 1024;
 
+/// Verified immutable publication identity/context and byte count, without source text.
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Entry {
@@ -17,6 +54,7 @@ pub struct Entry {
     pub snapshot: SnapshotId,
     #[serde(with = "encoding::identity")]
     pub operation: OperationId,
+
     /// Recorded publication principal, not inferred original text authorship.
     #[serde(with = "encoding::identity")]
     pub actor: PrincipalId,
@@ -25,17 +63,20 @@ pub struct Entry {
     pub text_bytes: usize,
 }
 
+/// Bounded ordered ancestry entries and an inclusive immutable continuation.
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Page {
     #[serde(with = "encoding::identity")]
     pub document: DocumentId,
     pub entries: Vec<Entry>,
+
     /// Inclusive next immutable revision; new commits cannot shift this cursor.
     #[serde(with = "encoding::optional_identity")]
     pub next: Option<RevisionId>,
 }
 
+/// Charge persisted envelope length before reading/decrypting one immutable object.
 pub(super) fn object<T: DeserializeOwned>(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -47,10 +88,12 @@ pub(super) fn object<T: DeserializeOwned>(
         .query_row(
             "SELECT length(envelope) FROM objects WHERE kind=?1 AND id=?2",
             params![kind, id.as_slice()],
+            // Read only the stored ciphertext length before allocating/decrypting its payload.
             |r| r.get(0),
         )
         .optional()?
         .ok_or(Error::NotFound)?;
+    // Negative/unrepresentable stored lengths are integrity failures, not usable budgets.
     let length = usize::try_from(length).map_err(|_| Error::Integrity)?;
     if length > *remaining {
         return Err(Error::Limit);
@@ -60,6 +103,7 @@ pub(super) fn object<T: DeserializeOwned>(
 }
 
 impl Workspace {
+    /// Read one bounded document history page using the standard object-byte allowance.
     pub fn history_page(
         &mut self,
         document: DocumentId,
@@ -68,6 +112,8 @@ impl Workspace {
     ) -> Result<Page> {
         self.history_page_budget(document, next, limit, PAGE_BYTES)
     }
+
+    /// Run a current-scope history read with an explicit byte allowance for boundary tests.
     fn history_page_budget(
         &mut self,
         document: DocumentId,
@@ -78,6 +124,7 @@ impl Workspace {
         if !(1..=MAX_PAGE).contains(&limit) {
             return Err(Error::Invalid);
         }
+
         let tx = self.db.transaction()?;
         let cipher = Cipher {
             key: &self.key,
@@ -87,6 +134,7 @@ impl Workspace {
         if catalog.owner != self.owner || catalog.device != self.device {
             return Err(Error::Integrity);
         }
+
         let page = read_page(
             &cipher,
             &tx,
@@ -96,7 +144,9 @@ impl Workspace {
             limit,
             &mut remaining,
         )?;
+
         tx.commit()?;
+
         Ok(page)
     }
 }
@@ -166,6 +216,7 @@ pub(super) fn read_page(
     read_document_page(cipher, db, &doc, next, limit, remaining)
 }
 
+/// Validate document head/manifest and traverse exact parents, retaining a stable partial cursor.
 pub(super) fn read_document_page(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -189,6 +240,7 @@ pub(super) fn read_document_page(
     {
         return Err(Error::Integrity);
     }
+
     let mut cursor = Some(next.unwrap_or(head.revision));
     let mut entries = Vec::new();
     let mut seen = BTreeSet::new();
@@ -199,6 +251,7 @@ pub(super) fn read_document_page(
         if seen.contains(&id.0) {
             return Err(Error::Integrity);
         }
+        // Only a head-started first entry must match the captured head snapshot.
         let entry = read_entry(cipher, db, doc, id, remaining).and_then(|entry| {
             if next.is_none() && entries.is_empty() && entry.snapshot != head.snapshot {
                 return Err(Error::Integrity);
@@ -215,9 +268,11 @@ pub(super) fn read_document_page(
             Err(error) => return Err(error),
         }
     }
+    // A cycle at the page boundary must fail instead of becoming a continuation.
     if cursor.is_some_and(|id| seen.contains(&id.0)) {
         return Err(Error::Integrity);
     }
+
     Ok(Page {
         document,
         entries,
@@ -229,6 +284,7 @@ pub(super) fn read_document_page(
 mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
+    /// Guard stable immutable continuations and exact snapshots after new Commit and restart.
     #[test]
     fn stable_pages_preserve_exact_snapshots_across_new_commits_and_restart() {
         let temp = Temp::new();
@@ -275,6 +331,7 @@ mod tests {
         );
     }
 
+    /// Reject invalid page sizes, budgets and cross-document cursors without writes.
     #[test]
     fn limits_and_cross_document_cursors_fail_without_publishing_changes() {
         let temp = Temp::new();
@@ -319,6 +376,7 @@ mod tests {
         assert_eq!(before.base, after.base);
     }
 
+    /// Missing retained snapshot evidence must not be replaced by a newer head.
     #[test]
     fn corrupt_events_and_missing_exact_snapshots_never_substitute_latest() {
         let temp = Temp::new();
@@ -338,6 +396,7 @@ mod tests {
         ));
     }
 
+    /// Preserve a valid incomplete-page cursor at the byte boundary without evicting history.
     #[test]
     fn byte_budget_returns_a_stable_partial_page_without_a_retention_cap() {
         let temp = Temp::new();
@@ -363,6 +422,7 @@ mod tests {
                 .query_row(
                     "SELECT length(envelope) FROM objects WHERE kind=?1 AND id=?2",
                     params![kind, id.as_slice()],
+                    // Read only the stored ciphertext length before allocating/decrypting its payload.
                     |r| r.get(0),
                 )
                 .unwrap();
@@ -376,6 +436,7 @@ mod tests {
         assert!(rest.next.is_none());
     }
 
+    /// Reject semantically inconsistent authenticated event/snapshot/cycle records.
     #[test]
     fn authenticated_but_inconsistent_event_snapshot_and_cycle_are_rejected() {
         for fault in ["event", "snapshot", "cycle"] {

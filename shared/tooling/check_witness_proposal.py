@@ -1,10 +1,28 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-only
-"""Abstract local-witness proposal checks, not storage/crypto/fsync verification.
+"""Hypergraph PX — Historical local-witness thought experiment
 
-Roots are symbolic collision-free labels. Only the database label is restored by
-the attacker; trusted local witness state survives, as selected by the owner.
-No workspace, witness file, credential, production version or runtime is changed.
+Exercise a bounded symbolic database/witness recovery model under explicitly supplied survival, receipt and authority assumptions.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/check_witness_proposal.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Developers reviewing the historical freshness investigation; not the application storage path.
+
+Specification:
+- [Current freshness limits](../../docs/08-assurance/security-threat-model.md)
+- [Current finding dispositions](../../docs/08-assurance/development-findings.md)
+
+Boundary: OWNER009 supersedes the external-witness direction. This retained model creates no witness, authenticates no real database and proves no fsync/crypto/application guarantee.
 """
 from dataclasses import dataclass, replace
 import hashlib
@@ -15,6 +33,8 @@ import platform
 
 @dataclass(frozen=True)
 class Witness:
+    """Represent supplied stable/prepared witness labels and authentication assumptions in the historical symbolic model."""
+
     mode: str
     old: str
     new: str | None = None
@@ -25,6 +45,8 @@ class Witness:
 
 @dataclass(frozen=True)
 class State:
+    """Pair a symbolic database label with witness, receipt and current-authority predicates for recovery classification."""
+
     database: str
     witness: Witness | None
     receipt_matches: bool = True
@@ -32,6 +54,8 @@ class State:
 
 
 def classify(state: State) -> str:
+    """Classify supplied database/witness labels without treating missing or unauthenticated witness evidence as success."""
+
     witness = state.witness
     if witness is None or not witness.authenticated:
         return "unknown"
@@ -47,23 +71,33 @@ def classify(state: State) -> str:
 
 
 def may_edit(state: State) -> bool:
+    """Permit model editing only when current authority and the exact stable witness label both hold."""
+
     return state.authorized and classify(state) == "matched"
 
 
 def acknowledge_b(state: State) -> bool:
+    """Require an editable stable B state and matching receipt before modelling acknowledgement of operation B."""
+
     return may_edit(state) and state.database == "B" and state.receipt_matches
 
 
 def finish(state: State) -> State:
+    """Advance only a validated prepared-new state to its stable witness label; refuse speculative resets."""
+
     if classify(state) != "finish_witness":
         raise ValueError("cannot advance or reset the witness from this evidence")
     return replace(state, witness=Witness("stable", state.witness.new))
 
 
 def run() -> dict:
+    """Enumerate model crash/restoration/authority cases and return bounded evidence with its supplied assumptions."""
+
     checks: list[str] = []
 
     def check(condition: bool, description: str) -> None:
+        """Record a model assertion only after its condition holds, aborting on the first counterexample."""
+
         if not condition:
             raise AssertionError(description)
         checks.append(description)
@@ -85,11 +119,13 @@ def run() -> dict:
         "witness finalize uncertain": [committed, finalized],
         "reply lost after finalize": [finalized],
     }
+
     for boundary, states in boundaries.items():
         for state in states:
             check(not acknowledge_b(state) or (state.database == "B" and state.witness.mode == "stable" and state.witness.old == "B"), f"{boundary}: acknowledgement requires both durable new labels ({state.database}/{state.witness.mode})")
 
     examined = 0
+
     for state in [initial, prepared, committed, finalized]:
         for restored in ["A", "B", "unrelated"]:
             candidate = replace(state, database=restored)
@@ -106,8 +142,10 @@ def run() -> dict:
         for database in ["A", "B"]:
             candidate = State(database, witness)
             check(classify(candidate) == "unknown" and not may_edit(candidate), "missing/unsupported/unauthenticated witness never triggers automatic enrollment or reset")
+
     for candidate in [replace(committed, receipt_matches=False), replace(committed, authorized=False), replace(committed, witness=replace(committed.witness, operation="different")), replace(committed, witness=replace(committed.witness, digest="changed"))]:
         check(classify(candidate) == "unknown" and not acknowledge_b(candidate), "prepared recovery requires matching operation, digest, original receipt and current authority")
+
     for state in [initial, finalized]:
         check(not may_edit(replace(state, authorized=False)), "freshness evidence does not grant current authorization")
 

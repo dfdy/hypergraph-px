@@ -1,7 +1,34 @@
-//! Trusted-server envelope adapter; no authorization, policy or filesystem I/O.
+//! # Hypergraph PX — Authenticated object envelopes and key wrapping
 //!
-//! See ADR 0002 for the development format, threat model and recovery limits.
-//! Caller-provided plaintext/passphrases remain the caller's responsibility.
+//! Encrypt and authenticate supplied bytes under an explicit caller-provided
+//! workspace/record context. Wrap data keys using the fixed passphrase KDF profile
+//! without changing encrypted object bytes when the passphrase wrapper changes.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Encrypted workspace storage and its keychain enrollment/unlock adapter.
+//!
+//! Specification:
+//! - [Crypto responsibilities][spec0]
+//! - [Envelope adapter contract][spec1]
+//! - [HGOB/HGWK byte format][spec2]
+//!
+//! Boundary: No authorization, filesystem access, history freshness or complete memory-erasure guarantee is provided here.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/crypto/src/lib.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/06-subsystems/interfaces/crypto-adapter.md
+//! [spec2]: ../../../../docs/06-subsystems/formats/crypto-envelopes.md
 
 use argon2::{Algorithm, Argon2, Block, Params, Version};
 use chacha20poly1305::{AeadInOut, KeyInit, XChaCha20Poly1305, XNonce};
@@ -42,21 +69,33 @@ pub enum Error {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
 pub enum Purpose {
+    /// Immutable revision payload domain.
     Revision = 1,
+    /// Selected composition/manifest payload domain.
     Manifest = 2,
+    /// Closed snapshot payload domain.
     Snapshot = 3,
+    /// Cross-identity transformation evidence domain.
     Transformation = 4,
+    /// Mutable draft payload domain, distinct from immutable history.
     Draft = 5,
+    /// Derived/index payload domain; this discriminator grants no authority.
     Index = 6,
 }
 
 /// Expected binding, supplied by an authorized application, never taken from ciphertext.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Context {
+    /// Expected workspace identity, supplied independently of untrusted bytes.
     pub workspace: [u8; 16],
+
     /// Opaque logical record ID; do not pass a public plaintext hash.
     pub binding: [u8; 32],
+
+    /// Expected record domain, authenticated as associated data.
     pub purpose: Purpose,
+
+    /// Expected key/context epoch; a number alone does not implement rotation.
     pub epoch: u64,
 }
 
@@ -77,6 +116,7 @@ impl SecretKey {
     /// Generate an independent data key using OS entropy.
     pub fn generate() -> Result<Self, Error> {
         let mut key = Zeroizing::new([0; 32]);
+        // Translate entropy-provider failure without exposing platform diagnostics.
         getrandom::fill(&mut *key).map_err(|_| Error::Entropy)?;
         Ok(Self(key))
     }
@@ -86,6 +126,7 @@ impl SecretKey {
         if plaintext.len() > MAX_PLAINTEXT {
             return Err(Error::Resource);
         }
+
         let mut header = Vec::from(OBJECT_PREFIX.as_slice());
         header.extend_from_slice(&random::<24>()?);
         let aad = object_aad(&header, context);
@@ -146,6 +187,8 @@ impl SecretKey {
                 return Err(Error::Unsupported);
             }
         }
+
+        // Only the exact supported framing/profile reaches memory-hard work.
         let kek = derive(passphrase, &envelope[18..34])?;
         let plaintext = decrypt(
             &kek,
@@ -153,18 +196,22 @@ impl SecretKey {
             WRAP_HEADER,
             &wrap_aad(&envelope[..WRAP_HEADER], workspace, epoch),
         )?;
+
         let mut key = Zeroizing::new([0; 32]);
         key.copy_from_slice(&plaintext);
         Ok(Self(key))
     }
 }
 
+/// Obtain fresh OS randomness; an entropy failure never falls back to predictable bytes.
 fn random<const N: usize>() -> Result<[u8; N], Error> {
     let mut bytes = [0; N];
+    // Preserve one non-sensitive failure category for all entropy-source errors.
     getrandom::fill(&mut bytes).map_err(|_| Error::Entropy)?;
     Ok(bytes)
 }
 
+/// Bound raw passphrase bytes before KDF work; preserve their exact representation.
 fn check_passphrase(passphrase: &[u8]) -> Result<(), Error> {
     if passphrase.is_empty() || passphrase.len() > 1024 {
         return Err(Error::Passphrase);
@@ -172,22 +219,27 @@ fn check_passphrase(passphrase: &[u8]) -> Result<(), Error> {
     Ok(())
 }
 
+/// Derive the fixed-profile wrapping key while zeroizing explicit Argon2 memory.
 fn derive(passphrase: &[u8], salt: &[u8]) -> Result<Zeroizing<[u8; 32]>, Error> {
+    // Refuse unsupported fixed KDF parameters rather than selecting a fallback.
     let params = Params::new(MEMORY_KIB, PASSES, LANES, Some(32)).map_err(|_| Error::Derivation)?;
     // The crate's convenience allocator does not clear its Blocks on drop.
     // Own the backing memory explicitly and clear it on every return path.
     let mut memory = Zeroizing::new(Vec::<Block>::new());
     memory
         .try_reserve_exact(params.block_count())
+        // Convert allocation failure into the bounded public resource category.
         .map_err(|_| Error::Resource)?;
     memory.resize(params.block_count(), Block::default());
     let mut kek = Zeroizing::new([0; 32]);
     Argon2::new(Algorithm::Argon2id, Version::V0x13, params)
         .hash_password_into_with_memory(passphrase, salt, &mut *kek, &mut memory[..])
+        // Hide backend KDF diagnostics behind the documented derivation failure.
         .map_err(|_| Error::Derivation)?;
     Ok(kek)
 }
 
+/// Bind the full public header to the caller's expected workspace and logical context.
 fn object_aad(header: &[u8], context: Context) -> Vec<u8> {
     let mut aad = Vec::from(b"hypergraph/object/v1\0".as_slice());
     aad.extend_from_slice(header);
@@ -198,6 +250,7 @@ fn object_aad(header: &[u8], context: Context) -> Vec<u8> {
     aad
 }
 
+/// Bind a key wrapper to its complete header, expected workspace and epoch.
 fn wrap_aad(header: &[u8], workspace: [u8; 16], epoch: u64) -> Vec<u8> {
     let mut aad = Vec::from(b"hypergraph/key-wrap/v1\0".as_slice());
     aad.extend_from_slice(header);
@@ -206,6 +259,7 @@ fn wrap_aad(header: &[u8], workspace: [u8; 16], epoch: u64) -> Vec<u8> {
     aad
 }
 
+/// Reject unsupported framing and oversized/truncated envelopes before cryptographic work.
 fn check(envelope: &[u8], prefix: &[u8; 6], header: usize, max: usize) -> Result<(), Error> {
     if envelope.len() > header + max + 16 {
         return Err(Error::Resource);
@@ -219,31 +273,38 @@ fn check(envelope: &[u8], prefix: &[u8; 6], header: usize, max: usize) -> Result
     Ok(())
 }
 
+/// Allocate a zeroizing payload with tag headroom before any secret bytes are copied.
 fn buffer(bytes: &[u8], extra: usize) -> Result<Zeroizing<Vec<u8>>, Error> {
     let mut buffer = Zeroizing::new(Vec::new());
     // Allocate tag space BEFORE copying plaintext; avoid reallocating secret bytes.
     buffer
         .try_reserve_exact(bytes.len() + extra)
+        // Convert allocation failure into the bounded public resource category.
         .map_err(|_| Error::Resource)?;
     buffer.extend_from_slice(bytes);
     Ok(buffer)
 }
 
+/// Seal a bounded payload with the nonce already present in the authenticated header.
 fn encrypt(key: &[u8; 32], header: &[u8], aad: &[u8], plaintext: &[u8]) -> Result<Vec<u8>, Error> {
     let mut output = Vec::new();
     output
         .try_reserve_exact(header.len() + plaintext.len() + 16)
+        // Convert allocation failure into the bounded public resource category.
         .map_err(|_| Error::Resource)?;
     let mut payload = buffer(plaintext, 16)?;
+    // Reject an invalid nonce slice using the public framing error.
     let nonce = XNonce::try_from(&header[header.len() - 24..]).map_err(|_| Error::Malformed)?;
     XChaCha20Poly1305::new(key.into())
         .encrypt_in_place(&nonce, aad, &mut *payload)
+        // Do not distinguish the library's key/context/tag failure causes.
         .map_err(|_| Error::Authentication)?;
     output.extend_from_slice(header);
     output.extend_from_slice(&payload);
     Ok(output)
 }
 
+/// Authenticate the supplied context before returning a zeroizing plaintext buffer.
 fn decrypt(
     key: &[u8; 32],
     envelope: &[u8],
@@ -251,9 +312,11 @@ fn decrypt(
     aad: &[u8],
 ) -> Result<Zeroizing<Vec<u8>>, Error> {
     let mut plaintext = buffer(&envelope[header..], 0)?;
+    // Reject an invalid nonce slice using the public framing error.
     let nonce = XNonce::try_from(&envelope[header - 24..header]).map_err(|_| Error::Malformed)?;
     XChaCha20Poly1305::new(key.into())
         .decrypt_in_place(&nonce, aad, &mut *plaintext)
+        // Do not distinguish the library's key/context/tag failure causes.
         .map_err(|_| Error::Authentication)?;
     Ok(plaintext)
 }

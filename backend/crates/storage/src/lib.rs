@@ -1,6 +1,43 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Encrypted SQLite local writer. Unlock grants the sole local workspace owner's
-//! authority, not a network session. No client-held mode or multi-owner edits.
+//! # Hypergraph PX — Encrypted workspace transaction boundary
+//!
+//! Coordinates encrypted SQLite records, exact mutable draft acknowledgements,
+//! explicit immutable Commit publication and durable operation-result
+//! reconciliation.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Rust runtime workspace command/query adapter and storage
+//! subsystem modules/tests.
+//!
+//! Specification:
+//! - [Storage responsibilities][spec0]
+//! - [SQLite record contracts][spec1]
+//! - [Draft publication protocol][spec2]
+//! - [Serialization boundary][spec3]
+//!
+//! Boundary: Current code binds a handle to one local catalogue
+//! owner/device. Unlock and runtime session authentication remain distinct;
+//! required multi-user policy is broader than this implementation. Normal
+//! opening supports schema1/2 without implicit migration or client-held
+//! custody.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/lib.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/07-implementation/data-structures/sqlite-records.md
+//! [spec2]: ../../../../docs/07-implementation/protocols/draft-publication.md
+//! [spec3]: ../../../../docs/04-architecture/decisions/0006-domain-serialization-boundary.md
+
 pub mod anchors;
 pub mod assertions;
 pub mod audit;
@@ -69,6 +106,7 @@ pub enum Error {
 }
 pub type Result<T> = std::result::Result<T, Error>;
 impl From<rusqlite::Error> for Error {
+    /// Classify SQL failures without carrying SQL or source data into public errors.
     fn from(error: rusqlite::Error) -> Self {
         #[cfg(test)]
         eprintln!("SQLite diagnostic: {error:?}");
@@ -77,21 +115,27 @@ impl From<rusqlite::Error> for Error {
         Self::Database
     }
 }
+
 impl From<hypergraph_crypto::Error> for Error {
+    /// Classify cryptographic failure without exposing sensitive mechanism details.
     fn from(_: hypergraph_crypto::Error) -> Self {
         Self::Crypto
     }
 }
+
 impl std::fmt::Display for Error {
+    /// Render the intentionally coarse error category for callers.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{self:?}")
     }
 }
+
 impl std::error::Error for Error {}
 
 /// Generate an opaque ID at the I/O boundary, never in the pure domain model.
 pub fn new_id() -> Result<[u8; 32]> {
     let mut id = [0; 32];
+    // The error callback rejects entropy failure rather than supplying a predictable identity.
     getrandom::fill(&mut id).map_err(|_| Error::Crypto)?;
     Ok(id)
 }
@@ -338,6 +382,7 @@ struct StoredReceipt {
     digest: [u8; 32],
     receipt: Receipt,
 }
+
 #[cfg_attr(feature = "api-schema", derive(utoipa::ToSchema))]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -347,6 +392,7 @@ pub struct DocumentSummary {
     pub document: DocumentId,
     pub title: String,
 }
+
 #[cfg_attr(feature = "api-schema", derive(utoipa::ToSchema))]
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -385,7 +431,9 @@ struct Cipher<'a> {
     key: &'a SecretKey,
     workspace: [u8; 16],
 }
+
 impl Cipher<'_> {
+    /// Bind encryption to workspace, record kind, identity and mutable generation.
     fn context(&self, kind: i32, id: [u8; 32], generation: u64) -> Context {
         let mut hash = Sha256::new();
         hash.update(b"hpx/sqlite/record/v1\0");
@@ -406,6 +454,8 @@ impl Cipher<'_> {
             epoch: 1,
         }
     }
+
+    /// Wrap a strict versioned adapter record and encrypt it with its exact storage context.
     fn seal<T: Serialize>(
         &self,
         kind: i32,
@@ -413,9 +463,12 @@ impl Cipher<'_> {
         generation: u64,
         value: &T,
     ) -> Result<Vec<u8>> {
+        // Reject unencodable exact command intent before deriving its retry digest.
         let bytes = Zeroizing::new(encoding::encode_record(kind, value)?);
         Ok(self.key.seal(self.context(kind, id, generation), &bytes)?)
     }
+
+    /// Authenticate the exact storage context before strict record decoding.
     fn open<T: DeserializeOwned>(
         &self,
         kind: i32,
@@ -428,17 +481,22 @@ impl Cipher<'_> {
             .open(self.context(kind, id, generation), envelope)?;
         encoding::decode_record(kind, &bytes)
     }
+
+    /// Read an immutable generation-zero encrypted object or report its absence.
     fn object<T: DeserializeOwned>(&self, db: &Connection, kind: i32, id: [u8; 32]) -> Result<T> {
         let bytes: Vec<u8> = db
             .query_row(
                 "SELECT envelope FROM objects WHERE kind=?1 AND id=?2",
                 params![kind, id.as_slice()],
+                // Read the exact addressed immutable envelope for context-authenticated decoding.
                 |r| r.get(0),
             )
             .optional()?
             .ok_or(Error::NotFound)?;
         self.open(kind, id, 0, &bytes)
     }
+
+    /// Insert a newly encrypted immutable object without overwriting an existing identity.
     fn insert<T: Serialize>(
         &self,
         db: &Connection,
@@ -453,6 +511,8 @@ impl Cipher<'_> {
         )?;
         Ok(())
     }
+
+    /// Read and authenticate a mutable slot together with its nonnegative generation.
     fn slot<T: DeserializeOwned>(
         &self,
         db: &Connection,
@@ -463,13 +523,17 @@ impl Cipher<'_> {
             .query_row(
                 "SELECT generation,envelope FROM slots WHERE kind=?1 AND id=?2",
                 params![kind, id.as_slice()],
+                // Read generation and envelope together so authentication uses the persisted generation.
                 |r| Ok((r.get(0)?, r.get(1)?)),
             )
             .optional()?
             .ok_or(Error::NotFound)?;
+        // Reject a negative SQL generation before constructing its encryption context.
         let generation = u64::try_from(generation).map_err(|_| Error::Integrity)?;
         Ok((generation, self.open(kind, id, generation, &bytes)?))
     }
+
+    /// Create a mutable encrypted slot at generation zero without replacing prior state.
     fn new_slot<T: Serialize>(
         &self,
         db: &Connection,
@@ -484,6 +548,8 @@ impl Cipher<'_> {
         )?;
         Ok(())
     }
+
+    /// Advance one expected mutable generation with SQL compare-and-swap.
     fn update<T: Serialize>(
         &self,
         db: &Connection,
@@ -494,6 +560,7 @@ impl Cipher<'_> {
     ) -> Result<u64> {
         let next = expected
             .checked_add(1)
+            // Keep the next generation representable by SQLite signed integers.
             .filter(|n| *n <= i64::MAX as u64)
             .ok_or(Error::Limit)?;
         let bytes = self.seal(kind, id, next, value)?;
@@ -517,6 +584,7 @@ pub struct Workspace {
     path: std::path::PathBuf,
     keychain_cleanup: Option<hypergraph_keychain::DeviceSecret>,
 }
+
 impl Workspace {
     /// Create only; never overwrite an existing file. Initial keys are passphrase-held.
     pub fn create(path: &Path, passphrase: &[u8], owner_label: &str) -> Result<Self> {
@@ -524,6 +592,7 @@ impl Workspace {
             return Err(Error::Invalid);
         }
         let mut workspace = [0; 16];
+        // The error callback rejects entropy failure rather than supplying a predictable identity.
         getrandom::fill(&mut workspace).map_err(|_| Error::Crypto)?;
         let key = SecretKey::generate()?;
         let wrapper = key.wrap(passphrase, workspace, 1)?;
@@ -534,6 +603,7 @@ impl Workspace {
             use std::os::unix::fs::OpenOptionsExt;
             options.mode(0o600);
         }
+        // Creation/open and sync callbacks preserve I/O failure without retrying an overwrite.
         let file = options.open(path).map_err(|_| Error::Io)?;
         file.sync_all().map_err(|_| Error::Io)?;
         let mut db = connect(path)?;
@@ -568,9 +638,11 @@ impl Workspace {
         {
             std::fs::File::open(
                 path.parent()
+                    // Treat an empty relative parent as the current directory.
                     .filter(|p| !p.as_os_str().is_empty())
                     .unwrap_or(Path::new(".")),
             )
+            // Persist the parent directory entry after creating the workspace file.
             .and_then(|f| f.sync_all())
             .map_err(|_| Error::Io)?;
         }
@@ -584,6 +656,7 @@ impl Workspace {
             keychain_cleanup: None,
         })
     }
+
     /// Open existing workspace only. No migration/downgrade or implicit creation.
     pub fn open(path: &Path, passphrase: &[u8]) -> Result<Self> {
         let db = open_existing(path)?;
@@ -591,6 +664,8 @@ impl Workspace {
         let key = SecretKey::unlock(passphrase, info.workspace, 1, &info.passphrase)?;
         Self::from_key(path, db, key, info.workspace)
     }
+
+    /// Configure an unlocked supported database and establish its authenticated owner/device handle.
     fn from_key(
         path: &Path,
         mut db: Connection,
@@ -615,6 +690,8 @@ impl Workspace {
             keychain_cleanup: None,
         })
     }
+
+    /// List catalogue-authorized document titles from a single SQL read view.
     pub fn list_documents(&mut self) -> Result<Vec<DocumentSummary>> {
         let cipher = Cipher {
             key: &self.key,
@@ -636,6 +713,8 @@ impl Workspace {
         tx.commit()?;
         Ok(result)
     }
+
+    /// Read exact last-acknowledged draft state after current document authority checks.
     pub fn open_document(&mut self, id: DocumentId) -> Result<EditorState> {
         let cipher = Cipher {
             key: &self.key,
@@ -652,6 +731,8 @@ impl Workspace {
         tx.commit()?;
         Ok(result)
     }
+
+    /// Reconstruct the exact closed historical source under present document authority.
     pub fn reconstruct_snapshot(
         &mut self,
         document: DocumentId,
@@ -672,6 +753,7 @@ impl Workspace {
         tx.commit()?;
         Ok(text)
     }
+
     /// Original receipt for reconciliation after an uncertain acknowledgement.
     pub fn receipt(&self, id: OperationId) -> Result<Receipt> {
         let cipher = Cipher {
@@ -688,10 +770,14 @@ impl Workspace {
         tx.commit()?;
         Ok(stored.receipt)
     }
+
+    /// Apply one exact command idempotently and return its durable original acknowledgement.
     pub fn execute(&mut self, operation: OperationId, command: Command) -> Result<Receipt> {
+        // Normal execution uses a no-op fault observer.
         self.execute_inner(operation, command, |_| Ok(()))
     }
 
+    /// Check present authority before receipt replay, then commit all command effects and receipt atomically.
     fn execute_inner(
         &mut self,
         operation: OperationId,
@@ -699,6 +785,7 @@ impl Workspace {
         mut checkpoint: impl FnMut(&str) -> Result<()>,
     ) -> Result<Receipt> {
         validate_command(&command)?;
+        // Reject unencodable exact command intent before deriving its retry digest.
         let bytes = Zeroizing::new(serde_json::to_vec(&command).map_err(|_| Error::Format)?);
         let digest: [u8; 32] = Sha256::digest(&*bytes).into();
         let cipher = Cipher {
@@ -708,6 +795,7 @@ impl Workspace {
         let tx = self
             .db
             .transaction_with_behavior(TransactionBehavior::Immediate)?;
+        // The SQL callback rechecks format support on this already-open handle.
         let schema: i32 = tx.query_row("PRAGMA user_version", [], |row| row.get(0))?;
         if ![SCHEMA_VERSION, keychain::KEYCHAIN_SCHEMA_VERSION].contains(&schema) {
             return Err(Error::Format);
@@ -891,6 +979,8 @@ impl Workspace {
         Ok(receipt)
     }
 }
+
+/// Verify head/draft/base composition and return exact acknowledged editor state.
 fn editor_state(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -922,6 +1012,7 @@ fn editor_state(
     Ok(result)
 }
 
+/// Apply generation-checked mutable Save or explicit immutable Commit in the caller transaction.
 #[allow(clippy::too_many_arguments)]
 fn write_draft(
     cipher: &Cipher<'_>,
@@ -1028,6 +1119,7 @@ struct CreatedDocument {
     revision: RevisionId,
     snapshot: SnapshotId,
 }
+/// Create distinct document/occurrence identities, initial closed history and acknowledged draft atomically.
 #[allow(clippy::too_many_arguments)]
 fn create_document(
     cipher: &Cipher<'_>,
@@ -1112,6 +1204,7 @@ fn create_document(
     })
 }
 
+/// Require draft ownership, branch and immutable base to agree with the current head.
 fn check_draft(
     doc: &Document,
     head: &Head,
@@ -1130,6 +1223,7 @@ fn check_draft(
     }
     Ok(())
 }
+/// Insert same-node immutable revision, exact snapshot and publication event together.
 #[allow(clippy::too_many_arguments)]
 fn publish_revision(
     cipher: &Cipher<'_>,
@@ -1189,6 +1283,8 @@ fn publish_revision(
         },
     )
 }
+
+/// Resolve a closed snapshot and return its exact revision text without normalization.
 fn reconstruct(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -1202,6 +1298,8 @@ fn reconstruct(
     }
     Ok(revision.text)
 }
+
+/// Verify the current single-occurrence manifest binding before returning the saved revision identity.
 fn snapshot_revision(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -1225,6 +1323,8 @@ fn snapshot_revision(
     }
     Ok(binding.revision)
 }
+
+/// Reject malformed or excessive command input before entering the writer transaction.
 fn validate_command(command: &Command) -> Result<()> {
     match command {
         Command::WorkingFork { plan } => working_forks::validate(plan)?,
@@ -1273,7 +1373,10 @@ fn validate_command(command: &Command) -> Result<()> {
     }
     Ok(())
 }
+
+/// Open only an existing nonsymlink database with bounded SQLite field size and busy timeout.
 fn open_existing(path: &Path) -> Result<Connection> {
+    // The error mapping preserves missing/unreadable-file failure without implicit creation.
     if std::fs::symlink_metadata(path)
         .map_err(|_| Error::Io)?
         .file_type()
@@ -1285,8 +1388,10 @@ fn open_existing(path: &Path) -> Result<Connection> {
     // SQLite NOFOLLOW still rejects a symlink in the final file component.
     let parent = path
         .parent()
+        // Treat an empty relative parent as the current directory.
         .filter(|p| !p.as_os_str().is_empty())
         .unwrap_or(Path::new("."));
+    // Map parent-resolution failure to I/O without altering the requested final filename.
     let resolved = parent
         .canonicalize()
         .map_err(|_| Error::Io)?
@@ -1304,13 +1409,18 @@ fn open_existing(path: &Path) -> Result<Connection> {
     )?;
     Ok(db)
 }
+
+/// Open an existing database and enforce the supported SQLite durability configuration.
 fn connect(path: &Path) -> Result<Connection> {
     let db = open_existing(path)?;
     configure(&db)?;
     Ok(db)
 }
+
+/// Require WAL and FULL synchronous recovery settings with untrusted SQL schema disabled.
 fn configure(db: &Connection) -> Result<()> {
     db.execute_batch("PRAGMA trusted_schema=OFF; PRAGMA foreign_keys=ON; PRAGMA temp_store=MEMORY; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;")?;
+    // SQL callbacks read back the actual journal and synchronous settings.
     let mode: String = db.query_row("PRAGMA journal_mode", [], |r| r.get(0))?;
     let sync: i32 = db.query_row("PRAGMA synchronous", [], |r| r.get(0))?;
     if mode != "wal" || sync != 2 {
@@ -1324,6 +1434,7 @@ mod tests {
     use super::*;
     pub(super) struct Temp(std::path::PathBuf);
     impl Temp {
+        /// Allocate a unique isolated temporary directory for synthetic storage evidence.
         pub(super) fn new() -> Self {
             let path = std::env::temp_dir().join(format!(
                 "hpx-storage-{:x}",
@@ -1332,19 +1443,25 @@ mod tests {
             std::fs::create_dir(&path).unwrap();
             Self(path)
         }
+
+        /// Return the isolated test database path without creating it.
         pub(super) fn db(&self) -> std::path::PathBuf {
             self.0.join("test.hpx")
         }
     }
     impl Drop for Temp {
+        /// Remove only this fixture temporary directory after the scenario.
         fn drop(&mut self) {
             let _ = std::fs::remove_dir_all(&self.0);
         }
     }
     pub(super) const PASS: &[u8] = b"synthetic-test-passphrase";
+    /// Build a deterministic synthetic operation identity for retry assertions.
     pub(super) fn op(byte: u8) -> OperationId {
         OperationId([byte; 32])
     }
+
+    /// Create a synthetic document containing exact mixed Unicode and CRLF source.
     pub(super) fn create(ws: &mut Workspace) -> DocumentId {
         match ws
             .execute(
@@ -1361,6 +1478,8 @@ mod tests {
             _ => panic!(),
         }
     }
+
+    /// Build a next-sequence Save tied to the fixture acknowledged generation/base.
     pub(super) fn save(state: &EditorState, text: &str) -> Command {
         Command::Save {
             document: state.document,
@@ -1371,6 +1490,8 @@ mod tests {
             text: text.into(),
         }
     }
+
+    /// Build explicit publication intent for the fixture current acknowledged draft.
     pub(super) fn commit(state: &EditorState) -> Command {
         Command::Commit {
             document: state.document,
@@ -1380,6 +1501,7 @@ mod tests {
         }
     }
 
+    /// Require every supported persisted record family to carry strict encrypted version/kind wrappers.
     #[test]
     fn every_persisted_record_kind_carries_an_authenticated_version() {
         let temp = Temp::new();
@@ -1469,6 +1591,7 @@ mod tests {
         while let Some(row) = rows.next().unwrap() {
             let kind: i32 = row.get(0).unwrap();
             let id: Vec<u8> = row.get(1).unwrap();
+            // Reject a negative SQL generation before constructing its encryption context.
             let generation = u64::try_from(row.get::<_, i64>(2).unwrap()).unwrap();
             let envelope: Vec<u8> = row.get(3).unwrap();
             let bytes = ws
@@ -1491,6 +1614,7 @@ mod tests {
         );
     }
 
+    /// Reject unversioned or future catalogues while preserving their exact stored ciphertext.
     #[test]
     fn legacy_and_future_catalog_payloads_are_rejected_without_rewriting_records() {
         let temp = Temp::new();
@@ -1507,6 +1631,7 @@ mod tests {
                 "record_version": 2, "record_kind": CATALOG, "payload": payload,
             }),
         ] {
+            // Reject unencodable exact command intent before deriving its retry digest.
             let bytes = Zeroizing::new(serde_json::to_vec(&record).unwrap());
             let envelope = ws
                 .key
@@ -1524,6 +1649,7 @@ mod tests {
             ));
             let retained: Vec<u8> = ws
                 .db
+                // Retain exact encrypted bytes for the no-rewrite assertion.
                 .query_row("SELECT envelope FROM slots WHERE kind=?1", [CATALOG], |r| {
                     r.get(0)
                 })
@@ -1531,6 +1657,8 @@ mod tests {
             assert_eq!(retained, envelope);
             assert_eq!(
                 ws.db
+                    // Count immutable objects to detect forbidden side effects.
+                    // Read immutable object count before/after rollback assertions.
                     .query_row("SELECT count(*) FROM objects", [], |r| r.get::<_, i64>(0))
                     .unwrap(),
                 0
@@ -1538,6 +1666,7 @@ mod tests {
         }
     }
 
+    /// Recover acknowledged drafts and exact historical snapshots while preserving original Save/Commit retry results.
     #[test]
     fn restart_recovers_draft_explicit_commit_reconstructs_immutable_history_and_retry() {
         let temp = Temp::new();
@@ -1579,6 +1708,8 @@ mod tests {
         assert!(matches!(ws.execute(op(4), request), Err(Error::Conflict)));
         assert_eq!(ws.open_document(id).unwrap().text, recovered.text);
     }
+
+    /// Keep source/labels absent from persisted plaintext and reject cross-kind ciphertext substitution.
     #[test]
     fn encrypted_disk_records_no_plaintext_source_or_labels_and_tamper_fails() {
         let temp = Temp::new();
@@ -1594,6 +1725,7 @@ mod tests {
                 b"PRIVATE OWNER SENTINEL",
                 b"Research",
             ] {
+                // The predicate detects exact sensitive sentinel windows in each SQLite file.
                 assert!(!bytes.windows(needle.len()).any(|w| w == needle));
             }
         }
@@ -1606,6 +1738,8 @@ mod tests {
             .unwrap();
         assert!(matches!(ws.open_document(id), Err(Error::Crypto)));
     }
+
+    /// Reject wrong credentials, existing create targets, missing files and unsupported schemas without migration.
     #[test]
     fn wrong_password_unrelated_future_schema_and_missing_file_fail_closed() {
         let temp = Temp::new();
@@ -1633,11 +1767,14 @@ mod tests {
         assert_eq!(
             Connection::open(temp.db())
                 .unwrap()
+                // Confirm rejected future schema remains untouched on disk.
                 .query_row("PRAGMA user_version", [], |r| r.get::<_, i32>(0))
                 .unwrap(),
             999
         );
     }
+
+    /// Reject stale concurrent Save and roll back all publication writes after an injected head-stage failure.
     #[test]
     fn stale_second_writer_and_failure_after_heads_publish_nothing() {
         let temp = Temp::new();
@@ -1655,9 +1792,11 @@ mod tests {
         let current = first.open_document(id).unwrap();
         let count: i64 = first
             .db
+            // Read immutable object count before/after rollback assertions.
             .query_row("SELECT count(*) FROM objects", [], |r| r.get(0))
             .unwrap();
         assert!(matches!(
+            // Interrupt after head changes while the encompassing transaction remains uncommitted.
             first.execute_inner(op(4), commit(&current), |phase| if phase == "heads" {
                 Err(Error::Io)
             } else {
@@ -1668,6 +1807,7 @@ mod tests {
         assert_eq!(
             first
                 .db
+                // Read immutable object count before/after rollback assertions.
                 .query_row("SELECT count(*) FROM objects", [], |r| r.get::<_, i64>(0))
                 .unwrap(),
             count
@@ -1678,6 +1818,8 @@ mod tests {
         );
         assert!(matches!(first.receipt(op(4)), Err(Error::NotFound)));
     }
+
+    /// Verify actual subprocess exit boundaries preserve either no Commit or its durable original result.
     #[test]
     fn process_exit_on_each_side_of_commit_is_atomic_and_retryable() {
         let temp = Temp::new();
@@ -1720,6 +1862,8 @@ mod tests {
             assert_eq!(ws.execute(op(9), original).unwrap(), receipt);
         }
     }
+
+    /// Exit the isolated subprocess at exactly the requested transaction checkpoint.
     #[test]
     #[ignore = "subprocess fault-injection worker, launched by process_exit test"]
     fn crash_worker() {
@@ -1728,6 +1872,7 @@ mod tests {
         let mut ws = Workspace::open(&path, PASS).unwrap();
         let id = ws.list_documents().unwrap()[0].document;
         let state = ws.open_document(id).unwrap();
+        // Terminate the child process at the designated transaction stage.
         ws.execute_inner(op(9), commit(&state), |at| {
             if at == phase {
                 std::process::exit(86);

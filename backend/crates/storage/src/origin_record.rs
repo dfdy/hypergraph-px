@@ -1,5 +1,37 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Inactive single-parent origin-evidence codec. No SQL, clock or authorization.
+//! # Hypergraph PX — Single-parent passage-origin evidence
+//!
+//! Serializes exact splice evidence and reconstructs passage origins against a
+//! validated parent map without inventing origin age for unknown source.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Experimental temporal Commit writer and bounded origin-history
+//! reader; codec tests.
+//!
+//! Specification:
+//! - [Storage record responsibilities][spec0]
+//! - [Candidate origin evidence][spec1]
+//!
+//! Boundary: Candidate kind34 only; callers authorize snapshots and
+//! allocate commit order. No SQL or clock allocation occurs here; the
+//! guarded experimental driver uses this codec, while normal formats remain
+//! unchanged.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/origin_record.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/shared-responsibilities.c4
+//! [spec1]: ../../../../docs/07-implementation/data-structures/sqlite-records.md
+
 use crate::{Error, Result, encoding};
 use hypergraph_domain::{
     parent_merge::{
@@ -31,7 +63,9 @@ pub struct Binding {
     pub parent_snapshot: SnapshotId,
     pub order: u64,
 }
+
 impl Binding {
+    /// Reject missing/unsafe commit order and a revision that names itself as parent.
     fn valid(&self) -> bool {
         self.order > 0 && self.order <= JS_MAX && self.revision != self.parent_revision
     }
@@ -42,7 +76,9 @@ pub enum Confidence {
     Exact,
     Unknown,
 }
+
 impl Confidence {
+    /// Translate persisted confidence without strengthening unknown evidence.
     fn domain(self) -> Mapping {
         match self {
             Self::Exact => Mapping::Exact,
@@ -99,6 +135,7 @@ struct Payload {
     evidence: Vec<Evidence>,
 }
 
+/// Reject impossible output budgets and oversized parent/result text before replay.
 fn bounds(parent: &Map, text: &str, limits: Limits, max_bytes: usize) -> Result<()> {
     if max_bytes == 0
         || max_bytes > hypergraph_crypto::MAX_PLAINTEXT
@@ -110,6 +147,8 @@ fn bounds(parent: &Map, text: &str, limits: Limits, max_bytes: usize) -> Result<
     }
     Ok(())
 }
+
+/// Rebuild origin runs from exact parent/trace evidence under the work budget.
 fn replay(
     binding: &Binding,
     parent: &Map,
@@ -126,17 +165,21 @@ fn replay(
     if evidence.len() > limits.work {
         return Err(Error::Limit);
     }
+    // Bound total nested pieces before allocating their domain representations.
     evidence.iter().try_fold(evidence.len(), |n, proof| {
         n.checked_add(proof.pieces.len())
+            // Stop the accumulated piece count at the configured work ceiling.
             .filter(|n| *n <= limits.work)
             .ok_or(Error::Limit)
     })?;
     let pieces: Vec<Vec<_>> = evidence
         .iter()
+        // Convert each persisted proof into borrowed-domain piece storage.
         .map(|proof| {
             proof
                 .pieces
                 .iter()
+                // Keep exact byte ranges and fresh/unknown/copied source distinctions.
                 .map(|piece| origins::Piece {
                     start: piece.start_byte,
                     end: piece.end_byte,
@@ -152,6 +195,7 @@ fn replay(
     let proofs: Vec<_> = evidence
         .iter()
         .zip(&pieces)
+        // Pair converted pieces with their independent deletion confidence.
         .map(|(proof, pieces)| origins::Evidence {
             pieces,
             deletion_mapping: proof.deletion_mapping.domain(),
@@ -159,11 +203,15 @@ fn replay(
         .collect();
     parent
         .publish(trace, binding.revision, binding.order, &proofs, limits)
+        // Preserve exhaustion; any other failed origin/trace invariant is corrupt evidence.
         .map_err(|error| match error {
             origins::Error::Limit => Error::Limit,
             _ => Error::Integrity,
         })
 }
+
+/// Encode a replay-validated origin record and return the reconstructed map.
+///
 /// Parent/current snapshot authority and clock allocation are caller obligations.
 pub fn encode(
     binding: &Binding,
@@ -178,6 +226,7 @@ pub fn encode(
     let changes = trace
         .changes()
         .iter()
+        // Borrow unchanged splice text for the serialized candidate payload.
         .map(|change| ChangeRef {
             start_byte: change.start,
             end_byte: change.end,
@@ -195,10 +244,14 @@ pub fn encode(
         map,
     ))
 }
+
 /// Metadata inspection for a bounded authenticated loader; this is not map validation.
 pub(super) fn binding(bytes: &[u8]) -> Result<Binding> {
+    // Discard unvalidated map material; callers requested only bound context.
     evidence(bytes).map(|(binding, _, _)| binding)
 }
+
+/// Inspect strict bounded metadata for loaders without claiming map validity.
 pub(super) fn evidence(bytes: &[u8]) -> Result<(Binding, usize, Vec<Evidence>)> {
     if bytes.len() > hypergraph_crypto::MAX_PLAINTEXT {
         return Err(Error::Limit);
@@ -209,6 +262,8 @@ pub(super) fn evidence(bytes: &[u8]) -> Result<(Binding, usize, Vec<Evidence>)> 
     }
     Ok((payload.binding, payload.text_bytes, payload.evidence))
 }
+
+/// Restore a bound origin map only after exact trace reconstruction succeeds.
 pub fn decode(
     bytes: &[u8],
     expected: &Binding,
@@ -237,6 +292,7 @@ pub fn decode(
     let changes: Vec<_> = payload
         .changes
         .into_iter()
+        // Carry exact persisted splice bytes into domain reconstruction.
         .map(|change| Change {
             start: change.start_byte,
             end: change.end_byte,
@@ -248,10 +304,11 @@ pub fn decode(
         revision: parent.revision(),
         text: parent.text(),
     };
-    let trace = Trace::restore(&base, text, &changes, limits).map_err(|error| match error {
-        hypergraph_domain::parent_merge::lineage::Error::Limit => Error::Limit,
-        _ => Error::Integrity,
-    })?;
+    let trace = Trace::restore(&base, text, &changes, limits) // Preserve exhaustion; any other failed origin/trace invariant is corrupt evidence.
+        .map_err(|error| match error {
+            hypergraph_domain::parent_merge::lineage::Error::Limit => Error::Limit,
+            _ => Error::Integrity,
+        })?;
     replay(expected, parent, &trace, &payload.evidence, limits)
 }
 
@@ -259,6 +316,7 @@ pub fn decode(
 mod tests {
     use super::*;
     use hypergraph_domain::parent_merge::lineage::Splice;
+    /// Provide distinct deterministic revision and snapshot identities.
     fn binding() -> Binding {
         Binding {
             document: DocumentId([1; 32]),
@@ -270,12 +328,16 @@ mod tests {
             order: 1,
         }
     }
+
+    /// Bound fixture source size and origin reconstruction work.
     fn limits() -> Limits {
         Limits {
             text_bytes: 4096,
             work: 100_000,
         }
     }
+
+    /// Mark the replacement range as fresh with exact deletion evidence.
     fn proof(end: usize) -> Vec<Evidence> {
         vec![Evidence {
             pieces: vec![Piece {
@@ -286,6 +348,8 @@ mod tests {
             deletion_mapping: Confidence::Exact,
         }]
     }
+
+    /// Build a parent map whose legacy source has no invented commit order.
     fn root(text: &str) -> Map {
         Map::root(
             &Base {
@@ -298,6 +362,8 @@ mod tests {
         )
         .unwrap()
     }
+
+    /// Lock exact record bytes and inherited unknown age through round-trip reconstruction.
     #[test]
     fn golden_bytes_round_trip_exact_source_and_derive_inherited_age_from_parent() {
         let parent = root("Mon\r\n😀");
@@ -321,6 +387,7 @@ mod tests {
             )
             .unwrap();
         let (bytes, map) = encode(&binding(), &parent, &trace, &proof(3), limits(), 4096).unwrap();
+        // Render exact identity-array bytes for the golden JSON vector.
         let array = |n: u8| {
             std::iter::repeat_n(n.to_string(), 32)
                 .collect::<Vec<_>>()
@@ -346,6 +413,8 @@ mod tests {
         assert_eq!(map.runs()[1].parent_start, Some(3));
         assert_eq!(map.deletions()[0].end, 3);
     }
+
+    /// Reject altered context, unsafe order and an unrelated parent node.
     #[test]
     fn every_binding_and_unsafe_order_are_checked_before_accepting_evidence() {
         let parent = root("a");
@@ -412,6 +481,8 @@ mod tests {
             Err(Error::Integrity)
         ));
     }
+
+    /// Reject unknown/duplicate fields, invalid traces and unsupported copy claims.
     #[test]
     fn malformed_future_duplicate_noncanonical_and_false_copy_records_fail_closed() {
         let parent = root("a");
@@ -527,6 +598,8 @@ mod tests {
             );
         }
     }
+
+    /// Preserve exact copied subranges and unknown confidence while enforcing all resource caps.
     #[test]
     fn exact_inner_copy_unknown_mapping_and_resource_bounds_survive_the_codec() {
         let parent = root("axb");

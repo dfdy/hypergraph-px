@@ -1,7 +1,45 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Atomic reviewed synthesis; optional record version 1, existing schemas unchanged.
+//! # Hypergraph PX — Atomic independently reviewed synthesis
+//!
+//! Validate ordered pinned source fragments and publish a separately reviewed
+//! output with its immutable derivation in the existing writer transaction.
+//! The output can differ from all inputs; source-copy authorship remains unknown.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Workspace Merge dispatch, derivation and graph/overlay readers,
+//! synthesis workflow tests.
+//!
+//! Specification:
+//! - [Synthesis planning/adapters][spec0]
+//! - [Cross-identity provenance meanings][spec1]
+//! - [Reviewed synthesis record contract][spec2]
+//! - [Navigation and source interfaces][spec3]
+//!
+//! Boundary: Cross-identity synthesis is not same-node parent Merge or an
+//! automatic text diff. Current owner/device scope, exact records and
+//! caller-owned transaction/receipt rules remain required.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/merges.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/pure-domain.c4
+//! [spec1]: ../../../../docs/05-domain/diagrams/provenance-working.c4
+//! [spec2]: ../../../../docs/07-implementation/data-structures/sqlite-records.md#optional-reviewed-synthesis-derivation-kind-17-record-version-1
+//! [spec3]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md
+
 use super::*;
+/// Existing optional reviewed-synthesis object kind; no SQL/envelope version change.
 pub const KIND: i32 = 17;
+/// One exact committed input and optional guard against a changed editor context.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Input {
@@ -9,6 +47,8 @@ pub struct Input {
     pub expected_draft: Option<clipboard::DraftContext>,
     pub quote: String,
 }
+
+/// Frozen reviewed output plus explicitly ordered source evidence; no copy map is inferred.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Request {
@@ -16,16 +56,22 @@ pub struct Request {
     pub text: String,
     pub inputs: Vec<Input>,
 }
+
+/// Explicit meaning of this immutable cross-identity derivation family.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Kind {
     ReviewedSynthesis,
 }
+
+/// Output publication evidence does not identify original authors of copied source.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SourceAuthorship {
     Unknown,
 }
+
+/// Pinned ordered input fragments and the independent initial output publication.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Derivation {
@@ -42,12 +88,16 @@ pub struct Derivation {
     pub inputs: Vec<clipboard::Source>,
     pub outputs: Vec<clipboard::Source>,
 }
+
+/// Domain-separate the stable derivation address from the output logical node identity.
 pub(super) fn address(node: NodeId) -> [u8; 32] {
     let mut hash = Sha256::new();
     hash.update(b"hpx/merge-derivation/by-output-node/v1\0");
     hash.update(node.0);
     hash.finalize().into()
 }
+
+/// Bound output/title/input shape and aggregate selected quotes before source acquisition.
 pub(super) fn validate(request: &Request) -> Result<()> {
     if request.title.trim().is_empty() || request.title.len() > 512 || request.text.is_empty() {
         return Err(Error::Invalid);
@@ -68,6 +118,9 @@ pub(super) fn validate(request: &Request) -> Result<()> {
     }
     Ok(())
 }
+
+/// Authenticate exact inputs, invoke pure validation and publish one independent synthesis.
+/// The caller owns commit/replay/receipt handling and all writes share its transaction.
 pub(super) fn apply(
     cipher: &Cipher<'_>,
     db: &Connection,
@@ -101,11 +154,13 @@ pub(super) fn apply(
             end_byte: input.source.end_byte,
         });
     }
+
     let output_node = NodeId(new_id()?);
     let inputs: Vec<_> = resolved
         .iter()
         .zip(&anchors)
         .map(
+            // Convert each resolved retained source and anchor into pure planner input.
             |((doc, revision), anchor)| hypergraph_domain::merge::Input {
                 node: doc.node,
                 revision: anchor.revision,
@@ -116,7 +171,9 @@ pub(super) fn apply(
         )
         .collect();
     hypergraph_domain::merge::validate(&inputs, output_node, &request.text)
+        // Resolved stored bindings failing pure validation signal integrity failure.
         .map_err(|_| Error::Integrity)?;
+
     let len = request.text.len();
     let output = create_document(
         cipher,
@@ -129,6 +186,7 @@ pub(super) fn apply(
         request.text,
         checkpoint,
     )?;
+
     let transformation = TransformationId(new_id()?);
     let event = Derivation {
         transformation,
@@ -140,6 +198,7 @@ pub(super) fn apply(
         inputs: request
             .inputs
             .into_iter()
+            // Retain input order and exact source bindings in immutable provenance.
             .map(|input| input.source)
             .collect(),
         outputs: vec![clipboard::Source {
@@ -154,6 +213,7 @@ pub(super) fn apply(
     };
     cipher.insert(db, KIND, address(output_node), &event)?;
     checkpoint("derivation")?;
+
     Ok(Outcome::Merged {
         document: output.document.id,
         transformation,
@@ -161,7 +221,9 @@ pub(super) fn apply(
         snapshot: output.snapshot,
     })
 }
+
 impl Workspace {
+    /// Read exact original synthesis provenance under current scope in one read transaction.
     pub fn document_merge(&mut self, document: DocumentId) -> Result<Derivation> {
         let tx = self.db.transaction()?;
         let cipher = Cipher {
@@ -172,11 +234,14 @@ impl Workspace {
         if catalog.owner != self.owner || catalog.device != self.device {
             return Err(Error::Integrity);
         }
+        // The ordinary reader supplies no extra externally charged source hook.
         let event = read_derivation(&cipher, &tx, &catalog, document, &mut |_| Ok(()))?;
         tx.commit()?;
         Ok(event)
     }
 }
+
+/// Validate pinned output publication/receipt and every exact input without following heads.
 /// Caller owns a current-authority consistent transaction and source work budget.
 pub(super) fn read_derivation(
     cipher: &Cipher<'_>,
@@ -204,6 +269,7 @@ pub(super) fn read_derivation(
     if out.document != document
         || out.node != doc.node
         || out.start_byte != 0
+        // An independent output cannot appear as one of its own source nodes.
         || event.inputs.iter().any(|s| s.node == doc.node)
     {
         return Err(Error::Integrity);
@@ -257,10 +323,12 @@ pub(super) fn read_derivation(
     }
     Ok(event)
 }
+
 #[cfg(test)]
 pub(super) mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, op, save};
+    /// Supply two explicit equal-source inputs with an independently reviewed output fixture.
     pub(crate) fn request(state: &EditorState) -> Request {
         let fork = forks::tests::request(state);
         Request {
@@ -280,6 +348,8 @@ pub(super) mod tests {
             ],
         }
     }
+
+    /// Create a disposable committed source with mixed Unicode/newline content.
     fn setup() -> (Temp, Workspace, EditorState) {
         let t = Temp::new();
         let mut w = Workspace::create(&t.db(), PASS, "Synthetic").unwrap();
@@ -298,12 +368,16 @@ pub(super) mod tests {
         let e = w.open_document(document).unwrap();
         (t, w, e)
     }
+
+    /// Require a successful synthesis outcome before extracting its independent document.
     fn document(r: &Receipt) -> DocumentId {
         let Outcome::Merged { document, .. } = r.outcome else {
             panic!()
         };
         document
     }
+
+    /// Guard independent reviewed output and ordered pinned provenance through replay/edit/restart.
     #[test]
     fn reviewed_output_retains_ordered_inputs_independent_identity_history_retry_and_restart() {
         let (t, mut w, source) = setup();
@@ -322,6 +396,7 @@ pub(super) mod tests {
             event.inputs,
             p.inputs
                 .iter()
+                // Compare retained input order, not only set membership.
                 .map(|i| i.source.clone())
                 .collect::<Vec<_>>()
         );
@@ -342,12 +417,15 @@ pub(super) mod tests {
         let mut w = Workspace::open(&t.db(), PASS).unwrap();
         assert_eq!(w.document_merge(id).unwrap(), event);
     }
+
+    /// Guard rollback-before-commit and exact single-result recovery after committed reply loss.
     #[test]
     fn all_publication_faults_roll_back_or_reconcile_one_output() {
         for phase in ["objects", "derivation", "heads", "receipt", "committed"] {
             let (t, mut w, s) = setup();
             let c = Command::Merge { plan: request(&s) };
             assert!(
+                // Fail this exact selected publication checkpoint and leave other phases alone.
                 w.execute_inner(op(2), c.clone(), |p| if p == phase {
                     Err(Error::Io)
                 } else {
@@ -366,6 +444,8 @@ pub(super) mod tests {
             w.document_merge(document(&r)).unwrap();
         }
     }
+
+    /// Reject wrong quotes/revisions and damaged original evidence without guessing provenance.
     #[test]
     fn invalid_uncommitted_scope_and_damaged_evidence_never_publish_or_guess() {
         let (_t, mut w, s) = setup();

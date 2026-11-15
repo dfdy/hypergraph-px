@@ -1,5 +1,28 @@
 #!/usr/bin/env python3
-"""Explicit ADR016 installation; public metadata only, no trust-store changes."""
+"""Hypergraph PX — Explicit local code-signing identity installation
+
+Install a dedicated macOS development signing identity only through the explicit install command, preserving public retry metadata and refusing ambiguous partial imports.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/setup_local_signing.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Owner-authorized local signing setup; ordinary development and commenting checks do not invoke it.
+
+Specification:
+- [Local signing policy](../../docs/04-architecture/decisions/0016-local-development-signing.md)
+- [Development workflow](../../docs/09-guides/developers/repository-development.md)
+
+Boundary: Execution changes credentials and requires its own authorization. This documentation edit does not install keys, trust or identities.
+"""
 import argparse
 import hashlib
 import json
@@ -14,16 +37,21 @@ NAME = 'Hypergraph PX Local Development'
 IDENTIFIER = 'org.hypergraph-px.runtime.local-development'
 
 def run(args):
+    """Execute an installation subprocess and expose only bounded public failure detail, never password/private output."""
+
     result = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if result.returncode:
         detail=''
         if args[0]=='/usr/bin/security':
             for line in result.stderr.decode(errors='replace').splitlines():
-                if line.startswith('security: SecKeychainItemImport:'): detail=' '+line
+                if line.startswith('security: SecKeychainItemImport:'):
+                    detail=' '+line
         raise RuntimeError(f'{Path(args[0]).name} failed (exit {result.returncode});'+detail+' no password or private material logged')
     return result.stdout
 
 def main():
+    """Refuse existing/ambiguous identities, create private temporary key material and record the explicit import outcome."""
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--install', action='store_true', required=True)
     parser.add_argument('--retry-uninstalled', action='store_true')
@@ -47,6 +75,7 @@ def main():
         if not (old_key.returncode==44 or old_key.returncode==1 and b'The specified item could not be found in the keychain.' in old_key.stderr) or old_key.stdout:
             raise RuntimeError('Possible partial signing-key import; no replacement attempted')
         pending.rename(FOLDER/'previous-uninstalled-attempt.json')
+
     with tempfile.TemporaryDirectory(prefix='hpx-signing-', dir='/private/tmp') as tmp:
         temp = Path(tmp)
         private, certificate, bundle = temp/'private.pem', temp/'certificate.pem', temp/'transfer.p12'

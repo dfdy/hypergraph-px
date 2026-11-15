@@ -1,67 +1,317 @@
-import {test,expect} from './fixtures.js';
-import {readFile} from 'node:fs/promises';
-async function source(page){const ready=page.waitForEvent('download');await page.getByRole('button',{name:'↓ Markdown',exact:true}).click();return readFile(await(await ready).path(),'utf8');}
-async function replaceAndSelect(page,text,from,to,reverse=false){const editor=page.getByRole('textbox',{name:'Markdown document editor'});await editor.focus();await page.keyboard.press('ControlOrMeta+A');await page.keyboard.insertText(text);await page.keyboard.press('ControlOrMeta+Home');for(let i=0;i<(reverse?to:from);i++)await page.keyboard.press('ArrowRight');await page.keyboard.down('Shift');for(let i=from;i<to;i++)await page.keyboard.press(reverse?'ArrowLeft':'ArrowRight');await page.keyboard.up('Shift');}
-async function open(page){await page.keyboard.press('Shift+F10');await page.getByRole('menuitem',{name:'Add relations',exact:true}).click();await expect(page.getByRole('dialog',{name:'Add relations',exact:true})).toBeVisible();}
-const errors=new WeakMap();test.beforeEach(async({page})=>{errors.set(page,[]);page.on('pageerror',e=>errors.get(page).push(e.message));page.on('dialog',d=>d.accept());await page.goto('/');await expect(page.getByRole('textbox',{name:'Markdown document editor'})).toBeVisible();});test.afterEach(async({page})=>expect(errors.get(page)).toEqual([]));
-test('right-click modal filters all thirteen categories and creates a typed sentence relationship without source edits',async({page})=>{
- const text='First sentence. Second sentence. Third sentence.',from=text.indexOf('Second');await replaceAndSelect(page,text,from,text.length);
- // Right-click inside the selected second sentence, preserving its two-unit selection.
- const point=await page.locator('.cm-content').evaluate(root=>{const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;while((node=walker.nextNode())){const at=node.textContent.indexOf('Second');if(at>=0){const range=document.createRange();range.setStart(node,at+2);range.setEnd(node,at+3);const box=range.getBoundingClientRect();return {x:box.x+1,y:box.y+box.height/2};}}throw Error('Missing Second');});
- await page.mouse.click(point.x,point.y,{button:'right'});await page.getByRole('menuitem',{name:'Add relations',exact:true}).click();const dialog=page.getByRole('dialog',{name:'Add relations',exact:true}),category=dialog.getByLabel('Relationship category',{exact:true}),type=dialog.getByLabel('Relationship type',{exact:true});await expect(category.locator('option:not([value=""])')).toHaveCount(13);await expect(category).toHaveValue('');await expect(type).toHaveValue('');await expect(dialog.getByRole('button',{name:'Add relation',exact:true})).toBeDisabled();await expect(dialog).not.toContainText('relationship types available');
- const counts={'ontological':39,'dialectical-process':67,'logical-argumentative':45,'epistemological':41,'ethical-political':28,'conceptual-semantic':38,'genealogical-historical':35,'methodological-practical':44,'logical-operators':26,'rhetorical-discourse':26,'temporal':13,'source-provenance':15,'causal-empirical':8};
- const options=await category.locator('option:not([value=""])').evaluateAll(nodes=>nodes.map(node=>({id:node.value,label:node.textContent}))),compare=(a,b)=>new Intl.Collator('en',{sensitivity:'base',numeric:true}).compare(a,b);expect(options.map(option=>option.label)).toEqual(options.map(option=>option.label).sort(compare));
- for(const option of options){await category.selectOption(option.id);await expect(type.locator('option:not([value=""])')).toHaveCount(counts[option.id]);await expect(type).toHaveValue('');const labels=await type.locator('option:not([value=""])').allTextContents();expect(labels).toEqual([...labels].sort(compare));}
- await category.selectOption('ontological');await type.selectOption('preview:ontological:depends_on');await expect(dialog).toContainText('Inverse label: is depended on by');
- await category.selectOption('logical-argumentative');await type.selectOption('preview:logical-argumentative:undermines');await expect(dialog).toContainText('A counterexample undermines an argument.');await expect(dialog).toContainText('Second sentence.');await expect(dialog).toContainText('Third sentence.');
- await expect(dialog.locator('.relationship-participants .relationship-connector strong')).toHaveText('undermines');await expect(dialog.locator('.relationship-details')).toContainText('Definition:');expect(await dialog.evaluate(element=>element.querySelector('.relationship-details').getBoundingClientRect().top>=element.querySelector('.relationship-participants').getBoundingClientRect().bottom)).toBe(true);
- const positions=await dialog.locator('select').evaluateAll(nodes=>nodes.map(node=>node.getBoundingClientRect().top));expect(positions[1]).toBeGreaterThan(positions[0]);await dialog.screenshot({path:'../.local/artifacts/ui/relationship-category-modal.png'});await dialog.getByRole('button',{name:'Add relation',exact:true}).click();await expect(dialog).toHaveCount(0);
- await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));await expect(page.locator('.relationship-card.inspected h3')).toHaveText('undermines');expect(await page.locator('.relationship-card.inspected').evaluate(card=>{const elements=[...card.children];return elements.indexOf(card.querySelectorAll('blockquote')[0])<elements.indexOf(card.querySelector('.relationship-connector'))&&elements.indexOf(card.querySelector('.relationship-connector'))<elements.indexOf(card.querySelectorAll('blockquote')[1]);})).toBe(true);await expect(page.locator('.relationship-card.inspected')).toContainText('Logical and argumentative relationships');await expect(page.locator('#editorHost .relationship-sentence button')).toHaveCount(1);expect(await source(page)).toBe(text);
-});
-test('keyboard menu supports two sibling sections and cancellation restores the exact selection',async({page})=>{
- const text='## One\n\nFirst body.\n\n## Two\n\nSecond body.\n\n## Three\n\nThird body.',to=text.indexOf('## Three');await replaceAndSelect(page,text,0,to,true);await open(page);await page.getByRole('dialog').getByRole('button',{name:'Cancel',exact:true}).click();await expect.poll(()=>page.evaluate(()=>window.getSelection().toString())).toBe(text.slice(0,to));await page.keyboard.press('Shift+F10');await expect(page.getByRole('menuitem',{name:'Add relations',exact:true})).toBeEnabled();await page.getByRole('menuitem',{name:'Add relations',exact:true}).click();
- const dialog=page.getByRole('dialog',{name:'Add relations',exact:true});await expect(dialog).toContainText('first selected section');await dialog.getByLabel('Relationship category',{exact:true}).selectOption('genealogical-historical');await dialog.getByLabel('Relationship type',{exact:true}).selectOption('preview:genealogical-historical:develops_from');await dialog.getByRole('button',{name:'Add relation',exact:true}).click();await expect(page.locator('#editorHost .relationship-section button')).toHaveCount(1);await expect(page.locator('.relationship-card.inspected h3')).toHaveText('develops from');expect(await source(page)).toBe(text);
-});
-test('Add relations is unavailable for a caret, partial text or more than two units',async({page})=>{
- const text='One sentence. Two sentence. Three sentence.';for(const [from,to] of [[0,0],[1,text.indexOf('Three')-1],[0,text.length]]){await replaceAndSelect(page,text,from,to);await page.keyboard.press('Shift+F10');await expect(page.getByRole('menuitem',{name:'Add relations',exact:true})).toBeDisabled();await page.keyboard.press('Escape');}
+/**
+ * Hypergraph PX — Semantic relation review dialog browser checks
+ *
+ * Check the catalog/category/search/claim-property review UI, exact unit
+ * selection, cancellation and source-neutral relation publication.
+ *
+ * Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/frontend/tests/browser/relationship-dialog.spec.js)
+ *
+ * Agent provenance: Agent creation unverified; original creator not recorded.
+ * Created: Unknown (not recorded).
+ * Creation harness: Unknown (not recorded).
+ * Creation model: Unknown (not recorded).
+ *
+ * Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+ * Latest editing harness: Codex; version/build: Unknown (not exposed).
+ * Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+ * Last edited: 2026-11-15 (UTC).
+ *
+ * Used by: Isolated headless Playwright preview test runner; browser editor
+ * component regression workflow.
+ *
+ * Specification:
+ * - [Browser editor definition](../../../docs/06-subsystems/diagrams/browser/interface.c4)
+ * - [Exact source and anchors](../../../docs/05-domain/text-and-anchors.md)
+ * - [Evidence and isolated test workflow](../../../docs/09-guides/reference/development-evidence.md)
+ *
+ * Boundary: Synthetic browser/component evidence only; no real HTTPS runtime,
+ * native trust/enrollment or product-wide proof is established by these
+ * fixtures.
+ */
+import { test, expect } from './fixtures.js';
+
+import { readFile } from 'node:fs/promises';
+
+/** Download exact current editor source for review-dialog non-mutation assertions. */
+async function source(page) { const ready = page.waitForEvent('download'); await page.getByRole('button', { name: '↓ Markdown', exact: true }).click(); return readFile(await (await ready).path(), 'utf8'); }
+
+/** Replace the fixture source and select the requested forward/reverse range through normal keyboard gestures. */
+async function replaceAndSelect(page, text, from, to, reverse = false) { const editor = page.getByRole('textbox', { name: 'Markdown document editor' }); await editor.focus(); await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.insertText(text); await page.keyboard.press('ControlOrMeta+Home'); for (let i = 0; i < (reverse ? to : from); i++)
+    await page.keyboard.press('ArrowRight'); await page.keyboard.down('Shift'); for (let i = from; i < to; i++)
+    await page.keyboard.press(reverse ? 'ArrowLeft' : 'ArrowRight'); await page.keyboard.up('Shift'); }
+
+/** Open Add relations from the keyboard context menu and wait for its visible review dialog. */
+async function open(page) { await page.keyboard.press('Shift+F10'); await page.getByRole('menuitem', { name: 'Add relations', exact: true }).click(); await expect(page.getByRole('dialog', { name: 'Add relations', exact: true })).toBeVisible(); }
+
+const errors = new WeakMap();
+
+test.beforeEach(/** Open a fresh synthetic editor while retaining page errors and accepting fixture prompts. */ async ({ page }) => {
+    errors.set(page, []);
+    page.on('pageerror', /** Collect browser exceptions for post-scenario assertions. */  e => errors.get(page).push(e.message));
+    page.on('dialog', /** Accept ordinary synthetic fixture dialogs. */  d => d.accept());
+    await page.goto('/');
+    await expect(page.getByRole('textbox', { name: 'Markdown document editor' })).toBeVisible();
 });
 
-test('Logical operators show symbols/meaning and preserve the selected direction',async({page})=>{
- const text='P holds. Q holds.';await replaceAndSelect(page,text,0,text.length);await open(page);const dialog=page.getByRole('dialog',{name:'Add relations',exact:true});await dialog.getByLabel('Relationship category',{exact:true}).selectOption('logical-operators');const types=dialog.getByLabel('Relationship type',{exact:true});await expect(types.locator('option:not([value=""])')).toHaveCount(26);await types.selectOption('preview:logical-operators:material_implication');await expect(dialog).toContainText('P → Q: false only when P is true and Q is false.');await types.selectOption('preview:logical-operators:semantic_entailment');await expect(dialog).toContainText('semantic consequence');await dialog.getByRole('button',{name:'Add relation',exact:true}).click();await expect(page.locator('.relationship-card.inspected')).toContainText('P ⊨ Q');await expect(page.locator('.relationship-card.inspected')).toContainText('Logical operators');expect(await source(page)).toBe(text);
+test.afterEach(/** Require each relationship review scenario to finish without page exceptions. */ async ({ page }) => expect(errors.get(page)).toEqual([]));
+
+test('right-click modal filters all thirteen categories and creates a typed sentence relationship without source edits', /** Check category counts/sorting, typed sentence relationship review and source-neutral publication from a right-click selection. */ async ({ page }) => {
+    const text = 'First sentence. Second sentence. Third sentence.', from = text.indexOf('Second');
+
+    await replaceAndSelect(page, text, from, text.length);
+    // Right-click inside the selected second sentence, preserving its two-unit selection.
+    const point = await page.locator('.cm-content').evaluate(/** Locate a point inside the selected second sentence so right-click preserves its exact two-unit range. */  root => { const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let node; while ((node = walker.nextNode())) {
+        const at = node.textContent.indexOf('Second');
+
+        if (at >= 0) {
+            const range = document.createRange();
+            range.setStart(node, at + 2);
+            range.setEnd(node, at + 3);
+            const box = range.getBoundingClientRect();
+
+            return { x: box.x + 1, y: box.y + box.height / 2 };
+        }
+    } throw Error('Missing Second'); });
+
+    await page.mouse.click(point.x, point.y, { button: 'right' });
+    await page.getByRole('menuitem', { name: 'Add relations', exact: true }).click();
+    const dialog = page.getByRole('dialog', { name: 'Add relations', exact: true }), category = dialog.getByLabel('Relationship category', { exact: true }), type = dialog.getByLabel('Relationship type', { exact: true });
+
+    await expect(category.locator('option:not([value=""])')).toHaveCount(13);
+    await expect(category).toHaveValue('');
+    await expect(type).toHaveValue('');
+    await expect(dialog.getByRole('button', { name: 'Add relation', exact: true })).toBeDisabled();
+    await expect(dialog).not.toContainText('relationship types available');
+    const counts = { 'ontological': 39, 'dialectical-process': 67, 'logical-argumentative': 45, 'epistemological': 41, 'ethical-political': 28, 'conceptual-semantic': 38, 'genealogical-historical': 35, 'methodological-practical': 44, 'logical-operators': 26, 'rhetorical-discourse': 26, 'temporal': 13, 'source-provenance': 15, 'causal-empirical': 8 };
+    const options = await category.locator('option:not([value=""])').evaluateAll(/** Collect catalog option identity/label pairs from the actual category chooser. */  nodes => nodes.map(/** Extract one catalog category option identity and label. */  node => ({ id: node.value, label: node.textContent }))), compare = /** Compare catalog labels with stable English case-insensitive numeric-aware ordering. */ (a, b) => new Intl.Collator('en', { sensitivity: 'base', numeric: true }).compare(a, b);
+    expect(options.map(/** Collect displayed category labels before ordering comparison. */  option => option.label)).toEqual(options.map(/** Collect another independent label list to sort without mutating observed option order. */  option => option.label).sort(compare));
+
+    for (const option of options) {
+        await category.selectOption(option.id);
+        await expect(type.locator('option:not([value=""])')).toHaveCount(counts[option.id]);
+        await expect(type).toHaveValue('');
+        const labels = await type.locator('option:not([value=""])').allTextContents();
+        expect(labels).toEqual([...labels].sort(compare));
+    }
+    await category.selectOption('ontological');
+    await type.selectOption('preview:ontological:depends_on');
+    await expect(dialog).toContainText('Inverse label: is depended on by');
+    await category.selectOption('logical-argumentative');
+    await type.selectOption('preview:logical-argumentative:undermines');
+    await expect(dialog).toContainText('A counterexample undermines an argument.');
+    await expect(dialog).toContainText('Second sentence.');
+    await expect(dialog).toContainText('Third sentence.');
+    await expect(dialog.locator('.relationship-participants .relationship-connector strong')).toHaveText('undermines');
+    await expect(dialog.locator('.relationship-details')).toContainText('Definition:');
+    expect(await dialog.evaluate(/** Check the detailed predicate definition appears below its reviewed participant source blocks. */  element => element.querySelector('.relationship-details').getBoundingClientRect().top >= element.querySelector('.relationship-participants').getBoundingClientRect().bottom)).toBe(true);
+    const positions = await dialog.locator('select').evaluateAll(/** Collect vertical positions of dialog select controls. */  nodes => nodes.map(/** Measure one select control top edge for category/type ordering. */  node => node.getBoundingClientRect().top));
+    expect(positions[1]).toBeGreaterThan(positions[0]);
+    await dialog.screenshot({ path: '../.local/artifacts/ui/relationship-category-modal.png' });
+    await dialog.getByRole('button', { name: 'Add relation', exact: true }).click();
+    await expect(dialog).toHaveCount(0);
+    await page.evaluate(/** Wait for relation card rendering across two animation frames after publication. */ () => new Promise(/** Coordinate the relation-card two-frame layout wait. */  resolve => requestAnimationFrame(/** Advance the second frame before relation card order assertions. */ () => requestAnimationFrame(resolve))));
+    await expect(page.locator('.relationship-card.inspected h3')).toHaveText('undermines');
+    expect(await page.locator('.relationship-card.inspected').evaluate(/** Check source block, directional connector and target block retain their intended card order. */  card => { const elements = [...card.children]; return elements.indexOf(card.querySelectorAll('blockquote')[0]) < elements.indexOf(card.querySelector('.relationship-connector')) && elements.indexOf(card.querySelector('.relationship-connector')) < elements.indexOf(card.querySelectorAll('blockquote')[1]); })).toBe(true);
+    await expect(page.locator('.relationship-card.inspected')).toContainText('Logical and argumentative relationships');
+    await expect(page.locator('#editorHost .relationship-sentence button')).toHaveCount(1);
+    expect(await source(page)).toBe(text);
 });
 
-test('modal search focuses immediately, finds ordinary operators and adds a custom term with its adjacent button',async({page})=>{
- const text='First statement. Second statement.';await replaceAndSelect(page,text,0,text.length);await open(page);const dialog=page.getByRole('dialog',{name:'Add relations',exact:true}),search=dialog.getByRole('combobox',{name:'Search relationships',exact:true});await expect(search).toBeFocused();await search.fill('and');await expect(dialog.getByLabel('Relationship type',{exact:true})).toHaveValue('');await dialog.getByLabel('Relationship type',{exact:true}).selectOption('preview:logical-operators:conjunction');await expect(dialog.getByLabel('Relationship type',{exact:true}).locator('option:checked')).toHaveText('and (∧)');
- await search.fill('therefore');await expect(dialog.getByLabel('Relationship type',{exact:true})).toHaveValue('preview:logical-operators:therefore');await expect(dialog).toContainText('inference indicator');
- await search.fill('My unique connection');await expect(dialog.getByRole('button',{name:'Add relation',exact:true})).toBeDisabled();await dialog.getByRole('button',{name:'Use search as custom term',exact:true}).click();await expect(dialog).toContainText('Custom term selected: My unique connection');await expect(dialog.locator('.relationship-search-row input')).toHaveCount(1);await dialog.getByRole('button',{name:'Add relation',exact:true}).click();await expect(page.locator('.relationship-card.inspected h3')).toHaveText('My unique connection');await expect(page.locator('.relationship-card.inspected')).toContainText('Custom relationship');expect(await source(page)).toBe(text);
+test('keyboard menu supports two sibling sections and cancellation restores the exact selection', /** Check keyboard two-section review and cancellation restore the exact reverse selection. */ async ({ page }) => {
+    const text = '## One\n\nFirst body.\n\n## Two\n\nSecond body.\n\n## Three\n\nThird body.', to = text.indexOf('## Three');
+
+    await replaceAndSelect(page, text, 0, to, true);
+    await open(page);
+    await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click();
+    await expect.poll(/** Poll source selection after canceling the section review dialog. */ () => page.evaluate(/** Read selected plain text after cancellation. */ () => window.getSelection().toString())).toBe(text.slice(0, to));
+    await page.keyboard.press('Shift+F10');
+    await expect(page.getByRole('menuitem', { name: 'Add relations', exact: true })).toBeEnabled();
+    await page.getByRole('menuitem', { name: 'Add relations', exact: true }).click();
+    const dialog = page.getByRole('dialog', { name: 'Add relations', exact: true });
+
+    await expect(dialog).toContainText('first selected section');
+    await dialog.getByLabel('Relationship category', { exact: true }).selectOption('genealogical-historical');
+    await dialog.getByLabel('Relationship type', { exact: true }).selectOption('preview:genealogical-historical:develops_from');
+    await dialog.getByRole('button', { name: 'Add relation', exact: true }).click();
+    await expect(page.locator('#editorHost .relationship-section button')).toHaveCount(1);
+    await expect(page.locator('.relationship-card.inspected h3')).toHaveText('develops from');
+    expect(await source(page)).toBe(text);
 });
 
-test('search auto-selects only a unique match and offers a small result list below ten matches',async({page})=>{
- await replaceAndSelect(page,'One sentence. Another sentence.',0,'One sentence. Another sentence.'.length);await open(page);const dialog=page.getByRole('dialog',{name:'Add relations',exact:true}),search=dialog.getByRole('combobox',{name:'Search relationships',exact:true}),types=dialog.getByLabel('Relationship type',{exact:true}),results=dialog.getByRole('listbox',{name:'Relationship search results',exact:true});await expect(search).toHaveAttribute('placeholder','');await expect(types).toHaveValue('');await expect(results).toBeHidden();
- await search.fill('undermines');await expect(results.getByRole('option')).toHaveCount(2);await expect(types).toHaveValue('');await results.getByRole('option',{name:/^undermines .*Logical and argumentative relationships/}).click();await expect(types).toHaveValue('preview:logical-argumentative:undermines');
- await search.fill('therefore');await expect(results.getByRole('option')).toHaveCount(1);await expect(types).toHaveValue('preview:logical-operators:therefore');await expect(dialog.locator('.relationship-connector strong')).toHaveText('therefore');await search.fill('and');await expect(results).toBeHidden();await expect(types).toHaveValue('');
-});
-test('relationship modal centres over the editor and stays centred when details change',async({page})=>{
- await replaceAndSelect(page,'One sentence. Another sentence.',0,'One sentence. Another sentence.'.length);await open(page);const dialog=page.getByRole('dialog',{name:'Add relations',exact:true});const check=async()=>{await expect.poll(()=>page.evaluate(()=>{const editor=document.querySelector('.editor-pane').getBoundingClientRect(),modal=document.querySelector('.relationship-dialog').getBoundingClientRect();return Math.abs((editor.left+editor.width/2)-(modal.left+modal.width/2));})).toBeLessThan(1);await expect.poll(()=>page.evaluate(()=>{const editor=document.querySelector('.editor-pane').getBoundingClientRect(),modal=document.querySelector('.relationship-dialog').getBoundingClientRect();return Math.abs((editor.top+editor.height/2)-(modal.top+modal.height/2));})).toBeLessThan(1);};await check();await dialog.getByLabel('Relationship category',{exact:true}).selectOption('ontological');await dialog.getByLabel('Relationship type',{exact:true}).selectOption('preview:ontological:constitutes');await check();await page.screenshot({path:'../.local/artifacts/ui/relationship-modal-editor-centred.png'});
-});
+test('Add relations is unavailable for a caret, partial text or more than two units', /** Check Add relations remains unavailable for caret/partial selections or more than two semantic units. */ async ({ page }) => {
+    const text = 'One sentence. Two sentence. Three sentence.';
 
-
-test('audited inverse, temporal and causal choices expose distinct meanings and create source-neutral records',async({page})=>{
- const text='The institution persists. Social relations persist.';await replaceAndSelect(page,text,0,text.length);await open(page);
- const dialog=page.getByRole('dialog',{name:'Add relations',exact:true}),category=dialog.getByLabel('Relationship category',{exact:true}),type=dialog.getByLabel('Relationship type',{exact:true});
- await category.selectOption('temporal');await type.selectOption('preview:temporal:starts_with');await expect(dialog).toContainText('source is the larger interval');
- await category.selectOption('causal-empirical');await type.selectOption('preview:causal-empirical:moderates');await dialog.getByText('Roles and context',{exact:true}).click();await expect(dialog).toContainText('predictor and outcome');
- await category.selectOption('ontological');await type.selectOption('preview:ontological:is_constituted_by');await dialog.getByText('Roles and context',{exact:true}).click();await expect(dialog).toContainText('Reverse wording of “constitutes”.');
- await dialog.getByRole('button',{name:'Add relation',exact:true}).click();await expect(page.locator('.relationship-card.inspected h3')).toHaveText('is constituted by');await expect(page.locator('.relationship-card.inspected')).toContainText('Definition:');await page.locator('.relationship-card.inspected summary').click();await expect(page.locator('.relationship-card.inspected')).toContainText('Reverse wording of “constitutes”.');expect(await source(page)).toBe(text);
- await page.screenshot({path:'../.local/artifacts/ui/full-relations-audit.png'});
+    for (const [from, to] of [[0, 0], [1, text.indexOf('Three') - 1], [0, text.length]]) {
+        await replaceAndSelect(page, text, from, to);
+        await page.keyboard.press('Shift+F10');
+        await expect(page.getByRole('menuitem', { name: 'Add relations', exact: true })).toBeDisabled();
+        await page.keyboard.press('Escape');
+    }
 });
 
+test('Logical operators show symbols/meaning and preserve the selected direction', /** Check logical operator meaning/symbols and selected source-to-target direction survive review publication. */ async ({ page }) => {
+    const text = 'P holds. Q holds.';
 
-test('shared tags retain one predicate and search result while assertion properties stay with the claim',async({page})=>{
- const text='A happens. B happens.';await replaceAndSelect(page,text,0,text.length);await open(page);const dialog=page.getByRole('dialog',{name:'Add relations',exact:true}),category=dialog.getByLabel('Relationship category',{exact:true}),type=dialog.getByLabel('Relationship type',{exact:true});
- await category.selectOption('causal-empirical');await type.selectOption('preview:causal-empirical:causes');await category.selectOption('dialectical-process');await expect(type).toHaveValue('preview:causal-empirical:causes');await expect(dialog.locator('.relationship-connector strong')).toHaveText('causes');
- await dialog.getByRole('combobox',{name:'Search relationships',exact:true}).fill('causes');await expect(dialog.getByRole('listbox').getByRole('option')).toHaveCount(1);await expect(type).toHaveValue('preview:causal-empirical:causes');await expect(type.locator('option[value="preview:causal-empirical:causes"]')).toHaveCount(1);
- await dialog.getByText('Assertion properties',{exact:true}).click();await dialog.getByLabel('Negate assertion',{exact:true}).check();await dialog.getByLabel('Assertion certainty',{exact:true}).selectOption('possible');await dialog.getByLabel('Assertion attribution',{exact:true}).fill('Reviewer');await dialog.getByLabel('Assertion scope',{exact:true}).fill('Within the pilot study');await expect(dialog.locator('.assertion-property-preview')).toContainText('Negated');await expect(dialog.locator('.assertion-property-preview')).toContainText('Certainty: possible');
- await dialog.getByRole('button',{name:'Add relation',exact:true}).click();await expect(page.locator('.relationship-card')).toHaveCount(1);const card=page.locator('.relationship-card.inspected');await expect(card.locator('h3')).toHaveText('causes');for(const label of ['Causal and empirical relationships','Dialectical and process relationships','Negated','Certainty: possible','Attributed to: Reviewer','Scope: Within the pilot study'])await expect(card).toContainText(label);await expect(page.locator('#editorHost .relationship-sentence button')).toHaveCount(1);await expect(page.locator('#editorHost .relationship-sentence button')).toHaveText('{possible: not causes}');expect(await card.evaluate(element=>element.querySelector('.assertion-property').getBoundingClientRect().top<element.querySelectorAll('blockquote')[1].getBoundingClientRect().top)).toBe(true);expect(await source(page)).toBe(text);const identity=await card.getAttribute('data-relationship-id');
- await page.getByRole('textbox',{name:'Markdown document editor'}).focus();await open(page);const repeated=page.getByRole('dialog',{name:'Add relations',exact:true});await repeated.getByLabel('Relationship category',{exact:true}).selectOption('dialectical-process');await repeated.getByLabel('Relationship type',{exact:true}).selectOption('preview:causal-empirical:causes');await repeated.getByText('Assertion properties',{exact:true}).click();await repeated.getByLabel('Negate assertion',{exact:true}).check();await repeated.getByLabel('Assertion certainty',{exact:true}).selectOption('possible');await repeated.getByLabel('Assertion attribution',{exact:true}).fill('Reviewer');await repeated.getByLabel('Assertion scope',{exact:true}).fill('Within the pilot study');await repeated.getByRole('button',{name:'Add relation',exact:true}).click();await expect(page.locator('.relationship-card')).toHaveCount(1);await expect(page.locator('.relationship-card.inspected')).toHaveAttribute('data-relationship-id',identity);await expect(page.locator('#editorHost .relationship-sentence button')).toHaveCount(1);await page.screenshot({path:'../.local/artifacts/ui/relationship-tags-properties.png'});
+    await replaceAndSelect(page, text, 0, text.length);
+    await open(page);
+    const dialog = page.getByRole('dialog', { name: 'Add relations', exact: true });
+
+    await dialog.getByLabel('Relationship category', { exact: true }).selectOption('logical-operators');
+    const types = dialog.getByLabel('Relationship type', { exact: true });
+
+    await expect(types.locator('option:not([value=""])')).toHaveCount(26);
+    await types.selectOption('preview:logical-operators:material_implication');
+    await expect(dialog).toContainText('P → Q: false only when P is true and Q is false.');
+    await types.selectOption('preview:logical-operators:semantic_entailment');
+    await expect(dialog).toContainText('semantic consequence');
+    await dialog.getByRole('button', { name: 'Add relation', exact: true }).click();
+    await expect(page.locator('.relationship-card.inspected')).toContainText('P ⊨ Q');
+    await expect(page.locator('.relationship-card.inspected')).toContainText('Logical operators');
+    expect(await source(page)).toBe(text);
+});
+
+test('modal search focuses immediately, finds ordinary operators and adds a custom term with its adjacent button', /** Check focused search finds ordinary operators and explicit custom-term adoption creates a source-neutral record. */ async ({ page }) => {
+    const text = 'First statement. Second statement.';
+
+    await replaceAndSelect(page, text, 0, text.length);
+    await open(page);
+    const dialog = page.getByRole('dialog', { name: 'Add relations', exact: true }), search = dialog.getByRole('combobox', { name: 'Search relationships', exact: true });
+
+    await expect(search).toBeFocused();
+    await search.fill('and');
+    await expect(dialog.getByLabel('Relationship type', { exact: true })).toHaveValue('');
+    await dialog.getByLabel('Relationship type', { exact: true }).selectOption('preview:logical-operators:conjunction');
+    await expect(dialog.getByLabel('Relationship type', { exact: true }).locator('option:checked')).toHaveText('and (∧)');
+    await search.fill('therefore');
+    await expect(dialog.getByLabel('Relationship type', { exact: true })).toHaveValue('preview:logical-operators:therefore');
+    await expect(dialog).toContainText('inference indicator');
+    await search.fill('My unique connection');
+    await expect(dialog.getByRole('button', { name: 'Add relation', exact: true })).toBeDisabled();
+    await dialog.getByRole('button', { name: 'Use search as custom term', exact: true }).click();
+    await expect(dialog).toContainText('Custom term selected: My unique connection');
+    await expect(dialog.locator('.relationship-search-row input')).toHaveCount(1);
+    await dialog.getByRole('button', { name: 'Add relation', exact: true }).click();
+    await expect(page.locator('.relationship-card.inspected h3')).toHaveText('My unique connection');
+    await expect(page.locator('.relationship-card.inspected')).toContainText('Custom relationship');
+    expect(await source(page)).toBe(text);
+});
+
+test('search auto-selects only a unique match and offers a small result list below ten matches', /** Check search selects only a unique result and presents a bounded small result list for ambiguous terms. */ async ({ page }) => {
+    await replaceAndSelect(page, 'One sentence. Another sentence.', 0, 'One sentence. Another sentence.'.length);
+    await open(page);
+    const dialog = page.getByRole('dialog', { name: 'Add relations', exact: true }), search = dialog.getByRole('combobox', { name: 'Search relationships', exact: true }), types = dialog.getByLabel('Relationship type', { exact: true }), results = dialog.getByRole('listbox', { name: 'Relationship search results', exact: true });
+
+    await expect(search).toHaveAttribute('placeholder', '');
+    await expect(types).toHaveValue('');
+    await expect(results).toBeHidden();
+    await search.fill('undermines');
+    await expect(results.getByRole('option')).toHaveCount(2);
+    await expect(types).toHaveValue('');
+    await results.getByRole('option', { name: /^undermines .*Logical and argumentative relationships/ }).click();
+    await expect(types).toHaveValue('preview:logical-argumentative:undermines');
+    await search.fill('therefore');
+    await expect(results.getByRole('option')).toHaveCount(1);
+    await expect(types).toHaveValue('preview:logical-operators:therefore');
+    await expect(dialog.locator('.relationship-connector strong')).toHaveText('therefore');
+    await search.fill('and');
+    await expect(results).toBeHidden();
+    await expect(types).toHaveValue('');
+});
+
+test('relationship modal centres over the editor and stays centred when details change', /** Check the relation modal remains centered over the editor when definition details change its dimensions. */ async ({ page }) => {
+    await replaceAndSelect(page, 'One sentence. Another sentence.', 0, 'One sentence. Another sentence.'.length);
+    await open(page);
+    const dialog = page.getByRole('dialog', { name: 'Add relations', exact: true });
+    const check = /** Poll horizontal and vertical centering after initial review and changed predicate details. */ async () => {
+        await expect.poll(/** Poll horizontal offset between editor center and dialog center. */ () => page.evaluate(/** Measure horizontal editor/dialog center distance from actual rectangles. */ () => { const editor = document.querySelector('.editor-pane').getBoundingClientRect(), modal = document.querySelector('.relationship-dialog').getBoundingClientRect(); return Math.abs((editor.left + editor.width / 2) - (modal.left + modal.width / 2)); })).toBeLessThan(1);
+        await expect.poll(/** Poll vertical offset between editor center and dialog center. */ () => page.evaluate(/** Measure vertical editor/dialog center distance from actual rectangles. */ () => { const editor = document.querySelector('.editor-pane').getBoundingClientRect(), modal = document.querySelector('.relationship-dialog').getBoundingClientRect(); return Math.abs((editor.top + editor.height / 2) - (modal.top + modal.height / 2)); })).toBeLessThan(1);
+    };
+
+    await check();
+    await dialog.getByLabel('Relationship category', { exact: true }).selectOption('ontological');
+    await dialog.getByLabel('Relationship type', { exact: true }).selectOption('preview:ontological:constitutes');
+    await check();
+    await page.screenshot({ path: '../.local/artifacts/ui/relationship-modal-editor-centred.png' });
+});
+
+test('audited inverse, temporal and causal choices expose distinct meanings and create source-neutral records', /** Check inverse, temporal and causal catalog choices expose distinct scoped meanings without source edits. */ async ({ page }) => {
+    const text = 'The institution persists. Social relations persist.';
+
+    await replaceAndSelect(page, text, 0, text.length);
+    await open(page);
+    const dialog = page.getByRole('dialog', { name: 'Add relations', exact: true }), category = dialog.getByLabel('Relationship category', { exact: true }), type = dialog.getByLabel('Relationship type', { exact: true });
+
+    await category.selectOption('temporal');
+    await type.selectOption('preview:temporal:starts_with');
+    await expect(dialog).toContainText('source is the larger interval');
+    await category.selectOption('causal-empirical');
+    await type.selectOption('preview:causal-empirical:moderates');
+    await dialog.getByText('Roles and context', { exact: true }).click();
+    await expect(dialog).toContainText('predictor and outcome');
+    await category.selectOption('ontological');
+    await type.selectOption('preview:ontological:is_constituted_by');
+    await dialog.getByText('Roles and context', { exact: true }).click();
+    await expect(dialog).toContainText('Reverse wording of “constitutes”.');
+    await dialog.getByRole('button', { name: 'Add relation', exact: true }).click();
+    await expect(page.locator('.relationship-card.inspected h3')).toHaveText('is constituted by');
+    await expect(page.locator('.relationship-card.inspected')).toContainText('Definition:');
+    await page.locator('.relationship-card.inspected summary').click();
+    await expect(page.locator('.relationship-card.inspected')).toContainText('Reverse wording of “constitutes”.');
+    expect(await source(page)).toBe(text);
+    await page.screenshot({ path: '../.local/artifacts/ui/full-relations-audit.png' });
+});
+
+test('shared tags retain one predicate and search result while assertion properties stay with the claim', /** Check category tags preserve one predicate identity while negation/certainty/attribution/scope remain claim properties. */ async ({ page }) => {
+    const text = 'A happens. B happens.';
+
+    await replaceAndSelect(page, text, 0, text.length);
+    await open(page);
+    const dialog = page.getByRole('dialog', { name: 'Add relations', exact: true }), category = dialog.getByLabel('Relationship category', { exact: true }), type = dialog.getByLabel('Relationship type', { exact: true });
+
+    await category.selectOption('causal-empirical');
+    await type.selectOption('preview:causal-empirical:causes');
+    await category.selectOption('dialectical-process');
+    await expect(type).toHaveValue('preview:causal-empirical:causes');
+    await expect(dialog.locator('.relationship-connector strong')).toHaveText('causes');
+    await dialog.getByRole('combobox', { name: 'Search relationships', exact: true }).fill('causes');
+    await expect(dialog.getByRole('listbox').getByRole('option')).toHaveCount(1);
+    await expect(type).toHaveValue('preview:causal-empirical:causes');
+    await expect(type.locator('option[value="preview:causal-empirical:causes"]')).toHaveCount(1);
+    await dialog.getByText('Assertion properties', { exact: true }).click();
+    await dialog.getByLabel('Negate assertion', { exact: true }).check();
+    await dialog.getByLabel('Assertion certainty', { exact: true }).selectOption('possible');
+    await dialog.getByLabel('Assertion attribution', { exact: true }).fill('Reviewer');
+    await dialog.getByLabel('Assertion scope', { exact: true }).fill('Within the pilot study');
+    await expect(dialog.locator('.assertion-property-preview')).toContainText('Negated');
+    await expect(dialog.locator('.assertion-property-preview')).toContainText('Certainty: possible');
+    await dialog.getByRole('button', { name: 'Add relation', exact: true }).click();
+    await expect(page.locator('.relationship-card')).toHaveCount(1);
+    const card = page.locator('.relationship-card.inspected');
+
+    await expect(card.locator('h3')).toHaveText('causes');
+
+    for (const label of ['Causal and empirical relationships', 'Dialectical and process relationships', 'Negated', 'Certainty: possible', 'Attributed to: Reviewer', 'Scope: Within the pilot study'])
+        await expect(card).toContainText(label);
+    await expect(page.locator('#editorHost .relationship-sentence button')).toHaveCount(1);
+    await expect(page.locator('#editorHost .relationship-sentence button')).toHaveText('{possible: not causes}');
+    expect(await card.evaluate(/** Check assertion properties appear before the reviewed target source block in the rendered card. */  element => element.querySelector('.assertion-property').getBoundingClientRect().top < element.querySelectorAll('blockquote')[1].getBoundingClientRect().top)).toBe(true);
+    expect(await source(page)).toBe(text);
+    const identity = await card.getAttribute('data-relationship-id');
+
+    await page.getByRole('textbox', { name: 'Markdown document editor' }).focus();
+    await open(page);
+    const repeated = page.getByRole('dialog', { name: 'Add relations', exact: true });
+
+    await repeated.getByLabel('Relationship category', { exact: true }).selectOption('dialectical-process');
+    await repeated.getByLabel('Relationship type', { exact: true }).selectOption('preview:causal-empirical:causes');
+    await repeated.getByText('Assertion properties', { exact: true }).click();
+    await repeated.getByLabel('Negate assertion', { exact: true }).check();
+    await repeated.getByLabel('Assertion certainty', { exact: true }).selectOption('possible');
+    await repeated.getByLabel('Assertion attribution', { exact: true }).fill('Reviewer');
+    await repeated.getByLabel('Assertion scope', { exact: true }).fill('Within the pilot study');
+    await repeated.getByRole('button', { name: 'Add relation', exact: true }).click();
+    await expect(page.locator('.relationship-card')).toHaveCount(1);
+    await expect(page.locator('.relationship-card.inspected')).toHaveAttribute('data-relationship-id', identity);
+    await expect(page.locator('#editorHost .relationship-sentence button')).toHaveCount(1);
+    await page.screenshot({ path: '../.local/artifacts/ui/relationship-tags-properties.png' });
 });

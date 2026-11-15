@@ -13,9 +13,13 @@
 - **Downstream dependencies:** [technical debt](../../02-governance/registers/technical-debt.csv), [acceptance gates](../../03-requirements/acceptance-criteria.md)
 - **Verification:** [current finding dispositions](../../08-assurance/development-findings.md#finding-dispositions), [test register](../../02-governance/registers/tests.csv), documentation/archive checks
 - **Decision/history:** current source/owner records; historical execution records are not current instructions
-- **Last reviewed:** 2026-11-14
+- **Last reviewed:** 2026-11-15
 
 ## Current execution status
+
+Commenting rollout (TEST204,2026-11-15): the owner resumed the successive programme. All 258 maintained authored files have whole-file reviews, readable project/source/consumer/specification headers, individual function purposes, visual grouping and separate creation/latest-editor metadata; five generated files retain explicit generator exclusions. Original creation and unavailable exact harness/model metadata remain explicitly unknown. Third-party dependencies are outside scope. The [exact inventory](../../../shared/tooling/code-comment-inventory.json) and [rollout evidence](../../08-assurance/evidence/code-comment-rollout.json) distinguish source reviews from mechanical checks. Earlier TEST194–203 checkpoints retain their as-run scope in the test register and pilot evidence; their stopped/pending wording is historical.
+
+Verification includes 213 Rust tests (four opt-in/protected tests ignored),222 Python fixtures,194 Node tests, production frontend build, API/strict TypeScript checks, formatting/Rustdoc and pinned Lean model/extracted-helper replay. Strict complete/base-ref closeout passes with zero pending files; all108 final headless browser tests pass against stable source/assets. Exact outcomes are recorded in TEST204 evidence. Executable syntax/literals were preserved, except explicitly reviewed comments inside executable fixture source strings and a test-only repair that scans comment-free syntax so required header URLs do not falsely violate runtime network boundaries. Product capabilities, formats and proof coverage did not change. No branch, commit, pull, publication, trust enrollment or manual-workspace handoff was performed; existing dirty work was preserved. The legacy archive verifier's missing manifest path is separately recorded maintenance debt and was not invoked against archives.
 
 Documentation maintenance (TEST193): seven completed records/proposal histories retired after preserving active input/proof obligations and finding dispositions; the five current registers and this summary were cleaned, and15 authoring templates remain available through AGENTS.md. Current links, source assessments and model routing pass;202 tooling tests and46 served layout/navigation comparisons pass. This is documentation maintenance, with no application or format change.
 

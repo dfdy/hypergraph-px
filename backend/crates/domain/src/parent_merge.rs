@@ -1,103 +1,234 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Bounded per-node Merge for supplied exact base-aligned changes.
-//! No diff inference, ancestry lookup, clock allocation, authority or persistence.
+//! # Hypergraph PX — Bounded same-node Merge over supplied changes
+//!
+//! Validate exact base-aligned edits for two retained versions and construct
+//! a complete merged result only when overlap evidence determines a choice.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build: unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision: unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Domain Merge/lineage/origin tests; experimental storage adapters consume
+//! the shared base/limit/origin types and focused submodules.
+//!
+//! Specification:
+//! - [Parent-Merge responsibilities][domain]
+//! - [Same-node Merge algorithm contract][merge]
+//! - [Publication and recovery boundary][publication]
+//!
+//! Boundary: The caller supplies authenticated maps and a verified common base. Logical
+//! work is not a measured time guarantee. This planner has no production Merge
+//! publication caller in the current slice and cannot infer origin from equal text.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/domain/src/parent_merge.rs
+//! [domain]: ../../../../docs/06-subsystems/diagrams/pure-domain.c4
+//! [merge]: ../../../../docs/07-implementation/algorithms/parent-merge.md
+//! [publication]: ../../../../docs/07-implementation/protocols/draft-publication.md
 use crate::records::{NodeId, RangeError, RevisionId, validate_byte_range};
 use std::collections::BTreeMap;
 
+/// Choose a unique maximal common base from supplied same-node DAG metadata.
 pub mod ancestry;
+
+/// Track immediate-base exact working splices without historical diff inference.
 pub mod lineage;
+
+/// Carry supplied historical passage origins through validated lineage.
 pub mod origins;
 
+/// A retained passage-change identity and optional supplied per-node order.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Origin {
+    /// Exact revision responsible for this change, not a current branch head.
     pub revision: RevisionId,
+
+    /// Known positive order or None for unknown age; unknown never becomes zero.
     pub order: Option<u64>,
 }
+
+/// Whether an edit has exact positional correspondence to the common base.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Mapping {
+    /// Supplied edit location is exact; the planner still verifies reconstruction.
     Exact,
+    /// Source location correspondence is uncertain; distinct competition cannot auto-resolve.
     Unknown,
 }
 
+/// One exact replacement in common-base UTF8 coordinates with origin evidence.
 #[derive(Debug)]
 pub struct Edit<'a> {
+    /// Inclusive byte cut in the full common-base source.
     pub start: usize,
+
+    /// Exclusive base cut; equality denotes insertion at that position.
     pub end: usize,
+
+    /// Exact base bytes that must occupy this range, including empty insertion text.
     pub expected: &'a str,
+
+    /// Original UTF8 replacement bytes; deletion is the empty string.
     pub replacement: &'a str,
+
     /// Validated historical origins; unknown order still has exact identity.
+    /// All retained passage origins asserted for this replacement.
     pub origins: &'a [Origin],
+
+    /// Whether supplied correspondence is exact enough for competing-byte selection.
     pub mapping: Mapping,
 }
+
+/// One verified common-base node/revision and its full original text.
 pub struct Base<'a> {
+    /// Logical identity shared by both versions being merged.
     pub node: NodeId,
+
+    /// Retained common-base revision chosen outside this planner.
     pub revision: RevisionId,
+
+    /// Exact full base source used for all expected quotes and byte ranges.
     pub text: &'a str,
 }
+
+/// A supplied side version plus edits that must exactly reconstruct it from base.
 pub struct Side<'a> {
+    /// Must equal the base node; this is not cross-identity synthesis.
     pub node: NodeId,
+
+    /// Retained version whose supplied text must reconstruct exactly.
     pub revision: RevisionId,
+
+    /// Exact full side text, checked against its ordered base-relative edits.
     pub text: &'a str,
+
+    /// Ordered nonoverlapping edits; touching insertions need coalesced evidence.
     pub edits: &'a [Edit<'a>],
 }
+
+/// Independent text-size and logical work allowances for one planning attempt.
 #[derive(Clone, Copy, Debug)]
 pub struct Limits {
+    /// Maximum full input and complete output size in UTF8 bytes.
     pub text_bytes: usize,
+
     /// Logical bytes/records/pair steps, not a measured time guarantee.
+    /// Remaining logical budget is debited before the corresponding operation.
     pub work: usize,
 }
+
+/// Which supplied side contributes a selected replacement.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Selection {
+    /// Use source-side replacement and origins.
     Source,
+    /// Use target-side replacement and origins.
     Target,
+    /// Equal bytes at equal cuts retain origin evidence from both sides.
     Both,
 }
+
+/// One selected edit with retained origins and the strongest justified mapping.
 #[derive(Debug, PartialEq, Eq)]
 pub struct Applied<'a> {
+    /// Inclusive common-base cut for this chosen region.
     pub start: usize,
+
+    /// Exclusive base cut; empty ranges retain insertion semantics.
     pub end: usize,
+
+    /// Borrowed exact bytes from the selected side.
     pub replacement: &'a str,
+
+    /// Sorted/deduplicated origins retained from the selected side(s).
     pub origins: Vec<Origin>,
+
+    /// Source, target or equal-byte contribution from both sides.
     pub selection: Selection,
+
+    /// Exact only when every contributing selected edit has exact mapping.
     pub mapping: Mapping,
 }
+
+/// Complete merged text and its exact base/source/target context; not publication.
 #[derive(Debug, PartialEq, Eq)]
 pub struct Plan<'a> {
+    /// Shared logical identity; no new node is created.
     pub node: NodeId,
+
+    /// Exact common-base revision supplied to the plan.
     pub base: RevisionId,
+
+    /// Exact source-side input version.
     pub source: RevisionId,
+
+    /// Exact target-side input version.
     pub target: RevisionId,
+
+    /// Complete reconstructed merged bytes; no partial result is returned.
     pub text: String,
+
+    /// Selected base-relative regions and their preserved origin evidence.
     pub edits: Vec<Applied<'a>>,
 }
+
+/// Why a competing region needs explicit resolution instead of guessed ordering.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Reason {
+    /// At least one origin lacks order, or competing known orders are equal.
     UnknownOrder,
+    /// Distinct competing bytes lack exact mapping on one or both sides.
     UnknownMapping,
+    /// Overlap boundaries differ, including an insertion touching a replacement.
     ComplexOverlap,
 }
+
+/// Either a complete plan or one unresolved input pair with no partial text.
 #[derive(Debug, PartialEq, Eq)]
 pub enum Outcome<'a> {
+    /// A validated complete plan; callers separately authorize and publish it.
     Merged(Plan<'a>),
     /// No partial merged text is returned. Indices bind exact supplied inputs.
     Unresolved {
+        /// Index of the first unresolved source-side edit.
         source: usize,
+        /// Index of its competing target-side edit.
         target: usize,
+        /// Exact missing/ambiguous evidence that prevents automatic selection.
         reason: Reason,
     },
 }
+
+/// Invalid supplied evidence or exhausted limits, distinct from unresolved choice.
 #[derive(Debug, PartialEq, Eq)]
 pub enum Error {
+    /// The side/base identities differ.
     WrongNode,
+    /// A base-relative UTF8 range is invalid or splits a scalar.
     Range(RangeError),
+    /// Expected bytes do not equal the exact common-base slice.
     Quote,
+    /// A side has reversed order or self-overlap.
     UnorderedEdits,
+    /// Empty, inconsistent, zero-valued or colliding origin claims.
     Origin,
+    /// Applying a side map does not reproduce its exact supplied text.
     Reconstruction,
+    /// Checked size/work accounting exceeds its allowance or overflows.
     Limit,
 }
+
 struct Budget(usize);
 impl Budget {
+    /// Debit logical work before proceeding; checked subtraction returns Limit
+    /// rather than allowing budget wraparound or an apparently complete partial plan.
     fn spend(&mut self, amount: usize) -> Result<(), Error> {
         self.0 = self.0.checked_sub(amount).ok_or(Error::Limit)?;
         Ok(())
@@ -105,6 +236,8 @@ impl Budget {
 }
 // Insertions touching either edge of a replacement need a coalesced exact map
 // or explicit review. Adjacent nonempty replacements do not overlap.
+/// Detect competing base regions; insertion cuts touch both neighbouring
+/// boundaries while adjacent nonempty replacements remain independent.
 fn overlaps(a: &Edit<'_>, b: &Edit<'_>) -> bool {
     match (a.start == a.end, b.start == b.end) {
         (true, _) => b.start <= a.start && a.start <= b.end,
@@ -112,11 +245,15 @@ fn overlaps(a: &Edit<'_>, b: &Edit<'_>) -> bool {
         _ => a.start < b.end && b.start < a.end,
     }
 }
+
 struct Origins {
     revisions: BTreeMap<RevisionId, Option<u64>>,
     orders: BTreeMap<u64, RevisionId>,
 }
+
 impl Origins {
+    /// Keep origin revision/order claims consistent across both sides: one known
+    /// order belongs to one revision, and one revision cannot change its known age.
     fn validate(&mut self, origin: Origin) -> Result<(), Error> {
         if origin.order == Some(0) {
             return Err(Error::Origin);
@@ -124,6 +261,7 @@ impl Origins {
         if self
             .revisions
             .get(&origin.revision)
+            // Detect another age claim for this same retained revision.
             .is_some_and(|old| *old != origin.order)
         {
             return Err(Error::Origin);
@@ -132,6 +270,7 @@ impl Origins {
             if self
                 .orders
                 .get(&order)
+                // Reject two different revisions claiming one known order.
                 .is_some_and(|old| *old != origin.revision)
             {
                 return Err(Error::Origin);
@@ -142,6 +281,9 @@ impl Origins {
         Ok(())
     }
 }
+
+/// Validate ordered scalar-aligned expected quotes and origin claims, then
+/// reconstruct the entire supplied side exactly before Merge decisions use it.
 fn validate_side(
     base: &Base<'_>,
     side: &Side<'_>,
@@ -171,6 +313,7 @@ fn validate_side(
         }
         size = size
             .checked_sub(edit.end - edit.start)
+            // Add replacement bytes only after checked removal of the base range.
             .and_then(|n| n.checked_add(edit.replacement.len()))
             .ok_or(Error::Limit)?;
         cursor = edit.end;
@@ -192,12 +335,20 @@ fn validate_side(
     }
     Ok(())
 }
+
+/// Return the greatest supplied origin order only if every origin is known;
+/// one unknown origin keeps the whole competing edit’s age unknown.
 fn order(edit: &Edit<'_>) -> Option<u64> {
     // Equal-byte deduplication must not turn any unknown origin into known age.
+    // Accumulate the maximum, short-circuiting the fold on an unknown origin.
     edit.origins.iter().try_fold(0, |latest, origin| {
+        // Extend the maximum only when this origin actually has known order.
         origin.order.map(|value| latest.max(value))
     })
 }
+
+/// Select one edit and optionally retain equal-byte evidence from both sides;
+/// merge origin lists without upgrading an unknown mapping to Exact.
 fn apply<'a>(
     edit: &Edit<'a>,
     selection: Selection,
@@ -220,6 +371,7 @@ fn apply<'a>(
         origins,
         selection,
         mapping: if edit.mapping == Mapping::Exact
+            // Equal-byte sharing is exact only if the other supplied map is exact.
             && other.is_none_or(|value| value.mapping == Mapping::Exact)
         {
             Mapping::Exact
@@ -228,8 +380,11 @@ fn apply<'a>(
         },
     })
 }
+
 /// The caller supplies authenticated maps and a verified common base. This
 /// validates exact reconstruction, but cannot prove who changed a repeated span.
+/// Validate both sides first; sweep ordered regions, resolve only equal-cut
+/// competition with sufficient evidence, then bound and construct complete text.
 pub fn plan<'a>(
     base: &Base<'a>,
     source: &Side<'a>,
@@ -242,6 +397,7 @@ pub fn plan<'a>(
     if limits.work == 0
         || [base.text.len(), source.text.len(), target.text.len()]
             .iter()
+            // Bound every full input before doing reconstruction/allocation work.
             .any(|&size| size > limits.text_bytes)
     {
         return Err(Error::Limit);
@@ -256,6 +412,8 @@ pub fn plan<'a>(
     };
     validate_side(base, source, &mut budget, &mut origins)?;
     validate_side(base, target, &mut budget, &mut origins)?;
+
+    // Sweep only already validated ordered maps; do not infer omitted changes.
     let (mut i, mut j) = (0, 0);
     let mut edits = Vec::new();
     while i < source.edits.len() || j < target.edits.len() {
@@ -320,11 +478,13 @@ pub fn plan<'a>(
             (None, None) => break,
         }
     }
+    // Bound the entire output before allocating or exposing any merged source.
     let mut size = base.text.len();
     for edit in &edits {
         budget.spend(1)?;
         size = size
             .checked_sub(edit.end - edit.start)
+            // Add replacement bytes only after checked removal of the base range.
             .and_then(|n| n.checked_add(edit.replacement.len()))
             .ok_or(Error::Limit)?;
     }
@@ -353,13 +513,17 @@ pub fn plan<'a>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
     const NODE: NodeId = NodeId([9; 32]);
+    /// Construct a stable test origin with an explicitly known or unknown order.
     fn origin(n: u8, order: Option<u64>) -> Origin {
         Origin {
             revision: RevisionId([n; 32]),
             order,
         }
     }
+
+    /// Bind synthetic base text to the common test node and retained revision.
     fn base(text: &str) -> Base<'_> {
         Base {
             node: NODE,
@@ -367,6 +531,8 @@ mod tests {
             text,
         }
     }
+
+    /// Build an exact supplied-side fixture without inferring any changes from text.
     fn side<'a>(text: &'a str, edits: &'a [Edit<'a>], revision: u8) -> Side<'a> {
         Side {
             node: NODE,
@@ -375,18 +541,26 @@ mod tests {
             edits,
         }
     }
+
+    /// Supply generous logical allowances so semantic tests isolate their intended rule.
     fn limits() -> Limits {
         Limits {
             text_bytes: 4096,
             work: 100_000,
         }
     }
+
+    /// Extract a complete result in tests, failing if a supposedly determined case
+    /// was unresolved instead.
     fn merged<'a>(outcome: Outcome<'a>) -> Plan<'a> {
         match outcome {
             Outcome::Merged(plan) => plan,
             _ => panic!("expected merged text"),
         }
     }
+
+    /// Verify competition uses each passage’s retained origin order, not unrelated
+    /// newer changes, while independent regions preserve their own evidence.
     #[test]
     fn later_passage_wins_but_unrelated_newer_edit_and_merge_do_not_retag_it() {
         let b = base("Monday\r\nOriginal");
@@ -443,6 +617,9 @@ mod tests {
             t.text
         );
     }
+
+    /// Verify an explicitly retained reversion remains a dated change even if its
+    /// bytes equal the common base, so its actual origin order can win.
     #[test]
     fn supplied_reversion_is_a_real_change_even_when_equal_to_the_common_base() {
         let b = base("Monday");
@@ -476,6 +653,9 @@ mod tests {
         assert_eq!(result.text, "Monday");
         assert_eq!(result.edits[0].origins, x);
     }
+
+    /// Verify exact Unicode/newline edits and independent insertions/deletions,
+    /// including order selection rather than concatenating competing insertions.
     #[test]
     fn exact_mixed_newlines_unicode_deletion_and_nonoverlapping_insertions_survive() {
         let b = base("A😀\r\n中\rZ");
@@ -540,6 +720,9 @@ mod tests {
             "中"
         );
     }
+
+    /// Verify equal-byte deduplication retains both origins and does not convert
+    /// unknown age into known age for a later distinct competition.
     #[test]
     fn equal_bytes_keep_both_origins_and_unknown_competition_returns_no_partial_text() {
         let b = base("A B");
@@ -597,6 +780,9 @@ mod tests {
             }
         );
     }
+
+    /// Verify uncoalesced overlap boundaries and touching insertions remain unresolved
+    /// instead of dropping a region or guessing a text diff.
     #[test]
     fn ambiguous_overlap_and_touching_insertions_do_not_discard_independent_regions() {
         let b = base("abcd");
@@ -648,6 +834,9 @@ mod tests {
             }
         ));
     }
+
+    /// Exercise invalid text/maps/ranges/identity/origin evidence and checked
+    /// work/input/output allowances without returning a success-labelled partial plan.
     #[test]
     fn malformed_mapping_origins_scope_and_work_or_output_limits_fail_closed() {
         let b = base("😀B");
@@ -777,6 +966,9 @@ mod tests {
             Err(Error::Limit)
         );
     }
+
+    /// Enumerate independent three-position change masks and compare complete output
+    /// with an independently constructed per-position selection oracle.
     #[test]
     fn exhaustive_independent_regions_match_the_simple_per_position_oracle() {
         let b = base("ABC");
@@ -849,6 +1041,9 @@ mod tests {
             }
         }
     }
+
+    /// Verify a later unresolved competing region discards earlier provisional
+    /// selections from the public outcome and leaves the supplied base unchanged.
     #[test]
     fn a_late_unknown_region_returns_no_earlier_partial_merge() {
         let b = base("A B C");
@@ -891,6 +1086,9 @@ mod tests {
         );
         assert_eq!(b.text, "A B C");
     }
+
+    /// Verify side maps must be ordered/nonoverlapping and origin age cannot change
+    /// between known and unknown for the same retained revision.
     #[test]
     fn unordered_or_self_overlapping_maps_and_inconsistent_origin_claims_are_rejected() {
         let b = base("AB");

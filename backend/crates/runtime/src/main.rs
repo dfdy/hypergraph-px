@@ -1,5 +1,43 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Loopback HTTPS single-executable writer. See ADR0004 for trust/bootstrap limits.
+//! # Hypergraph PX — Authenticated encrypted loopback runtime
+//!
+//! Serves embedded browser assets and the current shared command/query
+//! adapter over
+//! loopback TLS. A private launch bootstrap establishes a session;
+//! workspace unlock
+//! and storage authorization remain separate checks.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Browser application and isolated Rust runtime route/parser tests.
+//!
+//! Specification:
+//! - [Runtime API responsibilities][spec0]
+//! - [Browser-runtime transport contract][spec1]
+//! - [Local HTTPS bootstrap and trust][spec2]
+//! - [Keychain enrollment policy][spec3]
+//!
+//! Boundary: Trusted-server mode only; no HTTP fallback, automatic
+//! certificate trust, provider enrollment or schema upgrade. Current
+//! one-owner storage scope does not establish full multi-user product
+//! delivery. TLS protects transport, not a hostile host.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/runtime/src/main.rs
+//! [spec0]: ../../../../docs/06-subsystems/diagrams/runtime-api.c4
+//! [spec1]: ../../../../docs/06-subsystems/interfaces/browser-runtime.md
+//! [spec2]: ../../../../docs/04-architecture/decisions/0004-local-https-bootstrap.md
+//! [spec3]: ../../../../docs/04-architecture/decisions/0014-keychain-unlock-policy.md
+
 mod api;
 mod api_transport;
 use hypergraph_domain::records::{
@@ -32,25 +70,35 @@ struct DeadlineSocket {
     socket: TcpStream,
     deadline: Instant,
 }
+
 impl DeadlineSocket {
+    /// Compute the nonzero remaining absolute request deadline for each underlying socket operation.
     fn remaining(&self) -> std::io::Result<Duration> {
         self.deadline
             .checked_duration_since(Instant::now())
+            // Discard an exactly expired deadline rather than configuring an unlimited zero timeout.
             .filter(|remaining| !remaining.is_zero())
+            // Construct the timeout error only when no positive duration remains.
             .ok_or_else(|| std::io::Error::from(std::io::ErrorKind::TimedOut))
     }
 }
+
 impl Read for DeadlineSocket {
+    /// Apply the current deadline before reading encrypted transport bytes.
     fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
         self.socket.set_read_timeout(Some(self.remaining()?))?;
         self.socket.read(buffer)
     }
 }
+
 impl Write for DeadlineSocket {
+    /// Apply the current deadline before writing encrypted transport bytes.
     fn write(&mut self, buffer: &[u8]) -> std::io::Result<usize> {
         self.socket.set_write_timeout(Some(self.remaining()?))?;
         self.socket.write(buffer)
     }
+
+    /// Reject an expired request before flushing pending socket output.
     fn flush(&mut self) -> std::io::Result<()> {
         self.remaining()?;
         self.socket.flush()
@@ -77,6 +125,8 @@ struct Response {
     bytes: Vec<u8>,
     cookie: Option<String>,
 }
+
+/// Encode a successful typed JSON response without setting a session cookie implicitly.
 fn json<T: Serialize>(value: &T) -> Response {
     Response {
         status: 200,
@@ -85,14 +135,21 @@ fn json<T: Serialize>(value: &T) -> Response {
         cookie: None,
     }
 }
+
+/// Return a stable machine-readable error code with the intended HTTP status.
 fn error(status: u16, code: &str) -> Response {
     let mut r = json(&serde_json::json!({"error":code}));
     r.status = status;
     r
 }
+
+/// Decode strict typed request bytes and map malformed input to a client error.
 fn decode<T: serde::de::DeserializeOwned>(r: &Request) -> Result<T, Response> {
+    // Map malformed typed JSON to the stable request-error response.
     serde_json::from_slice(&r.body).map_err(|_| error(400, "invalid_request"))
 }
+
+/// Translate coarse storage failures into stable transport statuses without leaking SQL or source.
 fn storage_error(e: hypergraph_storage::Error) -> Response {
     use hypergraph_storage::Error::*;
     match e {
@@ -235,21 +292,31 @@ struct ReceiptRequest {
     #[serde(with = "encoding::identity")]
     operation: OperationId,
 }
+
+/// Generate an unpredictable launch/session token from operating-system entropy.
 fn token() -> String {
     hypergraph_storage::new_id()
         .expect("OS entropy unavailable")
         .iter()
+        // Render each random byte as lowercase hexadecimal without reducing entropy.
         .map(|b| format!("{b:02x}"))
         .collect()
 }
+
+/// Compare equal-length token bytes without data-dependent early mismatch return.
 fn secure_equal(a: &str, b: &str) -> bool {
     if a.len() != b.len() {
         return false;
     }
+    // Accumulate every byte difference after the explicit equal-length check.
     a.bytes().zip(b.bytes()).fold(0u8, |n, (a, b)| n | (a ^ b)) == 0
 }
+
+/// Negotiate optional problem details while retaining the inner route status and stable error code.
 fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
+    // Inspect the Accept header only when present; absence retains legacy response format.
     let problem = r.headers.get("accept").is_some_and(|accept| {
+        // Find an explicitly acceptable problem-details media range.
         accept.split(',').any(|range| {
             let mut parts = range.split(';');
             if !parts
@@ -261,8 +328,11 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
                 return false;
             }
             parts
+                // Extract only parameter name/value pairs for media quality handling.
                 .filter_map(|part| part.trim().split_once('='))
+                // Select quality parameters by their case-insensitive protocol name.
                 .filter(|(name, _)| name.eq_ignore_ascii_case("q"))
+                // Require every quality value to parse; the nested predicate accepts only positive values up to one.
                 .all(|(_, value)| value.parse::<f32>().is_ok_and(|q| q > 0.0 && q <= 1.0))
         })
     });
@@ -296,12 +366,15 @@ fn route(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
     }
     response
 }
+
+/// Enforce host/origin/session/lock gates before dispatching the current storage command/query surface.
 fn route_inner(r: Request, state: &mut State<impl Provider>, host: &str) -> Response {
     if r.headers.get("host").map(String::as_str) != Some(host) {
         return error(403, "host_rejected");
     }
     if r.headers
         .get("sec-fetch-site")
+        // Reject an explicit browser cross-site classification before content handling.
         .is_some_and(|v| v == "cross-site")
     {
         return error(403, "origin_rejected");
@@ -320,6 +393,7 @@ fn route_inner(r: Request, state: &mut State<impl Provider>, host: &str) -> Resp
         } else {
             &r.path
         };
+        // Match an exact embedded asset path without a filesystem path fallback.
         if let Some((_, bytes)) = ASSETS.iter().find(|(key, _)| *key == path) {
             let mime = if path.ends_with(".html") {
                 "text/html; charset=utf-8"
@@ -347,6 +421,7 @@ fn route_inner(r: Request, state: &mut State<impl Provider>, host: &str) -> Resp
         }
         return error(404, "not_found");
     }
+    // Only the private launch secret can establish this runtime session cookie.
     if r.method == "POST" && r.path == "/api/v1/bootstrap" {
         let request: api::BootstrapRequest = match decode(&r) {
             Ok(v) => v,
@@ -364,10 +439,13 @@ fn route_inner(r: Request, state: &mut State<impl Provider>, host: &str) -> Resp
         ));
         return result;
     }
+    // Require one exact session cookie; duplicate matching names fail authorization.
     let authorized = r.headers.get("cookie").is_some_and(|cookie| {
         let mut sessions = cookie
             .split(';')
+            // Trim only protocol space/tab around cookie segments, preserving Unicode bytes.
             .map(|value| value.trim_matches([' ', '\t']))
+            // Select only segments with the exact session-cookie name.
             .filter(|value| value.split('=').next() == Some("__Host-hpx"));
         let Some(session) = sessions.next() else {
             return false;
@@ -422,6 +500,7 @@ fn route_inner(r: Request, state: &mut State<impl Provider>, host: &str) -> Resp
         }
         if state
             .last_unlock
+            // Throttle explicit unlock attempts independently of which unlock method is selected.
             .is_some_and(|t| t.elapsed() < Duration::from_secs(1))
         {
             return error(429, "retry_later");
@@ -441,6 +520,7 @@ fn route_inner(r: Request, state: &mut State<impl Provider>, host: &str) -> Resp
         }
         if state
             .last_unlock
+            // Throttle explicit unlock attempts independently of which unlock method is selected.
             .is_some_and(|t| t.elapsed() < Duration::from_secs(1))
         {
             return error(429, "retry_later");
@@ -469,6 +549,7 @@ fn route_inner(r: Request, state: &mut State<impl Provider>, host: &str) -> Resp
         state.workspace = None;
         return json(&api::LockStateResponse { locked: true });
     }
+    // Every remaining command/query requires an explicitly unlocked workspace.
     let Some(workspace) = state.workspace.as_mut() else {
         return error(423, "locked");
     };
@@ -811,6 +892,8 @@ fn route_inner(r: Request, state: &mut State<impl Provider>, host: &str) -> Resp
         _ => error(404, "not_found"),
     }
 }
+
+/// Read one bounded HTTP1.1 request with exact framing, rejecting ambiguous or unsupported encodings.
 fn read_request(stream: &mut impl Read) -> Result<Request, ()> {
     let mut bytes = Zeroizing::new(Vec::new());
     let end;
@@ -819,12 +902,14 @@ fn read_request(stream: &mut impl Read) -> Result<Request, ()> {
             return Err(());
         }
         let mut chunk = [0; 1024];
+        // Map a failed header read to rejected HTTP framing.
         let count = stream.read(&mut chunk).map_err(|_| ())?;
         if count == 0 {
             return Err(());
         }
         let scan_from = bytes.len().saturating_sub(3);
         bytes.extend_from_slice(&chunk[..count]);
+        // Find the first exact header terminator, including across fragment boundaries.
         if let Some(at) = bytes[scan_from..].windows(4).position(|w| w == b"\r\n\r\n") {
             end = scan_from + at + 4;
             if end > HEADER_LIMIT {
@@ -835,6 +920,7 @@ fn read_request(stream: &mut impl Read) -> Result<Request, ()> {
     }
     let mut headers = [httparse::EMPTY_HEADER; 48];
     let mut parsed = httparse::Request::new(&mut headers);
+    // Reject parser errors or incomplete/non-HTTP1.1 request framing.
     if !parsed.parse(&bytes[..end]).map_err(|_| ())?.is_complete() || parsed.version != Some(1) {
         return Err(());
     }
@@ -846,9 +932,11 @@ fn read_request(stream: &mut impl Read) -> Result<Request, ()> {
     {
         return Err(());
     }
+    // Reject duplicate header names rather than choosing ambiguous authority/framing.
     let mut headers = BTreeMap::new();
     for header in parsed.headers {
         let name = header.name.to_ascii_lowercase();
+        // Reject non-UTF8 header values before preserving their exact authority text.
         let value = std::str::from_utf8(header.value)
             .map_err(|_| ())?
             .trim_matches([' ', '\t'])
@@ -862,9 +950,11 @@ fn read_request(stream: &mut impl Read) -> Result<Request, ()> {
     }
     let length = match headers.get("content-length") {
         Some(v) => {
+            // Require every content-length byte to be an ASCII digit before numeric conversion.
             if !v.bytes().all(|b| b.is_ascii_digit()) || v.is_empty() {
                 return Err(());
             }
+            // Reject overflow instead of truncating the declared body size.
             v.parse::<usize>().map_err(|_| ())?
         }
         None => 0,
@@ -872,6 +962,7 @@ fn read_request(stream: &mut impl Read) -> Result<Request, ()> {
     if length > BODY_LIMIT || bytes.len() - end > length || method == "GET" && length != 0 {
         return Err(());
     }
+    // Allocate only the validated declared body size; do not accept trailing pipelined bytes.
     let mut body = Zeroizing::new(Vec::with_capacity(length));
     body.extend_from_slice(&bytes[end..]);
     let mut chunk = Zeroizing::new([0; 8192]);
@@ -879,6 +970,7 @@ fn read_request(stream: &mut impl Read) -> Result<Request, ()> {
         let remaining = length - body.len();
         let count = stream
             .read(&mut chunk[..remaining.min(8192)])
+            // Reject a failed body read rather than returning partial request bytes.
             .map_err(|_| ())?;
         if count == 0 {
             return Err(());
@@ -892,9 +984,12 @@ fn read_request(stream: &mut impl Read) -> Result<Request, ()> {
         body,
     })
 }
+
+/// Emit exact response length and restrictive browser headers on a closing no-store connection.
 fn write_response(stream: &mut impl Write, response: Response) -> std::io::Result<()> {
     let cookie = response
         .cookie
+        // Emit the explicitly requested cookie as one response header.
         .map(|v| format!("Set-Cookie: {v}\r\n"))
         .unwrap_or_default();
     let header = format!(
@@ -908,6 +1003,8 @@ fn write_response(stream: &mut impl Write, response: Response) -> std::io::Resul
     stream.write_all(&response.bytes)?;
     stream.flush()
 }
+
+/// Serve one TLS request within its deadline and serialize access to the unlocked workspace.
 fn serve_socket(socket: TcpStream, tls: Arc<ServerConfig>, state: Arc<Mutex<State>>, host: String) {
     let deadline = Instant::now() + REQUEST_TIMEOUT;
     let Ok(connection) = ServerConnection::new(tls) else {
@@ -924,6 +1021,8 @@ fn serve_socket(socket: TcpStream, tls: Arc<ServerConfig>, state: Arc<Mutex<Stat
     };
     let _ = write_response(&mut stream, response);
 }
+
+/// Validate explicit startup inputs, configure TLS and accept bounded loopback connections locked by default.
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let mut args = std::env::args().skip(1);
     let mut path = None;
@@ -975,6 +1074,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             .with_no_client_auth()
             .with_single_cert(certs, key)?,
     );
+    // Launch/session secrets are independent; startup retains no unlocked workspace key.
     let launch = token();
     let state = Arc::new(Mutex::new(State {
         workspace: None,
@@ -990,6 +1090,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     println!(
         "Open https://{host}/#launch={launch}\nLocal trusted-server runtime; workspace locked. Keep this launch URL private."
     );
+    // Bound live TLS workers so slow fragmented connections cannot grow without limit.
     let slots = Arc::new(AtomicUsize::new(0));
     for socket in listener.incoming() {
         let socket = socket?;
@@ -1001,9 +1102,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         let state = state.clone();
         let tls = tls.clone();
         let host = host.clone();
+        // Serve this accepted connection while the scoped reservation bounds live workers.
         std::thread::spawn(move || {
             struct Slot(Arc<AtomicUsize>);
             impl Drop for Slot {
+                /// Release the connection-capacity reservation even when the worker exits early.
                 fn drop(&mut self) {
                     self.0.fetch_sub(1, Ordering::AcqRel);
                 }
@@ -1014,6 +1117,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     }
     Ok(())
 }
+
+/// Report startup failure and exit nonzero instead of silently serving an incomplete runtime.
 fn main() {
     if let Err(error) = run() {
         eprintln!("Runtime startup failed: {error}");
@@ -1024,6 +1129,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    /// Exercise current query/command routes with independent session/lock gates, strict schemas and bounded exact source.
     #[test]
     fn history_route_enforces_session_lock_schema_and_page_limits() {
         let directory = std::env::temp_dir().join(format!("hpx-history-route-{}", token()));
@@ -1057,6 +1163,7 @@ mod tests {
             last_unlock: None,
             provider: Native,
         };
+        // Build authenticated synthetic query requests while allowing individual gates to be removed.
         let request = |body: serde_json::Value| Request {
             method: "POST".into(),
             path: "/api/v1/history".into(),
@@ -1097,6 +1204,7 @@ mod tests {
             .unwrap()
             .open_document(document)
             .unwrap();
+        // Reuse authenticated request framing for each selected branch or working-source scenario.
         let branch_request = |path: &str, body| {
             let mut r = request(body);
             r.path = format!("/api/v1/{path}");
@@ -1373,6 +1481,7 @@ mod tests {
             );
         }
         let anchor = serde_json::json!({"document":document.0,"snapshot":editor.snapshot.0,"revision":editor.base.0,"occurrence_path":[editor.occurrence.0],"start_byte":5,"end_byte":11});
+        // Build comment queries with the same authenticated fixture headers.
         let comments_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/comments".into();
@@ -1417,6 +1526,7 @@ mod tests {
             423
         );
         state.workspace = workspace;
+        // Build exact anchor-resolution queries for coordinate and scope rejection cases.
         let anchor_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/anchor/resolve".into();
@@ -1440,6 +1550,7 @@ mod tests {
             route(anchor_request(invalid), &mut state, "127.0.0.1:8388").status,
             409
         );
+        // Build bounded publication-contributor queries without implying full authorship evidence.
         let contributor_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/contributors/publications".into();
@@ -1473,6 +1584,7 @@ mod tests {
                 400
             );
         }
+        // Build private clipboard queries for access and generation tests.
         let clipboard_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/clipboard".into();
@@ -1519,6 +1631,7 @@ mod tests {
         assert_eq!(captured["generation"], 1);
         assert_eq!(captured["entries"][0]["preview"], "😀\r\n");
         assert_eq!(captured["entries"][0]["available"], true);
+        // Build retained cross-identity derivation reads for the synthetic Fork.
         let derivation_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/derivation".into();
@@ -1576,6 +1689,7 @@ mod tests {
         let merged = route(merge_command, &mut state, "127.0.0.1:8388");
         assert_eq!(merged.status, 200);
         let merged: serde_json::Value = serde_json::from_slice(&merged.bytes).unwrap();
+        // Build retained ordered synthesis reads without asserting source authorship.
         let merge_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/merge".into();
@@ -1607,6 +1721,7 @@ mod tests {
             .status,
             400
         );
+        // Build explicitly selected document graph queries.
         let graph_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/graph".into();
@@ -1640,6 +1755,7 @@ mod tests {
                 400
             );
         }
+        // Build retrospective assertion page requests with exact selected snapshot context.
         let assertion_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/assertions".into();
@@ -1652,6 +1768,7 @@ mod tests {
             route(unauthenticated, &mut state, "127.0.0.1:8388").status,
             401
         );
+        // Bind a fixture role to exact historical source and acknowledged editor context.
         let participant = |role: &str, start, end, quote: &str| serde_json::json!({"role":role,"source":{"document":document.0,"node":editor.node.0,"snapshot":editor.snapshot.0,"revision":editor.base.0,"occurrence_path":[editor.occurrence.0],"start_byte":start,"end_byte":end},"expected_draft":{"generation":editor.generation,"sequence":editor.acknowledged_sequence},"quote":quote});
         let mut assertion = request(
             serde_json::json!({"operation":vec![5;32],"request":{"command":"assertion","mutation":{"action":"create","predicate":{"kind":"registered","choice":"preview:logical-argumentative:is_equivalent_to"},"participants":[participant("source",0,5,"Exact"),participant("target",5,11,"😀\r\n")],"properties":{"negated":false,"certainty":"unspecified","attribution":"","scope":""}}}}),
@@ -1681,6 +1798,7 @@ mod tests {
                 400
             );
         }
+        // Build selected transformation-incidence requests with explicit boundaries.
         let transformations_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/graph/transformations".into();
@@ -1711,6 +1829,7 @@ mod tests {
             .status,
             400
         );
+        // Build selected assertion-incidence requests without expanding unselected nodes.
         let overlay_graph_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/graph/overlay".into();
@@ -1744,6 +1863,7 @@ mod tests {
                 400
             );
         }
+        // Build exact historical judgement reads without current-state fallback.
         let review_history_request = |body| {
             let mut r = request(body);
             r.path = "/api/v1/assertion/revision".into();
@@ -1876,6 +1996,8 @@ mod tests {
         drop(state);
         std::fs::remove_dir_all(directory).unwrap();
     }
+
+    /// Require explicit authenticated fake-provider actions and retain locked startup without implicit enrollment/load.
     #[test]
     fn keychain_routes_are_explicit_authenticated_and_restart_locked() {
         use hypergraph_keychain::{DeviceSecret, Error as KeyError};
@@ -1885,9 +2007,12 @@ mod tests {
             calls: usize,
         }
         impl Provider for Fake {
+            /// Advertise the fake provider capability without native credential-store access.
             fn supported(&self) -> bool {
                 true
             }
+
+            /// Simulate create-only workspace secret custody for explicit route enrollment.
             fn create(
                 &mut self,
                 id: [u8; 16],
@@ -1900,6 +2025,8 @@ mod tests {
                 self.secret = Some((id, DeviceSecret::from_slice(secret.bytes())?));
                 Ok(())
             }
+
+            /// Return only the fake secret bound to the requested workspace identity.
             fn load(&mut self, id: [u8; 16]) -> hypergraph_keychain::Result<DeviceSecret> {
                 self.calls += 1;
                 let (expected, secret) = self.secret.as_ref().ok_or(KeyError::NotFound)?;
@@ -1908,6 +2035,8 @@ mod tests {
                 }
                 DeviceSecret::from_slice(secret.bytes())
             }
+
+            /// Remove only the expected fake secret after verifying its workspace and bytes.
             fn remove(
                 &mut self,
                 id: [u8; 16],
@@ -1932,6 +2061,7 @@ mod tests {
             last_unlock: None,
             provider: Fake::default(),
         };
+        // Build authenticated fake-provider route requests without invoking a native keychain.
         let request = |path: &str, body: &str| Request {
             method: "POST".into(),
             path: format!("/api/v1/{path}"),
@@ -2051,6 +2181,7 @@ mod tests {
         std::fs::remove_dir_all(directory).unwrap();
     }
 
+    /// Reject duplicate session cookies and non-ASCII authority whitespace without silent normalization.
     #[test]
     fn security_headers_do_not_normalize_unicode_whitespace_into_authority() {
         let mut state = State {
@@ -2123,6 +2254,7 @@ mod tests {
         }
     }
 
+    /// Apply the exact header byte cap across fragmented reads while excluding body bytes from that budget.
     #[test]
     fn fragmented_headers_obey_the_exact_limit_independently_of_read_sizes() {
         struct Fragmented<'a> {
@@ -2130,6 +2262,7 @@ mod tests {
             maximum: usize,
         }
         impl Read for Fragmented<'_> {
+            /// Fragment fixture reads at the selected size to exercise framing boundaries.
             fn read(&mut self, output: &mut [u8]) -> std::io::Result<usize> {
                 let count = output.len().min(self.maximum).min(self.bytes.len());
                 output[..count].copy_from_slice(&self.bytes[..count]);
@@ -2165,6 +2298,7 @@ mod tests {
         );
     }
 
+    /// Reject ambiguous duplicate framing, unsupported transfer encodings, excess body and pipelined input.
     #[test]
     fn parser_rejects_request_smuggling_and_oversized_bodies() {
         for request in [
@@ -2178,6 +2312,8 @@ mod tests {
         let r=read_request(&mut b"POST /api/v1/commands HTTP/1.1\r\nHost: 127.0.0.1:8388\r\nContent-Length: 2\r\n\r\n{}".as_slice()).unwrap();
         assert_eq!(&r.body[..], b"{}");
     }
+
+    /// Preserve legacy error bytes unless valid problem-details negotiation is explicitly requested.
     #[test]
     fn problem_details_are_opt_in_and_preserve_status_and_stable_codes() {
         let mut state = State {
@@ -2229,6 +2365,8 @@ mod tests {
             }
         }
     }
+
+    /// Verify host, origin, session and workspace lock each independently deny inappropriate access.
     #[test]
     fn host_origin_cookie_and_locked_gates_are_independent() {
         let mut state = State {
@@ -2240,6 +2378,7 @@ mod tests {
             last_unlock: None,
             provider: Native,
         };
+        // Vary independent request-security gates while keeping the remaining fixture framing fixed.
         let request = |method: &str, path: &str, host: &str, origin: &str, cookie: &str| Request {
             method: method.into(),
             path: path.into(),

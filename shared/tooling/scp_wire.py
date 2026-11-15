@@ -1,9 +1,27 @@
 #!/usr/bin/env python3
-"""HPX-SCP reference message validator and stdin/stdout YAML adapter.
+"""Hypergraph PX — Legacy YAML exchange adapter
 
-SCP prompts and replies must be sent as literal YAML through a permitted agent
-channel. Local files are optional validation adapters, not prompt substitutes.
-Verification runs outside model context. Not an agent runner or secure transport.
+Validate and emit literal legacy HPX-SCP YAML while tracking scoped readiness, correlation and replay identities in private local session state.
+
+Source: [Latest source on GitHub](https://github.com/dfdy/hypergraph-px/blob/main/shared/tooling/scp_wire.py)
+
+Agent provenance: Agent creation unverified; original creator not recorded.
+Created: Unknown (not recorded).
+Creation harness: Unknown (not recorded).
+Creation model: Unknown (not recorded).
+
+Latest editing agent: Codex (OpenAI coding agent), /root/tooling_comments.
+Latest editing harness: Codex; version/build: Unknown (not exposed).
+Latest editing model: OpenAI; exact identifier/revision: Unknown (not exposed).
+Last edited: 2026-11-15 (UTC).
+
+Used by: Explicit historical exchange commands and isolated handshake/message/bundle fixtures.
+
+Specification:
+- [Active protocol installation and legacy boundary](../../docs/09-guides/developers/vernaculum/UPGRADE_2.0.0.md)
+- [Commenting and exact-source review](../../docs/09-guides/developers/code-comments.md)
+
+Boundary: This is neither secure transport nor an agent runner. Its historical HPX-SCP grammar does not establish an active Vernaculum peer agreement.
 """
 from __future__ import annotations
 import argparse
@@ -33,6 +51,8 @@ OPTIONAL_ENVELOPE = {'reply_to','refs'}
 
 
 def verified(protocol: Path = PROTOCOL) -> dict:
+    """Verify the selected legacy protocol, including amendment coherence for the installed historical location."""
+
     projection = verify_path(protocol)
     # validate shared amendments for active installation; other locations are staged only
     if protocol.resolve() == PROTOCOL.resolve():
@@ -41,10 +61,14 @@ def verified(protocol: Path = PROTOCOL) -> dict:
 
 
 def fingerprint(protocol: Path) -> str:
+    """Identify exact natural-language protocol bytes without including the subordinate appendix in the discovery identity."""
+
     return hashlib.sha256(natural_prefix(protocol.read_bytes())).hexdigest()
 
 
 def clean_id(value: str, label: str) -> str:
+    """Constrain envelope/session identifiers before they enter routing, correlation or local state keys."""
+
     if not isinstance(value, str) or not ID.fullmatch(value):
         raise BootstrapError(f'invalid {label}')
     return value
@@ -52,14 +76,19 @@ def clean_id(value: str, label: str) -> str:
 
 def new_message(kind: str, sender: str, recipient: str, conversation: str,
                 version: str, body: dict, reply_to: str | None = None) -> dict:
+    """Construct one fresh legacy envelope with validated identities and optional explicit reply correlation."""
+
     msg={'scp':'HPX-SCP','version':version,'kind':kind,'id':'m-'+uuid.uuid4().hex,
          'sender':clean_id(sender,'sender'),'recipient':clean_id(recipient,'recipient'),
          'conversation':clean_id(conversation,'conversation'),'body':body}
-    if reply_to:msg['reply_to']=clean_id(reply_to,'reply_to')
+    if reply_to:
+        msg['reply_to']=clean_id(reply_to,'reply_to')
     return msg
 
 
 def validate_message(raw: bytes | dict, projection: dict, *, compatible: bool = True) -> dict:
+    """Check bounded YAML/envelope/body shape, known kinds, required correlation, version and reference constraints."""
+
     if isinstance(raw, bytes):
         if len(raw)>MAX_MESSAGE_BYTES:
             raise BootstrapError('message exceeds size limit')
@@ -74,6 +103,7 @@ def validate_message(raw: bytes | dict, projection: dict, *, compatible: bool = 
         raise BootstrapError('invalid message protocol version')
     if compatible and value['version'] != projection['protocol_version']:
         raise BootstrapError('incompatible protocol version')
+
     for field in ('id','sender','recipient','conversation'):
         clean_id(value[field],field)
     if 'reply_to' in value:
@@ -88,6 +118,7 @@ def validate_message(raw: bytes | dict, projection: dict, *, compatible: bool = 
     if not isinstance(body,dict) or any(not isinstance(k,str) for k in body):
         raise BootstrapError('message body must be a string-keyed mapping')
     contract=next(x for x in projection['message_types'] if x['kind']==value['kind'])
+
     for key in contract['required_body']:
         if key not in body or body[key] is None or (isinstance(body[key],str) and not body[key].strip()):
             raise BootstrapError('missing required message body: '+key)
@@ -105,20 +136,28 @@ def validate_message(raw: bytes | dict, projection: dict, *, compatible: bool = 
 
 
 def state_root() -> Path:
+    """Locate the caller state-home wire directory without changing repository or process authority."""
+
     return Path(os.environ.get('XDG_STATE_HOME',str(Path.home()/'.local/state')))/'hpx-scp'/'wire'
 
 
 def session_path(root: Path, conversation: str, local: str, remote: str) -> Path:
+    """Hash conversation and ordered peer identities into one private session filename."""
+
     fields=[clean_id(conversation,'conversation'),clean_id(local,'local'),clean_id(remote,'remote')]
     key=hashlib.sha256(json.dumps(fields,separators=(',',':')).encode('utf-8')).hexdigest()
     return root/(key+'.json')
 
 
 def state_read(root: Path, conversation: str, local: str, remote: str) -> dict | None:
+    """Load bounded nonsymlink session state only when its stored conversation and peers match the request."""
+
     path=session_path(root,conversation,local,remote)
-    if not path.exists():return None
+    if not path.exists():
+        return None
     if path.is_symlink() or path.stat().st_size>15000:
         raise BootstrapError('invalid state file')
+
     try:
         obj=json.loads(path.read_text(encoding='utf-8'),object_pairs_hook=strict_object)
     except (ValueError,UnicodeError) as exc:
@@ -129,11 +168,15 @@ def state_read(root: Path, conversation: str, local: str, remote: str) -> dict |
 
 
 def state_write(root: Path, value: dict) -> None:
+    """Atomically publish a private session snapshot with fsync and restrictive permissions."""
+
     root.mkdir(parents=True,exist_ok=True,mode=0o700)
     os.chmod(root,0o700)
     p=session_path(root,value['conversation'],value['local'],value['remote'])
-    if p.is_symlink():raise BootstrapError('refuse symlink session state')
+    if p.is_symlink():
+        raise BootstrapError('refuse symlink session state')
     fd,tmp=tempfile.mkstemp(prefix='.wire-',dir=root)
+
     try:
         with os.fdopen(fd,'w',encoding='utf-8') as handle:
             json.dump(value,handle,separators=(',',':'),ensure_ascii=False)
@@ -143,16 +186,21 @@ def state_write(root: Path, value: dict) -> None:
         os.chmod(tmp,0o600)
         os.replace(tmp,p)
     finally:
-        if os.path.exists(tmp):os.unlink(tmp)
+        if os.path.exists(tmp):
+            os.unlink(tmp)
 
 
 def state_new(message: dict, local: str, remote: str, fp: str, status: str) -> dict:
+    """Capture the originating hello identity, peers, fingerprint and initial replay history for one session."""
+
     return {'conversation':message['conversation'],'local':local,'remote':remote,
             'version':message['version'],'fingerprint':fp,'status':status,
             'hello_id':message['id'],'seen':[message['id']]}
 
 
 def require_active(root: Path, msg: dict, local: str, outgoing: bool, expected_fingerprint: str) -> dict:
+    """Require matching ready state and unseen message/correlation identities before extending the scoped replay history."""
+
     remote=msg['recipient'] if outgoing else msg['sender']
     session=state_read(root,msg['conversation'],local,remote)
     if not session or session['status']!='ready' or session['version']!=msg['version'] or session['fingerprint']!=expected_fingerprint:
@@ -172,6 +220,8 @@ def require_active(root: Path, msg: dict, local: str, outgoing: bool, expected_f
 
 
 def read_input(path: Path) -> bytes:
+    """Read explicit file input or bounded stdin bytes; a YAML path is never itself a valid message."""
+
     if str(path) == '-':
         raw = sys.stdin.buffer.read(MAX_MESSAGE_BYTES + 1)
         if len(raw) > MAX_MESSAGE_BYTES:
@@ -182,17 +232,21 @@ def read_input(path: Path) -> bytes:
 
 def write_yaml(path: Path, msg: dict) -> bool:
     """Output the *actual YAML*. True means stdout; never mix status with YAML."""
+
     data = yaml_bytes(msg)
     if str(path) == '-':
         sys.stdout.buffer.write(data)
         return True
-    if path.exists() or path.is_symlink():raise BootstrapError('refusing to overwrite existing message')
+    if path.exists() or path.is_symlink():
+        raise BootstrapError('refusing to overwrite existing message')
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_bytes(data)
     return False
 
 
 def run(args):
+    """Dispatch one validated negotiation, bundle or message action while preserving literal-YAML output and explicit activation boundaries."""
+
     projection=verified(args.protocol)
     ver=projection['protocol_version']
     fp=fingerprint(args.protocol)
@@ -243,7 +297,9 @@ def run(args):
     if action=='bundle':
         if str(args.output)=='-':
             raise BootstrapError('protocol bundles require a real output file, not inline task YAML')
-        if args.output.exists():raise BootstrapError('refusing to overwrite bundle')
+        if args.output.exists():
+            raise BootstrapError('refusing to overwrite bundle')
+
         with zipfile.ZipFile(args.output,'x',compression=zipfile.ZIP_DEFLATED) as z:
             z.writestr('PROTOCOL.md',args.protocol.read_bytes())
         return f'COMPLETE PROTOCOL BUNDLE CREATED: {args.output}; transmit by permitted channel, not model prompt'
@@ -252,6 +308,7 @@ def run(args):
             raise BootstrapError('inspect-bundle requires an explicit bundle file')
         if args.input.stat().st_size>MAX_BUNDLE_BYTES:
             raise BootstrapError('bundle is too large')
+
         with zipfile.ZipFile(args.input,'r') as z:
             if z.namelist()!=['PROTOCOL.md'] or z.getinfo('PROTOCOL.md').file_size>MAX_BUNDLE_BYTES:
                 raise BootstrapError('unexpected bundle content')
@@ -261,7 +318,8 @@ def run(args):
             raise BootstrapError('bundle does not match offered protocol fingerprint')
         args.stage_dir.mkdir(parents=True,exist_ok=True)
         target=args.stage_dir/'PROTOCOL.md'
-        if target.exists() or target.is_symlink():raise BootstrapError('staging target already exists')
+        if target.exists() or target.is_symlink():
+            raise BootstrapError('staging target already exists')
         target.write_bytes(raw)
         return (f'STAGED VERIFIED BUNDLE {incoming["protocol_version"]}: {target}; '
                 'not activated; local trust/compatibility approval still required')
@@ -286,6 +344,8 @@ def run(args):
 
 
 def main() -> int:
+    """Validate action-specific arguments and convert legacy exchange failures into refusal rather than mixed invalid YAML output."""
+
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('action',choices=['hello','answer-hello','accept-ready','offer','bundle','inspect-bundle','send','receive'])
     p.add_argument('--protocol',type=Path,default=PROTOCOL)
@@ -303,6 +363,7 @@ def main() -> int:
     p.add_argument('--stage-dir',type=Path)
     p.add_argument('--expected-fingerprint')
     a=p.parse_args()
+
     try:
         args_for={
             'hello':('sender','recipient','conversation'),
@@ -314,8 +375,10 @@ def main() -> int:
             'send':('sender','recipient','conversation','kind'),
             'receive':('local',),
         }
+
         for field in args_for[a.action]:
-            if getattr(a,field) is None:raise BootstrapError('missing --'+field.replace('_','-'))
+            if getattr(a,field) is None:
+                raise BootstrapError('missing --'+field.replace('_','-'))
         result=run(a)
         if result is not None:
             print(result)

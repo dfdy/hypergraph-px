@@ -1,8 +1,43 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-//! Publication evidence, explicitly narrower than complete contributor attribution.
+//! # Hypergraph PX — Snapshot-bound publication evidence pages
+//!
+//! Page retained text-publication events from an explicitly selected snapshot
+//! using owner-bound encrypted continuation context. Report the current label
+//! and publisher roles without pretending to know original text authorship.
+//!
+//! Source: [Latest source on GitHub][source]
+//!
+//! Agent provenance: Agent creation unverified; original creator not recorded.
+//! Created: Unknown (not recorded).
+//! Creation harness: Unknown (not recorded).
+//! Creation model: Unknown (not recorded).
+//!
+//! Latest editing agent: Codex /root/storage_comments (OpenAI coding agent).
+//! Latest editing harness: Codex; version/build unknown (not exposed).
+//! Latest editing model: OpenAI; exact identifier/revision unknown (not exposed).
+//! Last edited: 2026-11-15 (UTC).
+//!
+//! Used by: Runtime publication-contributors query and browser
+//! contributor-evidence presentation.
+//!
+//! Specification:
+//! - [Publication provenance definitions][spec0]
+//! - [Contributor query contract][spec1]
+//! - [Runtime evidence limits][spec2]
+//!
+//! Boundary: The cursor is ephemeral and not persisted. Complete
+//! text-publication paging does not mean complete contributors across
+//! comments, reviews or interaction records.
+//!
+//! [source]: https://github.com/dfdy/hypergraph-px/blob/main/backend/crates/storage/src/contributors.rs
+//! [spec0]: ../../../../docs/05-domain/diagrams/provenance-working.c4
+//! [spec1]: ../../../../docs/06-subsystems/interfaces/domain-navigation.md#bounded-publication-contributor-adapter-query
+//! [spec2]: ../../../../docs/06-subsystems/interfaces/browser-runtime.md
+
 use super::*;
 /// Ephemeral encrypted continuation context; never written to objects or slots.
 const CURSOR_KIND: i32 = 1_000_001;
+/// Bound untrusted continuation bytes before decrypting their context.
 pub const MAX_CURSOR_BYTES: usize = 4096;
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -14,12 +49,16 @@ struct Cursor {
     #[serde(with = "encoding::identity")]
     next: RevisionId,
 }
+
+/// Current workspace principal label, not retrospective source authorship.
 #[derive(Debug, Serialize)]
 pub struct Human {
     #[serde(with = "encoding::identity")]
     pub principal: PrincipalId,
     pub label: String,
 }
+
+/// Publisher evidence from one verified retained text-publication event.
 #[derive(Debug, Serialize)]
 pub struct Publication {
     #[serde(with = "encoding::identity")]
@@ -32,6 +71,8 @@ pub struct Publication {
     pub operation: OperationId,
     pub role: &'static str,
 }
+
+/// Snapshot-pinned publication page with explicit completeness/exclusion dimensions.
 #[derive(Debug, Serialize)]
 pub struct Page {
     pub projection: &'static str,
@@ -43,17 +84,25 @@ pub struct Page {
     pub current_agent: Option<Human>,
     pub publications: Vec<Publication>,
     pub next: Option<Vec<u8>>,
+
+    /// Whether the selected text-publication ancestry has no further page.
     pub complete_text_publications: bool,
+
+    /// Always false here: this view omits other contribution evidence families.
     pub complete_contributors: bool,
     pub excluded_families: Vec<&'static str>,
 }
+
+/// Bind ephemeral encrypted cursor context to the current owner under its own domain tag.
 fn cursor_address(owner: PrincipalId) -> [u8; 32] {
     let mut h = Sha256::new();
     h.update(b"hpx/publication-contributors/cursor/v1\0");
     h.update(owner.0);
     h.finalize().into()
 }
+
 impl Workspace {
+    /// Read a bounded exact-snapshot page under current scope, revalidating any continuation.
     pub fn publication_contributors(
         &mut self,
         document: DocumentId,
@@ -62,10 +111,12 @@ impl Workspace {
         limit: usize,
     ) -> Result<Page> {
         if !(1..=history::MAX_PAGE).contains(&limit)
+            // Reject empty/oversized supplied continuations before decryption.
             || cursor.is_some_and(|c| c.is_empty() || c.len() > MAX_CURSOR_BYTES)
         {
             return Err(Error::Invalid);
         }
+
         let tx = self.db.transaction()?;
         let cipher = Cipher {
             key: &self.key,
@@ -81,6 +132,7 @@ impl Workspace {
         if catalog.owner_label.len() > 4096 {
             return Err(Error::Limit);
         }
+
         let mut remaining = history::PAGE_BYTES;
         let doc: Document = history::object(&cipher, &tx, DOCUMENT, document.0, &mut remaining)?;
         let snap: Snapshot = history::object(&cipher, &tx, SNAPSHOT, snapshot.0, &mut remaining)?;
@@ -93,9 +145,11 @@ impl Workspace {
         {
             return Err(Error::Integrity);
         }
+
         let start = if let Some(bytes) = cursor {
             let token: Cursor = cipher
                 .open(CURSOR_KIND, cursor_address(self.owner), 0, bytes)
+                // A token that cannot authenticate is invalid caller continuation input.
                 .map_err(|_| Error::Invalid)?;
             if token.document != document || token.snapshot != snapshot {
                 return Err(Error::Invalid);
@@ -117,12 +171,15 @@ impl Workspace {
             && page
                 .entries
                 .first()
+                // The initial history entry must agree with the selected closed snapshot.
                 .is_none_or(|entry| entry.snapshot != snapshot)
         {
             return Err(Error::Integrity);
         }
+
         let next = page
             .next
+            // Bind the next revision to the original document/snapshot in an encrypted token.
             .map(|next| {
                 cipher.seal(
                     CURSOR_KIND,
@@ -136,9 +193,11 @@ impl Workspace {
                 )
             })
             .transpose()?;
+
         let publications = page
             .entries
             .into_iter()
+            // Project only the verified publisher evidence, not inferred authorship.
             .map(|entry| Publication {
                 principal: entry.actor,
                 revision: entry.revision,
@@ -147,6 +206,7 @@ impl Workspace {
                 role: "publisher",
             })
             .collect();
+
         let result = Page {
             projection: "text_publication_contributors",
             document,
@@ -167,14 +227,18 @@ impl Workspace {
                 "interaction_records",
             ],
         };
+
         tx.commit()?;
+
         Ok(result)
     }
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::tests::{PASS, Temp, commit, create, op, save};
+    /// Guard snapshot-stable paging across newer head changes and workspace restart.
     #[test]
     fn pinned_pages_retain_earlier_publishers_and_ignore_newer_heads_across_restart() {
         let t = Temp::new();
@@ -207,6 +271,7 @@ mod tests {
             .unwrap();
         assert!(older.complete_text_publications);
         assert_eq!(older.publications.last().unwrap().revision, first.base);
+        // Every visible role must remain the narrower publisher interpretation.
         assert!(older.publications.iter().all(|p| p.role == "publisher"));
         let original = w
             .publication_contributors(d, first.snapshot, None, 32)
@@ -214,6 +279,8 @@ mod tests {
         assert_eq!(original.publications.len(), 1);
         assert!(original.complete_text_publications);
     }
+
+    /// Reject tampered/cross-context continuations and changed authority without scope expansion.
     #[test]
     fn cursor_tampering_cross_document_and_authority_changes_cannot_extend_scope() {
         let t = Temp::new();
